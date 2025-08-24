@@ -1,7 +1,7 @@
 import type { Appointment, AppointmentPriority, AppointmentStatus, AppointmentType } from './index';
 
 export interface AppointmentsHeaderProps {
-  onNewAppointment: () => void;
+  onNewAppointment: (data: any) => void;
 }
 
 export interface AppointmentsTableProps {

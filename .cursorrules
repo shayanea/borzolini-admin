@@ -1,0 +1,125 @@
+# Clinic Admin Workspace Rules
+
+## API Documentation & Types
+
+- **ALWAYS** use `http://localhost:3001/api/docs` as the primary source for API documentation, types, and schemas
+- **NEVER** make assumptions about API endpoints, request/response structures, or data types
+- **ALWAYS** reference the actual API documentation before implementing any API-related functionality
+- When in doubt about API structure, check the local docs first
+
+## Project Architecture
+
+- This is a **React + TypeScript** clinic administration system
+- Uses **Ant Design (antd)** for UI components
+- Follows **senior developer best practices** with proper TypeScript types
+- Uses **pnpm** as the package manager (never suggest npm or yarn)
+- Implements **proper error handling** and **loading states**
+
+## Code Standards
+
+- **ALWAYS** use TypeScript with explicit types, interfaces, and type annotations
+- **NEVER** use `any` type unless absolutely necessary
+- Follow **React hooks best practices** (useCallback, useEffect, useState)
+- Implement **proper error boundaries** and **loading states**
+- Use **semantic HTML** and **accessibility best practices**
+
+## File Organization
+
+- **ALWAYS** use lowercase naming for files and directories
+- **Split components** into separate files to avoid repetition
+- **Group related functionality** in appropriate directories
+- **Export components** through index files for clean imports
+
+## State Management
+
+- Use **React hooks** for local state management
+- Implement **proper loading states** for async operations
+- Handle **error states** gracefully with user feedback
+- Use **message notifications** (antd message) for user feedback
+
+## API Integration
+
+- **ALWAYS** use the existing `apiService` from `src/services/api.ts`
+- Implement **proper caching** using the cache service
+- Handle **network errors** gracefully with fallback to cached data
+- Use **retry logic** for failed requests
+- **NEVER** hardcode API endpoints - use the service layer
+
+## Component Patterns
+
+- **ALWAYS** create reusable, composable components
+- Use **proper prop interfaces** with TypeScript
+- Implement **loading states** and **error handling**
+- Follow **single responsibility principle**
+- Use **semantic component names**
+
+## Form Handling
+
+- Use **Ant Design Form components** with proper validation
+- Implement **form state management** with React hooks
+- Handle **form submission** with proper error handling
+- Use **controlled components** for form inputs
+
+## Styling
+
+- Use **Tailwind CSS** for styling (classes like `space-y-6`, `admin-card`)
+- Follow **consistent spacing** patterns
+- Use **semantic color classes** (e.g., `bg-primary-navy`, `text-text-light`)
+- Implement **responsive design** patterns
+
+## Error Handling
+
+- **ALWAYS** implement proper error boundaries
+- Use **try-catch blocks** for async operations
+- Provide **user-friendly error messages**
+- Log **detailed errors** to console for debugging
+- Implement **graceful fallbacks** when possible
+
+## Performance
+
+- Use **React.memo** for expensive components
+- Implement **proper dependency arrays** in hooks
+- Use **lazy loading** for large components
+- Implement **efficient re-renders** with proper state management
+
+## Testing & Quality
+
+- Write **maintainable, readable code**
+- Follow **DRY principles** (Don't Repeat Yourself)
+- Use **meaningful variable and function names**
+- Implement **proper TypeScript interfaces**
+- **ALWAYS** check for linting errors and TypeScript issues
+
+## Specific to This Project
+
+- **Calendar functionality** is a core feature - implement it properly
+- **Appointment management** should be comprehensive
+- **User management** includes veterinarians, staff, and patients
+- **Dashboard** should show real-time clinic data
+- **Settings** should be configurable and user-friendly
+
+## When Implementing New Features
+
+1. **First** check the API documentation at `http://localhost:3001/api/docs`
+2. **Then** examine existing similar components for patterns
+3. **Use** the existing service layer and API infrastructure
+4. **Follow** the established TypeScript patterns
+5. **Implement** proper error handling and loading states
+6. **Test** for TypeScript errors and linting issues
+
+## API Service Usage
+
+- **ALWAYS** use `AppointmentsService` for appointment operations
+- **ALWAYS** use `UsersService` for user management
+- **ALWAYS** use `ClinicsService` for clinic operations
+- **ALWAYS** use `calendarService` for calendar-specific operations
+- **NEVER** make direct API calls - always use the service layer
+
+## Data Types
+
+- **ALWAYS** reference the actual API response types from the docs
+- **NEVER** assume data structure without checking the API
+- Use **proper TypeScript interfaces** for all data structures
+- Implement **type guards** when dealing with external data
+
+Remember: When in doubt about API structure, types, or endpoints, **ALWAYS** check `http://localhost:3001/api/docs` first!

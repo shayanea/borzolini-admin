@@ -154,6 +154,7 @@ export interface DashboardStats {
   totalPatients: number;
   appointmentsToday: number;
   pendingAppointments: number;
+  cancelledAppointments: number;
   revenueThisMonth: number;
   growthRate: number;
   // Additional properties needed by components

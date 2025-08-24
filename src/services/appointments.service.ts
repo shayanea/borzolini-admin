@@ -1,5 +1,7 @@
 import { apiService } from './api';
 import type { Appointment, AppointmentStatus, AppointmentType, AppointmentPriority } from '@/types';
+import { appointmentsCache } from './cache.service';
+import { environment } from '@/config/environment';
 
 export interface CreateAppointmentData {
   appointment_type: AppointmentType;
@@ -69,124 +71,425 @@ export interface AppointmentsResponse {
   limit: number;
 }
 
+export interface AppointmentStats {
+  total: number;
+  pending: number;
+  confirmed: number;
+  in_progress: number;
+  completed: number;
+  cancelled: number;
+  no_show: number;
+  today: number;
+  thisWeek: number;
+  thisMonth: number;
+}
+
 export class AppointmentsService {
   /**
    * Get all appointments with optional filtering and pagination
    */
   static async getAll(filters: AppointmentsFilters = {}): Promise<AppointmentsResponse> {
-    const params = new URLSearchParams();
-    
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
-        params.append(key, String(value));
-      }
-    });
+    try {
+      const params = new URLSearchParams();
+      
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          params.append(key, String(value));
+        }
+      });
 
-    const queryString = params.toString();
-    const url = queryString ? `/appointments?${queryString}` : '/appointments';
-    
-    return apiService.get<AppointmentsResponse>(url);
+      const queryString = params.toString();
+      const url = queryString ? `/appointments?${queryString}` : '/appointments';
+      
+      const response = await apiService.get<AppointmentsResponse>(url);
+      
+      // Validate response data
+      if (!response.appointments || !Array.isArray(response.appointments)) {
+        throw new Error('Invalid response format: appointments array is missing');
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to fetch appointments:', error);
+      throw new Error('Failed to fetch appointments. Please try again.');
+    }
   }
 
   /**
    * Get current user appointments
    */
   static async getMyAppointments(): Promise<Appointment[]> {
-    return apiService.get<Appointment[]>('/appointments/my-appointments');
+    try {
+      const response = await apiService.get<Appointment[]>('/appointments/my-appointments');
+      
+      if (!Array.isArray(response)) {
+        throw new Error('Invalid response format: expected array of appointments');
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to fetch my appointments:', error);
+      throw new Error('Failed to fetch your appointments. Please try again.');
+    }
   }
 
   /**
    * Get appointments by pet
    */
   static async getByPet(petId: string): Promise<Appointment[]> {
-    return apiService.get<Appointment[]>(`/appointments/pet/${petId}`);
+    try {
+      if (!petId) {
+        throw new Error('Pet ID is required');
+      }
+      
+      const response = await apiService.get<Appointment[]>(`/appointments/pet/${petId}`);
+      
+      if (!Array.isArray(response)) {
+        throw new Error('Invalid response format: expected array of appointments');
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to fetch pet appointments:', error);
+      throw new Error('Failed to fetch pet appointments. Please try again.');
+    }
   }
 
   /**
    * Get appointments by clinic
    */
   static async getByClinic(clinicId: string, date?: string): Promise<Appointment[]> {
-    const params = date ? `?date=${date}` : '';
-    return apiService.get<Appointment[]>(`/appointments/clinic/${clinicId}${params}`);
+    try {
+      if (!clinicId) {
+        throw new Error('Clinic ID is required');
+      }
+      
+      const params = date ? `?date=${date}` : '';
+      const response = await apiService.get<Appointment[]>(`/appointments/clinic/${clinicId}${params}`);
+      
+      if (!Array.isArray(response)) {
+        throw new Error('Invalid response format: expected array of appointments');
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to fetch clinic appointments:', error);
+      throw new Error('Failed to fetch clinic appointments. Please try again.');
+    }
   }
 
   /**
    * Get appointments by staff member
    */
   static async getByStaff(staffId: string, date?: string): Promise<Appointment[]> {
-    const params = date ? `?date=${date}` : '';
-    return apiService.get<Appointment[]>(`/appointments/staff/${staffId}${params}`);
+    try {
+      if (!staffId) {
+        throw new Error('Staff ID is required');
+      }
+      
+      const params = date ? `?date=${date}` : '';
+      const response = await apiService.get<Appointment[]>(`/appointments/staff/${staffId}${params}`);
+      
+      if (!Array.isArray(response)) {
+        throw new Error('Invalid response format: expected array of appointments');
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to fetch staff appointments:', error);
+      throw new Error('Failed to fetch staff appointments. Please try again.');
+    }
   }
 
   /**
    * Get appointment by ID
    */
   static async getById(id: string): Promise<Appointment> {
-    return apiService.get<Appointment>(`/appointments/${id}`);
+    try {
+      if (!id) {
+        throw new Error('Appointment ID is required');
+      }
+      
+      const response = await apiService.get<Appointment>(`/appointments/${id}`);
+      
+      if (!response.id) {
+        throw new Error('Invalid response format: appointment ID is missing');
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to fetch appointment:', error);
+      throw new Error('Failed to fetch appointment details. Please try again.');
+    }
   }
 
   /**
    * Create new appointment
    */
   static async create(data: CreateAppointmentData): Promise<Appointment> {
-    return apiService.post<Appointment>('/appointments', data);
+    try {
+      // Validate required fields
+      if (!data.pet_id || !data.clinic_id || !data.scheduled_date) {
+        throw new Error('Pet ID, Clinic ID, and scheduled date are required');
+      }
+      
+      // Validate date format
+      if (isNaN(Date.parse(data.scheduled_date))) {
+        throw new Error('Invalid date format');
+      }
+      
+      const response = await apiService.post<Appointment>('/appointments', data);
+      
+      // Clear cache to ensure fresh data
+      appointmentsCache.clear();
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to create appointment:', error);
+      throw new Error('Failed to create appointment. Please check your input and try again.');
+    }
   }
 
   /**
    * Update appointment
    */
   static async update(id: string, data: UpdateAppointmentData): Promise<Appointment> {
-    return apiService.patch<Appointment>(`/appointments/${id}`, data);
+    try {
+      if (!id) {
+        throw new Error('Appointment ID is required');
+      }
+      
+      // Validate date format if provided
+      if (data.scheduled_date && isNaN(Date.parse(data.scheduled_date))) {
+        throw new Error('Invalid date format');
+      }
+      
+      const response = await apiService.patch<Appointment>(`/appointments/${id}`, data);
+      
+      // Clear cache to ensure fresh data
+      appointmentsCache.clear();
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to update appointment:', error);
+      throw new Error('Failed to update appointment. Please try again.');
+    }
   }
 
   /**
    * Update appointment status
    */
   static async updateStatus(id: string, status: AppointmentStatus): Promise<Appointment> {
-    return apiService.patch<Appointment>(`/appointments/${id}/status?status=${status}`);
+    try {
+      if (!id) {
+        throw new Error('Appointment ID is required');
+      }
+      
+      if (!status) {
+        throw new Error('Status is required');
+      }
+      
+      const response = await apiService.patch<Appointment>(`/appointments/${id}/status?status=${status}`);
+      
+      // Clear cache to ensure fresh data
+      appointmentsCache.clear();
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to update appointment status:', error);
+      throw new Error('Failed to update appointment status. Please try again.');
+    }
   }
 
   /**
    * Reschedule appointment
    */
   static async reschedule(id: string, newDate: string): Promise<Appointment> {
-    return apiService.patch<Appointment>(`/appointments/${id}/reschedule?new_date=${newDate}`);
+    try {
+      if (!id) {
+        throw new Error('Appointment ID is required');
+      }
+      
+      if (!newDate || isNaN(Date.parse(newDate))) {
+        throw new Error('Valid new date is required');
+      }
+      
+      const response = await apiService.patch<Appointment>(`/appointments/${id}/reschedule?new_date=${newDate}`);
+      
+      // Clear cache to ensure fresh data
+      appointmentsCache.clear();
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to reschedule appointment:', error);
+      throw new Error('Failed to reschedule appointment. Please try again.');
+    }
   }
 
   /**
    * Cancel appointment
    */
   static async cancel(id: string): Promise<void> {
-    return apiService.delete(`/appointments/${id}`);
+    try {
+      if (!id) {
+        throw new Error('Appointment ID is required');
+      }
+      
+      await apiService.delete(`/appointments/${id}`);
+      
+      // Clear cache to ensure fresh data
+      appointmentsCache.clear();
+    } catch (error) {
+      console.error('Failed to cancel appointment:', error);
+      throw new Error('Failed to cancel appointment. Please try again.');
+    }
   }
 
   /**
    * Get today's appointments
    */
   static async getToday(clinicId?: string): Promise<Appointment[]> {
-    const params = clinicId ? `?clinic_id=${clinicId}` : '';
-    return apiService.get<Appointment[]>(`/appointments/today${params}`);
+    try {
+      const params = clinicId ? `?clinic_id=${clinicId}` : '';
+      const response = await apiService.get<Appointment[]>(`/appointments/today${params}`);
+      
+      if (!Array.isArray(response)) {
+        throw new Error('Invalid response format: expected array of appointments');
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to fetch today\'s appointments:', error);
+      throw new Error('Failed to fetch today\'s appointments. Please try again.');
+    }
   }
 
   /**
    * Get upcoming appointments
    */
   static async getUpcoming(days: number = 7): Promise<Appointment[]> {
-    return apiService.get<Appointment[]>(`/appointments/upcoming?days=${days}`);
+    try {
+      if (days < 1 || days > 365) {
+        throw new Error('Days must be between 1 and 365');
+      }
+      
+      const response = await apiService.get<Appointment[]>(`/appointments/upcoming?days=${days}`);
+      
+      if (!Array.isArray(response)) {
+        throw new Error('Invalid response format: expected array of appointments');
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to fetch upcoming appointments:', error);
+      throw new Error('Failed to fetch upcoming appointments. Please try again.');
+    }
   }
 
   /**
    * Get available time slots for a clinic
    */
   static async getAvailableSlots(clinicId: string, date: string, duration: number = 30): Promise<string[]> {
-    return apiService.get<string[]>(`/appointments/available-slots/${clinicId}?date=${date}&duration=${duration}`);
+    try {
+      if (!clinicId) {
+        throw new Error('Clinic ID is required');
+      }
+      
+      if (!date || isNaN(Date.parse(date))) {
+        throw new Error('Valid date is required');
+      }
+      
+      if (duration < 15 || duration > 480) {
+        throw new Error('Duration must be between 15 and 480 minutes');
+      }
+      
+      const response = await apiService.get<string[]>(`/appointments/available-slots/${clinicId}?date=${date}&duration=${duration}`);
+      
+      if (!Array.isArray(response)) {
+        throw new Error('Invalid response format: expected array of time slots');
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to fetch available slots:', error);
+      throw new Error('Failed to fetch available time slots. Please try again.');
+    }
   }
 
   /**
    * Get appointment statistics
    */
-  static async getStats(): Promise<any> {
-    return apiService.get('/appointments/stats');
+  static async getStats(): Promise<AppointmentStats> {
+    try {
+      const response = await apiService.get<AppointmentStats>('/appointments/stats');
+      
+      // Validate response structure
+      if (typeof response.total !== 'number') {
+        throw new Error('Invalid response format: stats data is missing');
+      }
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to fetch appointment stats:', error);
+      throw new Error('Failed to fetch appointment statistics. Please try again.');
+    }
+  }
+
+  /**
+   * Bulk update appointments
+   */
+  static async bulkUpdate(appointmentIds: string[], updates: Partial<UpdateAppointmentData>): Promise<Appointment[]> {
+    try {
+      if (!appointmentIds.length) {
+        throw new Error('At least one appointment ID is required');
+      }
+      
+      const response = await apiService.patch<Appointment[]>('/appointments/bulk-update', {
+        appointment_ids: appointmentIds,
+        updates,
+      });
+      
+      // Clear cache to ensure fresh data
+      appointmentsCache.clear();
+      
+      return response;
+    } catch (error) {
+      console.error('Failed to bulk update appointments:', error);
+      throw new Error('Failed to update appointments. Please try again.');
+    }
+  }
+
+  /**
+   * Export appointments
+   */
+  static async export(filters: AppointmentsFilters = {}, format: 'csv' | 'excel' = 'csv'): Promise<Blob> {
+    try {
+      const params = new URLSearchParams();
+      
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          params.append(key, String(value));
+        }
+      });
+      
+      params.append('format', format);
+      
+      const response = await window.fetch(`${environment.api.baseUrl}/appointments/export?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Export failed');
+      }
+      
+      return await response.blob();
+    } catch (error) {
+      console.error('Failed to export appointments:', error);
+      throw new Error('Failed to export appointments. Please try again.');
+    }
   }
 }
 

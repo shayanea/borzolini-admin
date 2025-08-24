@@ -1,7 +1,7 @@
 import { Avatar, Button, Space, Table, Tag, Tooltip } from 'antd';
 import type { TablePaginationConfig } from 'antd/es/table';
 
-import { APPOINTMENT_STATUS_COLORS, APPOINTMENT_PRIORITY_COLORS, APPOINTMENT_TYPES } from '@/constants/appointments';
+import { APPOINTMENT_STATUS_COLORS, APPOINTMENT_PRIORITY_COLORS } from '@/constants/appointments';
 import type { Appointment } from '@/types';
 import { UserOutlined } from '@ant-design/icons';
 import React from 'react';

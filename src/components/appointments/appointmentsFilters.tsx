@@ -8,7 +8,7 @@ import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 
 import type { AppointmentsFiltersProps } from '@/types/appointments';
-import type { RangePickerProps } from 'antd/es/date-picker';
+
 
 const { Search } = Input;
 const { RangePicker } = DatePicker;
@@ -78,7 +78,7 @@ const AppointmentsFilters: React.FC<AppointmentsFiltersProps> = ({
               onChange={value => handleFilterChange('status', value)}
               allowClear
             >
-              {Object.entries(APPOINTMENT_STATUSES).map(([key, value]) => (
+              {Object.entries(APPOINTMENT_STATUSES).map(([, value]) => (
                 <Select.Option key={value} value={value}>
                   {formatOptionLabel(value)}
                 </Select.Option>
@@ -95,7 +95,7 @@ const AppointmentsFilters: React.FC<AppointmentsFiltersProps> = ({
               onChange={value => handleFilterChange('type', value)}
               allowClear
             >
-              {Object.entries(APPOINTMENT_TYPES).map(([key, value]) => (
+              {Object.entries(APPOINTMENT_TYPES).map(([, value]) => (
                 <Select.Option key={value} value={value}>
                   {formatOptionLabel(value)}
                 </Select.Option>
@@ -112,7 +112,7 @@ const AppointmentsFilters: React.FC<AppointmentsFiltersProps> = ({
               onChange={value => handleFilterChange('priority', value)}
               allowClear
             >
-              {Object.entries(APPOINTMENT_PRIORITIES).map(([key, value]) => (
+              {Object.entries(APPOINTMENT_PRIORITIES).map(([, value]) => (
                 <Select.Option key={value} value={value}>
                   {formatOptionLabel(value)}
                 </Select.Option>

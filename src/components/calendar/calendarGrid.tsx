@@ -1,71 +1,96 @@
 import React from 'react';
-import { Avatar, Typography } from 'antd';
-import type { CalendarGridProps } from '@/types/calendar';
+import type { CalendarAppointment, Veterinarian } from '@/types/calendar';
 
-const { Text } = Typography;
+interface CalendarGridProps {
+  timeSlots: number[];
+  veterinarians: Veterinarian[];
+  appointments: CalendarAppointment[];
+  onAppointmentClick: (appointment: CalendarAppointment) => void;
+}
 
 const CalendarGrid: React.FC<CalendarGridProps> = ({
-  veterinarians,
   timeSlots,
-  getAppointmentsForTimeAndVet,
+  veterinarians,
+  appointments,
+  onAppointmentClick,
 }) => {
+  const getAppointmentsForTimeAndVet = (time: number, vetId: string) => {
+    return appointments.filter(apt => {
+      const startHour = parseInt(apt.startTime.split(':')[0]);
+      const vet = veterinarians.find(v => v.id === vetId);
+      return startHour === time && vet?.name === apt.veterinarian;
+    });
+  };
+
+  const formatTime = (hour: number) => {
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+    return `${displayHour} ${period}`;
+  };
+
   return (
-    <div className='overflow-x-auto'>
-      <div className='min-w-[1200px]'>
-        {/* Header Row */}
-        <div className='grid grid-cols-7 gap-0 border-b border-gray-200'>
-          <div className='p-3 bg-gray-50 font-medium text-gray-600'>Time</div>
-          {veterinarians.map(vet => (
-            <div key={vet.id} className='p-3 bg-gray-50 font-medium text-gray-600 text-center'>
-              <div className='flex flex-col items-center space-y-1'>
-                <Avatar size={32} className='bg-primary-navy text-white font-medium'>
-                  {vet.initials}
-                </Avatar>
-                <Text className='text-xs'>{vet.name.split(' ').slice(-1)[0]}</Text>
-              </div>
-            </div>
-          ))}
+    <div className="calendar-grid border border-gray-200 rounded-lg overflow-hidden">
+      {/* Header row with veterinarian names */}
+      <div className="grid grid-cols-[100px_repeat(auto-fit,minmax(200px,1fr))] bg-gray-50 border-b border-gray-200">
+        <div className="p-3 font-semibold text-gray-700 border-r border-gray-200">
+          Time
         </div>
-
-        {/* Time Slots */}
-        {timeSlots.map(time => (
-          <div key={time} className='grid grid-cols-7 gap-0 border-b border-gray-200 min-h-[60px]'>
-            {/* Time Column */}
-            <div className='p-3 bg-gray-50 text-sm text-gray-600 font-medium border-r border-gray-200'>
-              {time === 8
-                ? '8:00 AM'
-                : time === 12
-                  ? '12:00 PM'
-                  : `${time}:00 ${time < 12 ? 'AM' : 'PM'}`}
+        {veterinarians.map(vet => (
+          <div
+            key={vet.id}
+            className="p-3 font-semibold text-gray-700 border-r border-gray-200 last:border-r-0 text-center"
+          >
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-8 h-8 bg-primary-navy text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                {vet.initials}
+              </div>
+              <span className="text-sm">{vet.name}</span>
             </div>
-
-            {/* Veterinarian Columns */}
-            {veterinarians.map(vet => {
-              const appointments = getAppointmentsForTimeAndVet(time, vet.id);
-              return (
-                <div key={vet.id} className='p-2 border-r border-gray-200 relative'>
-                  {appointments.map(apt => (
-                    <div
-                      key={apt.id}
-                      className={`${apt.color} calendar-appointment mb-1 cursor-pointer hover:opacity-90 transition-opacity`}
-                    >
-                      <div className='font-medium text-sm'>{apt.clientName}</div>
-                      {apt.petName && (
-                        <div className='text-xs opacity-90'>
-                          {apt.petName} ({apt.petType})
-                        </div>
-                      )}
-                      <div className='text-xs opacity-90'>
-                        {apt.startTime} - {apt.endTime}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              );
-            })}
           </div>
         ))}
       </div>
+
+      {/* Time slots and appointments */}
+      {timeSlots.map(time => (
+        <div
+          key={time}
+          className="grid grid-cols-[100px_repeat(auto-fit,minmax(200px,1fr))] border-b border-gray-200 last:border-b-0"
+        >
+          {/* Time column */}
+          <div className="p-3 text-sm text-gray-600 border-r border-gray-200 bg-gray-50 font-medium">
+            {formatTime(time)}
+          </div>
+
+          {/* Veterinarian columns */}
+          {veterinarians.map(vet => {
+            const timeAppointments = getAppointmentsForTimeAndVet(time, vet.id);
+            
+            return (
+              <div
+                key={vet.id}
+                className="p-2 border-r border-gray-200 last:border-r-0 min-h-[60px] relative"
+              >
+                {timeAppointments.map(apt => (
+                  <div
+                    key={apt.id}
+                    onClick={() => onAppointmentClick(apt)}
+                    className="mb-1 p-2 rounded text-xs cursor-pointer hover:opacity-80 transition-opacity"
+                    style={{ backgroundColor: apt.color }}
+                    title={`${apt.clientName} - ${apt.petName} (${apt.petType})`}
+                  >
+                    <div className="font-medium text-white truncate">
+                      {apt.clientName}
+                    </div>
+                    <div className="text-white/90 truncate">
+                      {apt.petName} ({apt.petType})
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 };
