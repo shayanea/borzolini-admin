@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Spin } from 'antd';
-import { useAuth } from '@/hooks/useAuth';
-import { useAuthStatus } from '@/hooks/useAuth';
+import { useAuth, useAuthStatus } from '@/hooks/useAuth';
 import LoginForm from '@/components/auth/LoginForm';
 import AdminLayout from '@/components/layout/AdminLayout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';

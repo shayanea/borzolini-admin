@@ -1,0 +1,185 @@
+import { ACCOUNT_STATUSES, USER_ROLES } from '@/constants/userManagement';
+import { Button, Col, Form, Input, Modal, Row, Select, Space } from 'antd';
+import React, { useCallback } from 'react';
+
+import type { UserFormModalProps } from '@/types/userManagement';
+
+const { Option } = Select;
+
+const UserFormModal: React.FC<UserFormModalProps> = ({
+  isVisible,
+  editingUser,
+  loading,
+  onCancel,
+  onSubmit,
+}) => {
+  const [form] = Form.useForm();
+
+  React.useEffect(() => {
+    if (editingUser) {
+      form.setFieldsValue({
+        firstName: editingUser.firstName,
+        lastName: editingUser.lastName,
+        email: editingUser.email,
+        phone: editingUser.phone,
+        role: editingUser.role,
+        address: editingUser.address,
+        city: editingUser.city,
+        country: editingUser.country,
+        accountStatus: editingUser.accountStatus,
+      });
+    } else {
+      form.resetFields();
+    }
+  }, [editingUser, form]);
+
+  const handleSubmit = useCallback(
+    (values: any) => {
+      onSubmit(values);
+    },
+    [onSubmit]
+  );
+
+  const handleCancel = useCallback(() => {
+    onCancel();
+  }, [onCancel]);
+
+  return (
+    <Modal
+      title={editingUser ? 'Edit User' : 'Create New User'}
+      open={isVisible}
+      onCancel={onCancel}
+      footer={null}
+      width={600}
+      destroyOnClose
+    >
+      <Form
+        form={form}
+        layout='vertical'
+        onFinish={handleSubmit}
+        initialValues={{
+          role: USER_ROLES.PATIENT,
+          accountStatus: ACCOUNT_STATUSES.ACTIVE,
+        }}
+      >
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name='firstName'
+              label='First Name'
+              rules={[{ required: true, message: 'Please enter first name' }]}
+            >
+              <Input placeholder='First Name' />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='lastName'
+              label='Last Name'
+              rules={[{ required: true, message: 'Please enter last name' }]}
+            >
+              <Input placeholder='Last Name' />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name='email'
+              label='Email'
+              rules={[
+                { required: true, message: 'Please enter email' },
+                { type: 'email', message: 'Please enter a valid email' },
+              ]}
+            >
+              <Input placeholder='Email' disabled={!!editingUser} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item name='phone' label='Phone' rules={[{ required: false }]}>
+              <Input placeholder='Phone' />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        {!editingUser && (
+          <Form.Item
+            name='password'
+            label='Password'
+            rules={[
+              { required: true, message: 'Please enter password' },
+              { min: 8, message: 'Password must be at least 8 characters' },
+            ]}
+          >
+            <Input.Password placeholder='Password' />
+          </Form.Item>
+        )}
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name='role'
+              label='Role'
+              rules={[{ required: true, message: 'Please select role' }]}
+            >
+              <Select placeholder='Select Role'>
+                <Option value={USER_ROLES.ADMIN}>Admin</Option>
+                <Option value={USER_ROLES.VETERINARIAN}>Veterinarian</Option>
+                <Option value={USER_ROLES.STAFF}>Staff</Option>
+                <Option value={USER_ROLES.PATIENT}>Patient</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='accountStatus'
+              label='Account Status'
+              rules={[{ required: true, message: 'Please select status' }]}
+            >
+              <Select placeholder='Select Status'>
+                <Option value={ACCOUNT_STATUSES.ACTIVE}>Active</Option>
+                <Option value={ACCOUNT_STATUSES.INACTIVE}>Inactive</Option>
+                <Option value={ACCOUNT_STATUSES.SUSPENDED}>Suspended</Option>
+                <Option value={ACCOUNT_STATUSES.PENDING}>Pending</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item name='city' label='City' rules={[{ required: false }]}>
+              <Input placeholder='City' />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item name='country' label='Country' rules={[{ required: false }]}>
+              <Input placeholder='Country' />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Form.Item name='address' label='Address' rules={[{ required: false }]}>
+          <Input.TextArea placeholder='Address' rows={2} />
+        </Form.Item>
+
+        <Form.Item className='mb-0'>
+          <Space className='w-full justify-end'>
+            <Button onClick={handleCancel}>Cancel</Button>
+            <Button
+              type='primary'
+              htmlType='submit'
+              loading={loading}
+              className='bg-primary-navy border-primary-navy'
+            >
+              {editingUser ? 'Update User' : 'Create User'}
+            </Button>
+          </Space>
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+};
+
+export default UserFormModal;

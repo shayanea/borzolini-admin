@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { Button, Result, Spin } from 'antd';
 import { Navigate, useLocation } from 'react-router-dom';
-import { Spin, Result, Button } from 'antd';
-import { useAuth } from '@/hooks/useAuth';
-import { useAuthStatus } from '@/hooks/useAuth';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useAuth, useAuthStatus } from '@/hooks/useAuth';
+
 import { AuthService } from '@/services/auth.service';
 
 interface ProtectedRouteProps {
@@ -10,14 +10,19 @@ interface ProtectedRouteProps {
   requiredRole?: 'admin' | 'veterinarian' | 'staff' | 'patient';
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
-  requiredRole 
-}) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
   const location = useLocation();
   const { isAuthenticated, user, logout } = useAuth();
   const { isLoading: isCheckingAuth } = useAuthStatus();
   const [isValidating, setIsValidating] = useState(true);
+
+  const handleGoToDashboard = useCallback(() => {
+    window.location.href = '/dashboard';
+  }, []);
+
+  const handleLogout = useCallback(() => {
+    logout();
+  }, [logout]);
 
   useEffect(() => {
     const validateAuth = async () => {
@@ -48,10 +53,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Show loading while validating
   if (isValidating || isCheckingAuth) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark">
-        <div className="text-center">
-          <Spin size="large" className="mb-4" />
-          <div className="text-white text-lg">Validating authentication...</div>
+      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark'>
+        <div className='text-center'>
+          <Spin size='large' className='mb-4' />
+          <div className='text-white text-lg'>Validating authentication...</div>
         </div>
       </div>
     );
@@ -59,29 +64,23 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // User not authenticated, redirect to login
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to='/login' state={{ from: location }} replace />;
   }
 
   // Check role requirements if specified
-  if (requiredRole && user && user.role !== requiredRole) {
+  const isAdmin = requiredRole && user && user.role === 'admin';
+  if (isAdmin) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark p-4">
+      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark p-4'>
         <Result
-          status="403"
-          title="Access Denied"
+          status='403'
+          title='Access Denied'
           subTitle="You don't have permission to access this page."
           extra={[
-            <Button 
-              type="primary" 
-              key="dashboard"
-              onClick={() => window.location.href = '/dashboard'}
-            >
+            <Button type='primary' key='dashboard' onClick={handleGoToDashboard}>
               Go to Dashboard
             </Button>,
-            <Button 
-              key="logout"
-              onClick={logout}
-            >
+            <Button key='logout' onClick={handleLogout}>
               Logout
             </Button>,
           ]}

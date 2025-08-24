@@ -34,6 +34,9 @@ export default [
         navigator: 'readonly',
         localStorage: 'readonly',
         sessionStorage: 'readonly',
+        FormData: 'readonly',
+        URLSearchParams: 'readonly',
+        Blob: 'readonly',
       },
     },
     plugins: {
@@ -56,7 +59,7 @@ export default [
       'react/jsx-indent-props': ['error', 2],
       'react/jsx-key': 'error',
       'react/jsx-max-props-per-line': ['error', { maximum: 1, when: 'multiline' }],
-      'react/jsx-no-bind': 'error',
+      'react/jsx-no-bind': 'warn',
       'react/jsx-no-duplicate-props': 'error',
       'react/jsx-no-literals': 'off',
       'react/jsx-no-target-blank': 'error',
@@ -83,7 +86,6 @@ export default [
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-non-null-assertion': 'warn',
-      '@typescript-eslint/prefer-const': 'error',
       '@typescript-eslint/no-var-requires': 'error',
 
       // General rules

@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
-import { Layout, Menu, Button, Avatar, Dropdown, Space, Badge, Typography } from 'antd';
-import type { MenuProps } from 'antd';
+import {
+  Layout,
+  Menu,
+  Button,
+  Avatar,
+  Dropdown,
+  Space,
+  Badge,
+  Typography,
+  type MenuProps,
+} from 'antd';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -18,12 +27,12 @@ import {
 } from '@ant-design/icons';
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import Dashboard from '@/pages/Dashboard';
-import Calendar from '@/pages/Calendar';
-import Users from '@/pages/Users';
-import Appointments from '@/pages/Appointments';
-import Reports from '@/pages/Reports';
-import Settings from '@/pages/Settings';
+import Dashboard from '@/pages/dashboard';
+import Calendar from '@/pages/calendar';
+import Users from '@/pages/users';
+import Appointments from '@/pages/appointments';
+import Reports from '@/pages/reports';
+import Settings from '@/pages/settings';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -33,6 +42,10 @@ const AdminLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+
+  const handleToggleCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
 
   // Menu items configuration
   const menuItems: MenuProps['items'] = [
@@ -117,21 +130,15 @@ const AdminLayout: React.FC = () => {
   };
 
   return (
-    <Layout className="admin-layout">
-      <Sider
-        trigger={null}
-        collapsible
-        collapsed={collapsed}
-        className="admin-sidebar"
-        width={280}
-      >
-        <div className="p-6">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-primary-orange to-primary-navy rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">B</span>
+    <Layout className='admin-layout'>
+      <Sider trigger={null} collapsible collapsed={collapsed} className='admin-sidebar' width={280}>
+        <div className='p-6'>
+          <div className='flex items-center space-x-3'>
+            <div className='w-10 h-10 bg-gradient-to-r from-primary-orange to-primary-navy rounded-lg flex items-center justify-center'>
+              <span className='text-white font-bold text-lg'>B</span>
             </div>
             {!collapsed && (
-              <Title level={4} className="!mb-0">
+              <Title level={4} className='!mb-0'>
                 Borzolini
               </Title>
             )}
@@ -139,11 +146,11 @@ const AdminLayout: React.FC = () => {
         </div>
 
         <Menu
-          theme="dark"
-          mode="inline"
+          theme='dark'
+          mode='inline'
           selectedKeys={[getSelectedKey()]}
           items={menuItems}
-          className="admin-sidebar-menu"
+          className='admin-sidebar-menu'
           style={{
             backgroundColor: 'transparent',
             border: 'none',
@@ -152,73 +159,67 @@ const AdminLayout: React.FC = () => {
       </Sider>
 
       <Layout>
-        <Header className="admin-header px-6 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+        <Header className='admin-header px-6 flex items-center justify-between'>
+          <div className='flex items-center space-x-4'>
             <Button
-              type="text"
+              type='text'
               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => setCollapsed(!collapsed)}
-              className="text-lg"
+              onClick={handleToggleCollapsed}
+              className='text-lg'
             />
-            
+
             {/* Search Bar */}
-            <div className="relative">
-              <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-light" />
+            <div className='relative'>
+              <SearchOutlined className='absolute left-3 top-1/2 transform -translate-y-1/2 text-text-light' />
               <input
-                type="text"
-                placeholder="Search..."
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-navy focus:border-transparent w-64"
+                type='text'
+                placeholder='Search...'
+                className='pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-navy focus:border-transparent w-64'
               />
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className='flex items-center space-x-4'>
             {/* Action Buttons */}
             <Space>
               <Button
                 icon={<FilterOutlined />}
-                className="border-gray-300 text-text-primary hover:border-primary-navy hover:text-primary-navy"
+                className='border-gray-300 text-text-primary hover:border-primary-navy hover:text-primary-navy'
               >
                 Filters
               </Button>
               <Button
-                type="primary"
+                type='primary'
                 icon={<PlusOutlined />}
-                className="bg-primary-navy border-primary-navy hover:bg-primary-dark hover:border-primary-dark"
+                className='bg-primary-navy border-primary-navy hover:bg-primary-dark hover:border-primary-dark'
               >
                 New Appointment
               </Button>
             </Space>
 
             {/* Notifications */}
-            <Badge count={3} size="small">
+            <Badge count={3} size='small'>
               <Button
-                type="text"
+                type='text'
                 icon={<BellOutlined />}
-                className="text-lg text-text-primary hover:text-primary-navy"
+                className='text-lg text-text-primary hover:text-primary-navy'
               />
             </Badge>
 
             {/* User Menu */}
-            <Dropdown
-              menu={{ items: userMenuItems }}
-              placement="bottomRight"
-              trigger={['click']}
-            >
-              <div className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+            <Dropdown menu={{ items: userMenuItems }} placement='bottomRight' trigger={['click']}>
+              <div className='flex items-center space-x-3 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors'>
                 <Avatar
                   size={40}
                   icon={<UserOutlined />}
-                  className="bg-gradient-to-r from-primary-orange to-primary-navy"
+                  className='bg-gradient-to-r from-primary-orange to-primary-navy'
                 />
                 {!collapsed && (
-                  <div className="text-left">
-                    <div className="font-medium text-text-primary">
+                  <div className='text-left'>
+                    <div className='font-medium text-text-primary'>
                       {user?.firstName} {user?.lastName}
                     </div>
-                    <div className="text-sm text-text-light capitalize">
-                      {user?.role}
-                    </div>
+                    <div className='text-sm text-text-light capitalize'>{user?.role}</div>
                   </div>
                 )}
               </div>
@@ -226,16 +227,16 @@ const AdminLayout: React.FC = () => {
           </div>
         </Header>
 
-        <Content className="admin-content p-6">
+        <Content className='admin-content p-6'>
           <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/appointments" element={<Appointments />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/veterinarians" element={<Users />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/" element={<Dashboard />} />
+            <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/calendar' element={<Calendar />} />
+            <Route path='/appointments' element={<Appointments />} />
+            <Route path='/users' element={<Users />} />
+            <Route path='/veterinarians' element={<Users />} />
+            <Route path='/reports' element={<Reports />} />
+            <Route path='/settings' element={<Settings />} />
+            <Route path='/' element={<Dashboard />} />
           </Routes>
         </Content>
       </Layout>

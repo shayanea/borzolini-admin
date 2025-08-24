@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { message } from 'antd';
 
 // API Configuration
-const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:3001';
+const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:3001/api/v1';
 const API_TIMEOUT = 30000; // 30 seconds
 
 // Create axios instance

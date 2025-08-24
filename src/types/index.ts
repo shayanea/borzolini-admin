@@ -102,20 +102,40 @@ export interface MenuItem {
 // Calendar and Appointment Types
 export interface Appointment {
   id: string;
-  clientName: string;
-  petName: string;
-  petType: string;
-  startTime: string;
-  endTime: string;
-  veterinarianId: string;
-  veterinarianName: string;
+  appointment_type: string;
   status: AppointmentStatus;
+  priority: AppointmentPriority;
+  scheduled_date: string;
+  duration_minutes: number;
+  actual_start_time?: string;
+  actual_end_time?: string;
   notes?: string;
-  createdAt: string;
-  updatedAt: string;
+  reason?: string;
+  symptoms?: string;
+  diagnosis?: string;
+  treatment_plan?: string;
+  prescriptions?: string[];
+  follow_up_instructions?: string;
+  cost?: number;
+  payment_status?: string;
+  is_telemedicine: boolean;
+  telemedicine_link?: string;
+  home_visit_address?: string;
+  is_home_visit: boolean;
+  reminder_settings?: object;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  owner_id: string;
+  pet_id: string;
+  clinic_id: string;
+  staff_id?: string;
+  service_id?: string;
 }
 
-export type AppointmentStatus = 'scheduled' | 'confirmed' | 'in-progress' | 'completed' | 'cancelled';
+export type AppointmentStatus = 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled' | 'no_show' | 'rescheduled' | 'waiting';
+export type AppointmentPriority = 'low' | 'normal' | 'high' | 'urgent' | 'emergency';
+export type AppointmentType = 'consultation' | 'vaccination' | 'surgery' | 'follow_up' | 'emergency' | 'wellness_exam' | 'dental_cleaning' | 'laboratory_test' | 'imaging' | 'therapy' | 'grooming' | 'behavioral_training' | 'nutrition_consultation' | 'physical_therapy' | 'specialist_consultation';
 
 export interface CalendarEvent {
   id: string;
@@ -136,6 +156,32 @@ export interface DashboardStats {
   pendingAppointments: number;
   revenueThisMonth: number;
   growthRate: number;
+  // Additional properties needed by components
+  newUsersThisWeek: number;
+  totalClinics: number;
+  newClinicsThisMonth: number;
+  urgentAppointments: number;
+  completedAppointments: number;
+  averageAppointmentDuration: number;
+  recentActivity: RecentActivityItem[];
+  topPerformingClinics: TopPerformingClinic[];
+}
+
+export interface RecentActivityItem {
+  id: string;
+  type: string;
+  description: string;
+  timestamp: string;
+  userName?: string;
+  clinicName?: string;
+}
+
+export interface TopPerformingClinic {
+  id: string;
+  name: string;
+  rating: number;
+  revenue: number;
+  totalAppointments: number;
 }
 
 // Error Types
@@ -159,3 +205,21 @@ export interface SortConfig {
   field: string;
   direction: 'asc' | 'desc';
 }
+
+// User Management Types
+export * from './userManagement';
+
+// Dashboard Types
+export * from './dashboard';
+
+// Appointments Types
+export * from './appointments';
+
+// Calendar Types
+export * from './calendar';
+
+// Reports Types
+export * from './reports';
+
+// Settings Types
+export * from './settings';

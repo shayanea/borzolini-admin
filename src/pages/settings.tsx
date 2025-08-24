@@ -1,0 +1,65 @@
+import React from 'react';
+import { Form, Button } from 'antd';
+import { SaveOutlined } from '@ant-design/icons';
+import { useSettings } from '@/hooks/useSettings';
+import {
+  SettingsHeader,
+  GeneralSettings,
+  NotificationSettings,
+  AppointmentSettings,
+  SecuritySettings,
+} from '@/components/settings';
+
+const Settings: React.FC = () => {
+  const [form] = Form.useForm();
+  const {
+    initialValues,
+    handleResetDefaults,
+    handleSaveChanges,
+    onFinish,
+  } = useSettings();
+
+  return (
+    <div className="space-y-6">
+      {/* Page Header */}
+      <SettingsHeader
+        onResetDefaults={handleResetDefaults}
+        onSaveChanges={handleSaveChanges}
+      />
+
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        initialValues={initialValues}
+      >
+        {/* General Settings */}
+        <GeneralSettings />
+
+        {/* Notification Settings */}
+        <NotificationSettings />
+
+        {/* Appointment Settings */}
+        <AppointmentSettings />
+
+        {/* Security Settings */}
+        <SecuritySettings />
+
+        {/* Save Button */}
+        <div className="text-center">
+          <Button
+            type="primary"
+            htmlType="submit"
+            size="large"
+            icon={<SaveOutlined />}
+            className="bg-primary-navy border-primary-navy hover:bg-primary-dark hover:border-primary-dark"
+          >
+            Save All Changes
+          </Button>
+        </div>
+      </Form>
+    </div>
+  );
+};
+
+export default Settings;
