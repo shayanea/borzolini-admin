@@ -1,5 +1,6 @@
 import { Button, Card, Col, Divider, Form, Input, Row } from 'antd';
 import { EditOutlined, EnvironmentOutlined, PhoneOutlined, SaveOutlined, UserOutlined } from '@/ui';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { User } from '@/types';
 import { UsersService } from '@/services/users.service';
@@ -29,7 +30,26 @@ export const ProfileInformation: React.FC<ProfileInformationProps> = ({
   const [form] = Form.useForm();
   const { updateUser } = useAuthActions();
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
+
+  // Mutation for updating profile
+  const updateProfileMutation = useMutation({
+    mutationFn: (values: ProfileFormData) => UsersService.updateUser(user.id, values),
+    onSuccess: updatedUser => {
+      // Update local auth store
+      updateUser(updatedUser);
+      // Invalidate user-related queries
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+
+      setIsEditing(false);
+      onSuccess('Profile updated successfully!');
+    },
+    onError: error => {
+      console.error('Error updating profile:', error);
+      onError('Failed to update profile. Please try again.');
+    },
+  });
 
   const initialValues: ProfileFormData = {
     firstName: user.firstName,
@@ -51,23 +71,7 @@ export const ProfileInformation: React.FC<ProfileInformationProps> = ({
   };
 
   const handleSubmit = async (values: ProfileFormData) => {
-    try {
-      setLoading(true);
-
-      // Update user via API
-      const updatedUser = await UsersService.updateUser(user.id, values);
-
-      // Update local auth store
-      updateUser(updatedUser);
-
-      setIsEditing(false);
-      onSuccess('Profile updated successfully!');
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      onError('Failed to update profile. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    await updateProfileMutation.mutateAsync(values);
   };
 
   const renderField = (label: string, value: string | undefined, icon: React.ReactNode) => (
@@ -240,14 +244,14 @@ export const ProfileInformation: React.FC<ProfileInformationProps> = ({
           <Divider />
 
           <div className='flex justify-end space-x-3'>
-            <Button onClick={handleCancel} disabled={loading}>
+            <Button onClick={handleCancel} disabled={updateProfileMutation.isPending}>
               Cancel
             </Button>
             <Button
               type='primary'
               htmlType='submit'
               icon={<SaveOutlined />}
-              loading={loading}
+              loading={updateProfileMutation.isPending}
               className='bg-primary-navy border-primary-navy hover:bg-primary-dark hover:border-primary-dark'
             >
               Save Changes

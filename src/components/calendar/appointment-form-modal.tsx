@@ -1,5 +1,7 @@
-import type { AppointmentFormModalProps, Clinic, Pet, Service } from '@/types/calendar-modals';
+import type { AppointmentFormModalProps } from '@/types/calendar-modals';
 import type { AppointmentPriority, AppointmentStatus, AppointmentType } from '@/types';
+import type { CreateAppointmentData } from '@/services/appointments.service';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   DatePicker,
@@ -12,59 +14,34 @@ import {
   TimePicker,
   message,
 } from 'antd';
-import { useEffect, useState } from 'react';
-
-import type { CreateAppointmentData } from '@/services/appointments.service';
+import { useCalendarFormData } from '@/hooks/use-calendar-form-data';
 import { SaveOutlined } from '@ant-design/icons';
-import { calendarService } from '@/services/calendar.service';
 import dayjs from 'dayjs';
 
 const { TextArea } = Input;
 const { Option } = Select;
 
-const AppointmentFormModal = ({
+export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
   visible,
   onCancel,
   onSubmit,
   loading = false,
   veterinarians,
   currentDate = dayjs(),
-}: AppointmentFormModalProps) => {
+}) => {
   const [form] = Form.useForm();
-  const [pets, setPets] = useState<Pet[]>([]);
-  const [clinics, setClinics] = useState<Clinic[]>([]);
-  const [services, setServices] = useState<Service[]>([]);
   const [isTelemedicine, setIsTelemedicine] = useState(false);
   const [isHomeVisit, setIsHomeVisit] = useState(false);
-  const [loadingData, setLoadingData] = useState(false);
 
-  // Load data from API when modal opens
+  // Use the new hook for form data
+  const { pets, clinics, services, loading: loadingData, error } = useCalendarFormData();
+
+  // Show error message if data loading fails
   useEffect(() => {
-    if (visible) {
-      loadFormData();
-    }
-  }, [visible]);
-
-  const loadFormData = async () => {
-    try {
-      setLoadingData(true);
-
-      // Load pets, clinics, and services in parallel
-      const [petsData, clinicsData, servicesData] = await Promise.all([
-        calendarService.getPets(),
-        calendarService.getClinics(),
-        calendarService.getServices(),
-      ]);
-
-      setPets(petsData);
-      setClinics(clinicsData);
-      setServices(servicesData);
-    } catch (error) {
+    if (error) {
       message.error('Failed to load form data. Please try again.');
-    } finally {
-      setLoadingData(false);
     }
-  };
+  }, [error]);
 
   const handleSubmit = async () => {
     try {

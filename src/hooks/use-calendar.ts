@@ -4,18 +4,15 @@ import {
   type UpdateAppointmentData,
 } from '@/services/appointments.service';
 import { calendarService } from '@/services/calendar.service';
-import type { CalendarAppointment, CalendarFilters, Veterinarian } from '@/types/calendar';
+import type { CalendarAppointment, CalendarFilters } from '@/types/calendar';
 import { message } from 'antd';
 import dayjs from 'dayjs';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useCalendar = () => {
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [selectedVeterinarians, setSelectedVeterinarians] = useState<string[]>([]);
-  const [veterinarians, setVeterinarians] = useState<Veterinarian[]>([]);
-  const [appointments, setAppointments] = useState<CalendarAppointment[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [workingHours, setWorkingHours] = useState({ start: '08:00', end: '18:00' });
 
   // Enhanced filtering state
@@ -38,87 +35,137 @@ export const useCalendar = () => {
 
   // Modal state
   const [isAppointmentModalVisible, setIsAppointmentModalVisible] = useState(false);
-  const [creatingAppointment, setCreatingAppointment] = useState(false);
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
-  const [fetchingAppointment, setFetchingAppointment] = useState(false);
 
-  // Dynamic time slots based on working hours
-  const [timeSlots, setTimeSlots] = useState<number[]>([]);
+  const queryClient = useQueryClient();
 
-  // Load initial data
-  useEffect(() => {
-    loadVeterinarians();
-    loadCalendarData();
-  }, []);
-
-  // Load calendar data when date changes
-  useEffect(() => {
-    loadCalendarData();
-  }, [currentDate]);
-
-  // Load calendar data when filters change
-  useEffect(() => {
-    if (filters.veterinarianIds && filters.veterinarianIds.length > 0) {
-      loadCalendarData();
-    }
-  }, [filters]);
-
-  // Update time slots when working hours change
-  useEffect(() => {
-    if (workingHours.start && workingHours.end) {
-      const startHour = parseInt(workingHours.start.split(':')[0]);
-      const endHour = parseInt(workingHours.end.split(':')[0]);
-      const slots = Array.from({ length: endHour - startHour }, (_, i) => startHour + i);
-      setTimeSlots(slots);
-    }
-  }, [workingHours]);
-
-  const loadVeterinarians = async () => {
-    try {
-      setLoading(true);
+  // Query for veterinarians
+  const {
+    data: veterinarians = [],
+    isLoading: vetsLoading,
+  } = useQuery({
+    queryKey: ['veterinarians'],
+    queryFn: async () => {
       const vets = await calendarService.getVeterinarians();
-      setVeterinarians(vets);
       // Select all veterinarians by default
       setSelectedVeterinarians(vets.map(v => v.id));
       // Update filters with selected veterinarians
       setFilters(prev => ({ ...prev, veterinarianIds: vets.map(v => v.id) }));
-    } catch (error) {
-      setError('Failed to load veterinarians');
-      message.error('Failed to load veterinarian list');
-    } finally {
-      setLoading(false);
-    }
-  };
+      return vets;
+    },
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
+  });
 
-  const loadCalendarData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
+  // Query for calendar data
+  const {
+    data: calendarData,
+    isLoading: loading,
+    error: queryError,
+    refetch: refetchCalendarData,
+  } = useQuery({
+    queryKey: ['calendar-data', currentDate.format('YYYY-MM-DD'), selectedVeterinarians, filters],
+    queryFn: async () => {
       // Prepare filters with current veterinarian selection
       const currentFilters: CalendarFilters = {
         ...filters,
         veterinarianIds: selectedVeterinarians.length > 0 ? selectedVeterinarians : undefined,
       };
 
-      const calendarData = await calendarService.getCalendarData(
+      const data = await calendarService.getCalendarData(
         currentDate.format('YYYY-MM-DD'),
         currentFilters
       );
 
-      setAppointments(calendarData.appointments);
-      setWorkingHours(calendarData.workingHours);
+      // Update working hours
+      setWorkingHours(data.workingHours);
 
-      // Note: Working hours are now properly set and can be used by components
-      // to dynamically adjust time slots if needed
-    } catch (error) {
-      setError('Failed to load calendar data');
-      message.error('Failed to load calendar data');
-    } finally {
-      setLoading(false);
+      return data;
+    },
+    enabled: selectedVeterinarians.length > 0,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  // Query for appointment details
+  const {
+    data: appointmentDetails,
+    isLoading: fetchingAppointment,
+  } = useQuery({
+    queryKey: ['appointment-details', selectedAppointment?.id],
+    queryFn: async () => {
+      if (!selectedAppointment?.id) return null;
+      return await AppointmentsService.getById(selectedAppointment.id);
+    },
+    enabled: !!selectedAppointment?.id,
+    staleTime: 1 * 60 * 1000, // 1 minute
+    gcTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  // Mutations
+  const createAppointmentMutation = useMutation({
+    mutationFn: AppointmentsService.create,
+    onSuccess: () => {
+      message.success('Appointment created successfully!');
+      // Invalidate and refetch calendar data
+      queryClient.invalidateQueries({ queryKey: ['calendar-data'] });
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      // Close the modal
+      setIsAppointmentModalVisible(false);
+    },
+    onError: (error) => {
+      console.error('Failed to create appointment:', error);
+      message.error('Failed to create appointment. Please try again.');
+    },
+  });
+
+  const updateAppointmentMutation = useMutation({
+    mutationFn: ({ appointmentId, updates }: { appointmentId: string; updates: UpdateAppointmentData }) =>
+      AppointmentsService.update(appointmentId, updates),
+    onSuccess: () => {
+      message.success('Appointment updated successfully!');
+      // Invalidate and refetch data
+      queryClient.invalidateQueries({ queryKey: ['calendar-data'] });
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['appointment-details'] });
+    },
+    onError: (error) => {
+      console.error('Failed to update appointment:', error);
+      message.error('Failed to update appointment. Please try again.');
+    },
+  });
+
+  const deleteAppointmentMutation = useMutation({
+    mutationFn: AppointmentsService.cancel,
+    onSuccess: () => {
+      message.success('Appointment deleted successfully!');
+      // Invalidate and refetch data
+      queryClient.invalidateQueries({ queryKey: ['calendar-data'] });
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      // Close the details modal
+      setIsDetailsModalVisible(false);
+      setSelectedAppointment(null);
+    },
+    onError: (error) => {
+      console.error('Failed to delete appointment:', error);
+      message.error('Failed to delete appointment. Please try again.');
+    },
+  });
+
+  // Dynamic time slots based on working hours
+  const timeSlots = (() => {
+    if (workingHours.start && workingHours.end) {
+      const startHour = parseInt(workingHours.start.split(':')[0]);
+      const endHour = parseInt(workingHours.end.split(':')[0]);
+      return Array.from({ length: endHour - startHour }, (_, i) => startHour + i);
     }
-  };
+    return [];
+  })();
+
+  // Extract data from queries
+  const appointments = calendarData?.appointments || [];
+  const error = queryError ? (queryError instanceof Error ? queryError.message : 'Failed to load calendar data') : null;
 
   const goToPreviousDay = useCallback(() => {
     setCurrentDate(currentDate.subtract(1, 'day'));
@@ -205,49 +252,20 @@ export const useCalendar = () => {
 
   // Handle appointment click to show details
   const handleAppointmentClick = useCallback(async (appointment: CalendarAppointment) => {
-    try {
-      setFetchingAppointment(true);
-
-      // Fetch full appointment details from the appointments service
-      const fullAppointment = await AppointmentsService.getById(appointment.id);
-
-      setSelectedAppointment(fullAppointment);
-      setIsDetailsModalVisible(true);
-    } catch (error) {
-      console.error('Failed to fetch appointment details:', error);
-      message.error('Failed to load appointment details');
-    } finally {
-      setFetchingAppointment(false);
-    }
+    setSelectedAppointment(appointment);
+    setIsDetailsModalVisible(true);
   }, []);
 
   // Appointment creation using AppointmentsService
   const createAppointment = async (appointmentData: CreateAppointmentData): Promise<void> => {
-    try {
-      setCreatingAppointment(true);
+    // Convert the data to match the appointments service format
+    const appointmentRequest = {
+      ...appointmentData,
+      // Ensure the scheduled_date includes both date and time
+      scheduled_date: appointmentData.scheduled_date,
+    };
 
-      // Convert the data to match the appointments service format
-      const appointmentRequest = {
-        ...appointmentData,
-        // Ensure the scheduled_date includes both date and time
-        scheduled_date: appointmentData.scheduled_date,
-      };
-
-      await AppointmentsService.create(appointmentRequest);
-
-      // Refresh calendar data to show the new appointment
-      await loadCalendarData();
-
-      // Close the modal
-      setIsAppointmentModalVisible(false);
-
-      message.success('Appointment created successfully!');
-    } catch (error) {
-      console.error('Failed to create appointment:', error);
-      message.error('Failed to create appointment. Please try again.');
-    } finally {
-      setCreatingAppointment(false);
-    }
+    await createAppointmentMutation.mutateAsync(appointmentRequest);
   };
 
   // Update appointment using AppointmentsService
@@ -255,53 +273,17 @@ export const useCalendar = () => {
     appointmentId: string,
     updates: UpdateAppointmentData
   ): Promise<void> => {
-    try {
-      setLoading(true);
-      await AppointmentsService.update(appointmentId, updates);
-
-      // Refresh calendar data to reflect changes
-      await loadCalendarData();
-
-      // Refresh the selected appointment
-      if (selectedAppointment && selectedAppointment.id === appointmentId) {
-        const updatedAppointment = await AppointmentsService.getById(appointmentId);
-        setSelectedAppointment(updatedAppointment);
-      }
-
-      message.success('Appointment updated successfully!');
-    } catch (error) {
-      console.error('Failed to update appointment:', error);
-      message.error('Failed to update appointment. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    await updateAppointmentMutation.mutateAsync({ appointmentId, updates });
   };
 
   // Delete appointment using AppointmentsService
   const deleteAppointment = async (appointmentId: string): Promise<void> => {
-    try {
-      setLoading(true);
-      await AppointmentsService.cancel(appointmentId);
-
-      // Refresh calendar data to reflect deletion
-      await loadCalendarData();
-
-      // Close the details modal
-      setIsDetailsModalVisible(false);
-      setSelectedAppointment(null);
-
-      message.success('Appointment deleted successfully!');
-    } catch (error) {
-      console.error('Failed to delete appointment:', error);
-      message.error('Failed to delete appointment. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    await deleteAppointmentMutation.mutateAsync(appointmentId);
   };
 
   const refreshCalendar = useCallback(() => {
-    loadCalendarData();
-  }, []);
+    refetchCalendarData();
+  }, [refetchCalendarData]);
 
   const closeAppointmentModal = useCallback(() => {
     setIsAppointmentModalVisible(false);
@@ -319,16 +301,16 @@ export const useCalendar = () => {
     timeSlots,
     veterinarians,
     appointments,
-    loading,
+    loading: loading || vetsLoading,
     error,
     workingHours,
     filters,
 
     // Modal state
     isAppointmentModalVisible,
-    creatingAppointment,
+    creatingAppointment: createAppointmentMutation.isPending,
     isDetailsModalVisible,
-    selectedAppointment,
+    selectedAppointment: appointmentDetails || selectedAppointment,
     fetchingAppointment,
 
     // Navigation

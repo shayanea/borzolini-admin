@@ -20,3 +20,9 @@ export interface SettingsFormValues {
   passwordExpiry?: number;
   twoFactorAuth: boolean;
 }
+
+export interface Settings extends SettingsFormValues {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+}

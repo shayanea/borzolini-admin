@@ -12,12 +12,12 @@ import { useSettings } from '@/hooks/use-settings';
 
 const Settings = () => {
   const [form] = Form.useForm();
-  const { initialValues, handleResetDefaults, handleSaveChanges, onFinish } = useSettings();
+  const { initialValues, handleResetDefaults, onFinish } = useSettings();
 
   return (
     <div className='space-y-6'>
       {/* Page Header */}
-      <SettingsHeader onResetDefaults={handleResetDefaults} onSaveChanges={handleSaveChanges} />
+      <SettingsHeader onResetDefaults={handleResetDefaults} onSaveChanges={() => {}} />
 
       <Form form={form} layout='vertical' onFinish={onFinish} initialValues={initialValues}>
         {/* General Settings */}

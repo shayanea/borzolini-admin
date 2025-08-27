@@ -1,8 +1,10 @@
 import type {
+  Appointment,
   DashboardFilters,
   DashboardStats,
   RecentActivityItem,
   TopPerformingClinic,
+  User,
 } from '@/types';
 
 import { AppointmentsService } from './appointments.service';
@@ -14,6 +16,8 @@ export class DashboardService {
   // Get comprehensive dashboard statistics
   static async getDashboardStats(filters: DashboardFilters = {}): Promise<DashboardStats> {
     try {
+      console.log('DashboardService: Starting to fetch dashboard stats with filters:', filters);
+
       // Fetch data in parallel for better performance
       const [usersResponse, clinicsResponse, appointmentsStats] = await Promise.all([
         UsersService.getUsers({ limit: 1000, ...filters }).catch(error => {
@@ -46,18 +50,27 @@ export class DashboardService {
         }),
       ]);
 
+      console.log('DashboardService: Raw API responses:', {
+        usersResponse,
+        clinicsResponse,
+        appointmentsStats,
+      });
+
       // Validate responses and provide fallbacks
       if (!usersResponse || !usersResponse.data || !Array.isArray(usersResponse.data)) {
+        console.warn('DashboardService: Invalid users response structure:', usersResponse);
         // Return empty data instead of throwing error
         return this.getEmptyDashboardStats();
       }
 
       if (!clinicsResponse || !clinicsResponse.data || !Array.isArray(clinicsResponse.data)) {
+        console.warn('DashboardService: Invalid clinics response structure:', clinicsResponse);
         // Return empty data instead of throwing error
         return this.getEmptyDashboardStats();
       }
 
       if (!appointmentsStats) {
+        console.warn('DashboardService: Invalid appointments stats structure:', appointmentsStats);
         // Return empty data instead of throwing error
         return this.getEmptyDashboardStats();
       }
@@ -67,10 +80,21 @@ export class DashboardService {
       const totalClinics = clinicsResponse.total || clinicsResponse.data.length || 0;
       const totalAppointments = appointmentsStats.total || 0;
 
+      console.log('DashboardService: Calculated totals:', {
+        totalUsers,
+        totalClinics,
+        totalAppointments,
+      });
+
       // Filter users by role with proper null checking
       const veterinarians =
-        usersResponse.data.filter((user: any) => user?.role === 'veterinarian') || [];
-      const patients = usersResponse.data.filter((user: any) => user?.role === 'patient') || [];
+        usersResponse.data.filter((user: User) => user?.role === 'veterinarian') || [];
+      const patients = usersResponse.data.filter((user: User) => user?.role === 'patient') || [];
+
+      console.log('DashboardService: Filtered users:', {
+        veterinarians: veterinarians.length,
+        patients: patients.length,
+      });
 
       // Calculate growth rate (mock for now - would need historical data)
       const growthRate = 12.5; // This would come from historical comparison
@@ -157,7 +181,7 @@ export class DashboardService {
 
       // Add recent user registrations with null checking
       if (recentUsers?.data && Array.isArray(recentUsers.data)) {
-        recentUsers.data.slice(0, 5).forEach((user: any) => {
+        recentUsers.data.slice(0, 5).forEach((user: User) => {
           const isValid =
             user?.id && user?.role && user?.firstName && user?.lastName && user?.createdAt;
           if (isValid) {
@@ -165,7 +189,7 @@ export class DashboardService {
               id: `user_${user.id}`,
               type: 'user_registration',
               description: `New ${user.role} registered`,
-              timestamp: user.createdAt,
+              timestamp: user.createdAt || '',
               userName: `${user.firstName} ${user.lastName}`,
             });
           }
@@ -174,7 +198,7 @@ export class DashboardService {
 
       // Add recent appointments with null checking
       if (recentAppointments?.appointments && Array.isArray(recentAppointments.appointments)) {
-        recentAppointments.appointments.slice(0, 5).forEach((appointment: any) => {
+        recentAppointments.appointments.slice(0, 5).forEach((appointment: Appointment) => {
           if (appointment?.id && appointment?.created_at) {
             activities.push({
               id: `appointment_${appointment.id}`,
@@ -309,7 +333,7 @@ export class DashboardService {
         { name: 'Emergency', value: 10, color: '#ff4d4f' },
       ];
 
-      const userRoleChart = userStats.data.reduce((acc: Record<string, number>, user: any) => {
+      const userRoleChart = userStats.data.reduce((acc: Record<string, number>, user: User) => {
         if (user?.role) {
           acc[user.role] = (acc[user.role] || 0) + 1;
         }

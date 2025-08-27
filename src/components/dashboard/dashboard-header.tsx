@@ -4,6 +4,7 @@ import { FilterOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { DashboardHeaderProps } from '@/types/dashboard';
 
 const { Title, Text } = Typography;
+const { RangePicker } = DatePicker;
 
 const DashboardHeader = ({
   onDateRangeChange,
@@ -27,19 +28,12 @@ const DashboardHeader = ({
       <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
         <div className='flex items-center gap-3'>
           <div className='flex items-center gap-2'>
-            <span className='text-sm font-medium text-text-primary'>Start Date:</span>
-            <DatePicker
-              onChange={date => onDateRangeChange?.(date ? [date, null] : null)}
-              placeholder='Start Date'
-              className='w-40'
-            />
-          </div>
-          <div className='flex items-center gap-2'>
-            <span className='text-sm font-medium text-text-primary'>End Date:</span>
-            <DatePicker
-              onChange={date => onDateRangeChange?.(date ? [null, date] : null)}
-              placeholder='End Date'
-              className='w-40'
+            <span className='text-sm font-medium text-text-primary'>Date Range:</span>
+            <RangePicker
+              onChange={onDateRangeChange}
+              placeholder={['Start Date', 'End Date']}
+              className='w-64'
+              format='YYYY-MM-DD'
             />
           </div>
         </div>

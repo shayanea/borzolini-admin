@@ -20,6 +20,7 @@ export interface User {
   status?: string;
   verified?: boolean;
   profileCompletion?: number;
+  timestamp?: string;
   // Allow for additional properties
   [key: string]: any;
 }

@@ -31,3 +31,10 @@ export interface ReportCategory {
 export interface ReportCategoriesProps {
   categories: ReportCategory[];
 }
+
+export interface ReportFilters {
+  dateRange?: [string, string];
+  clinicId?: string;
+  reportType?: string;
+  format?: 'csv' | 'pdf';
+}

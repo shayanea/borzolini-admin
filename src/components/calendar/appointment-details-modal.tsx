@@ -1,4 +1,3 @@
-import type { AppointmentDetailsModalProps, Clinic, Pet, Service } from '@/types/calendar-modals';
 import type { AppointmentPriority, AppointmentStatus, AppointmentType } from '@/types';
 import {
   Button,
@@ -19,9 +18,10 @@ import {
 import { DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 
+import type { AppointmentDetailsModalProps } from '@/types/calendar-modals';
 import type { UpdateAppointmentData } from '@/services/appointments.service';
-import { calendarService } from '@/services/calendar.service';
 import dayjs from 'dayjs';
+import { useCalendarFormData } from '@/hooks/use-calendar-form-data';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -38,41 +38,18 @@ const AppointmentDetailsModal = ({
   const [form] = Form.useForm();
   const [isEditing, setIsEditing] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [pets, setPets] = useState<Pet[]>([]);
-  const [clinics, setClinics] = useState<Clinic[]>([]);
-  const [services, setServices] = useState<Service[]>([]);
   const [isTelemedicine, setIsTelemedicine] = useState(false);
   const [isHomeVisit, setIsHomeVisit] = useState(false);
-  const [loadingData, setLoadingData] = useState(false);
 
-  // Load data from API when modal opens
+  // Use the new hook for form data
+  const { pets, clinics, services, loading: loadingData, error } = useCalendarFormData();
+
+  // Show error message if data loading fails
   useEffect(() => {
-    if (visible) {
-      loadFormData();
-    }
-  }, [visible]);
-
-  const loadFormData = async () => {
-    try {
-      setLoadingData(true);
-
-      // Load pets, clinics, and services in parallel
-      const [petsData, clinicsData, servicesData] = await Promise.all([
-        calendarService.getPets(),
-        calendarService.getClinics(),
-        calendarService.getServices(),
-      ]);
-
-      setPets(petsData);
-      setClinics(clinicsData);
-      setServices(servicesData);
-    } catch (error) {
-      console.error('Failed to load form data:', error);
+    if (error) {
       message.error('Failed to load form data. Please try again.');
-    } finally {
-      setLoadingData(false);
     }
-  };
+  }, [error]);
 
   // Update form when appointment changes
   useEffect(() => {

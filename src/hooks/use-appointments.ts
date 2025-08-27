@@ -7,7 +7,8 @@ import { useAuthStore } from '@/stores/auth.store';
 import type { Appointment, AppointmentStatus } from '@/types';
 import type { AppointmentsFilters } from '@/types/appointments';
 import { message } from 'antd';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export interface UseAppointmentsReturn {
   appointments: Appointment[];
@@ -41,9 +42,6 @@ export interface UseAppointmentsReturn {
 }
 
 export const useAppointments = (): UseAppointmentsReturn => {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [searchText, setSearchText] = useState('');
   const [filters, setFilters] = useState<AppointmentsFilters>({});
   const [pagination, setPagination] = useState({
@@ -51,113 +49,155 @@ export const useAppointments = (): UseAppointmentsReturn => {
     pageSize: 10,
     total: 0,
   });
-  const [stats, setStats] = useState<AppointmentStats | null>(null);
-  const [statsLoading, setStatsLoading] = useState(false);
 
   // Get authentication state from the store
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+  const queryClient = useQueryClient();
 
-  // Ref to track if component is mounted
-  const isMounted = useRef(true);
+  // Convert filters to API format
+  const getApiFilters = useCallback(() => {
+    const apiFilters: any = { ...filters };
+    if (filters.dateRange && filters.dateRange.length === 2) {
+      apiFilters.date_from = filters.dateRange[0];
+      apiFilters.date_to = filters.dateRange[1];
+      delete apiFilters.dateRange;
+    }
+    return apiFilters;
+  }, [filters]);
 
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  // Fetch appointments
-  const fetchAppointments = useCallback(
-    async (filters: AppointmentsFilters = {}) => {
-      if (!isMounted.current || !isAuthenticated) return;
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Convert filters to API format
-        const apiFilters: any = { ...filters };
-        if (filters.dateRange && filters.dateRange.length === 2) {
-          apiFilters.date_from = filters.dateRange[0];
-          apiFilters.date_to = filters.dateRange[1];
-          delete apiFilters.dateRange;
-        }
-
-        const response = await AppointmentsService.getAll({
-          ...apiFilters,
-          page: pagination.current,
-          limit: pagination.pageSize,
-        });
-
-        if (isMounted.current) {
-          setAppointments(response.appointments);
-          setPagination(prev => ({
-            ...prev,
-            total: response.total,
-          }));
-        }
-      } catch (error) {
-        setLoading(false);
-        if (isMounted.current) {
-          const errorMessage =
-            error instanceof Error ? error.message : 'Failed to load appointments';
-          setError(errorMessage);
-          message.error(errorMessage);
-        }
-      } finally {
-        if (isMounted.current) {
-          setLoading(false);
-        }
-      }
+  // Query for appointments
+  const {
+    data: appointmentsData,
+    isLoading: loading,
+    error: queryError,
+    refetch: refetchAppointments,
+  } = useQuery({
+    queryKey: ['appointments', filters, pagination.current, pagination.pageSize],
+    queryFn: async () => {
+      if (!isAuthenticated) return { appointments: [], total: 0 };
+      
+      const apiFilters = getApiFilters();
+      const response = await AppointmentsService.getAll({
+        ...apiFilters,
+        page: pagination.current,
+        limit: pagination.pageSize,
+      });
+      
+      // Update pagination total
+      setPagination(prev => ({ ...prev, total: response.total }));
+      
+      return response;
     },
-    [pagination.current, pagination.pageSize, isAuthenticated]
-  );
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+  });
 
-  // Fetch statistics
-  const fetchStats = useCallback(async () => {
-    if (!isMounted.current || !isAuthenticated) return;
+  // Query for appointment stats
+  const {
+    data: stats,
+    isLoading: statsLoading,
+    refetch: refetchStats,
+  } = useQuery({
+    queryKey: ['appointment-stats'],
+    queryFn: async () => {
+      if (!isAuthenticated) return null;
+      return await AppointmentsService.getStats();
+    },
+    enabled: isAuthenticated,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes
+  });
 
-    try {
-      setStatsLoading(true);
-      const statsData = await AppointmentsService.getStats();
+  // Mutations
+  const createAppointmentMutation = useMutation({
+    mutationFn: AppointmentsService.create,
+    onSuccess: () => {
+      message.success('Appointment created successfully');
+      // Invalidate and refetch appointments
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['appointment-stats'] });
+    },
+    onError: (error) => {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create appointment';
+      message.error(errorMessage);
+      throw error;
+    },
+  });
 
-      if (isMounted.current) {
-        setStats(statsData);
-      }
-    } catch (error) {
-      if (isMounted.current) {
-        console.error('Failed to fetch stats:', error);
-        // Don't show error message for stats as it's not critical
-      }
-    } finally {
-      if (isMounted.current) {
-        setStatsLoading(false);
-      }
-    }
-  }, [isAuthenticated]);
+  const updateAppointmentMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateAppointmentData }) =>
+      AppointmentsService.update(id, data),
+    onSuccess: () => {
+      message.success('Appointment updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['appointment-stats'] });
+    },
+    onError: (error) => {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update appointment';
+      message.error(errorMessage);
+      throw error;
+    },
+  });
 
-  // Load appointments on mount and when filters change, but only if authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchAppointments(filters);
-    } else {
-      // Clear appointments data when not authenticated
-      setAppointments([]);
-      setPagination(prev => ({ ...prev, total: 0 }));
-      setError(null);
-    }
-  }, [fetchAppointments, filters, isAuthenticated]);
+  const cancelAppointmentMutation = useMutation({
+    mutationFn: AppointmentsService.cancel,
+    onSuccess: () => {
+      message.success('Appointment cancelled successfully');
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['appointment-stats'] });
+    },
+    onError: (error) => {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to cancel appointment';
+      message.error(errorMessage);
+      throw error;
+    },
+  });
 
-  // Load stats on mount, but only if authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchStats();
-    } else {
-      // Clear stats when not authenticated
-      setStats(null);
-    }
-  }, [fetchStats, isAuthenticated]);
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: AppointmentStatus }) =>
+      AppointmentsService.updateStatus(id, status),
+    onSuccess: () => {
+      message.success('Appointment status updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['appointment-stats'] });
+    },
+    onError: (error) => {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update appointment status';
+      message.error(errorMessage);
+      throw error;
+    },
+  });
+
+  const rescheduleMutation = useMutation({
+    mutationFn: ({ id, newDate }: { id: string; newDate: string }) =>
+      AppointmentsService.reschedule(id, newDate),
+    onSuccess: () => {
+      message.success('Appointment rescheduled successfully');
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['appointment-stats'] });
+    },
+    onError: (error) => {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to reschedule appointment';
+      message.error(errorMessage);
+      throw error;
+    },
+  });
+
+  const bulkUpdateMutation = useMutation({
+    mutationFn: ({ appointmentIds, updates }: { appointmentIds: string[]; updates: Partial<UpdateAppointmentData> }) =>
+      AppointmentsService.bulkUpdate(appointmentIds, updates),
+    onSuccess: (_, { appointmentIds }) => {
+      message.success(`${appointmentIds.length} appointments updated successfully`);
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['appointment-stats'] });
+    },
+    onError: (error) => {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update appointments';
+      message.error(errorMessage);
+      throw error;
+    },
+  });
 
   const handleSearch = useCallback((value: string) => {
     setSearchText(value);
@@ -186,9 +226,8 @@ export const useAppointments = (): UseAppointmentsReturn => {
 
   const handleExport = useCallback(async () => {
     try {
-      setError(null);
-
-      const blob = await AppointmentsService.export(filters, 'csv');
+      const apiFilters = getApiFilters();
+      const blob = await AppointmentsService.export(apiFilters, 'csv');
 
       // Create download link
       const url = window.URL.createObjectURL(blob);
@@ -203,121 +242,41 @@ export const useAppointments = (): UseAppointmentsReturn => {
       message.success('Appointments exported successfully');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Export failed';
-      setError(errorMessage);
       message.error(errorMessage);
+      throw error;
     }
-  }, [filters]);
+  }, [getApiFilters]);
 
   const handleNewAppointment = useCallback(
     async (data: CreateAppointmentData): Promise<Appointment> => {
-      try {
-        setError(null);
-        const newAppointment = await AppointmentsService.create(data);
-
-        if (isMounted.current) {
-          setAppointments(prev => [newAppointment, ...prev]);
-          setPagination(prev => ({ ...prev, total: prev.total + 1 }));
-          message.success('Appointment created successfully');
-        }
-
-        return newAppointment;
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : 'Failed to create appointment';
-        setError(errorMessage);
-        message.error(errorMessage);
-        throw error;
-      }
+      return await createAppointmentMutation.mutateAsync(data);
     },
-    []
+    [createAppointmentMutation]
   );
 
   const handleEditAppointment = useCallback(
     async (id: string, data: UpdateAppointmentData): Promise<Appointment> => {
-      try {
-        setError(null);
-        const updatedAppointment = await AppointmentsService.update(id, data);
-
-        if (isMounted.current) {
-          setAppointments(prev => prev.map(apt => (apt.id === id ? updatedAppointment : apt)));
-          message.success('Appointment updated successfully');
-        }
-
-        return updatedAppointment;
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : 'Failed to update appointment';
-        setError(errorMessage);
-        message.error(errorMessage);
-        throw error;
-      }
+      return await updateAppointmentMutation.mutateAsync({ id, data });
     },
-    []
+    [updateAppointmentMutation]
   );
 
   const handleCancelAppointment = useCallback(async (id: string): Promise<void> => {
-    try {
-      setError(null);
-      await AppointmentsService.cancel(id);
-
-      if (isMounted.current) {
-        setAppointments(prev =>
-          prev.map(apt => (apt.id === id ? { ...apt, status: 'cancelled' as const } : apt))
-        );
-        message.success('Appointment cancelled successfully');
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to cancel appointment';
-      setError(errorMessage);
-      message.error(errorMessage);
-      throw error;
-    }
-  }, []);
+    await cancelAppointmentMutation.mutateAsync(id);
+  }, [cancelAppointmentMutation]);
 
   const handleUpdateStatus = useCallback(
     async (id: string, status: AppointmentStatus): Promise<Appointment> => {
-      try {
-        setError(null);
-        const updatedAppointment = await AppointmentsService.updateStatus(id, status);
-
-        if (isMounted.current) {
-          setAppointments(prev => prev.map(apt => (apt.id === id ? updatedAppointment : apt)));
-          message.success('Appointment status updated successfully');
-        }
-
-        return updatedAppointment;
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : 'Failed to update appointment status';
-        setError(errorMessage);
-        message.error(errorMessage);
-        throw error;
-      }
+      return await updateStatusMutation.mutateAsync({ id, status });
     },
-    []
+    [updateStatusMutation]
   );
 
   const handleReschedule = useCallback(
     async (id: string, newDate: string): Promise<Appointment> => {
-      try {
-        setError(null);
-        const updatedAppointment = await AppointmentsService.reschedule(id, newDate);
-
-        if (isMounted.current) {
-          setAppointments(prev => prev.map(apt => (apt.id === id ? updatedAppointment : apt)));
-          message.success('Appointment rescheduled successfully');
-        }
-
-        return updatedAppointment;
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : 'Failed to reschedule appointment';
-        setError(errorMessage);
-        message.error(errorMessage);
-        throw error;
-      }
+      return await rescheduleMutation.mutateAsync({ id, newDate });
     },
-    []
+    [rescheduleMutation]
   );
 
   const handleBulkUpdate = useCallback(
@@ -325,43 +284,26 @@ export const useAppointments = (): UseAppointmentsReturn => {
       appointmentIds: string[],
       updates: Partial<UpdateAppointmentData>
     ): Promise<Appointment[]> => {
-      try {
-        setError(null);
-        const updatedAppointments = await AppointmentsService.bulkUpdate(appointmentIds, updates);
-
-        if (isMounted.current) {
-          setAppointments(prev =>
-            prev.map(apt => {
-              const updated = updatedAppointments.find(u => u.id === apt.id);
-              return updated || apt;
-            })
-          );
-          message.success(`${appointmentIds.length} appointments updated successfully`);
-        }
-
-        return updatedAppointments;
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : 'Failed to update appointments';
-        setError(errorMessage);
-        message.error(errorMessage);
-        throw error;
-      }
+      return await bulkUpdateMutation.mutateAsync({ appointmentIds, updates });
     },
-    []
+    [bulkUpdateMutation]
   );
 
   const refreshAppointments = useCallback(() => {
-    fetchAppointments(filters);
-  }, [fetchAppointments, filters]);
+    refetchAppointments();
+  }, [refetchAppointments]);
 
   const refreshStats = useCallback(() => {
-    fetchStats();
-  }, [fetchStats]);
+    refetchStats();
+  }, [refetchStats]);
 
   const clearError = useCallback(() => {
-    setError(null);
+    // React Query handles errors automatically
   }, []);
+
+  // Extract data from queries
+  const appointments = appointmentsData?.appointments || [];
+  const error = queryError ? (queryError instanceof Error ? queryError.message : 'An error occurred') : null;
 
   return {
     appointments,
@@ -370,7 +312,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
     searchText,
     filters,
     pagination,
-    stats,
+    stats: stats || null,
     statsLoading,
     handleSearch,
     handleFilters,

@@ -6,7 +6,8 @@ import UsersService, {
   UpdateUserData,
   UsersQueryParams,
 } from '@/services/users.service';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface UseUserManagementReturn {
   // State
@@ -47,9 +48,6 @@ interface UseUserManagementReturn {
 
 export const useUserManagement = (roleFilter?: UserRole): UseUserManagementReturn => {
   // Basic state
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchText, setSearchText] = useState('');
@@ -62,16 +60,19 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   // Modal states
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [modalLoading, setModalLoading] = useState(false);
 
   // Bulk operations
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
-  const [bulkLoading, setBulkLoading] = useState(false);
 
-  // Fetch users
-  const fetchUsers = useCallback(async () => {
-    try {
-      setLoading(true);
+  const queryClient = useQueryClient();
+
+  // Query for users
+  const {
+    data: usersResponse,
+    isLoading: loading,
+  } = useQuery({
+    queryKey: ['users', currentPage, pageSize, searchText, roleFilter, selectedRole, selectedStatus, dateRange, sortBy, sortOrder],
+    queryFn: async () => {
       const params: UsersQueryParams = {
         page: currentPage,
         limit: pageSize,
@@ -83,40 +84,72 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
         sortOrder,
       };
 
-      const response = await UsersService.getUsers(params);
-      setUsers(response.data);
-      setTotal(response.total);
-    } catch (error) {
-      antMessage.error('Failed to load users');
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    currentPage,
-    pageSize,
-    searchText,
-    roleFilter,
-    selectedRole,
-    selectedStatus,
-    dateRange,
-    sortBy,
-    sortOrder,
-  ]);
+      return await UsersService.getUsers(params);
+    },
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes
+  });
 
-  // Load users on component mount and when filters change
-  useEffect(() => {
-    fetchUsers();
-  }, [
-    currentPage,
-    pageSize,
-    searchText,
-    roleFilter,
-    selectedRole,
-    selectedStatus,
-    dateRange,
-    sortBy,
-    sortOrder,
-  ]);
+  // Mutations
+  const createUserMutation = useMutation({
+    mutationFn: UsersService.createUser,
+    onSuccess: () => {
+      antMessage.success('User created successfully');
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      hideModal();
+    },
+    onError: (error) => {
+      console.error('Error creating user:', error);
+      antMessage.error('Failed to create user');
+      throw error;
+    },
+  });
+
+  const updateUserMutation = useMutation({
+    mutationFn: ({ userId, data }: { userId: string; data: UpdateUserData }) =>
+      UsersService.updateUser(userId, data),
+    onSuccess: () => {
+      antMessage.success('User updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      hideModal();
+    },
+    onError: (error) => {
+      console.error('Error updating user:', error);
+      antMessage.error('Failed to update user');
+      throw error;
+    },
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: UsersService.deleteUser,
+    onSuccess: () => {
+      antMessage.success('User deleted successfully');
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+    onError: (error) => {
+      console.error('Error deleting user:', error);
+      antMessage.error('Failed to delete user');
+      throw error;
+    },
+  });
+
+  const bulkDeleteUsersMutation = useMutation({
+    mutationFn: UsersService.bulkDeleteUsers,
+    onSuccess: (_, variables) => {
+      antMessage.success(`${variables.length} users deleted successfully`);
+      setSelectedRowKeys([]);
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+    onError: (error) => {
+      console.error('Error bulk deleting users:', error);
+      antMessage.error('Failed to delete selected users');
+      throw error;
+    },
+  });
+
+  // Extract data from query
+  const users = usersResponse?.data || [];
+  const total = usersResponse?.total || 0;
 
   // Handle search
   const handleSearch = useCallback((value: string) => {
@@ -190,67 +223,46 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   // Handle form submission
   const handleSubmit = useCallback(
     async (values: any) => {
-      try {
-        setModalLoading(true);
+      if (editingUser) {
+        // Update existing user
+        const updateData: UpdateUserData = {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          phone: values.phone,
+          address: values.address,
+          city: values.city,
+          country: values.country,
+          role: values.role,
+          accountStatus: values.accountStatus,
+        };
 
-        if (editingUser) {
-          // Update existing user
-          const updateData: UpdateUserData = {
-            firstName: values.firstName,
-            lastName: values.lastName,
-            phone: values.phone,
-            address: values.address,
-            city: values.city,
-            country: values.country,
-            role: values.role,
-            accountStatus: values.accountStatus,
-          };
+        await updateUserMutation.mutateAsync({ userId: editingUser.id, data: updateData });
+      } else {
+        // Create new user
+        const createData: CreateUserData = {
+          email: values.email,
+          password: values.password,
+          firstName: values.firstName,
+          lastName: values.lastName,
+          phone: values.phone,
+          role: values.role,
+          address: values.address,
+          city: values.city,
+          country: values.country,
+        };
 
-          await UsersService.updateUser(editingUser.id, updateData);
-          antMessage.success('User updated successfully');
-        } else {
-          // Create new user
-          const createData: CreateUserData = {
-            email: values.email,
-            password: values.password,
-            firstName: values.firstName,
-            lastName: values.lastName,
-            phone: values.phone,
-            role: values.role,
-            address: values.address,
-            city: values.city,
-            country: values.country,
-          };
-
-          await UsersService.createUser(createData);
-          antMessage.success('User created successfully');
-        }
-
-        hideModal();
-        fetchUsers();
-      } catch (error) {
-        console.error('Error saving user:', error);
-        antMessage.error('Failed to save user');
-      } finally {
-        setModalLoading(false);
+        await createUserMutation.mutateAsync(createData);
       }
     },
-    [editingUser, hideModal, fetchUsers]
+    [editingUser, updateUserMutation, createUserMutation]
   );
 
   // Handle user deletion
   const handleDeleteUser = useCallback(
     async (userId: string) => {
-      try {
-        await UsersService.deleteUser(userId);
-        antMessage.success('User deleted successfully');
-        fetchUsers();
-      } catch (error) {
-        console.error('Error deleting user:', error);
-        antMessage.error('Failed to delete user');
-      }
+      await deleteUserMutation.mutateAsync(userId);
     },
-    [fetchUsers]
+    [deleteUserMutation]
   );
 
   // Handle bulk operations
@@ -267,21 +279,10 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
       okType: 'danger',
       cancelText: 'Cancel',
       onOk: async () => {
-        try {
-          setBulkLoading(true);
-          await UsersService.bulkDeleteUsers(selectedRowKeys);
-          antMessage.success(`${selectedRowKeys.length} users deleted successfully`);
-          setSelectedRowKeys([]);
-          fetchUsers();
-        } catch (error) {
-          console.error('Error bulk deleting users:', error);
-          antMessage.error('Failed to delete selected users');
-        } finally {
-          setBulkLoading(false);
-        }
+        await bulkDeleteUsersMutation.mutateAsync(selectedRowKeys);
       },
     });
-  }, [selectedRowKeys, fetchUsers]);
+  }, [selectedRowKeys, bulkDeleteUsersMutation]);
 
   // Handle export
   const handleExport = useCallback(async () => {
@@ -324,10 +325,10 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
     sortBy,
     sortOrder,
     selectedRowKeys,
-    bulkLoading,
+    bulkLoading: bulkDeleteUsersMutation.isPending,
     isModalVisible,
     editingUser,
-    modalLoading,
+    modalLoading: createUserMutation.isPending || updateUserMutation.isPending,
 
     // Actions
     setCurrentPage,

@@ -10,8 +10,17 @@ import {
 import { useDashboard } from '@/hooks/use-dashboard';
 
 const Dashboard = () => {
-  const { stats, loading, error, handleDateRangeChange, handleClearFilters, handleRefresh } =
-    useDashboard();
+  const {
+    stats,
+    loading,
+    error,
+    chartsLoading,
+    chartsError,
+    handleDateRangeChange,
+    handleClearFilters,
+    handleRefresh,
+    isRefreshing,
+  } = useDashboard();
 
   if (loading && !stats) {
     return (
@@ -33,7 +42,7 @@ const Dashboard = () => {
           type='error'
           showIcon
           action={
-            <Button size='small' danger onClick={handleRefresh}>
+            <Button size='small' danger onClick={handleRefresh} loading={isRefreshing}>
               Retry
             </Button>
           }
@@ -62,7 +71,7 @@ const Dashboard = () => {
         onDateRangeChange={handleDateRangeChange}
         onClearFilters={handleClearFilters}
         onRefresh={handleRefresh}
-        loading={loading}
+        loading={loading || isRefreshing}
       />
 
       {/* Statistics Cards */}
@@ -80,6 +89,25 @@ const Dashboard = () => {
 
       {/* Top Performing Clinics */}
       <TopPerformingClinics stats={stats} />
+
+      {/* Show charts loading state if needed */}
+      {chartsLoading && (
+        <div className='text-center py-4'>
+          <Spin size='default' />
+          <div className='mt-2 text-sm text-gray-500'>Loading charts...</div>
+        </div>
+      )}
+
+      {/* Show charts error if needed */}
+      {chartsError && (
+        <Alert
+          message='Charts Error'
+          description={chartsError}
+          type='warning'
+          showIcon
+          className='mt-4'
+        />
+      )}
     </div>
   );
 };
