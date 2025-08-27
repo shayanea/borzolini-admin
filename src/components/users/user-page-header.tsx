@@ -2,7 +2,7 @@ import { Button, Space, Typography } from 'antd';
 import { ExportOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 
 import React from 'react';
-import type { UserPageHeaderProps } from '@/types/userManagement';
+import type { UserPageHeaderProps } from '@/types/user-management';
 
 const { Title, Text } = Typography;
 

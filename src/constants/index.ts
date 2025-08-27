@@ -16,4 +16,4 @@ export {
   TABLE_PAGE_SIZES,
   USER_ROLES,
   USER_TABLE_COLUMNS,
-} from './userManagement';
+} from './user-management';

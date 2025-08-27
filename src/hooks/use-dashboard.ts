@@ -4,7 +4,7 @@ import type { DashboardFilters } from '@/types/dashboard';
 import DashboardService from '@/services/dashboard.service';
 import type { DashboardStats } from '@/types';
 import { message } from 'antd';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/use-auth';
 
 export const useDashboard = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);

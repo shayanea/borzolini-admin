@@ -2,7 +2,7 @@ import { Alert, Button, Card, Divider, Form, Input, Space, Typography } from 'an
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, UserOutlined } from '@ant-design/icons';
 
 import type { LoginCredentials } from '@/types';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/use-auth';
 import { useCallback } from 'react';
 
 const { Title, Text } = Typography;

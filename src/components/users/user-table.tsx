@@ -6,11 +6,11 @@ import {
   PhoneOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { ROLE_COLORS, STATUS_COLORS, USER_TABLE_COLUMNS, TABLE_PAGE_SIZES } from '@/constants/userManagement';
+import { ROLE_COLORS, STATUS_COLORS, USER_TABLE_COLUMNS, TABLE_PAGE_SIZES } from '@/constants/user-management';
 
 import React from 'react';
 import type { User } from '@/types';
-import type { UserTableProps } from '@/types/userManagement';
+import type { UserTableProps } from '@/types/user-management';
 
 const UserTable = ({
   users,

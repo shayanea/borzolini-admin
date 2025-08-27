@@ -1,9 +1,9 @@
-import { ACCOUNT_STATUSES, USER_ROLES } from '@/constants/userManagement';
+import { ACCOUNT_STATUSES, USER_ROLES } from '@/constants/user-management';
 import { Button, Card, Col, DatePicker, Input, Row, Select } from 'antd';
 import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 
 import React from 'react';
-import type { UserFiltersProps } from '@/types/userManagement';
+import type { UserFiltersProps } from '@/types/user-management';
 import dayjs from 'dayjs';
 
 const { Search } = Input;

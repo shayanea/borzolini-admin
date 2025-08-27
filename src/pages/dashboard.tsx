@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, Spin, Alert, Button } from 'antd';
-import { useDashboard } from '@/hooks/useDashboard';
+import { useDashboard } from '@/hooks/use-dashboard';
 import {
   DashboardHeader,
   StatisticsCards,

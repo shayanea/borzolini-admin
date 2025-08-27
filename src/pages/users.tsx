@@ -8,7 +8,7 @@ import {
 } from '@/components/users';
 
 import { Card } from 'antd';
-import { useUserManagement } from '@/hooks/useUserManagement';
+import { useUserManagement } from '@/hooks/use-user-management';
 
 const Users = () => {
   const {

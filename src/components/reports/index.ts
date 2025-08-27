@@ -1,4 +1,4 @@
-export { default as ReportsHeader } from './reportsHeader';
-export { default as KeyMetrics } from './keyMetrics';
-export { default as ReportCategories } from './reportCategories';
-export { default as ComingSoon } from './comingSoon';
+export { default as ReportsHeader } from './reports-header';
+export { default as KeyMetrics } from './key-metrics';
+export { default as ReportCategories } from './report-categories';
+export { default as ComingSoon } from './coming-soon';

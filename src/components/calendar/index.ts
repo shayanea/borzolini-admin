@@ -1,7 +1,7 @@
-export { default as CalendarHeader } from './calendarHeader';
-export { default as CalendarNavigation } from './calendarNavigation';
-export { default as VeterinarianSelection } from './veterinarianSelection';
-export { default as CalendarGrid } from './calendarGrid';
-export { default as AppointmentFormModal } from './appointmentFormModal';
-export { default as AppointmentDetailsModal } from './appointmentDetailsModal';
-export { default as CalendarFilters } from './calendarFilters';
+export { default as CalendarHeader } from './calendar-header';
+export { default as CalendarNavigation } from './calendar-navigation';
+export { default as VeterinarianSelection } from './veterinarian-selection';
+export { default as CalendarGrid } from './calendar-grid';
+export { default as AppointmentFormModal } from './appointment-form-modal';
+export { default as AppointmentDetailsModal } from './appointment-details-modal';
+export { default as CalendarFilters } from './calendar-filters';

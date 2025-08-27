@@ -5,11 +5,11 @@ import {
   AppointmentsTable,
 } from '@/components/appointments';
 
-import ErrorBoundary from '@/components/common/ErrorBoundary';
+import ErrorBoundary from '@/components/common/error-boundary';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import LoadingSpinner from '@/components/common/LoadingSpinner';
+import LoadingSpinner from '@/components/common/loading-spinner';
 import React from 'react';
-import { useAppointments } from '@/hooks/useAppointments';
+import { useAppointments } from '@/hooks/use-appointments';
 
 const Appointments = () => {
   const {
@@ -114,7 +114,7 @@ const Appointments = () => {
           </div>
         )}
       </div>
-    </ErrorBoundary>
+    </error-boundary>
   );
 };
 

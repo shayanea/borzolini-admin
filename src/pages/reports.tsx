@@ -1,5 +1,5 @@
 import React from 'react';
-import { useReports } from '@/hooks/useReports';
+import { useReports } from '@/hooks/use-reports';
 import {
   ReportsHeader,
   KeyMetrics,

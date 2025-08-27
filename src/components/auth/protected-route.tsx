@@ -1,7 +1,7 @@
 import { Button, Result, Spin } from 'antd';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useAuth, useAuthStatus } from '@/hooks/useAuth';
+import { useAuth, useAuthStatus } from '@/hooks/use-auth';
 
 import { AuthService } from '@/services/auth.service';
 

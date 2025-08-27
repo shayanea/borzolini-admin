@@ -208,7 +208,7 @@ export interface SortConfig {
 }
 
 // User Management Types
-export * from './userManagement';
+export * from './user-management';
 
 // Dashboard Types
 export * from './dashboard';

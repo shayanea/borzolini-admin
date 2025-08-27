@@ -2,10 +2,10 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import React, { useCallback, useEffect } from 'react';
 import { initializeAuthListener, useAuthActions } from '@/stores/auth.store';
 
-import AdminLayout from '@/components/layout/AdminLayout';
-import LoginForm from '@/components/auth/LoginForm';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import { useAuth } from '@/hooks/useAuth';
+import AdminLayout from '@/components/layout/admin-layout';
+import LoginForm from '@/components/auth/login-form';
+import ProtectedRoute from '@/components/auth/protected-route';
+import { useAuth } from '@/hooks/use-auth';
 
 const App = () => {
   const { isAuthenticated, user } = useAuth();
@@ -64,7 +64,7 @@ const App = () => {
         element={
           <ProtectedRoute>
             <AdminLayout />
-          </ProtectedRoute>
+          </protected-route>
         }
       />
     </Routes>

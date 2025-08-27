@@ -1,5 +1,5 @@
-export { default as SettingsHeader } from './settingsHeader';
-export { default as GeneralSettings } from './generalSettings';
-export { default as NotificationSettings } from './notificationSettings';
-export { default as AppointmentSettings } from './appointmentSettings';
-export { default as SecuritySettings } from './securitySettings';
+export { default as SettingsHeader } from './settings-header';
+export { default as GeneralSettings } from './general-settings';
+export { default as NotificationSettings } from './notification-settings';
+export { default as AppointmentSettings } from './appointment-settings';
+export { default as SecuritySettings } from './security-settings';

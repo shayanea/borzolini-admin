@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Button } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
-import { useSettings } from '@/hooks/useSettings';
+import { useSettings } from '@/hooks/use-settings';
 import {
   SettingsHeader,
   GeneralSettings,

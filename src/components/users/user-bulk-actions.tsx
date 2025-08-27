@@ -3,7 +3,7 @@ import { Space, Button, Typography } from 'antd';
 
 const { Text } = Typography;
 
-import type { UserBulkActionsProps } from '@/types/userManagement';
+import type { UserBulkActionsProps } from '@/types/user-management';
 
 const UserBulkActions = ({
   selectedCount,

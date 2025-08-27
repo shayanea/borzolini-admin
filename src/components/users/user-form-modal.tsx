@@ -1,8 +1,8 @@
-import { ACCOUNT_STATUSES, USER_ROLES } from '@/constants/userManagement';
+import { ACCOUNT_STATUSES, USER_ROLES } from '@/constants/user-management';
 import { Button, Col, Form, Input, Modal, Row, Select, Space } from 'antd';
 import React, { useCallback } from 'react';
 
-import type { UserFormModalProps } from '@/types/userManagement';
+import type { UserFormModalProps } from '@/types/user-management';
 
 const { Option } = Select;
 

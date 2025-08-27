@@ -1,5 +1,5 @@
 import type { AccountStatus, User, UserRole } from '@/types';
-import { DEFAULT_SORT_FIELD, DEFAULT_SORT_ORDER } from '@/constants/userManagement';
+import { DEFAULT_SORT_FIELD, DEFAULT_SORT_ORDER } from '@/constants/user-management';
 import { Modal, message as antMessage } from 'antd';
 import UsersService, {
   CreateUserData,
