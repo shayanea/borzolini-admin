@@ -10,7 +10,7 @@ import {
   SecuritySettings,
 } from '@/components/settings';
 
-const Settings: React.FC = () => {
+const Settings = () => {
   const [form] = Form.useForm();
   const {
     initialValues,

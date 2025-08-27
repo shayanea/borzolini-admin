@@ -6,7 +6,7 @@ import type { UserFormModalProps } from '@/types/userManagement';
 
 const { Option } = Select;
 
-const UserFormModal: React.FC<UserFormModalProps> = ({
+const UserFormModal = ({
   isVisible,
   editingUser,
   loading,

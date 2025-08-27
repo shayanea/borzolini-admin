@@ -1,9 +1,9 @@
 import { Alert, Button, Card, Divider, Form, Input, Space, Typography } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, UserOutlined } from '@ant-design/icons';
-import React, { useCallback } from 'react';
 
 import type { LoginCredentials } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
+import { useCallback } from 'react';
 
 const { Title, Text } = Typography;
 
@@ -12,10 +12,7 @@ interface LoginFormProps {
   onSwitchToForgotPassword?: () => void;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({
-  onSwitchToRegister,
-  onSwitchToForgotPassword,
-}) => {
+export const LoginForm = ({ onSwitchToRegister, onSwitchToForgotPassword }: LoginFormProps) => {
   const [form] = Form.useForm();
   const { login, isLoading, loginMutation } = useAuth();
 

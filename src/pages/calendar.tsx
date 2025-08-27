@@ -11,7 +11,7 @@ import {
 import React from 'react';
 import { useCalendar } from '@/hooks/useCalendar';
 
-const CalendarPage: React.FC = () => {
+const CalendarPage = () => {
   const {
     // State
     currentDate,

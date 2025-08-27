@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Card, Statistic, Progress } from 'antd';
 import type { KeyMetricsProps } from '@/types/reports';
 
-const KeyMetrics: React.FC<KeyMetricsProps> = ({ metrics }) => {
+const KeyMetrics = ({ metrics }: KeyMetricsProps) => {
   return (
     <Row gutter={[24, 24]}>
       {metrics.map((metric) => (

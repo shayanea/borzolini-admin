@@ -4,7 +4,7 @@ import { BarChartOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
-const ComingSoon: React.FC = () => {
+const ComingSoon = () => {
   return (
     <Card className="admin-card">
       <div className="text-center py-8">

@@ -9,7 +9,7 @@ interface LoadingSpinnerProps {
   className?: string;
 }
 
-const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+const LoadingSpinner = ({
   size = 'default',
   text = 'Loading...',
   fullScreen = false,

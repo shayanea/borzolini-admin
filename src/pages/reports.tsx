@@ -7,7 +7,7 @@ import {
   ComingSoon,
 } from '@/components/reports';
 
-const Reports: React.FC = () => {
+const Reports = () => {
   const {
     metrics,
     categories,

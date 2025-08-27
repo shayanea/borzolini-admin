@@ -50,7 +50,7 @@ interface Service {
   price: number;
 }
 
-const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
+const AppointmentFormModal = ({
   visible,
   onCancel,
   onSubmit,

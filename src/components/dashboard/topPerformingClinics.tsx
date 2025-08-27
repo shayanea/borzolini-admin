@@ -8,7 +8,7 @@ interface TopPerformingClinicsProps {
   stats: DashboardStats;
 }
 
-const TopPerformingClinics: React.FC<TopPerformingClinicsProps> = ({ stats }) => {
+const TopPerformingClinics = ({ stats }: TopPerformingClinicsProps) => {
   if (stats.topPerformingClinics.length === 0) {
     return null;
   }

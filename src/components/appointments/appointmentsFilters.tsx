@@ -13,7 +13,7 @@ import type { AppointmentsFiltersProps } from '@/types/appointments';
 const { Search } = Input;
 const { RangePicker } = DatePicker;
 
-const AppointmentsFilters: React.FC<AppointmentsFiltersProps> = ({
+const AppointmentsFilters = ({
   searchText,
   onSearch,
   onFilters,

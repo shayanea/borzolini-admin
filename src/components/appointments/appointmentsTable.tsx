@@ -19,7 +19,7 @@ interface AppointmentsTableProps {
   onPagination?: (page: number, pageSize: number) => void;
 }
 
-const AppointmentsTable: React.FC<AppointmentsTableProps> = ({
+const AppointmentsTable = ({
   appointments,
   loading = false,
   pagination,

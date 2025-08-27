@@ -6,7 +6,7 @@ import React from 'react';
 
 const { Title, Text } = Typography;
 
-const DashboardHeader: React.FC<DashboardHeaderProps> = ({
+const DashboardHeader = ({
   onDateRangeChange,
   onClearFilters,
   onRefresh,

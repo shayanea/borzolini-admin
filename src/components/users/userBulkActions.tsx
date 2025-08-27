@@ -5,7 +5,7 @@ const { Text } = Typography;
 
 import type { UserBulkActionsProps } from '@/types/userManagement';
 
-const UserBulkActions: React.FC<UserBulkActionsProps> = ({
+const UserBulkActions = ({
   selectedCount,
   loading,
   onBulkDelete,

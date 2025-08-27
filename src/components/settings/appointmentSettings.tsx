@@ -4,7 +4,7 @@ import { APPOINTMENT_DURATIONS } from '@/constants/settings';
 
 const { Option } = Select;
 
-const AppointmentSettings: React.FC = () => {
+const AppointmentSettings = () => {
   return (
     <Card title="Appointment Settings" className="admin-card mb-6">
       <Row gutter={24}>

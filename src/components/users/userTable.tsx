@@ -12,7 +12,7 @@ import React from 'react';
 import type { User } from '@/types';
 import type { UserTableProps } from '@/types/userManagement';
 
-const UserTable: React.FC<UserTableProps> = ({
+const UserTable = ({
   users,
   loading = false,
   currentPage = 1,

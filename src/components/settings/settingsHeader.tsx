@@ -5,7 +5,7 @@ import type { SettingsHeaderProps } from '@/types/settings';
 
 const { Title, Text } = Typography;
 
-const SettingsHeader: React.FC<SettingsHeaderProps> = ({
+const SettingsHeader = ({
   onResetDefaults,
   onSaveChanges,
 }) => {

@@ -7,7 +7,7 @@ import type { UserPageHeaderProps } from '@/types/userManagement';
 const { Title, Text } = Typography;
 
 
-const UserPageHeader: React.FC<UserPageHeaderProps> = ({
+const UserPageHeader = ({
   onRefresh,
   onExport,
   onAddUser,

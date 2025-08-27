@@ -9,7 +9,7 @@ import {
   TopPerformingClinics,
 } from '@/components/dashboard';
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   const {
     stats,
     loading,

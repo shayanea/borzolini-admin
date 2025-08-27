@@ -10,7 +10,7 @@ const { Search } = Input;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
-const UserFilters: React.FC<UserFiltersProps> = ({
+const UserFilters = ({
   searchText,
   selectedRole,
   selectedStatus,

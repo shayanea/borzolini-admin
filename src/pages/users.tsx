@@ -10,7 +10,7 @@ import {
 import { Card } from 'antd';
 import { useUserManagement } from '@/hooks/useUserManagement';
 
-const Users: React.FC = () => {
+const Users = () => {
   const {
     // State
     users,

@@ -6,7 +6,7 @@ import {
   HomeOutlined,
 } from '@ant-design/icons';
 
-const QuickActions: React.FC = () => {
+const QuickActions = () => {
   const handleNewAppointment = () => {
     // TODO: Navigate to new appointment form
   };

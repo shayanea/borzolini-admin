@@ -5,7 +5,7 @@ import type { CalendarNavigationProps } from '@/types/calendar';
 
 const { Title } = Typography;
 
-const CalendarNavigation: React.FC<CalendarNavigationProps> = ({
+const CalendarNavigation = ({
   currentDate,
   onPreviousDay,
   onNextDay,

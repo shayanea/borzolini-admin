@@ -4,7 +4,7 @@ import { TIMEZONES, CURRENCIES } from '@/constants/settings';
 
 const { Option } = Select;
 
-const GeneralSettings: React.FC = () => {
+const GeneralSettings = () => {
   return (
     <Card title="General Settings" className="admin-card mb-6">
       <Row gutter={24}>

@@ -23,13 +23,13 @@ import {
   UserOutlined,
   type MenuProps,
 } from '@/ui';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
 
-const AdminLayout: React.FC = () => {
+const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();

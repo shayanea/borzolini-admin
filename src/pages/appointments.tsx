@@ -11,7 +11,7 @@ import LoadingSpinner from '@/components/common/LoadingSpinner';
 import React from 'react';
 import { useAppointments } from '@/hooks/useAppointments';
 
-const Appointments: React.FC = () => {
+const Appointments = () => {
   const {
     appointments,
     loading,

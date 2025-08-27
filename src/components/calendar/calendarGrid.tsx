@@ -8,7 +8,7 @@ interface CalendarGridProps {
   onAppointmentClick: (appointment: CalendarAppointment) => void;
 }
 
-const CalendarGrid: React.FC<CalendarGridProps> = ({
+const CalendarGrid = ({
   timeSlots,
   veterinarians,
   appointments,

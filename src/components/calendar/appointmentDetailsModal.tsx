@@ -55,7 +55,7 @@ interface Service {
   price: number;
 }
 
-const AppointmentDetailsModal: React.FC<AppointmentDetailsModalProps> = ({
+const AppointmentDetailsModal = ({
   visible,
   onCancel,
   onUpdate,

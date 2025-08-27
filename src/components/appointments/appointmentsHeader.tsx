@@ -5,7 +5,7 @@ import type { AppointmentsHeaderProps } from '@/types/appointments';
 
 const { Title, Text } = Typography;
 
-const AppointmentsHeader: React.FC<AppointmentsHeaderProps> = ({
+const AppointmentsHeader = ({
   onNewAppointment,
 }) => {
   return (

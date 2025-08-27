@@ -18,7 +18,7 @@ interface StatisticsCardsProps {
   stats: DashboardStats;
 }
 
-const StatisticsCards: React.FC<StatisticsCardsProps> = ({ stats }) => {
+const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
   return (
     <div className="space-y-6">
       {/* Main Statistics Row */}

@@ -7,7 +7,7 @@ import LoginForm from '@/components/auth/LoginForm';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import { useAuth } from '@/hooks/useAuth';
 
-const App: React.FC = () => {
+const App = () => {
   const { isAuthenticated, user } = useAuth();
   const { clearError, handleAuthFailure } = useAuthActions();
 

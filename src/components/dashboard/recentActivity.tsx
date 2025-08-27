@@ -16,7 +16,7 @@ interface RecentActivityProps {
   stats: DashboardStats;
 }
 
-const RecentActivity: React.FC<RecentActivityProps> = ({ stats }) => {
+const RecentActivity = ({ stats }: RecentActivityProps) => {
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'user_registration':

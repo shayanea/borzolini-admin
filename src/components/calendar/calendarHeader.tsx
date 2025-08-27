@@ -5,7 +5,7 @@ import type { CalendarHeaderProps } from '@/types/calendar';
 
 const { Title, Text } = Typography;
 
-const CalendarHeader: React.FC<CalendarHeaderProps> = ({ onFilters, onNewAppointment }) => {
+const CalendarHeader = ({ onFilters, onNewAppointment }: CalendarHeaderProps) => {
   return (
     <div className='flex items-center justify-between'>
       <div>

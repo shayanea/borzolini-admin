@@ -5,7 +5,7 @@ import type { VeterinarianSelectionProps } from '@/types/calendar';
 
 const { Text } = Typography;
 
-const VeterinarianSelection: React.FC<VeterinarianSelectionProps> = ({
+const VeterinarianSelection = ({
   veterinarians,
   selectedVeterinarians,
   onToggleVeterinarian,
