@@ -8,11 +8,11 @@ import {
   UserOutlined,
 } from '@/ui';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useMemo, useState } from 'react';
 
 import { MenuProps } from 'antd';
 import { ROUTES } from '@/constants';
 import { useAuth } from '@/hooks/use-auth';
-import { useState } from 'react';
 
 export const useAdminLayoutLogic = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -24,8 +24,8 @@ export const useAdminLayoutLogic = () => {
     setCollapsed(prev => !prev);
   };
 
-  // Menu items configuration
-  const menuItems: MenuProps['items'] = [
+  // Menu items configuration (base)
+  const baseMenuItems: MenuProps['items'] = [
     {
       key: '/dashboard',
       label: 'Dashboard',
@@ -70,6 +70,25 @@ export const useAdminLayoutLogic = () => {
     },
   ];
 
+  // Get current selected menu item
+  const getSelectedKey = (): string => {
+    const path = location.pathname;
+    return baseMenuItems?.find(item => item?.key === path)?.key?.toString() || ROUTES.DASHBOARD;
+  };
+
+  // Add a custom class to the active item for text color overrides if needed
+  const menuItems: MenuProps['items'] = useMemo(() => {
+    const selectedKey = getSelectedKey();
+    return baseMenuItems.map(item => {
+      if (!item) return item;
+      const isSelected = item.key === selectedKey;
+      return {
+        ...item,
+        className: isSelected ? 'menu-item-selected-custom' : undefined,
+      } as NonNullable<typeof item>;
+    });
+  }, [location.pathname]);
+
   // Handle logout
   const handleLogout = async () => {
     await logout();
@@ -99,12 +118,6 @@ export const useAdminLayoutLogic = () => {
       onClick: handleLogout,
     },
   ];
-
-  // Get current selected menu item
-  const getSelectedKey = (): string => {
-    const path = location.pathname;
-    return menuItems?.find(item => item?.key === path)?.key?.toString() || ROUTES.DASHBOARD;
-  };
 
   const navigateToNewAppointment = () => {
     navigate(ROUTES.APPOINTMENTS);

@@ -30,9 +30,9 @@ const renderHeader = (
   collapsed: boolean
 ) => {
   return (
-    <Header className='admin-header px-6'>
-      <div className='max-w-7xl mr-auto w-full flex items-center justify-between'>
-        <div className='flex items-center space-x-4'>
+    <Header className='admin-header px-6 overflow-hidden'>
+      <div className='w-full flex items-center justify-between min-w-0'>
+        <div className='flex items-center space-x-4 flex-shrink-0'>
           <Button
             type='text'
             icon={<MenuOutlined />}
@@ -40,13 +40,14 @@ const renderHeader = (
             className='text-lg'
           />
         </div>
-        <div className='flex items-center space-x-4'>
+
+        <div className='flex items-center space-x-4 flex-shrink-0 ml-auto'>
           {/* Action Buttons */}
           <Space>
             <Button
               type='primary'
               icon={<PlusOutlined />}
-              className='bg-primary-navy border-primary-navy hover:bg-primary-dark hover:border-primary-dark'
+              className='bg-primary-navy border-primary-navy hover:bg-primary-dark hover:border-primary-dark whitespace-nowrap'
               onClick={navigateToNewAppointment}
             >
               New Appointment
@@ -64,18 +65,17 @@ const renderHeader = (
 
           {/* User Menu */}
           <Dropdown menu={{ items: userMenuItems }} placement='bottomRight' trigger={['click']}>
-            <div className='flex items-center space-x-3 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors'>
+            <div className='flex items-center space-x-3 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors flex-shrink-0'>
               <Avatar
                 size={40}
                 icon={<UserOutlined />}
-                className='bg-gradient-to-r from-primary-orange to-primary-navy'
+                className='bg-gradient-to-r from-primary-orange to-primary-navy flex-shrink-0'
               />
               {!collapsed && (
-                <div className='text-left'>
-                  <div className='font-medium text-text-primary'>
+                <div className='text-left min-w-0'>
+                  <div className='font-medium text-text-primary truncate'>
                     {user?.firstName} {user?.lastName}
                   </div>
-                  <div className='text-sm text-text-light capitalize'>{user?.role}</div>
                 </div>
               )}
             </div>
@@ -118,14 +118,22 @@ const AdminLayout = () => {
 
   return (
     <Layout className='admin-layout'>
-      <Sider trigger={null} collapsible collapsed={collapsed} className='admin-sidebar' width={280}>
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        className='admin-sidebar m-4 rounded-lg shadow-lg'
+        width={220}
+        style={{ backgroundImage: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' }}
+      >
+        <div className='absolute inset-0 bg-pattern-dots opacity-10' />
         <div className='p-6'>
           <div className='flex items-center space-x-3'>
-            <div className='w-10 h-10 bg-gradient-to-r from-primary-orange to-primary-navy rounded-lg flex items-center justify-center'>
+            <div className='w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500'>
               <span className='text-white font-bold text-lg'>B</span>
             </div>
             {!collapsed && (
-              <Title level={4} className='!mb-0'>
+              <Title level={4} className='!mb-0 !text-white font-bold'>
                 Borzolini
               </Title>
             )}
@@ -137,14 +145,14 @@ const AdminLayout = () => {
           mode='inline'
           selectedKeys={[getSelectedKey()]}
           items={menuItems}
-          className='admin-sidebar-menu'
+          className='admin-sidebar-menu px-4'
           style={{
             backgroundColor: 'transparent',
             border: 'none',
           }}
         />
       </Sider>
-      <Layout>
+      <Layout className='m-4 rounded-lg shadow-lg bg-white h-full w-full overflow-hidden'>
         {renderHeader(
           handleToggleCollapsed,
           navigateToNewAppointment,

@@ -8,7 +8,17 @@
   }
 
   body {
-    font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    font-family:
+      'Poppins',
+      'Inter',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      'Roboto',
+      'Oxygen',
+      'Ubuntu',
+      'Cantarell',
+      sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: #f9fafb;
@@ -53,6 +63,10 @@
     background: #ffffff;
     border-bottom: 1px solid #e5e7eb;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
   }
 
   .admin-content {
@@ -64,7 +78,9 @@
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 1px 3px 0 rgba(0, 0, 0, 0.1),
+      0 1px 2px 0 rgba(0, 0, 0, 0.06);
   }
 
   /* Calendar styles inspired by the reference image */
@@ -162,10 +178,42 @@
   }
 
   .shadow-admin {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 1px 3px 0 rgba(0, 0, 0, 0.1),
+      0 1px 2px 0 rgba(0, 0, 0, 0.06);
   }
 
   .shadow-admin-lg {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
+}
+
+/* Admin sidebar menu customizations */
+.admin-sidebar-menu .ant-menu-item-selected {
+  background-color: #ffffff !important;
+  border-radius: 8px;
+}
+
+.admin-sidebar-menu .ant-menu-item-selected .ant-menu-title-content,
+.admin-sidebar-menu .ant-menu-item-selected .ant-menu-item-icon,
+.admin-sidebar-menu .ant-menu-item-selected .ant-menu-item-icon svg {
+  color: #111827 !important; /* text-gray-900 */
+  fill: #111827 !important;
+  font-weight: bold;
+}
+
+/* Optional: custom class applied to the selected item for extra control */
+.admin-sidebar-menu .menu-item-selected-custom .ant-menu-title-content,
+.admin-sidebar-menu .menu-item-selected-custom .ant-menu-item-icon,
+.admin-sidebar-menu .menu-item-selected-custom .ant-menu-item-icon svg {
+  color: #111827 !important;
+  fill: #111827 !important;
+}
+
+/* Improve hover/active contrast on dark gradient sidebar */
+.admin-sidebar-menu .ant-menu-item:hover {
+  background-color: #06b6d4 !important;
+  border-radius: 8px;
 }
