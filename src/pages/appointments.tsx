@@ -8,7 +8,6 @@ import {
 import ErrorBoundary from '@/components/common/error-boundary';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import LoadingSpinner from '@/components/common/loading-spinner';
-import React from 'react';
 import { useAppointments } from '@/hooks/use-appointments';
 
 const Appointments = () => {
@@ -114,7 +113,7 @@ const Appointments = () => {
           </div>
         )}
       </div>
-    </error-boundary>
+    </ErrorBoundary>
   );
 };
 

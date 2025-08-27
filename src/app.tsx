@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import React, { useCallback, useEffect } from 'react';
 import { initializeAuthListener, useAuthActions } from '@/stores/auth.store';
+import { useCallback, useEffect } from 'react';
 
 import AdminLayout from '@/components/layout/admin-layout';
 import LoginForm from '@/components/auth/login-form';
@@ -64,7 +64,7 @@ const App = () => {
         element={
           <ProtectedRoute>
             <AdminLayout />
-          </protected-route>
+          </ProtectedRoute>
         }
       />
     </Routes>
