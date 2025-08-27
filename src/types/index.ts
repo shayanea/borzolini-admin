@@ -9,13 +9,19 @@ export interface User {
   address?: string;
   city?: string;
   country?: string;
-  isEmailVerified: boolean;
-  isPhoneVerified: boolean;
-  profileCompletionPercentage: number;
-  accountStatus: AccountStatus;
+  isEmailVerified?: boolean;
+  isPhoneVerified?: boolean;
+  profileCompletionPercentage?: number;
+  accountStatus?: AccountStatus;
   lastLoginAt?: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
+  // Additional fields that might come from the API
+  status?: string;
+  verified?: boolean;
+  profileCompletion?: number;
+  // Allow for additional properties
+  [key: string]: any;
 }
 
 export type UserRole = 'admin' | 'veterinarian' | 'staff' | 'patient';

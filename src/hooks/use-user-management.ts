@@ -1,11 +1,11 @@
-import type { AccountStatus, User, UserRole } from '@/types';
 import { DEFAULT_SORT_FIELD, DEFAULT_SORT_ORDER } from '@/constants/user-management';
-import { Modal, message as antMessage } from 'antd';
 import UsersService, {
   CreateUserData,
   UpdateUserData,
   UsersQueryParams,
 } from '@/services/users.service';
+import type { AccountStatus, User, UserRole } from '@/types';
+import { Modal, message as antMessage } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 
 interface UseUserManagementReturn {
@@ -16,8 +16,8 @@ interface UseUserManagementReturn {
   currentPage: number;
   pageSize: number;
   searchText: string;
-  selectedRole: UserRole | '';
-  selectedStatus: AccountStatus | '';
+  selectedRole: UserRole | null;
+  selectedStatus: AccountStatus | null;
   dateRange: [string, string] | null;
   sortBy: string;
   sortOrder: 'asc' | 'desc';
@@ -31,8 +31,8 @@ interface UseUserManagementReturn {
   setCurrentPage: (page: number) => void;
   setPageSize: (size: number) => void;
   handleSearch: (value: string) => void;
-  handleRoleFilter: (value: UserRole | '') => void;
-  handleStatusFilter: (value: AccountStatus | '') => void;
+  handleRoleFilter: (value: UserRole | null) => void;
+  handleStatusFilter: (value: AccountStatus | null) => void;
   handleDateRangeChange: (dates: any) => void;
   clearFilters: () => void;
   handleTableChange: (pagination: any, filters: any, sorter: any) => void;
@@ -53,8 +53,8 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchText, setSearchText] = useState('');
-  const [selectedRole, setSelectedRole] = useState<UserRole | ''>('');
-  const [selectedStatus, setSelectedStatus] = useState<AccountStatus | ''>('');
+  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<AccountStatus | null>(null);
   const [dateRange, setDateRange] = useState<[string, string] | null>(null);
   const [sortBy, setSortBy] = useState<string>(DEFAULT_SORT_FIELD);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(DEFAULT_SORT_ORDER);
@@ -87,7 +87,6 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
       setUsers(response.data);
       setTotal(response.total);
     } catch (error) {
-      console.error('Error fetching users:', error);
       antMessage.error('Failed to load users');
     } finally {
       setLoading(false);
@@ -126,13 +125,13 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   }, []);
 
   // Handle role filter
-  const handleRoleFilter = useCallback((value: UserRole | '') => {
+  const handleRoleFilter = useCallback((value: UserRole | null) => {
     setSelectedRole(value);
     setCurrentPage(1);
   }, []);
 
   // Handle status filter
-  const handleStatusFilter = useCallback((value: AccountStatus | '') => {
+  const handleStatusFilter = useCallback((value: AccountStatus | null) => {
     setSelectedStatus(value);
     setCurrentPage(1);
   }, []);
@@ -150,8 +149,8 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   // Clear all filters
   const clearFilters = useCallback(() => {
     setSearchText('');
-    setSelectedRole('');
-    setSelectedStatus('');
+    setSelectedRole(null);
+    setSelectedStatus(null);
     setDateRange(null);
     setSortBy(DEFAULT_SORT_FIELD);
     setSortOrder(DEFAULT_SORT_ORDER);

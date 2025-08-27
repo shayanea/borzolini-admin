@@ -1,4 +1,9 @@
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
+import {
+  ROLE_COLORS,
+  STATUS_COLORS,
+  TABLE_PAGE_SIZES,
+  USER_TABLE_COLUMNS,
+} from '@/constants/user-management';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -6,12 +11,7 @@ import {
   PhoneOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import {
-  ROLE_COLORS,
-  STATUS_COLORS,
-  TABLE_PAGE_SIZES,
-  USER_TABLE_COLUMNS,
-} from '@/constants/user-management';
+import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 
 import type { User } from '@/types';
 import type { UserTableProps } from '@/types/user-management';
@@ -44,9 +44,9 @@ const UserTable = ({
       render: (user: User) => (
         <div className='flex items-center space-x-3'>
           <Avatar
-            size={40}
+            size={25}
             icon={<UserOutlined />}
-            className='bg-gradient-to-r from-primary-orange to-primary-navy'
+            className='bg-gradient-to-r from-cyan-500 to-blue-500'
           />
           <div>
             <div className='font-medium'>
@@ -75,32 +75,41 @@ const UserTable = ({
     {
       title: 'Status',
       key: USER_TABLE_COLUMNS.STATUS,
-      render: (user: User) => (
-        <Tag color={STATUS_COLORS[user.accountStatus] || 'default'}>
-          {user.accountStatus.charAt(0).toUpperCase() + user.accountStatus.slice(1)}
-        </Tag>
-      ),
+      render: (user: User) => {
+        const status = user.accountStatus || user.status || 'unknown';
+        const statusKey = status as keyof typeof STATUS_COLORS;
+        return (
+          <Tag color={STATUS_COLORS[statusKey] || 'default'}>
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </Tag>
+        );
+      },
     },
     {
       title: 'Verification',
       key: USER_TABLE_COLUMNS.VERIFICATION,
-      render: (user: User) => (
-        <div className='space-y-1'>
-          <div className='flex items-center space-x-2'>
-            <Badge
-              status={user.isEmailVerified ? 'success' : 'error'}
-              text={<span className='text-xs'>{user.isEmailVerified ? 'Email ✓' : 'Email ✗'}</span>}
-            />
-            <Badge
-              status={user.isPhoneVerified ? 'success' : 'error'}
-              text={<span className='text-xs'>{user.isPhoneVerified ? 'Phone ✓' : 'Phone ✗'}</span>}
-            />
+      width: 200,
+      render: (user: User) => {
+        const isEmailVerified = user.isEmailVerified ?? user.verified ?? false;
+        const isPhoneVerified = user.isPhoneVerified ?? false;
+        const profileCompletion = user.profileCompletionPercentage ?? user.profileCompletion ?? 0;
+
+        return (
+          <div className='space-y-1'>
+            <div className='flex items-center space-x-2'>
+              <Badge
+                status={isEmailVerified ? 'success' : 'error'}
+                text={<span className='text-xs'>{isEmailVerified ? 'Email ✓' : 'Email ✗'}</span>}
+              />
+              <Badge
+                status={isPhoneVerified ? 'success' : 'error'}
+                text={<span className='text-xs'>{isPhoneVerified ? 'Phone ✓' : 'Phone ✗'}</span>}
+              />
+            </div>
+            <div className='text-xs text-text-light'>Profile: {profileCompletion}% complete</div>
           </div>
-          <div className='text-xs text-text-light'>
-            Profile: {user.profileCompletionPercentage}% complete
-          </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       title: 'Location',

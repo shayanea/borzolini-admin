@@ -2,8 +2,8 @@ import { APPOINTMENT_PRIORITY_COLORS, APPOINTMENT_STATUS_COLORS } from '@/consta
 import { Avatar, Button, Space, Table, Tag, Tooltip } from 'antd';
 
 import type { Appointment } from '@/types';
-import type { TablePaginationConfig } from 'antd/es/table';
 import { UserOutlined } from '@ant-design/icons';
+import type { TablePaginationConfig } from 'antd/es/table';
 
 interface AppointmentsTableProps {
   appointments: Appointment[];
@@ -49,7 +49,7 @@ const AppointmentsTable = ({
           <Avatar
             size={40}
             icon={<UserOutlined />}
-            className='bg-gradient-to-r from-primary-orange to-primary-navy'
+            className='bg-gradient-to-r from-cyan-500 to-blue-500'
           />
           <div>
             <div className='font-medium'>Client ID: {appointment.owner_id}</div>

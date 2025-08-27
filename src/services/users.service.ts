@@ -1,5 +1,6 @@
+import type { AccountStatus, PaginatedResponse, User, UserRole } from '@/types';
+
 import { apiService } from './api';
-import type { User, UserRole, AccountStatus, PaginatedResponse } from '@/types';
 
 export interface CreateUserData {
   email: string;
@@ -39,7 +40,7 @@ export class UsersService {
   // Get all users with pagination and filters
   static async getUsers(params: UsersQueryParams = {}): Promise<PaginatedResponse<User>> {
     const queryParams = new URLSearchParams();
-    
+
     if (params.page) queryParams.append('page', params.page.toString());
     if (params.limit) queryParams.append('limit', params.limit.toString());
     if (params.search) queryParams.append('search', params.search);
@@ -53,7 +54,35 @@ export class UsersService {
     if (params.sortOrder) queryParams.append('sortOrder', params.sortOrder);
 
     const url = `/users${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-    return apiService.get<PaginatedResponse<User>>(url);
+
+    const response = await apiService.get<any>(url);
+
+    // Handle both response formats:
+    // 1. PaginatedResponse format: { data: User[], total: number, ... }
+    // 2. Direct array format: User[]
+    if (response && typeof response === 'object' && 'data' in response && 'total' in response) {
+      // PaginatedResponse format
+      return response as PaginatedResponse<User>;
+    } else if (Array.isArray(response)) {
+      // Direct array format - wrap it in PaginatedResponse structure
+      return {
+        data: response,
+        total: response.length,
+        page: params.page || 1,
+        limit: params.limit || 10,
+        totalPages: Math.ceil(response.length / (params.limit || 10)),
+      };
+    } else {
+      // Fallback - empty response
+      console.warn('Unexpected response format:', response);
+      return {
+        data: [],
+        total: 0,
+        page: params.page || 1,
+        limit: params.limit || 10,
+        totalPages: 0,
+      };
+    }
   }
 
   // Get user by ID
@@ -110,19 +139,26 @@ export class UsersService {
   }
 
   // Request phone verification for user
-  static async requestPhoneVerification(userId: string, phone: string): Promise<{ message: string }> {
+  static async requestPhoneVerification(
+    userId: string,
+    phone: string
+  ): Promise<{ message: string }> {
     return apiService.post<{ message: string }>(`/users/phone/verification/request`, {
       userId,
-      phone
+      phone,
     });
   }
 
   // Verify user phone
-  static async verifyUserPhone(userId: string, phone: string, otp: string): Promise<{ message: string }> {
+  static async verifyUserPhone(
+    userId: string,
+    phone: string,
+    otp: string
+  ): Promise<{ message: string }> {
     return apiService.post<{ message: string }>(`/users/phone/verification/verify`, {
       userId,
       phone,
-      otp
+      otp,
     });
   }
 
@@ -136,23 +172,26 @@ export class UsersService {
   }
 
   // Bulk operations
-  static async bulkUpdateUsers(userIds: string[], updates: Partial<UpdateUserData>): Promise<{ message: string }> {
+  static async bulkUpdateUsers(
+    userIds: string[],
+    updates: Partial<UpdateUserData>
+  ): Promise<{ message: string }> {
     return apiService.patch<{ message: string }>('/users/bulk-update', {
       userIds,
-      updates
+      updates,
     });
   }
 
   static async bulkDeleteUsers(userIds: string[]): Promise<{ message: string }> {
     return apiService.delete<{ message: string }>('/users/bulk-delete', {
-      data: { userIds }
+      data: { userIds },
     });
   }
 
   // Export users
   static async exportUsers(params: UsersQueryParams = {}): Promise<Blob> {
     const queryParams = new URLSearchParams();
-    
+
     if (params.search) queryParams.append('search', params.search);
     if (params.role) queryParams.append('role', params.role);
     if (params.status) queryParams.append('status', params.status);
@@ -162,11 +201,11 @@ export class UsersService {
     }
 
     const url = `/users/export${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-    
+
     const response = await apiService.get(url, {
-      responseType: 'blob'
+      responseType: 'blob',
     });
-    
+
     return response;
   }
 }
