@@ -1,9 +1,10 @@
 import { ApiHealthState, HealthCheckResponse, HealthStatus } from '@/types/api-health';
-import { useCallback } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { CACHE_PRESETS, GC_TIMES, STALE_TIMES } from '@/constants';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { apiHealthService } from '@/services/api-health.service';
 import { message } from 'antd';
+import { useCallback } from 'react';
 
 export const useApiHealth = () => {
   const queryClient = useQueryClient();
@@ -19,35 +20,29 @@ export const useApiHealth = () => {
     queryFn: async () => {
       return await apiHealthService.checkApiHealth();
     },
-    staleTime: 1 * 60 * 1000, // 1 minute
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: CACHE_PRESETS.LIVE.staleTime,
+    gcTime: CACHE_PRESETS.LIVE.gcTime,
     refetchInterval: 5 * 60 * 1000, // Auto-refresh every 5 minutes
   });
 
   // Query for endpoint tests
-  const {
-    data: endpointTests = [],
-    refetch: refetchEndpointTests,
-  } = useQuery({
+  const { data: endpointTests = [], refetch: refetchEndpointTests } = useQuery({
     queryKey: ['endpoint-tests'],
     queryFn: async () => {
       return await apiHealthService.testCriticalEndpoints();
     },
-    staleTime: 2 * 60 * 1000, // 2 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: CACHE_PRESETS.ACTIVE.staleTime,
+    gcTime: CACHE_PRESETS.ACTIVE.gcTime,
   });
 
   // Query for system health
-  const {
-    data: systemHealth = 'degraded',
-    refetch: refetchSystemHealth,
-  } = useQuery({
+  const { data: systemHealth = 'degraded', refetch: refetchSystemHealth } = useQuery({
     queryKey: ['system-health'],
     queryFn: async () => {
       return await apiHealthService.getSystemHealth();
     },
-    staleTime: 30 * 1000, // 30 seconds
-    gcTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: STALE_TIMES.VERY_SHORT,
+    gcTime: GC_TIMES.VERY_SHORT,
   });
 
   // Mutation for running full health check
@@ -60,8 +55,10 @@ export const useApiHealth = () => {
       ]);
 
       // Determine overall status
-      const hasUnhealthyEndpoints = endpointTestsResult.data?.some(test => test.status === 'error') || false;
-      const hasDegradedEndpoints = endpointTestsResult.data?.some(test => test.status === 'timeout') || false;
+      const hasUnhealthyEndpoints =
+        endpointTestsResult.data?.some(test => test.status === 'error') || false;
+      const hasDegradedEndpoints =
+        endpointTestsResult.data?.some(test => test.status === 'timeout') || false;
 
       let overallStatus: HealthStatus = 'healthy';
       if (apiHealthResult.data?.status === 'unhealthy' || hasUnhealthyEndpoints) {
@@ -73,12 +70,16 @@ export const useApiHealth = () => {
       // Update system health
       queryClient.setQueryData(['system-health'], overallStatus);
 
-      return { overallStatus, apiHealth: apiHealthResult.data, endpointTests: endpointTestsResult.data };
+      return {
+        overallStatus,
+        apiHealth: apiHealthResult.data,
+        endpointTests: endpointTestsResult.data,
+      };
     },
     onSuccess: () => {
       message.success('Health status refreshed successfully');
     },
-    onError: (error) => {
+    onError: error => {
       const errorMessage = error instanceof Error ? error.message : 'Health check failed';
       message.error(errorMessage);
       // Set system health as unhealthy on error
@@ -117,9 +118,13 @@ export const useApiHealth = () => {
   const state: ApiHealthState = {
     overallStatus: systemHealth,
     lastCheck: new Date().toISOString(),
-    checks: apiHealth || {} as HealthCheckResponse,
+    checks: apiHealth || ({} as HealthCheckResponse),
     isLoading: isLoadingApiHealth || runFullHealthCheckMutation.isPending,
-    error: apiHealthError ? (apiHealthError instanceof Error ? apiHealthError.message : 'API health check failed') : null,
+    error: apiHealthError
+      ? apiHealthError instanceof Error
+        ? apiHealthError.message
+        : 'API health check failed'
+      : null,
     endpointTests,
   };
 

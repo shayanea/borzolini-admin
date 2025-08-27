@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { CACHE_PRESETS } from '@/constants';
 import type { DashboardFilters } from '@/types/dashboard';
 import DashboardService from '@/services/dashboard.service';
 import { message } from 'antd';
@@ -33,8 +34,8 @@ export const useDashboard = () => {
       return result;
     },
     enabled: isAuthenticated,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: CACHE_PRESETS.STANDARD.staleTime,
+    gcTime: CACHE_PRESETS.STANDARD.gcTime,
     retry: (failureCount, error: any) => {
       // Don't retry on authentication errors
       if (error?.response?.status === 401) {
@@ -58,8 +59,8 @@ export const useDashboard = () => {
       return result;
     },
     enabled: isAuthenticated,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: CACHE_PRESETS.STANDARD.staleTime,
+    gcTime: CACHE_PRESETS.STANDARD.gcTime,
     retry: (failureCount, error: any) => {
       if (error?.response?.status === 401) {
         return false;
@@ -71,7 +72,7 @@ export const useDashboard = () => {
   // Refresh mutation
   const refreshMutation = useMutation({
     mutationFn: () => DashboardService.getDashboardStats(filters),
-    onSuccess: (newStats) => {
+    onSuccess: newStats => {
       // Update the cache with new data
       queryClient.setQueryData(DASHBOARD_KEYS.stats(filters), newStats);
       message.success('Dashboard data refreshed successfully');
@@ -83,20 +84,23 @@ export const useDashboard = () => {
   });
 
   // Handle date range change
-  const handleDateRangeChange = useCallback((dates: any) => {
-    const newFilters: DashboardFilters = { ...filters };
-    
-    if (dates && dates[0] && dates[1]) {
-      newFilters.dateRange = [dates[0].toISOString(), dates[1].toISOString()];
-    } else {
-      delete newFilters.dateRange;
-    }
-    
-    setFilters(newFilters);
-    
-    // React Query will automatically refetch with new filters
-    // due to the query key change
-  }, [filters]);
+  const handleDateRangeChange = useCallback(
+    (dates: any) => {
+      const newFilters: DashboardFilters = { ...filters };
+
+      if (dates && dates[0] && dates[1]) {
+        newFilters.dateRange = [dates[0].toISOString(), dates[1].toISOString()];
+      } else {
+        delete newFilters.dateRange;
+      }
+
+      setFilters(newFilters);
+
+      // React Query will automatically refetch with new filters
+      // due to the query key change
+    },
+    [filters]
+  );
 
   // Handle clear filters
   const handleClearFilters = useCallback(() => {
@@ -140,38 +144,38 @@ export const useDashboard = () => {
     error,
     stats,
     chartsData,
-    filters
+    filters,
   });
 
   return {
     // Data
     stats: stats || null,
     chartsData: chartsData || null,
-    
+
     // Loading states
     loading,
     chartsLoading,
-    
+
     // Error states
     error: errorMessage,
     chartsError: chartsErrorMessage,
-    
+
     // Filters
     filters,
-    
+
     // Actions
     handleDateRangeChange,
     handleClearFilters,
     handleRefresh,
-    
+
     // Refresh mutation state
     isRefreshing: refreshMutation.isPending,
-    
+
     // Query invalidation helpers
     invalidateQueries: () => {
       queryClient.invalidateQueries({ queryKey: DASHBOARD_KEYS.all });
     },
-    
+
     // Manual refetch
     refetch,
   };

@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { CACHE_PRESETS } from '@/constants';
 import { calendarService } from '@/services/calendar.service';
+import { useQuery } from '@tanstack/react-query';
 // Types are inferred from the service responses
 
 export const useCalendarFormData = () => {
@@ -13,8 +14,8 @@ export const useCalendarFormData = () => {
     queryFn: async () => {
       return await calendarService.getPets();
     },
-    staleTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 30 * 60 * 1000, // 30 minutes
+    staleTime: CACHE_PRESETS.STABLE.staleTime,
+    gcTime: CACHE_PRESETS.STABLE.gcTime,
   });
 
   // Query for clinics
@@ -25,10 +26,10 @@ export const useCalendarFormData = () => {
   } = useQuery({
     queryKey: ['calendar-clinics'],
     queryFn: async () => {
-      return await calendarService.getClinics();
+      return await calendarService.getClinic();
     },
-    staleTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 30 * 60 * 1000, // 30 minutes
+    staleTime: CACHE_PRESETS.STABLE.staleTime,
+    gcTime: CACHE_PRESETS.STABLE.gcTime,
   });
 
   // Query for services
@@ -41,8 +42,8 @@ export const useCalendarFormData = () => {
     queryFn: async () => {
       return await calendarService.getServices();
     },
-    staleTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 30 * 60 * 1000, // 30 minutes
+    staleTime: CACHE_PRESETS.STABLE.staleTime,
+    gcTime: CACHE_PRESETS.STABLE.gcTime,
   });
 
   return {

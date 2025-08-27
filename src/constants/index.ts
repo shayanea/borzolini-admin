@@ -1,10 +1,11 @@
 export {
   APPOINTMENT_PRIORITIES,
   APPOINTMENT_PRIORITY_COLORS,
-  APPOINTMENT_STATUS_COLORS,
   APPOINTMENT_STATUSES,
+  APPOINTMENT_STATUS_COLORS,
   APPOINTMENT_TYPES,
 } from './appointments';
+export { CACHE_PRESETS, GC_TIMES, STALE_TIMES } from './cache-times';
 export { ACTIVITY_COLORS, ACTIVITY_TYPES, QUICK_ACTIONS } from './dashboard';
 export { DEFAULT_METRICS, METRIC_COLORS } from './reports';
 export { ROUTES } from './routes';
