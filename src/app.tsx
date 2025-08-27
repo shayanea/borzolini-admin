@@ -1,12 +1,12 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
 import { initializeAuthListener, useAuthActions } from '@/stores/auth.store';
 import { useCallback, useEffect } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import AdminLayout from '@/components/layout/admin-layout';
 import LoginForm from '@/components/auth/login-form';
 import ProtectedRoute from '@/components/auth/protected-route';
-import { ROUTES } from './constants';
+import AdminLayout from '@/components/layout/admin-layout';
 import { useAuth } from '@/hooks/use-auth';
+import { ROUTES } from './constants';
 
 const App = () => {
   const { isAuthenticated, user } = useAuth();
@@ -68,6 +68,9 @@ const App = () => {
           </ProtectedRoute>
         }
       />
+
+      {/* Catch-all route for direct access to nested routes */}
+      <Route path='*' element={<Navigate to={ROUTES.DASHBOARD} replace />} />
     </Routes>
   );
 };

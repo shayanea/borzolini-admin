@@ -1,4 +1,3 @@
-import { Button, Table, Tag, Tooltip } from 'antd';
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
@@ -6,6 +5,7 @@ import {
   ExclamationCircleOutlined,
   ReloadOutlined,
 } from '@ant-design/icons';
+import { Button, Table, Tag, Tooltip } from 'antd';
 
 import { EndpointStatus } from '@/types/api-health';
 import React from 'react';
@@ -58,18 +58,18 @@ export const EndpointHealthTable: React.FC<EndpointHealthTableProps> = ({
       title: 'Status',
       key: 'status',
       width: 80,
-      render: (status: string) => (
-        <Tag color={getStatusColor(status)} icon={getStatusIcon(status)}>
-          {status.toUpperCase()}
+      render: (_: any, record: EndpointStatus) => (
+        <Tag color={getStatusColor(record.status)} icon={getStatusIcon(record.status)}>
+          {record.status.toUpperCase()}
         </Tag>
       ),
     },
     {
       title: 'Endpoint',
       key: 'url',
-      render: (url: string) => (
-        <Tooltip title={url}>
-          <span className='font-mono text-sm'>{url}</span>
+      render: (_: any, record: EndpointStatus) => (
+        <Tooltip title={record.url}>
+          <span className='font-mono text-sm'>{record.url}</span>
         </Tooltip>
       ),
     },
@@ -77,9 +77,9 @@ export const EndpointHealthTable: React.FC<EndpointHealthTableProps> = ({
       title: 'Method',
       key: 'method',
       width: 80,
-      render: (method: string) => (
+      render: (_: any, record: EndpointStatus) => (
         <Tag color='blue' className='font-mono'>
-          {method}
+          {record.method}
         </Tag>
       ),
     },
@@ -87,17 +87,17 @@ export const EndpointHealthTable: React.FC<EndpointHealthTableProps> = ({
       title: 'Response Time',
       key: 'responseTime',
       width: 120,
-      render: (responseTime: number) => (
+      render: (_: any, record: EndpointStatus) => (
         <span
           className={`font-mono ${
-            getResponseTimeColor(responseTime) === 'success'
+            getResponseTimeColor(record.responseTime) === 'success'
               ? 'text-green-600'
-              : getResponseTimeColor(responseTime) === 'warning'
+              : getResponseTimeColor(record.responseTime) === 'warning'
                 ? 'text-yellow-600'
                 : 'text-red-600'
           }`}
         >
-          {responseTime}ms
+          {record.responseTime}ms
         </span>
       ),
       sorter: (a: EndpointStatus, b: EndpointStatus) => a.responseTime - b.responseTime,
@@ -106,18 +106,18 @@ export const EndpointHealthTable: React.FC<EndpointHealthTableProps> = ({
       title: 'Status Code',
       key: 'statusCode',
       width: 100,
-      render: (statusCode?: number) =>
-        statusCode ? (
+      render: (_: any, record: EndpointStatus) =>
+        record.statusCode ? (
           <Tag
             color={
-              statusCode >= 200 && statusCode < 300
+              record.statusCode >= 200 && record.statusCode < 300
                 ? 'success'
-                : statusCode >= 400 && statusCode < 500
+                : record.statusCode >= 400 && record.statusCode < 500
                   ? 'warning'
                   : 'error'
             }
           >
-            {statusCode}
+            {record.statusCode}
           </Tag>
         ) : (
           <span className='text-gray-400'>-</span>
@@ -127,8 +127,8 @@ export const EndpointHealthTable: React.FC<EndpointHealthTableProps> = ({
       title: 'Last Check',
       key: 'lastChecked',
       width: 150,
-      render: (lastChecked: string) => {
-        const date = new Date(lastChecked);
+      render: (_: any, record: EndpointStatus) => {
+        const date = new Date(record.lastChecked);
         return (
           <Tooltip title={date.toLocaleString()}>
             <span className='text-sm text-gray-600'>{date.toLocaleTimeString()}</span>
@@ -139,10 +139,10 @@ export const EndpointHealthTable: React.FC<EndpointHealthTableProps> = ({
     {
       title: 'Error',
       key: 'error',
-      render: (error?: string) =>
-        error ? (
-          <Tooltip title={error}>
-            <span className='text-red-600 text-sm truncate max-w-32 block'>{error}</span>
+      render: (_: any, record: EndpointStatus) =>
+        record.error ? (
+          <Tooltip title={record.error}>
+            <span className='text-red-600 text-sm truncate max-w-32 block'>{record.error}</span>
           </Tooltip>
         ) : (
           <span className='text-gray-400'>-</span>

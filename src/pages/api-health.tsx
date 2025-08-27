@@ -1,13 +1,13 @@
-import { Alert, Button, Card, Col, Row, Space, Spin, Typography, message } from 'antd';
 import { ExclamationCircleOutlined, MonitorOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, Col, Row, Space, Spin, Typography, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 import { CacheStatusCard } from '@/components/api-health/cache-status-card';
 import { DatabaseHealthCard } from '@/components/api-health/database-health-card';
 import { EndpointHealthTable } from '@/components/api-health/endpoint-health-table';
 import { HealthStatusCard } from '@/components/api-health/health-status-card';
-import { apiHealthService } from '@/services/api-health.service';
 import { useApiHealth } from '@/hooks/use-api-health';
+import { apiHealthService } from '@/services/api-health.service';
 
 const ApiHealthPage: React.FC = () => {
   const { overallStatus, lastCheck, checks, isLoading, error, endpointTests, refreshHealthStatus } =
@@ -22,7 +22,6 @@ const ApiHealthPage: React.FC = () => {
       const status = await apiHealthService.getCacheStatus();
       setCacheStatus(status);
     } catch (error) {
-      console.error('Failed to load cache status:', error);
       setCacheStatus({ error: 'Failed to load cache status' });
     } finally {
       setCacheLoading(false);
@@ -96,11 +95,12 @@ const ApiHealthPage: React.FC = () => {
       <HealthStatusCard overallStatus={overallStatus} lastCheck={lastCheck} isLoading={isLoading} />
 
       <Row gutter={[16, 16]}>
-        {/* Database Health */}
+        {/* API Health Status */}
         <Col xs={24} lg={12}>
           <DatabaseHealthCard
-            databaseHealth={checks?.checks?.database || {}}
+            databaseHealth={checks?.checks?.api || {}}
             isLoading={isLoading}
+            title='API Health Status'
           />
         </Col>
 

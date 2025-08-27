@@ -26,8 +26,8 @@ import {
 import { Route, Routes } from 'react-router-dom';
 
 import { User } from '@/types';
-import { useAdminLayoutLogic } from './admin-layout.logic';
 import { useMemo } from 'react';
+import { useAdminLayoutLogic } from './admin-layout.logic';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -114,16 +114,16 @@ const AdminLayout = () => {
   const routes = useMemo(
     () => (
       <Routes>
-        <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/calendar' element={<Calendar />} />
-        <Route path='/appointments' element={<Appointments />} />
-        <Route path='/users' element={<Users />} />
-        <Route path='/veterinarians' element={<Users roleFilter={VETERINARIAN_ROLE_FILTER} />} />
-        <Route path='/reports' element={<Reports />} />
-        <Route path='/settings' element={<Settings />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/api-health' element={<ApiHealth />} />
-        <Route path='/' element={<Dashboard />} />
+        <Route path='dashboard' element={<Dashboard />} />
+        <Route path='calendar' element={<Calendar />} />
+        <Route path='appointments' element={<Appointments />} />
+        <Route path='users' element={<Users />} />
+        <Route path='veterinarians' element={<Users roleFilter={VETERINARIAN_ROLE_FILTER} />} />
+        <Route path='reports' element={<Reports />} />
+        <Route path='settings' element={<Settings />} />
+        <Route path='profile' element={<Profile />} />
+        <Route path='api-health' element={<ApiHealth />} />
+        <Route path='' element={<Dashboard />} />
       </Routes>
     ),
     []

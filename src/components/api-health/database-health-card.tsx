@@ -1,10 +1,10 @@
-import { Card, Col, Progress, Row, Space, Statistic, Tag, Tooltip } from 'antd';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   DatabaseOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
+import { Card, Col, Progress, Row, Space, Statistic, Tag, Tooltip } from 'antd';
 
 import { HealthCheck } from '@/types/api-health';
 import React from 'react';
@@ -12,6 +12,7 @@ import React from 'react';
 interface DatabaseHealthCardProps {
   databaseHealth: HealthCheck;
   isLoading: boolean;
+  title?: string;
 }
 
 const getStatusIcon = (status: string) => {
@@ -43,6 +44,7 @@ const getStatusColor = (status: string) => {
 export const DatabaseHealthCard: React.FC<DatabaseHealthCardProps> = ({
   databaseHealth,
   isLoading,
+  title = 'Database Health',
 }) => {
   const isHealthy = databaseHealth?.status === 'healthy';
   const responseTime = databaseHealth?.responseTime || 0;
@@ -58,7 +60,7 @@ export const DatabaseHealthCard: React.FC<DatabaseHealthCardProps> = ({
       title={
         <Space>
           <DatabaseOutlined className='text-blue-500' />
-          <span>Database Health</span>
+          <span>{title}</span>
           {databaseHealth?.status && (
             <Tag color={getStatusColor(databaseHealth.status)}>
               {databaseHealth.status.toUpperCase()}

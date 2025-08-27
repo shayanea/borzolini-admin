@@ -14,20 +14,20 @@ export const useApiHealth = () => {
     endpointTests: [],
   });
 
-  const checkDatabaseHealth = useCallback(async () => {
+  const checkApiHealth = useCallback(async () => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      const dbHealth = await apiHealthService.checkDatabaseHealth();
+      const apiHealth = await apiHealthService.checkApiHealth();
       setState(prev => ({
         ...prev,
-        checks: dbHealth,
+        checks: apiHealth,
         lastCheck: new Date().toISOString(),
         isLoading: false,
       }));
-      return dbHealth;
+      return apiHealth;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Database health check failed';
+      const errorMessage = error instanceof Error ? error.message : 'API health check failed';
       setState(prev => ({
         ...prev,
         error: errorMessage,
@@ -40,7 +40,7 @@ export const useApiHealth = () => {
 
   const testEndpoints = useCallback(async () => {
     try {
-      const endpointTests = await apiHealthService.testEndpoints();
+      const endpointTests = await apiHealthService.testCriticalEndpoints();
       setState(prev => ({
         ...prev,
         endpointTests,
@@ -80,29 +80,29 @@ export const useApiHealth = () => {
 
     try {
       // Run all health checks in parallel
-      const [dbHealth, endpointTests] = await Promise.all([checkDatabaseHealth(), testEndpoints()]);
+      const [apiHealth, endpointTests] = await Promise.all([checkApiHealth(), testEndpoints()]);
 
       // Determine overall status
       const hasUnhealthyEndpoints = endpointTests.some(test => test.status === 'error');
       const hasDegradedEndpoints = endpointTests.some(test => test.status === 'timeout');
 
       let overallStatus: HealthStatus = 'healthy';
-      if (dbHealth.status === 'unhealthy' || hasUnhealthyEndpoints) {
+      if (apiHealth.status === 'unhealthy' || hasUnhealthyEndpoints) {
         overallStatus = 'unhealthy';
-      } else if (dbHealth.status === 'degraded' || hasDegradedEndpoints) {
+      } else if (apiHealth.status === 'degraded' || hasDegradedEndpoints) {
         overallStatus = 'degraded';
       }
 
       setState(prev => ({
         ...prev,
         overallStatus,
-        checks: dbHealth,
+        checks: apiHealth,
         endpointTests,
         lastCheck: new Date().toISOString(),
         isLoading: false,
       }));
 
-      return { overallStatus, dbHealth, endpointTests };
+      return { overallStatus, apiHealth, endpointTests };
     } catch (error) {
       setState(prev => ({
         ...prev,
@@ -112,7 +112,7 @@ export const useApiHealth = () => {
       }));
       throw error;
     }
-  }, [checkDatabaseHealth, testEndpoints]);
+  }, [checkApiHealth, testEndpoints]);
 
   const refreshHealthStatus = useCallback(async () => {
     try {
@@ -144,7 +144,7 @@ export const useApiHealth = () => {
 
   return {
     ...state,
-    checkDatabaseHealth,
+    checkApiHealth,
     testEndpoints,
     getSystemHealth,
     runFullHealthCheck,
