@@ -25,27 +25,37 @@ export interface CalendarFilters {
   petTypes?: string[];
   status?: 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no-show';
   includeCancelled?: boolean;
-  
+
   // Enhanced filters
   priority?: 'low' | 'normal' | 'high' | 'urgent' | 'emergency';
-  appointmentType?: 'consultation' | 'vaccination' | 'surgery' | 'follow_up' | 'emergency' | 'wellness_exam' | 'dental_cleaning' | 'laboratory_test' | 'imaging' | 'therapy';
+  appointmentType?:
+    | 'consultation'
+    | 'vaccination'
+    | 'surgery'
+    | 'follow_up'
+    | 'emergency'
+    | 'wellness_exam'
+    | 'dental_cleaning'
+    | 'laboratory_test'
+    | 'imaging'
+    | 'therapy';
   search?: string; // Search across client name, pet name, notes, etc.
-  
+
   // Time-based filters
   timeFrom?: string; // HH:mm format
-  timeTo?: string;   // HH:mm format
-  
+  timeTo?: string; // HH:mm format
+
   // Visit type filters
   isTelemedicine?: boolean;
   isHomeVisit?: boolean;
-  
+
   // Pagination
   page?: number;
   limit?: number;
-  
+
   // Sorting
   sortBy?: 'startTime' | 'clientName' | 'petName' | 'priority' | 'status';
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: 'ASC' | 'DESC';
 }
 
 export interface CalendarResponse {

@@ -1,7 +1,7 @@
-import { ACCOUNT_STATUSES, USER_ROLES } from '@/constants/user-management';
-import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Card, Col, DatePicker, Input, Row, Select } from 'antd';
+import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 
+import { USER_ROLES } from '@/constants/user-management';
 import type { UserFiltersProps } from '@/types/user-management';
 import dayjs from 'dayjs';
 
@@ -12,16 +12,12 @@ const { RangePicker } = DatePicker;
 const UserFilters = ({
   searchText,
   selectedRole,
-  selectedStatus,
   dateRange,
   onSearch,
   onRoleFilter,
-  onStatusFilter,
   onDateRangeChange,
   onClearFilters,
 }: UserFiltersProps) => {
-  console.log(selectedRole);
-  console.log(selectedStatus);
   return (
     <Card className='admin-card admin-filters'>
       <Row gutter={[16, 16]} className='mb-4'>
@@ -49,7 +45,7 @@ const UserFilters = ({
             <Option value={USER_ROLES.PATIENT}>Patient</Option>
           </Select>
         </Col>
-        <Col xs={24} sm={12} md={4}>
+        {/* <Col xs={24} sm={12} md={4}>
           <Select
             placeholder='Status'
             allowClear
@@ -62,7 +58,7 @@ const UserFilters = ({
             <Option value={ACCOUNT_STATUSES.SUSPENDED}>Suspended</Option>
             <Option value={ACCOUNT_STATUSES.PENDING}>Pending</Option>
           </Select>
-        </Col>
+        </Col> */}
         <Col xs={24} sm={12} md={6}>
           <RangePicker
             placeholder={['Start Date', 'End Date']}

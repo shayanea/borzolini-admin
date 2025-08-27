@@ -147,7 +147,7 @@ export class DashboardService {
       // This would typically come from a dedicated activity log endpoint
       // For now, we'll simulate with recent users and appointments
       const [recentUsers, recentAppointments] = await Promise.all([
-        UsersService.getUsers({ limit: 10, sortBy: 'createdAt', sortOrder: 'desc' }).catch(() => ({
+        UsersService.getUsers({ limit: 10, sortBy: 'createdAt', sortOrder: 'DESC' }).catch(() => ({
           data: [],
         })),
         AppointmentsService.getAll({ limit: 10 }).catch(() => ({ appointments: [] })),
@@ -158,7 +158,9 @@ export class DashboardService {
       // Add recent user registrations with null checking
       if (recentUsers?.data && Array.isArray(recentUsers.data)) {
         recentUsers.data.slice(0, 5).forEach((user: any) => {
-          if (user?.id && user?.role && user?.firstName && user?.lastName && user?.createdAt) {
+          const isValid =
+            user?.id && user?.role && user?.firstName && user?.lastName && user?.createdAt;
+          if (isValid) {
             activities.push({
               id: `user_${user.id}`,
               type: 'user_registration',
@@ -202,7 +204,7 @@ export class DashboardService {
       const clinics = await ClinicsService.getClinics({
         limit: 10,
         sortBy: 'rating',
-        sortOrder: 'desc',
+        sortOrder: 'DESC',
       }).catch(() => ({ data: [] }));
 
       if (!clinics?.data || !Array.isArray(clinics.data)) {

@@ -4,13 +4,15 @@ import {
   AppointmentsHeader,
   AppointmentsTable,
 } from '@/components/appointments';
+import { ExclamationCircleOutlined, LockOutlined } from '@ant-design/icons';
 
 import ErrorBoundary from '@/components/common/error-boundary';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
 import LoadingSpinner from '@/components/common/loading-spinner';
 import { useAppointments } from '@/hooks/use-appointments';
+import { useAuthStore } from '@/stores/auth.store';
 
 const Appointments = () => {
+  const { isAuthenticated } = useAuthStore();
   const {
     appointments,
     loading,
@@ -29,9 +31,30 @@ const Appointments = () => {
     clearError,
   } = useAppointments();
 
+  console.log(appointments.length);
+  console.log(loading);
+
   // Show loading spinner for initial load
-  if (loading && appointments.length === 0) {
+  if (loading) {
     return <LoadingSpinner fullScreen text='Loading appointments...' />;
+  }
+
+  // Show authentication required message if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark'>
+        <div className='text-center text-white'>
+          <LockOutlined className='text-6xl mb-4 text-primary-orange' />
+          <h1 className='text-2xl font-bold mb-2'>Authentication Required</h1>
+          <p className='text-lg text-gray-300 mb-6'>
+            Please log in to view and manage appointments.
+          </p>
+          <p className='text-sm text-gray-400'>
+            You will be redirected to the login page automatically.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (

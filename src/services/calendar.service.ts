@@ -59,66 +59,14 @@ class CalendarService implements CalendarServiceInterface {
    */
   async getCalendarData(date: string, filters?: CalendarFilters): Promise<CalendarResponse> {
     try {
-      const params = new URLSearchParams({ date });
+      // Start with the date parameter
+      const baseParams = { date };
       
-      if (filters) {
-        // Basic filters
-        if (filters.veterinarianIds?.length) {
-          params.append('veterinarianIds', filters.veterinarianIds.join(','));
-        }
-        if (filters.petTypes?.length) {
-          params.append('petTypes', filters.petTypes.join(','));
-        }
-        if (filters.status) {
-          params.append('status', filters.status);
-        }
-        if (filters.includeCancelled !== undefined) {
-          params.append('includeCancelled', filters.includeCancelled.toString());
-        }
-        
-        // Enhanced filters
-        if (filters.priority) {
-          params.append('priority', filters.priority);
-        }
-        if (filters.appointmentType) {
-          params.append('appointmentType', filters.appointmentType);
-        }
-        if (filters.search) {
-          params.append('search', filters.search);
-        }
-        
-        // Time-based filters
-        if (filters.timeFrom) {
-          params.append('timeFrom', filters.timeFrom);
-        }
-        if (filters.timeTo) {
-          params.append('timeTo', filters.timeTo);
-        }
-        
-        // Visit type filters
-        if (filters.isTelemedicine !== undefined) {
-          params.append('isTelemedicine', filters.isTelemedicine.toString());
-        }
-        if (filters.isHomeVisit !== undefined) {
-          params.append('isHomeVisit', filters.isHomeVisit.toString());
-        }
-        
-        // Pagination
-        if (filters.page) {
-          params.append('page', filters.page.toString());
-        }
-        if (filters.limit) {
-          params.append('limit', filters.limit.toString());
-        }
-        
-        // Sorting
-        if (filters.sortBy) {
-          params.append('sortBy', filters.sortBy);
-        }
-        if (filters.sortOrder) {
-          params.append('sortOrder', filters.sortOrder);
-        }
-      }
+      // Merge with filters if provided
+      const allParams = filters ? { ...baseParams, ...filters } : baseParams;
+      
+      // Use the utility function for consistent query parameter handling
+      const params = apiService.buildQueryParams(allParams);
 
       const response = await apiService.get<CalendarResponse>(
         `${this.baseUrl}/data?${params.toString()}`
@@ -149,11 +97,7 @@ class CalendarService implements CalendarServiceInterface {
    */
   async getAppointments(date: string, veterinarianId?: string): Promise<CalendarAppointment[]> {
     try {
-      const params = new URLSearchParams({ date });
-      if (veterinarianId) {
-        params.append('veterinarianId', veterinarianId);
-      }
-
+      const params = apiService.buildQueryParams({ date, veterinarianId });
       const response = await apiService.get<CalendarAppointment[]>(
         `${this.appointmentsUrl}?${params.toString()}`
       );

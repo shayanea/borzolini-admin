@@ -24,7 +24,7 @@ export interface PetsQueryParams {
   ownerName?: string;
   isActive?: boolean;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: 'ASC' | 'DESC';
 }
 
 export class PetsService {
@@ -37,7 +37,7 @@ export class PetsService {
     totalPages: number;
   }> {
     const queryParams = new URLSearchParams();
-    
+
     if (params.page) queryParams.append('page', params.page.toString());
     if (params.limit) queryParams.append('limit', params.limit.toString());
     if (params.search) queryParams.append('search', params.search);
@@ -72,7 +72,10 @@ export class PetsService {
   }
 
   // Update pet
-  static async updatePet(id: string, data: Partial<Omit<Pet, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Pet> {
+  static async updatePet(
+    id: string,
+    data: Partial<Omit<Pet, 'id' | 'createdAt' | 'updatedAt'>>
+  ): Promise<Pet> {
     return apiService.put<Pet>(`/pets/${id}`, data);
   }
 

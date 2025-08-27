@@ -1,9 +1,4 @@
-import {
-  ROLE_COLORS,
-  STATUS_COLORS,
-  TABLE_PAGE_SIZES,
-  USER_TABLE_COLUMNS,
-} from '@/constants/user-management';
+import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -11,10 +6,8 @@ import {
   PhoneOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
-
-import type { User } from '@/types';
-import type { UserTableProps } from '@/types/user-management';
+import { ROLE_COLORS, TABLE_PAGE_SIZES, USER_TABLE_COLUMNS } from '@/constants';
+import type { User, UserTableProps } from '@/types';
 
 const UserTable = ({
   users,
@@ -71,19 +64,6 @@ const UserTable = ({
           {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
         </Tag>
       ),
-    },
-    {
-      title: 'Status',
-      key: USER_TABLE_COLUMNS.STATUS,
-      render: (user: User) => {
-        const status = user.accountStatus || user.status || 'unknown';
-        const statusKey = status as keyof typeof STATUS_COLORS;
-        return (
-          <Tag color={STATUS_COLORS[statusKey] || 'default'}>
-            {status.charAt(0).toUpperCase() + status.slice(1)}
-          </Tag>
-        );
-      },
     },
     {
       title: 'Verification',

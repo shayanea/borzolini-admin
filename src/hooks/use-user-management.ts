@@ -1,11 +1,11 @@
+import type { AccountStatus, User, UserRole } from '@/types';
 import { DEFAULT_SORT_FIELD, DEFAULT_SORT_ORDER } from '@/constants/user-management';
+import { Modal, message as antMessage } from 'antd';
 import UsersService, {
   CreateUserData,
   UpdateUserData,
   UsersQueryParams,
 } from '@/services/users.service';
-import type { AccountStatus, User, UserRole } from '@/types';
-import { Modal, message as antMessage } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 
 interface UseUserManagementReturn {
@@ -20,7 +20,7 @@ interface UseUserManagementReturn {
   selectedStatus: AccountStatus | null;
   dateRange: [string, string] | null;
   sortBy: string;
-  sortOrder: 'asc' | 'desc';
+  sortOrder: 'ASC' | 'DESC';
   selectedRowKeys: string[];
   bulkLoading: boolean;
   isModalVisible: boolean;
@@ -57,7 +57,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   const [selectedStatus, setSelectedStatus] = useState<AccountStatus | null>(null);
   const [dateRange, setDateRange] = useState<[string, string] | null>(null);
   const [sortBy, setSortBy] = useState<string>(DEFAULT_SORT_FIELD);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(DEFAULT_SORT_ORDER);
+  const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>(DEFAULT_SORT_ORDER);
 
   // Modal states
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -169,7 +169,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
       }
       if (sorter.field && sorter.order) {
         setSortBy(sorter.field);
-        setSortOrder(sorter.order === 'ascend' ? 'asc' : 'desc');
+        setSortOrder(sorter.order === 'ascend' ? 'ASC' : 'DESC');
       }
     },
     [currentPage, pageSize]

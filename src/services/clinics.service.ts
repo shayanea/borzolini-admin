@@ -97,7 +97,7 @@ export interface ClinicsQueryParams {
   city?: string;
   isActive?: boolean;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: 'ASC' | 'DESC';
 }
 
 export class ClinicsService {
@@ -110,7 +110,7 @@ export class ClinicsService {
     totalPages: number;
   }> {
     const queryParams = new URLSearchParams();
-    
+
     if (params.page) queryParams.append('page', params.page.toString());
     if (params.limit) queryParams.append('limit', params.limit.toString());
     if (params.search) queryParams.append('search', params.search);
@@ -159,11 +159,14 @@ export class ClinicsService {
   }
 
   // Add staff member to clinic
-  static async addClinicStaff(clinicId: string, data: {
-    userId: string;
-    role: ClinicStaff['role'];
-    specialization?: string;
-  }): Promise<ClinicStaff> {
+  static async addClinicStaff(
+    clinicId: string,
+    data: {
+      userId: string;
+      role: ClinicStaff['role'];
+      specialization?: string;
+    }
+  ): Promise<ClinicStaff> {
     return apiService.post<ClinicStaff>(`/clinics/${clinicId}/staff`, data);
   }
 
@@ -178,17 +181,23 @@ export class ClinicsService {
   }
 
   // Add service to clinic
-  static async addClinicService(clinicId: string, data: {
-    name: string;
-    description: string;
-    duration: number;
-    price: number;
-  }): Promise<ClinicService> {
+  static async addClinicService(
+    clinicId: string,
+    data: {
+      name: string;
+      description: string;
+      duration: number;
+      price: number;
+    }
+  ): Promise<ClinicService> {
     return apiService.post<ClinicService>(`/clinics/${clinicId}/services`, data);
   }
 
   // Update clinic service
-  static async updateClinicService(serviceId: string, data: Partial<ClinicService>): Promise<ClinicService> {
+  static async updateClinicService(
+    serviceId: string,
+    data: Partial<ClinicService>
+  ): Promise<ClinicService> {
     return apiService.patch<ClinicService>(`/clinics/services/${serviceId}`, data);
   }
 
@@ -229,33 +238,36 @@ export class ClinicsService {
   }
 
   // Bulk operations
-  static async bulkUpdateClinics(clinicIds: string[], updates: Partial<UpdateClinicData>): Promise<{ message: string }> {
+  static async bulkUpdateClinics(
+    clinicIds: string[],
+    updates: Partial<UpdateClinicData>
+  ): Promise<{ message: string }> {
     return apiService.patch<{ message: string }>('/clinics/bulk-update', {
       clinicIds,
-      updates
+      updates,
     });
   }
 
   static async bulkDeleteClinics(clinicIds: string[]): Promise<{ message: string }> {
     return apiService.delete<{ message: string }>('/clinics/bulk-delete', {
-      data: { clinicIds }
+      data: { clinicIds },
     });
   }
 
   // Export clinics
   static async exportClinics(params: ClinicsQueryParams = {}): Promise<Blob> {
     const queryParams = new URLSearchParams();
-    
+
     if (params.search) queryParams.append('search', params.search);
     if (params.city) queryParams.append('city', params.city);
     if (params.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
 
     const url = `/clinics/export${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-    
+
     const response = await apiService.get(url, {
-      responseType: 'blob'
+      responseType: 'blob',
     });
-    
+
     return response;
   }
 }

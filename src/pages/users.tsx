@@ -49,6 +49,8 @@ const Users = ({ roleFilter }: UsersProps) => {
     setSelectedRowKeys,
   } = useUserManagement(roleFilter);
 
+  console.log(users);
+
   const handleRefresh = useCallback(() => {
     window.location.reload();
   }, []);

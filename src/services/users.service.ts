@@ -33,44 +33,33 @@ export interface UsersQueryParams {
   status?: AccountStatus;
   dateRange?: [string, string];
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: 'ASC' | 'DESC';
+  startDate?: string;
+  endDate?: string;
+  city?: string;
+  country?: string;
+  isVerified?: boolean;
+  lastLoginFrom?: string;
+  lastLoginTo?: string;
 }
 
 export class UsersService {
   // Get all users with pagination and filters
   static async getUsers(params: UsersQueryParams = {}): Promise<PaginatedResponse<User>> {
-    const queryParams = new URLSearchParams();
-
-    if (params.page) queryParams.append('page', params.page.toString());
-    if (params.limit) queryParams.append('limit', params.limit.toString());
-    if (params.search) queryParams.append('search', params.search);
-    if (params.role) queryParams.append('role', params.role);
-    if (params.status) queryParams.append('status', params.status);
-    if (params.dateRange) {
-      queryParams.append('startDate', params.dateRange[0]);
-      queryParams.append('endDate', params.dateRange[1]);
-    }
-    if (params.sortBy) queryParams.append('sortBy', params.sortBy);
-    if (params.sortOrder) queryParams.append('sortOrder', params.sortOrder);
-
+    // Use the utility function for consistent query parameter handling
+    const queryParams = apiService.buildQueryParams(params);
     const url = `/users${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
 
     const response = await apiService.get<any>(url);
 
-    // Handle both response formats:
-    // 1. PaginatedResponse format: { data: User[], total: number, ... }
-    // 2. Direct array format: User[]
-    if (response && typeof response === 'object' && 'data' in response && 'total' in response) {
-      // PaginatedResponse format
-      return response as PaginatedResponse<User>;
-    } else if (Array.isArray(response)) {
+    if (response && Array.isArray(response.users)) {
       // Direct array format - wrap it in PaginatedResponse structure
       return {
-        data: response,
-        total: response.length,
+        data: response.users,
+        total: response.total,
         page: params.page || 1,
         limit: params.limit || 10,
-        totalPages: Math.ceil(response.length / (params.limit || 10)),
+        totalPages: Math.ceil(response.total / (params.limit || 10)),
       };
     } else {
       // Fallback - empty response

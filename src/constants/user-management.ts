@@ -15,7 +15,7 @@ export const ACCOUNT_STATUSES = {
 export const TABLE_PAGE_SIZES = [10, 20, 50, 100] as const;
 
 export const DEFAULT_SORT_FIELD = 'createdAt';
-export const DEFAULT_SORT_ORDER = 'desc' as const;
+export const DEFAULT_SORT_ORDER = 'DESC' as const;
 
 export const USER_TABLE_COLUMNS = {
   USER: 'user',

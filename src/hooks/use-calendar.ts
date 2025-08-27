@@ -1,6 +1,9 @@
-import { AppointmentsService, type CreateAppointmentData } from '@/services/appointments.service';
+import {
+  AppointmentsService,
+  type CreateAppointmentData,
+  type UpdateAppointmentData,
+} from '@/services/appointments.service';
 import { calendarService } from '@/services/calendar.service';
-import { Appointment } from '@/types';
 import type { CalendarAppointment, CalendarFilters, Veterinarian } from '@/types/calendar';
 import { message } from 'antd';
 import dayjs from 'dayjs';
@@ -28,7 +31,7 @@ export const useCalendar = () => {
     isTelemedicine: undefined,
     isHomeVisit: undefined,
     sortBy: 'startTime',
-    sortOrder: 'asc',
+    sortOrder: 'ASC',
     page: 1,
     limit: 100,
   });
@@ -190,7 +193,7 @@ export const useCalendar = () => {
       isTelemedicine: undefined,
       isHomeVisit: undefined,
       sortBy: 'startTime',
-      sortOrder: 'asc',
+      sortOrder: 'ASC',
       page: 1,
       limit: 100,
     });
@@ -248,7 +251,10 @@ export const useCalendar = () => {
   };
 
   // Update appointment using AppointmentsService
-  const updateAppointment = async (appointmentId: string, updates: Appointment): Promise<void> => {
+  const updateAppointment = async (
+    appointmentId: string,
+    updates: UpdateAppointmentData
+  ): Promise<void> => {
     try {
       setLoading(true);
       await AppointmentsService.update(appointmentId, updates);

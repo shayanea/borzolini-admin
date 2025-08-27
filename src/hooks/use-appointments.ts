@@ -3,6 +3,7 @@ import AppointmentsService, {
   type CreateAppointmentData,
   type UpdateAppointmentData,
 } from '@/services/appointments.service';
+import { useAuthStore } from '@/stores/auth.store';
 import type { Appointment, AppointmentStatus } from '@/types';
 import type { AppointmentsFilters } from '@/types/appointments';
 import { message } from 'antd';
@@ -26,7 +27,7 @@ export interface UseAppointmentsReturn {
   handlePagination: (page: number, pageSize: number) => void;
   handleExport: () => Promise<void>;
   handleNewAppointment: (data: CreateAppointmentData) => Promise<Appointment>;
-  handleEditAppointment: (id: string, data: Appointment) => Promise<Appointment>;
+  handleEditAppointment: (id: string, data: UpdateAppointmentData) => Promise<Appointment>;
   handleCancelAppointment: (id: string) => Promise<void>;
   handleUpdateStatus: (id: string, status: AppointmentStatus) => Promise<Appointment>;
   handleReschedule: (id: string, newDate: string) => Promise<Appointment>;
@@ -53,6 +54,9 @@ export const useAppointments = (): UseAppointmentsReturn => {
   const [stats, setStats] = useState<AppointmentStats | null>(null);
   const [statsLoading, setStatsLoading] = useState(false);
 
+  // Get authentication state from the store
+  const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+
   // Ref to track if component is mounted
   const isMounted = useRef(true);
 
@@ -66,7 +70,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
   // Fetch appointments
   const fetchAppointments = useCallback(
     async (filters: AppointmentsFilters = {}) => {
-      if (!isMounted.current) return;
+      if (!isMounted.current || !isAuthenticated) return;
 
       try {
         setLoading(true);
@@ -94,6 +98,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
           }));
         }
       } catch (error) {
+        setLoading(false);
         if (isMounted.current) {
           const errorMessage =
             error instanceof Error ? error.message : 'Failed to load appointments';
@@ -106,12 +111,12 @@ export const useAppointments = (): UseAppointmentsReturn => {
         }
       }
     },
-    [pagination.current, pagination.pageSize]
+    [pagination.current, pagination.pageSize, isAuthenticated]
   );
 
   // Fetch statistics
   const fetchStats = useCallback(async () => {
-    if (!isMounted.current) return;
+    if (!isMounted.current || !isAuthenticated) return;
 
     try {
       setStatsLoading(true);
@@ -130,17 +135,29 @@ export const useAppointments = (): UseAppointmentsReturn => {
         setStatsLoading(false);
       }
     }
-  }, []);
+  }, [isAuthenticated]);
 
-  // Load appointments on mount and when filters change
+  // Load appointments on mount and when filters change, but only if authenticated
   useEffect(() => {
-    fetchAppointments(filters);
-  }, [fetchAppointments, filters]);
+    if (isAuthenticated) {
+      fetchAppointments(filters);
+    } else {
+      // Clear appointments data when not authenticated
+      setAppointments([]);
+      setPagination(prev => ({ ...prev, total: 0 }));
+      setError(null);
+    }
+  }, [fetchAppointments, filters, isAuthenticated]);
 
-  // Load stats on mount
+  // Load stats on mount, but only if authenticated
   useEffect(() => {
-    fetchStats();
-  }, [fetchStats]);
+    if (isAuthenticated) {
+      fetchStats();
+    } else {
+      // Clear stats when not authenticated
+      setStats(null);
+    }
+  }, [fetchStats, isAuthenticated]);
 
   const handleSearch = useCallback((value: string) => {
     setSearchText(value);
@@ -216,7 +233,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
   );
 
   const handleEditAppointment = useCallback(
-    async (id: string, data: Appointment): Promise<Appointment> => {
+    async (id: string, data: UpdateAppointmentData): Promise<Appointment> => {
       try {
         setError(null);
         const updatedAppointment = await AppointmentsService.update(id, data);

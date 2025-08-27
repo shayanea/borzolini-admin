@@ -150,6 +150,7 @@ const handleApiError = (error: any) => {
         if (typeof window !== 'undefined') {
           window.dispatchEvent(createAuthFailureEvent());
         }
+        // Don't show error message for 401 as it's handled by auth system
         break;
 
       case 403:
@@ -208,6 +209,26 @@ const handleApiError = (error: any) => {
 const createCacheKey = (url: string, params?: any): string => {
   const paramString = params ? JSON.stringify(params) : '';
   return `${url}${paramString}`;
+};
+
+// Utility function for building query parameters consistently
+const buildQueryParams = (filters: Record<string, any>): URLSearchParams => {
+  const params = new URLSearchParams();
+  
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      // Handle arrays by joining with commas
+      if (Array.isArray(value)) {
+        if (value.length > 0) {
+          params.append(key, value.join(','));
+        }
+      } else {
+        params.append(key, String(value));
+      }
+    }
+  });
+  
+  return params;
 };
 
 // API methods
@@ -279,6 +300,9 @@ export const apiService = {
         },
       })
       .then(response => response.data),
+
+  // Query parameter utilities
+  buildQueryParams,
 
   // Cache management
   clearCache: (type?: 'appointments' | 'users' | 'calendar') => {

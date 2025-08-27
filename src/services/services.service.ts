@@ -22,7 +22,7 @@ export interface ServicesQueryParams {
   category?: string;
   isActive?: boolean;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: 'ASC' | 'DESC';
 }
 
 export class ServicesService {
@@ -35,7 +35,7 @@ export class ServicesService {
     totalPages: number;
   }> {
     const queryParams = new URLSearchParams();
-    
+
     if (params.page) queryParams.append('page', params.page.toString());
     if (params.limit) queryParams.append('limit', params.limit.toString());
     if (params.search) queryParams.append('search', params.search);
@@ -64,12 +64,17 @@ export class ServicesService {
   }
 
   // Create new service
-  static async createService(data: Omit<VeterinaryService, 'id' | 'createdAt' | 'updatedAt'>): Promise<VeterinaryService> {
+  static async createService(
+    data: Omit<VeterinaryService, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<VeterinaryService> {
     return apiService.post<VeterinaryService>('/services', data);
   }
 
   // Update service
-  static async updateService(id: string, data: Partial<Omit<VeterinaryService, 'id' | 'createdAt' | 'updatedAt'>>): Promise<VeterinaryService> {
+  static async updateService(
+    id: string,
+    data: Partial<Omit<VeterinaryService, 'id' | 'createdAt' | 'updatedAt'>>
+  ): Promise<VeterinaryService> {
     return apiService.put<VeterinaryService>(`/services/${id}`, data);
   }
 

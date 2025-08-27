@@ -5,7 +5,13 @@ import type { Appointment } from '@/types';
 import { UserOutlined } from '@ant-design/icons';
 import type { TablePaginationConfig } from 'antd/es/table';
 
-interface AppointmentsTableProps {
+import type { UpdateAppointmentData } from '@/services/appointments.service';
+
+export interface AppointmentsHeaderProps {
+  onNewAppointment: (data: any) => void;
+}
+
+export interface AppointmentsTableProps {
   appointments: Appointment[];
   loading?: boolean;
   pagination?: {
@@ -13,21 +19,48 @@ interface AppointmentsTableProps {
     pageSize: number;
     total: number;
   };
-  onEdit: (id: string, data: Appointment) => Promise<Appointment>;
+  onEdit: (id: string, data: UpdateAppointmentData) => Promise<Appointment>;
   onCancel: (id: string) => void;
   onPagination?: (page: number, pageSize: number) => void;
 }
 
 const AppointmentsTable = ({
   appointments,
-  loading = false,
+  loading,
   pagination,
   onEdit,
   onCancel,
   onPagination,
 }: AppointmentsTableProps) => {
   const createActionHandlers = (appointment: Appointment) => {
-    const handleEdit = () => onEdit(appointment.id, appointment);
+    const handleEdit = () => {
+      // Convert Appointment to UpdateAppointmentData by extracting only updatable fields
+      const updateData: UpdateAppointmentData = {
+        appointment_type: appointment.appointment_type as any, // Cast to AppointmentType
+        status: appointment.status,
+        priority: appointment.priority,
+        scheduled_date: appointment.scheduled_date,
+        duration_minutes: appointment.duration_minutes,
+        notes: appointment.notes,
+        reason: appointment.reason,
+        symptoms: appointment.symptoms,
+        diagnosis: appointment.diagnosis,
+        treatment_plan: appointment.treatment_plan,
+        prescriptions: appointment.prescriptions,
+        follow_up_instructions: appointment.follow_up_instructions,
+        cost: appointment.cost,
+        payment_status: appointment.payment_status,
+        is_telemedicine: appointment.is_telemedicine,
+        telemedicine_link: appointment.telemedicine_link,
+        home_visit_address: appointment.home_visit_address,
+        is_home_visit: appointment.is_home_visit,
+        pet_id: appointment.pet_id,
+        clinic_id: appointment.clinic_id,
+        staff_id: appointment.staff_id,
+        service_id: appointment.service_id,
+      };
+      onEdit(appointment.id, updateData);
+    };
     const handleCancel = () => onCancel(appointment.id);
 
     return { handleEdit, handleCancel };
