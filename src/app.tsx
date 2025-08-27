@@ -5,6 +5,7 @@ import { useCallback, useEffect } from 'react';
 import AdminLayout from '@/components/layout/admin-layout';
 import LoginForm from '@/components/auth/login-form';
 import ProtectedRoute from '@/components/auth/protected-route';
+import { ROUTES } from './constants';
 import { useAuth } from '@/hooks/use-auth';
 
 const App = () => {
@@ -54,8 +55,8 @@ const App = () => {
     <Routes>
       {/* Public routes */}
       <Route
-        path='/login'
-        element={isAuthenticated ? <Navigate to='/dashboard' replace /> : <LoginForm />}
+        path={ROUTES.LOGIN}
+        element={isAuthenticated ? <Navigate to={ROUTES.DASHBOARD} replace /> : <LoginForm />}
       />
 
       {/* Protected admin routes */}

@@ -5,4 +5,9 @@ export const ROUTES: Record<string, string> = {
   REPORTS: '/reports',
   SETTINGS: '/settings',
   USERS: '/users',
+  LOGIN: '/login',
+  PROFILE: '/profile',
+  VETERINARIANS: '/veterinarians',
+  HOME: '/',
+  PATIENTS: '/patients',
 };

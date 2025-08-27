@@ -127,16 +127,17 @@ const AdminLayout = () => {
         style={{ backgroundImage: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' }}
       >
         <div className='absolute inset-0 bg-pattern-dots opacity-10' />
-        <div className='p-6'>
+        <div className='p-6 overflow-hidden'>
           <div className='flex items-center space-x-3'>
             <div className='w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500'>
               <span className='text-white font-bold text-lg'>B</span>
             </div>
-            {!collapsed && (
-              <Title level={4} className='!mb-0 !text-white font-bold'>
-                Borzolini
-              </Title>
-            )}
+            <Title
+              level={4}
+              className={`!mb-0 !text-white font-bold whitespace-nowrap ${collapsed ? 'hidden' : ''}`}
+            >
+              Borzolini
+            </Title>
           </div>
         </div>
 
@@ -146,6 +147,7 @@ const AdminLayout = () => {
           selectedKeys={[getSelectedKey()]}
           items={menuItems}
           className='admin-sidebar-menu px-4'
+          inlineCollapsed={collapsed}
           style={{
             backgroundColor: 'transparent',
             border: 'none',

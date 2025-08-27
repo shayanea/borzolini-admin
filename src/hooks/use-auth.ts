@@ -9,6 +9,7 @@ import { useAuthActions, useAuthStore } from '@/stores/auth.store';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { AuthService } from '@/services/auth.service';
+import { ROUTES } from '@/constants';
 import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,7 +31,7 @@ export const useAuth = () => {
     onSuccess: data => {
       loginStore(data.user);
       message.success('Login successful!');
-      navigate('/dashboard');
+      navigate(ROUTES.DASHBOARD);
     },
     onError: (error: any) => {
       setError(error.response?.data?.message || 'Login failed');
@@ -43,7 +44,7 @@ export const useAuth = () => {
     mutationFn: AuthService.register,
     onSuccess: () => {
       message.success('Registration successful! Please check your email to verify your account.');
-      navigate('/login');
+      navigate(ROUTES.LOGIN);
     },
     onError: (error: any) => {
       setError(error.response?.data?.message || 'Registration failed');
@@ -58,13 +59,13 @@ export const useAuth = () => {
       logoutStore();
       queryClient.clear();
       message.success('Logged out successfully');
-      navigate('/login');
+      navigate(ROUTES.LOGIN);
     },
     onError: () => {
       // Even if logout fails, clear local state
       logoutStore();
       queryClient.clear();
-      navigate('/login');
+      navigate(ROUTES.LOGIN);
     },
   });
 
@@ -95,7 +96,7 @@ export const useAuth = () => {
     mutationFn: AuthService.resetPassword,
     onSuccess: () => {
       message.success('Password reset successfully! You can now login with your new password.');
-      navigate('/login');
+      navigate(ROUTES.LOGIN);
     },
     onError: (error: any) => {
       message.error(error.response?.data?.message || 'Failed to reset password');

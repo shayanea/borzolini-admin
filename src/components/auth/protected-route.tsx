@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth, useAuthStatus } from '@/hooks/use-auth';
 
 import { AuthService } from '@/services/auth.service';
+import { ROUTES } from '@/constants';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -24,7 +25,7 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   const hasValidatedRef = useRef(false);
 
   const handleGoToDashboard = useCallback(() => {
-    navigate('/dashboard');
+    navigate(ROUTES.DASHBOARD);
   }, [navigate]);
 
   const handleLogout = useCallback(() => {
@@ -70,14 +71,14 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
     const handleAuthRedirect = (event: any) => {
       const customEvent = event as AuthRedirectEvent;
       const { path } = customEvent.detail;
-      if (path === '/login') {
-        navigate('/login', { state: { from: location }, replace: true });
+      if (path === ROUTES.LOGIN) {
+        navigate(ROUTES.LOGIN, { state: { from: location }, replace: true });
       }
     };
 
     const handleAuthFailure = () => {
       // Clear any local auth state and redirect to login
-      navigate('/login', { state: { from: location }, replace: true });
+      navigate(ROUTES.LOGIN, { state: { from: location }, replace: true });
     };
 
     window.addEventListener('auth:redirect', handleAuthRedirect);
@@ -91,7 +92,7 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
 
   // If user is not authenticated, redirect to login immediately
   if (!isAuthenticated) {
-    return <Navigate to='/login' state={{ from: location }} replace />;
+    return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
   }
 
   // Show loading while validating authenticated user

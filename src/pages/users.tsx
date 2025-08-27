@@ -1,4 +1,3 @@
-import React, { useCallback } from 'react';
 import {
   UserBulkActions,
   UserFilters,
@@ -8,6 +7,7 @@ import {
 } from '@/components/users';
 
 import { Card } from 'antd';
+import { useCallback } from 'react';
 import { useUserManagement } from '@/hooks/use-user-management';
 
 const Users = () => {
@@ -90,7 +90,7 @@ const Users = () => {
           currentPage={currentPage}
           pageSize={pageSize}
           total={total}
-          selectedRowKeys={selectedRowKeys}
+          selectedRowKeys={selectedRowKeys as never[]}
           onTableChange={handleTableChange}
           onRowSelectionChange={setSelectedRowKeys}
           onViewUser={showModal}
