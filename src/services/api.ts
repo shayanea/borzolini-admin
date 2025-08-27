@@ -1,10 +1,10 @@
-import { appointmentsCache, calendarCache, usersCache } from './cache.service';
 import axios, {
   AxiosInstance,
   AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
+import { appointmentsCache, calendarCache, usersCache } from './cache.service';
 
 import { environment } from '@/config/environment';
 import { message } from 'antd';
@@ -14,6 +14,19 @@ const API_BASE_URL = environment.api.baseUrl;
 const API_TIMEOUT = environment.api.timeout;
 const RETRY_ATTEMPTS = environment.api.retryAttempts;
 const RETRY_DELAY = environment.api.retryDelay;
+
+// Custom event for authentication failures
+export const createAuthFailureEvent = () => {
+  if (typeof window !== 'undefined' && window.CustomEvent) {
+    return new window.CustomEvent('auth:unauthorized', {
+      detail: { timestamp: Date.now() }
+    });
+  }
+  // Fallback for environments without CustomEvent
+  const event = document.createEvent('CustomEvent');
+  event.initCustomEvent('auth:unauthorized', false, false, { timestamp: Date.now() });
+  return event;
+};
 
 // Create axios instance
 const api: AxiosInstance = axios.create({
@@ -53,13 +66,8 @@ const retryRequest = async (error: any, retryCount: number = 0): Promise<any> =>
 // Request interceptor
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Add auth token if available
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    // Add request timestamp for caching
+    // Cookie-based auth: do not attach Authorization header
+    // Add request timestamp for performance/caching diagnostics
     (config as any).metadata = { startTime: Date.now() };
 
     return config;
@@ -70,6 +78,9 @@ api.interceptors.request.use(
 );
 
 // Response interceptor
+let isRefreshing = false;
+let pendingRequests: Array<() => void> = [];
+
 api.interceptors.response.use(
   (response: AxiosResponse) => {
     // Log response time for performance monitoring
@@ -82,7 +93,41 @@ api.interceptors.response.use(
     return response;
   },
   async error => {
-    // Try to retry the request
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+
+    // Handle 401 with cookie-based refresh
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      if (isRefreshing) {
+        // Queue this request until refresh completes
+        return new Promise((resolve, reject) => {
+          pendingRequests.push(() => {
+            api.request(originalRequest).then(resolve).catch(reject);
+          });
+        });
+      }
+
+      isRefreshing = true;
+      try {
+        await api.post('/auth/refresh');
+        // Replay queued requests
+        pendingRequests.forEach(callback => callback());
+        pendingRequests = [];
+        return api.request(originalRequest);
+      } catch (refreshError) {
+        pendingRequests = [];
+        // On refresh fail, dispatch auth failure event
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(createAuthFailureEvent());
+        }
+        // Fall through to error handler
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
+    // Try to retry the request for network/5xx errors
     try {
       return await retryRequest(error);
     } catch (retryError) {
@@ -101,10 +146,10 @@ const handleApiError = (error: any) => {
     // Handle specific error cases
     switch (status) {
       case 401:
-        // Unauthorized - clear tokens and redirect to login
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        window.location.href = '/login';
+        // Unauthorized - dispatch auth failure event instead of redirecting
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(createAuthFailureEvent());
+        }
         break;
 
       case 403:

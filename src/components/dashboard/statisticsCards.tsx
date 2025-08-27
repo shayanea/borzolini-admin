@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Card, Statistic, Typography, Progress } from 'antd';
+import { Row, Col, Card, Statistic, Typography } from 'antd';
 import {
   UserOutlined,
   CalendarOutlined,
@@ -20,89 +20,115 @@ interface StatisticsCardsProps {
 
 const StatisticsCards: React.FC<StatisticsCardsProps> = ({ stats }) => {
   return (
-    <>
+    <div className="space-y-6">
       {/* Main Statistics Row */}
       <Row gutter={[24, 24]}>
         <Col xs={24} sm={12} lg={6}>
-          <Card className="admin-card hover:shadow-admin-lg transition-shadow">
-            <Statistic
-              title="Total Users"
-              value={stats.totalUsers}
-              prefix={<UserOutlined className="text-primary-navy" />}
-              valueStyle={{ color: '#14213d' }}
-            />
-            <div className="flex items-center justify-between mt-2">
-              <Text className="text-sm text-text-light">
-                +{stats.newUsersThisWeek} this week
-              </Text>
-              <Progress
-                percent={Math.min((stats.newUsersThisWeek / Math.max(stats.totalUsers, 1)) * 100, 100)}
-                showInfo={false}
-                strokeColor="#14213d"
-                size="small"
+          <Card className="admin-card hover:shadow-admin-lg transition-all duration-200 border-0 shadow-sm">
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <UserOutlined className="text-xl text-blue-600" />
+                </div>
+              </div>
+              <Statistic
+                title={<span className="text-sm font-medium text-text-primary">Total Users</span>}
+                value={stats.totalUsers}
+                valueStyle={{ 
+                  color: '#14213d', 
+                  fontSize: '2rem', 
+                  fontWeight: '600',
+                  lineHeight: '1.2'
+                }}
               />
+              <div className="mt-2">
+                <Text className="text-sm text-text-light">
+                  +{stats.newUsersThisWeek} this week
+                </Text>
+              </div>
             </div>
           </Card>
         </Col>
 
         <Col xs={24} sm={12} lg={6}>
-          <Card className="admin-card hover:shadow-admin-lg transition-shadow">
-            <Statistic
-              title="Today's Appointments"
-              value={stats.appointmentsToday}
-              prefix={<CalendarOutlined className="text-primary-orange" />}
-              valueStyle={{ color: '#fca311' }}
-            />
-            <div className="flex items-center justify-between mt-2">
-              <Text className="text-sm text-text-light">
-                {stats.pendingAppointments} pending
-              </Text>
-              <Progress
-                percent={Math.min((stats.appointmentsToday / Math.max(stats.totalAppointments, 1)) * 100, 100)}
-                showInfo={false}
-                strokeColor="#fca311"
-                size="small"
+          <Card className="admin-card hover:shadow-admin-lg transition-all duration-200 border-0 shadow-sm">
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <CalendarOutlined className="text-xl text-orange-600" />
+                </div>
+              </div>
+              <Statistic
+                title={<span className="text-sm font-medium text-text-primary">Today's Appointments</span>}
+                value={stats.appointmentsToday}
+                valueStyle={{ 
+                  color: '#fca311', 
+                  fontSize: '2rem', 
+                  fontWeight: '600',
+                  lineHeight: '1.2'
+                }}
               />
+              <div className="mt-2">
+                <Text className="text-sm text-text-light">
+                  {stats.pendingAppointments} pending
+                </Text>
+              </div>
             </div>
           </Card>
         </Col>
 
         <Col xs={24} sm={12} lg={6}>
-          <Card className="admin-card hover:shadow-admin-lg transition-shadow">
-            <Statistic
-              title="Veterinarians"
-              value={stats.totalVeterinarians}
-              prefix={<TeamOutlined className="text-health-excellent" />}
-              valueStyle={{ color: '#059669' }}
-            />
-            <div className="flex items-center justify-between mt-2">
-              <Text className="text-sm text-text-light">
-                {stats.totalClinics} clinics
-              </Text>
-              <Progress
-                percent={Math.min((stats.totalVeterinarians / Math.max(stats.totalUsers, 1)) * 100, 100)}
-                showInfo={false}
-                strokeColor="#059669"
-                size="small"
+          <Card className="admin-card hover:shadow-admin-lg transition-all duration-200 border-0 shadow-sm">
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                  <TeamOutlined className="text-xl text-green-600" />
+                </div>
+              </div>
+              <Statistic
+                title={<span className="text-sm font-medium text-text-primary">Veterinarians</span>}
+                value={stats.totalVeterinarians}
+                valueStyle={{ 
+                  color: '#059669', 
+                  fontSize: '2rem', 
+                  fontWeight: '600',
+                  lineHeight: '1.2'
+                }}
               />
+              <div className="mt-2">
+                <Text className="text-sm text-text-light">
+                  {stats.totalClinics} clinics
+                </Text>
+              </div>
             </div>
           </Card>
         </Col>
 
         <Col xs={24} sm={12} lg={6}>
-          <Card className="admin-card hover:shadow-admin-lg transition-shadow">
-            <Statistic
-              title="Monthly Revenue"
-              value={stats.revenueThisMonth}
-              prefix={<DollarOutlined className="text-health-good" />}
-              suffix="USD"
-              valueStyle={{ color: '#fca311' }}
-            />
-            <div className="flex items-center mt-2">
-              <RiseOutlined className="text-health-excellent mr-1" />
-              <Text className="text-health-excellent text-sm">
-                +{stats.growthRate}% from last month
-              </Text>
+          <Card className="admin-card hover:shadow-admin-lg transition-all duration-200 border-0 shadow-sm">
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                  <DollarOutlined className="text-xl text-yellow-600" />
+                </div>
+              </div>
+              <Statistic
+                title={<span className="text-sm font-medium text-text-primary">Monthly Revenue</span>}
+                value={stats.revenueThisMonth}
+                suffix="USD"
+                valueStyle={{ 
+                  color: '#fca311', 
+                  fontSize: '2rem', 
+                  fontWeight: '600',
+                  lineHeight: '1.2'
+                }}
+              />
+              <div className="mt-2 flex items-center justify-center">
+                <RiseOutlined className="text-green-500 mr-1" />
+                <Text className="text-green-500 text-sm font-medium">
+                  +{stats.growthRate}% from last month
+                </Text>
+              </div>
             </div>
           </Card>
         </Col>
@@ -111,70 +137,114 @@ const StatisticsCards: React.FC<StatisticsCardsProps> = ({ stats }) => {
       {/* Additional Stats Row */}
       <Row gutter={[24, 24]}>
         <Col xs={24} sm={12} lg={6}>
-          <Card className="admin-card hover:shadow-admin-lg transition-shadow">
-            <Statistic
-              title="Total Clinics"
-              value={stats.totalClinics}
-              prefix={<HomeOutlined className="text-blue-500" />}
-              valueStyle={{ color: '#3b82f6' }}
-            />
-            <div className="flex items-center justify-between mt-2">
-              <Text className="text-sm text-text-light">
-                +{stats.newClinicsThisMonth} this month
-              </Text>
+          <Card className="admin-card hover:shadow-admin-lg transition-all duration-200 border-0 shadow-sm">
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <HomeOutlined className="text-xl text-blue-600" />
+                </div>
+              </div>
+              <Statistic
+                title={<span className="text-sm font-medium text-text-primary">Total Clinics</span>}
+                value={stats.totalClinics}
+                valueStyle={{ 
+                  color: '#3b82f6', 
+                  fontSize: '2rem', 
+                  fontWeight: '600',
+                  lineHeight: '1.2'
+                }}
+              />
+              <div className="mt-2">
+                <Text className="text-sm text-text-light">
+                  +{stats.newClinicsThisMonth} this month
+                </Text>
+              </div>
             </div>
           </Card>
         </Col>
 
         <Col xs={24} sm={12} lg={6}>
-          <Card className="admin-card hover:shadow-admin-lg transition-shadow">
-            <Statistic
-              title="Urgent Cases"
-              value={stats.urgentAppointments}
-              prefix={<ExclamationCircleOutlined className="text-red-500" />}
-              valueStyle={{ color: '#ef4444' }}
-            />
-            <div className="flex items-center justify-between mt-2">
-              <Text className="text-sm text-text-light">
-                {stats.appointmentsToday} today
-              </Text>
+          <Card className="admin-card hover:shadow-admin-lg transition-all duration-200 border-0 shadow-sm">
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                  <ExclamationCircleOutlined className="text-xl text-red-600" />
+                </div>
+              </div>
+              <Statistic
+                title={<span className="text-sm font-medium text-text-primary">Urgent Cases</span>}
+                value={stats.urgentAppointments}
+                valueStyle={{ 
+                  color: '#ef4444', 
+                  fontSize: '2rem', 
+                  fontWeight: '600',
+                  lineHeight: '1.2'
+                }}
+              />
+              <div className="mt-2">
+                <Text className="text-sm text-text-light">
+                  {stats.appointmentsToday} today
+                </Text>
+              </div>
             </div>
           </Card>
         </Col>
 
         <Col xs={24} sm={12} lg={6}>
-          <Card className="admin-card hover:shadow-admin-lg transition-shadow">
-            <Statistic
-              title="Completed Today"
-              value={stats.completedAppointments}
-              prefix={<ClockCircleOutlined className="text-green-500" />}
-              valueStyle={{ color: '#10b981' }}
-            />
-            <div className="flex items-center justify-between mt-2">
-              <Text className="text-sm text-text-light">
-                {stats.averageAppointmentDuration} min avg
-              </Text>
+          <Card className="admin-card hover:shadow-admin-lg transition-all duration-200 border-0 shadow-sm">
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                  <ClockCircleOutlined className="text-xl text-green-600" />
+                </div>
+              </div>
+              <Statistic
+                title={<span className="text-sm font-medium text-text-primary">Completed Today</span>}
+                value={stats.completedAppointments}
+                valueStyle={{ 
+                  color: '#10b981', 
+                  fontSize: '2rem', 
+                  fontWeight: '600',
+                  lineHeight: '1.2'
+                }}
+              />
+              <div className="mt-2">
+                <Text className="text-sm text-text-light">
+                  {stats.averageAppointmentDuration} min avg
+                </Text>
+              </div>
             </div>
           </Card>
         </Col>
 
         <Col xs={24} sm={12} lg={6}>
-          <Card className="admin-card hover:shadow-admin-lg transition-shadow">
-            <Statistic
-              title="Total Patients"
-              value={stats.totalPatients}
-              prefix={<UserOutlined className="text-purple-500" />}
-              valueStyle={{ color: '#8b5cf6' }}
-            />
-            <div className="flex items-center justify-between mt-2">
-              <Text className="text-sm text-text-light">
-                Active patients
-              </Text>
+          <Card className="admin-card hover:shadow-admin-lg transition-all duration-200 border-0 shadow-sm">
+            <div className="text-center">
+              <div className="flex justify-center mb-3">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <UserOutlined className="text-xl text-purple-600" />
+                </div>
+              </div>
+              <Statistic
+                title={<span className="text-sm font-medium text-text-primary">Total Patients</span>}
+                value={stats.totalPatients}
+                valueStyle={{ 
+                  color: '#8b5cf6', 
+                  fontSize: '2rem', 
+                  fontWeight: '600',
+                  lineHeight: '1.2'
+                }}
+              />
+              <div className="mt-2">
+                <Text className="text-sm text-text-light">
+                  Active patients
+                </Text>
+              </div>
             </div>
           </Card>
         </Col>
       </Row>
-    </>
+    </div>
   );
 };
 

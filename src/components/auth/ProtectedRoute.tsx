@@ -1,6 +1,6 @@
 import { Button, Result, Spin } from 'antd';
-import { Navigate, useLocation } from 'react-router-dom';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth, useAuthStatus } from '@/hooks/useAuth';
 
 import { AuthService } from '@/services/auth.service';
@@ -10,47 +10,91 @@ interface ProtectedRouteProps {
   requiredRole?: 'admin' | 'veterinarian' | 'staff' | 'patient';
 }
 
+// Custom event types
+interface AuthRedirectEvent {
+  detail: { path: string };
+}
+
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
   const { isLoading: isCheckingAuth } = useAuthStatus();
-  const [isValidating, setIsValidating] = useState(true);
+  const [isValidating, setIsValidating] = useState(false);
+  const hasValidatedRef = useRef(false);
 
   const handleGoToDashboard = useCallback(() => {
-    window.location.href = '/dashboard';
-  }, []);
+    navigate('/dashboard');
+  }, [navigate]);
 
   const handleLogout = useCallback(() => {
     logout();
   }, [logout]);
 
+  // Only validate auth once when user appears to be authenticated
   useEffect(() => {
+    // Prevent multiple validations
+    if (hasValidatedRef.current || !isAuthenticated) {
+      return;
+    }
+
     const validateAuth = async () => {
-      if (!isAuthenticated) {
-        try {
-          // Try to get auth status from server
-          const status = await AuthService.getAuthStatus();
-          if (status.isAuthenticated) {
-            // User is authenticated on server, update local state
-            // This would typically be handled by a refresh token mechanism
-            // For now, we'll redirect to login
-            setIsValidating(false);
-          } else {
-            setIsValidating(false);
+      setIsValidating(true);
+      hasValidatedRef.current = true;
+
+      try {
+        // Try to get auth status from server
+        const status = await AuthService.getAuthStatus();
+        if (!status.isAuthenticated) {
+          // User is not authenticated on server, dispatch auth failure event
+          // instead of calling logout directly to prevent infinite loops
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('auth:unauthorized'));
           }
-        } catch (error) {
-          // Auth check failed, user needs to login
-          setIsValidating(false);
         }
-      } else {
+      } catch (error) {
+        // Auth check failed, dispatch auth failure event
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+        }
+      } finally {
         setIsValidating(false);
       }
     };
 
     validateAuth();
-  }, [isAuthenticated]);
+  }, [isAuthenticated]); // Remove logout from dependencies
 
-  // Show loading while validating
+  // Listen for authentication failure events
+  useEffect(() => {
+    const handleAuthRedirect = (event: any) => {
+      const customEvent = event as AuthRedirectEvent;
+      const { path } = customEvent.detail;
+      if (path === '/login') {
+        navigate('/login', { state: { from: location }, replace: true });
+      }
+    };
+
+    const handleAuthFailure = () => {
+      // Clear any local auth state and redirect to login
+      navigate('/login', { state: { from: location }, replace: true });
+    };
+
+    window.addEventListener('auth:redirect', handleAuthRedirect);
+    window.addEventListener('auth:unauthorized', handleAuthFailure);
+
+    return () => {
+      window.removeEventListener('auth:redirect', handleAuthRedirect);
+      window.removeEventListener('auth:unauthorized', handleAuthFailure);
+    };
+  }, [navigate, location]);
+
+  // If user is not authenticated, redirect to login immediately
+  if (!isAuthenticated) {
+    return <Navigate to='/login' state={{ from: location }} replace />;
+  }
+
+  // Show loading while validating authenticated user
   if (isValidating || isCheckingAuth) {
     return (
       <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark'>
@@ -60,11 +104,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
         </div>
       </div>
     );
-  }
-
-  // User not authenticated, redirect to login
-  if (!isAuthenticated) {
-    return <Navigate to='/login' state={{ from: location }} replace />;
   }
 
   // Check role requirements if specified

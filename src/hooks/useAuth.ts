@@ -1,26 +1,33 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import { message } from 'antd';
-import { AuthService } from '@/services/auth.service';
-import { useAuthStore, useAuthActions } from '@/stores/auth.store';
 import type {
-  LoginCredentials,
-  RegisterData,
   ChangePasswordData,
   ForgotPasswordData,
+  LoginCredentials,
+  RegisterData,
   ResetPasswordData,
 } from '@/types';
+import { useAuthActions, useAuthStore } from '@/stores/auth.store';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { AuthService } from '@/services/auth.service';
+import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 export const useAuth = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, isAuthenticated } = useAuthStore();
-  const { login: loginStore, logout: logoutStore, setLoading, setError } = useAuthActions();
+  const {
+    login: loginStore,
+    logout: logoutStore,
+    setLoading,
+    setError,
+    handleAuthFailure,
+  } = useAuthActions();
 
   // Login mutation
   const loginMutation = useMutation({
     mutationFn: AuthService.login,
-    onSuccess: (data) => {
+    onSuccess: data => {
       loginStore(data.user);
       message.success('Login successful!');
       navigate('/dashboard');
@@ -172,12 +179,17 @@ export const useAuth = () => {
     await resendVerificationMutation.mutateAsync(email);
   };
 
+  // Handle authentication failure manually
+  const triggerAuthFailure = () => {
+    handleAuthFailure();
+  };
+
   return {
     // State
     user,
     isAuthenticated,
     isLoading: loginMutation.isPending || registerMutation.isPending || logoutMutation.isPending,
-    
+
     // Mutations
     loginMutation,
     registerMutation,
@@ -187,7 +199,7 @@ export const useAuth = () => {
     resetPasswordMutation,
     verifyEmailMutation,
     resendVerificationMutation,
-    
+
     // Actions
     login,
     register,
@@ -197,6 +209,7 @@ export const useAuth = () => {
     resetPassword,
     verifyEmail,
     resendVerification,
+    triggerAuthFailure,
   };
 };
 

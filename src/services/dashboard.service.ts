@@ -16,19 +16,61 @@ export class DashboardService {
     try {
       // Fetch data in parallel for better performance
       const [usersResponse, clinicsResponse, appointmentsStats] = await Promise.all([
-        UsersService.getUsers({ limit: 1000, ...filters }),
-        ClinicsService.getClinics({ limit: 1000, ...filters }),
-        AppointmentsService.getStats(),
+        UsersService.getUsers({ limit: 1000, ...filters }).catch(error => {
+          // Handle authentication errors gracefully
+          if (error.response?.status === 401) {
+            return { data: [], total: 0 };
+          }
+          throw error;
+        }),
+        ClinicsService.getClinics({ limit: 1000, ...filters }).catch(error => {
+          // Handle authentication errors gracefully
+          if (error.response?.status === 401) {
+            return { data: [], total: 0 };
+          }
+          throw error;
+        }),
+        AppointmentsService.getStats().catch(error => {
+          // Handle authentication errors gracefully
+          if (error.response?.status === 401) {
+            return {
+              total: 0,
+              today: 0,
+              pending: 0,
+              confirmed: 0,
+              completed: 0,
+              cancelled: 0,
+            };
+          }
+          throw error;
+        }),
       ]);
 
-      // Calculate totals
-      const totalUsers = usersResponse.total;
-      const totalClinics = clinicsResponse.total;
-      const totalAppointments = appointmentsStats.total;
+      // Validate responses and provide fallbacks
+      if (!usersResponse || !usersResponse.data || !Array.isArray(usersResponse.data)) {
+        // Return empty data instead of throwing error
+        return this.getEmptyDashboardStats();
+      }
 
-      // Filter users by role with proper typing
-      const veterinarians = usersResponse.data.filter((user: any) => user.role === 'veterinarian');
-      const patients = usersResponse.data.filter((user: any) => user.role === 'patient');
+      if (!clinicsResponse || !clinicsResponse.data || !Array.isArray(clinicsResponse.data)) {
+        // Return empty data instead of throwing error
+        return this.getEmptyDashboardStats();
+      }
+
+      if (!appointmentsStats) {
+        // Return empty data instead of throwing error
+        return this.getEmptyDashboardStats();
+      }
+
+      // Calculate totals with safe fallbacks
+      const totalUsers = usersResponse.total || usersResponse.data.length || 0;
+      const totalClinics = clinicsResponse.total || clinicsResponse.data.length || 0;
+      const totalAppointments = appointmentsStats.total || 0;
+
+      // Filter users by role with proper null checking
+      const veterinarians =
+        usersResponse.data.filter((user: any) => user?.role === 'veterinarian') || [];
+      const patients = usersResponse.data.filter((user: any) => user?.role === 'patient') || [];
 
       // Calculate growth rate (mock for now - would need historical data)
       const growthRate = 12.5; // This would come from historical comparison
@@ -42,16 +84,16 @@ export class DashboardService {
       // Get top performing clinics
       const topPerformingClinics = await this.getTopPerformingClinics();
 
-      return {
+      const result = {
         totalUsers,
         totalAppointments,
         totalVeterinarians: veterinarians.length,
         totalPatients: patients.length,
         totalClinics,
-        appointmentsToday: appointmentsStats.today,
-        pendingAppointments: appointmentsStats.pending + appointmentsStats.confirmed,
-        completedAppointments: appointmentsStats.completed,
-        cancelledAppointments: appointmentsStats.cancelled,
+        appointmentsToday: appointmentsStats.today || 0,
+        pendingAppointments: (appointmentsStats.pending || 0) + (appointmentsStats.confirmed || 0),
+        completedAppointments: appointmentsStats.completed || 0,
+        cancelledAppointments: appointmentsStats.cancelled || 0,
         urgentAppointments: 0, // Not available in current stats
         revenueThisMonth,
         growthRate,
@@ -61,10 +103,42 @@ export class DashboardService {
         topPerformingClinics,
         recentActivity,
       };
-    } catch (error) {
-      console.error('Error fetching dashboard stats:', error);
+      console.log('DashboardService: Dashboard stats calculated successfully:', result);
+      return result;
+    } catch (error: any) {
+      console.error('DashboardService: Error fetching dashboard stats:', error);
+
+      // If it's an authentication error, return empty stats instead of throwing
+      if (error.response?.status === 401) {
+        console.warn('DashboardService: Authentication failed, returning empty dashboard data');
+        return this.getEmptyDashboardStats();
+      }
+
       throw error;
     }
+  }
+
+  // Get empty dashboard stats for unauthenticated users or errors
+  private static getEmptyDashboardStats(): DashboardStats {
+    return {
+      totalUsers: 0,
+      totalAppointments: 0,
+      totalVeterinarians: 0,
+      totalPatients: 0,
+      totalClinics: 0,
+      appointmentsToday: 0,
+      pendingAppointments: 0,
+      completedAppointments: 0,
+      cancelledAppointments: 0,
+      urgentAppointments: 0,
+      revenueThisMonth: 0,
+      growthRate: 0,
+      newUsersThisWeek: 0,
+      newClinicsThisMonth: 0,
+      averageAppointmentDuration: 0,
+      topPerformingClinics: [],
+      recentActivity: [],
+    };
   }
 
   // Get recent activity for dashboard
@@ -73,34 +147,44 @@ export class DashboardService {
       // This would typically come from a dedicated activity log endpoint
       // For now, we'll simulate with recent users and appointments
       const [recentUsers, recentAppointments] = await Promise.all([
-        UsersService.getUsers({ limit: 10, sortBy: 'createdAt', sortOrder: 'desc' }),
-        AppointmentsService.getAll({ limit: 10 }),
+        UsersService.getUsers({ limit: 10, sortBy: 'createdAt', sortOrder: 'desc' }).catch(() => ({
+          data: [],
+        })),
+        AppointmentsService.getAll({ limit: 10 }).catch(() => ({ appointments: [] })),
       ]);
 
       const activities: RecentActivityItem[] = [];
 
-      // Add recent user registrations
-      recentUsers.data.slice(0, 5).forEach((user: any) => {
-        activities.push({
-          id: `user_${user.id}`,
-          type: 'user_registration',
-          description: `New ${user.role} registered`,
-          timestamp: user.createdAt,
-          userName: `${user.firstName} ${user.lastName}`,
+      // Add recent user registrations with null checking
+      if (recentUsers?.data && Array.isArray(recentUsers.data)) {
+        recentUsers.data.slice(0, 5).forEach((user: any) => {
+          if (user?.id && user?.role && user?.firstName && user?.lastName && user?.createdAt) {
+            activities.push({
+              id: `user_${user.id}`,
+              type: 'user_registration',
+              description: `New ${user.role} registered`,
+              timestamp: user.createdAt,
+              userName: `${user.firstName} ${user.lastName}`,
+            });
+          }
         });
-      });
+      }
 
-      // Add recent appointments
-      recentAppointments.appointments.slice(0, 5).forEach((appointment: any) => {
-        activities.push({
-          id: `appointment_${appointment.id}`,
-          type: 'appointment_created',
-          description: `New appointment scheduled`,
-          timestamp: appointment.created_at,
-          userName: appointment.owner_id, // Using owner_id as patient name for now
-          clinicName: appointment.clinic_id, // Using clinic_id as clinic name for now
+      // Add recent appointments with null checking
+      if (recentAppointments?.appointments && Array.isArray(recentAppointments.appointments)) {
+        recentAppointments.appointments.slice(0, 5).forEach((appointment: any) => {
+          if (appointment?.id && appointment?.created_at) {
+            activities.push({
+              id: `appointment_${appointment.id}`,
+              type: 'appointment_created',
+              description: `New appointment scheduled`,
+              timestamp: appointment.created_at,
+              userName: appointment.owner_id || 'Unknown', // Using owner_id as patient name for now
+              clinicName: appointment.clinic_id || 'Unknown', // Using clinic_id as clinic name for now
+            });
+          }
         });
-      });
+      }
 
       // Sort by timestamp and return latest 10
       return activities
@@ -119,11 +203,16 @@ export class DashboardService {
         limit: 10,
         sortBy: 'rating',
         sortOrder: 'desc',
-      });
+      }).catch(() => ({ data: [] }));
+
+      if (!clinics?.data || !Array.isArray(clinics.data)) {
+        console.warn('Invalid clinics response structure:', clinics);
+        return [];
+      }
 
       return clinics.data.slice(0, 5).map((clinic: any) => ({
-        id: clinic.id,
-        name: clinic.name,
+        id: clinic.id || 'unknown',
+        name: clinic.name || 'Unknown Clinic',
         totalAppointments: 0, // Would need to fetch from appointments service
         rating: clinic.rating || 0,
         revenue: 0, // Would need payment integration
@@ -143,7 +232,12 @@ export class DashboardService {
       const users = await UsersService.getUsers({
         limit: 1000,
         dateRange: [cutoffDate.toISOString(), new Date().toISOString()],
-      });
+      }).catch(() => ({ data: [] }));
+
+      if (!users?.data || !Array.isArray(users.data)) {
+        console.warn('Invalid users response structure in getNewUsersCount:', users);
+        return 0;
+      }
 
       return users.data.length;
     } catch (error) {
@@ -160,7 +254,12 @@ export class DashboardService {
 
       const clinics = await ClinicsService.getClinics({
         limit: 1000,
-      });
+      }).catch(() => ({ data: [] }));
+
+      if (!clinics?.data || !Array.isArray(clinics.data)) {
+        console.warn('Invalid clinics response structure in getNewClinicsCount:', clinics);
+        return 0;
+      }
 
       return clinics.data.length;
     } catch (error) {
@@ -173,14 +272,30 @@ export class DashboardService {
   static async getDashboardCharts(filters: DashboardFilters = {}) {
     try {
       const [appointmentsStats, userStats] = await Promise.all([
-        AppointmentsService.getStats(),
-        UsersService.getUsers({ limit: 1000, ...filters }),
+        AppointmentsService.getStats().catch(() => ({
+          total: 0,
+          today: 0,
+          pending: 0,
+          confirmed: 0,
+          completed: 0,
+          cancelled: 0,
+        })),
+        UsersService.getUsers({ limit: 1000, ...filters }).catch(() => ({ data: [] })),
       ]);
+
+      // Validate responses
+      if (!appointmentsStats) {
+        throw new Error('Invalid appointments stats received');
+      }
+
+      if (!userStats?.data || !Array.isArray(userStats.data)) {
+        throw new Error('Invalid user stats received');
+      }
 
       // Prepare chart data
       const appointmentStatusChart = Object.entries(appointmentsStats).map(([status, count]) => ({
         name: status.charAt(0).toUpperCase() + status.slice(1),
-        value: count,
+        value: count || 0,
         color: this.getStatusColor(status),
       }));
 
@@ -193,7 +308,9 @@ export class DashboardService {
       ];
 
       const userRoleChart = userStats.data.reduce((acc: Record<string, number>, user: any) => {
-        acc[user.role] = (acc[user.role] || 0) + 1;
+        if (user?.role) {
+          acc[user.role] = (acc[user.role] || 0) + 1;
+        }
         return acc;
       }, {});
 

@@ -1,38 +1,30 @@
-import React, { useState } from 'react';
+import { ROUTES } from '@/constants';
+import { useAuth } from '@/hooks';
+import { Appointments, Calendar, Dashboard, Reports, Settings, Users } from '@/pages';
 import {
-  Layout,
-  Menu,
-  Button,
   Avatar,
-  Dropdown,
-  Space,
   Badge,
-  Typography,
-  type MenuProps,
-} from 'antd';
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  DashboardOutlined,
-  CalendarOutlined,
-  UserOutlined,
-  TeamOutlined,
-  FileTextOutlined,
-  SettingOutlined,
-  LogoutOutlined,
   BellOutlined,
-  SearchOutlined,
-  PlusOutlined,
+  Button,
+  CalendarOutlined,
+  DashboardOutlined,
+  Dropdown,
+  FileTextOutlined,
   FilterOutlined,
-} from '@ant-design/icons';
-import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import Dashboard from '@/pages/dashboard';
-import Calendar from '@/pages/calendar';
-import Users from '@/pages/users';
-import Appointments from '@/pages/appointments';
-import Reports from '@/pages/reports';
-import Settings from '@/pages/settings';
+  Layout,
+  LogoutOutlined,
+  Menu,
+  MenuOutlined,
+  PlusOutlined,
+  SettingOutlined,
+  Space,
+  TeamOutlined,
+  Typography,
+  UserOutlined,
+  type MenuProps,
+} from '@/ui';
+import React, { useState } from 'react';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -44,7 +36,7 @@ const AdminLayout: React.FC = () => {
   const { user, logout } = useAuth();
 
   const handleToggleCollapsed = () => {
-    setCollapsed(!collapsed);
+    setCollapsed(prev => !prev);
   };
 
   // Menu items configuration
@@ -126,7 +118,7 @@ const AdminLayout: React.FC = () => {
   // Get current selected menu item
   const getSelectedKey = (): string => {
     const path = location.pathname;
-    return menuItems?.find(item => item?.key === path)?.key?.toString() || '/dashboard';
+    return menuItems?.find(item => item?.key === path)?.key?.toString() || ROUTES.DASHBOARD;
   };
 
   return (
@@ -163,22 +155,11 @@ const AdminLayout: React.FC = () => {
           <div className='flex items-center space-x-4'>
             <Button
               type='text'
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              icon={<MenuOutlined />}
               onClick={handleToggleCollapsed}
               className='text-lg'
             />
-
-            {/* Search Bar */}
-            <div className='relative'>
-              <SearchOutlined className='absolute left-3 top-1/2 transform -translate-y-1/2 text-text-light' />
-              <input
-                type='text'
-                placeholder='Search...'
-                className='pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-navy focus:border-transparent w-64'
-              />
-            </div>
           </div>
-
           <div className='flex items-center space-x-4'>
             {/* Action Buttons */}
             <Space>

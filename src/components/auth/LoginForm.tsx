@@ -49,7 +49,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
   return (
     <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark p-4'>
-      <Card className='w-full max-w-md shadow-admin-lg' bodyStyle={{ padding: '2rem' }}>
+      <Card className='w-full max-w-md shadow-admin-lg p-8'>
         <div className='text-center mb-8'>
           <div className='mb-4'>
             <div className='w-16 h-16 bg-gradient-to-r from-primary-navy to-primary-orange rounded-full flex items-center justify-center mx-auto'>

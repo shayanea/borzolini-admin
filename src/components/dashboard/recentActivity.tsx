@@ -1,12 +1,14 @@
-import React from 'react';
-import { Card, List, Avatar, Typography } from 'antd';
+import { Avatar, Card, Empty, List, Typography } from 'antd';
 import {
-  UserOutlined,
-  HomeOutlined,
   CalendarOutlined,
   ClockCircleOutlined,
+  FolderOutlined,
+  HomeOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
+
 import type { DashboardStats } from '@/types';
+import React from 'react';
 
 const { Text } = Typography;
 
@@ -58,24 +60,20 @@ const RecentActivity: React.FC<RecentActivityProps> = ({ stats }) => {
             />
           }
           title={
-            <div className="flex items-center justify-between">
-              <span className="font-medium">{item.description}</span>
-              <span className="text-xs text-text-light">
+            <div className='flex items-center justify-between'>
+              <span className='font-medium'>{item.description}</span>
+              <span className='text-xs text-text-light'>
                 {new Date(item.timestamp).toLocaleDateString()}
               </span>
             </div>
           }
           description={
-            <div className="space-y-1">
+            <div className='space-y-1'>
               {item.userName && (
-                <div className="text-sm text-primary-navy font-medium">
-                  {item.userName}
-                </div>
+                <div className='text-sm text-primary-navy font-medium'>{item.userName}</div>
               )}
               {item.clinicName && (
-                <div className="text-sm text-text-light">
-                  Clinic: {item.clinicName}
-                </div>
+                <div className='text-sm text-text-light'>Clinic: {item.clinicName}</div>
               )}
             </div>
           }
@@ -84,25 +82,41 @@ const RecentActivity: React.FC<RecentActivityProps> = ({ stats }) => {
     );
   }
 
+  const hasActivity = stats.recentActivity && stats.recentActivity.length > 0;
+
   return (
     <Card
-      title="Recent Activity"
-      className="admin-card"
+      title='Recent Activity'
+      className='admin-card border-0 shadow-sm'
       extra={
-        <Text 
-          className="text-primary-navy cursor-pointer hover:underline"
+        <Text
+          className='text-primary-navy cursor-pointer hover:underline font-medium'
           onClick={handleViewAll}
         >
           View All
         </Text>
       }
     >
-      <List
-        itemLayout="horizontal"
-        dataSource={stats.recentActivity}
-        rowKey="id"
-        renderItem={renderActivityItem}
-      />
+      {hasActivity ? (
+        <List
+          itemLayout='horizontal'
+          dataSource={stats.recentActivity}
+          rowKey='id'
+          renderItem={renderActivityItem}
+        />
+      ) : (
+        <div className='py-12 text-center'>
+          <Empty
+            image={<FolderOutlined className='text-4xl text-gray-300' />}
+            description={
+              <div className='space-y-2'>
+                <Text className='text-lg text-gray-500'>No data</Text>
+                <Text className='text-sm text-gray-400 block'>No recent activity to display</Text>
+              </div>
+            }
+          />
+        </div>
+      )}
     </Card>
   );
 };

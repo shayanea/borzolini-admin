@@ -4,14 +4,23 @@ import type { DashboardFilters } from '@/types/dashboard';
 import DashboardService from '@/services/dashboard.service';
 import type { DashboardStats } from '@/types';
 import { message } from 'antd';
+import { useAuth } from '@/hooks/useAuth';
 
 export const useDashboard = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<DashboardFilters>({});
+  const { isAuthenticated } = useAuth();
 
   const fetchDashboardData = useCallback(async () => {
+    // Don't fetch data if user is not authenticated
+    if (!isAuthenticated) {
+      setLoading(false);
+      setError('User not authenticated');
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -24,11 +33,17 @@ export const useDashboard = () => {
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [filters, isAuthenticated]);
 
   useEffect(() => {
-    fetchDashboardData();
-  }, [fetchDashboardData]);
+    // Only fetch data if user is authenticated
+    if (isAuthenticated) {
+      fetchDashboardData();
+    } else {
+      setLoading(false);
+      setError('User not authenticated');
+    }
+  }, [fetchDashboardData, isAuthenticated]);
 
   const handleDateRangeChange = useCallback((dates: any) => {
     if (dates) {
@@ -50,8 +65,10 @@ export const useDashboard = () => {
   }, []);
 
   const handleRefresh = useCallback(() => {
-    fetchDashboardData();
-  }, [fetchDashboardData]);
+    if (isAuthenticated) {
+      fetchDashboardData();
+    }
+  }, [fetchDashboardData, isAuthenticated]);
 
   return {
     stats,

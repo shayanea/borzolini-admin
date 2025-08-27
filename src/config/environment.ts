@@ -3,8 +3,8 @@ export const environment = {
   api: {
     baseUrl: (import.meta as any).env?.VITE_API_URL || 'http://localhost:3001/api/v1',
     timeout: parseInt((import.meta as any).env?.VITE_API_TIMEOUT || '30000'),
-    retryAttempts: parseInt((import.meta as any).env?.VITE_API_RETRY_ATTEMPTS || '3'),
-    retryDelay: parseInt((import.meta as any).env?.VITE_API_RETRY_DELAY || '1000'),
+    retryAttempts: parseInt((import.meta as any).env?.VITE_API_RETRY_ATTEMPTS || '2'),
+    retryDelay: parseInt((import.meta as any).env?.VITE_API_RETRY_DELAY || '5000'),
   },
 
   // App Configuration

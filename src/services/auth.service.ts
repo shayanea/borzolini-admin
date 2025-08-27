@@ -1,14 +1,14 @@
-import { apiService } from './api';
 import type {
-  LoginCredentials,
-  RegisterData,
   AuthResponse,
   AuthStatus,
-  User,
   ChangePasswordData,
   ForgotPasswordData,
+  LoginCredentials,
+  RegisterData,
   ResetPasswordData,
+  User,
 } from '@/types';
+import { apiService } from './api';
 
 export class AuthService {
   // Login
@@ -74,11 +74,6 @@ export class AuthService {
   // Verify phone
   static async verifyPhone(phone: string, otp: string): Promise<{ message: string }> {
     return apiService.post<{ message: string }>('/auth/verify-phone', { phone, otp });
-  }
-
-  // Refresh token
-  static async refreshToken(): Promise<{ message: string }> {
-    return apiService.post<{ message: string }>('/auth/refresh');
   }
 }
 

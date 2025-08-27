@@ -1,7 +1,7 @@
 import type { DashboardStats } from './index';
 
 export interface DashboardHeaderProps {
-  onDateRangeChange: (dates: any, dateStrings: [string, string]) => void;
+  onDateRangeChange?: (dates: [any, any] | null) => void;
   onClearFilters: () => void;
   onRefresh: () => void;
   loading: boolean;
