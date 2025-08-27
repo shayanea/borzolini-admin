@@ -1,10 +1,10 @@
+import { appointmentsCache, calendarCache, usersCache } from './cache.service';
 import axios, {
   AxiosInstance,
   AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
-import { appointmentsCache, calendarCache, usersCache } from './cache.service';
 
 import { environment } from '@/config/environment';
 import { message } from 'antd';
@@ -19,7 +19,7 @@ const RETRY_DELAY = environment.api.retryDelay;
 export const createAuthFailureEvent = () => {
   if (typeof window !== 'undefined' && window.CustomEvent) {
     return new window.CustomEvent('auth:unauthorized', {
-      detail: { timestamp: Date.now() }
+      detail: { timestamp: Date.now() },
     });
   }
   // Fallback for environments without CustomEvent
@@ -136,70 +136,85 @@ api.interceptors.response.use(
   }
 );
 
-// Error handling
+// Centralized error handling for all HTTP status codes
 const handleApiError = (error: any) => {
   const { response } = error;
 
   if (response) {
     const { status, data } = response;
 
-    // Handle specific error cases
+    // Handle all HTTP status codes in one place
     switch (status) {
-      case 401:
-        // Unauthorized - dispatch auth failure event instead of redirecting
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(createAuthFailureEvent());
-        }
-        // Don't show error message for 401 as it's handled by auth system
-        break;
-
+      // 401 is handled by axios interceptor for automatic token refresh
       case 403:
-        // Forbidden - show access denied message
         message.error('Access denied. You do not have permission to perform this action.');
         break;
 
       case 404:
-        // Not found
         message.error('The requested resource was not found.');
         break;
 
+      case 409:
+        message.error('Conflict: The resource already exists or cannot be created.');
+        break;
+
       case 422:
-        // Validation error
+        // Validation error - show detailed messages
         if (data.message && Array.isArray(data.message)) {
           message.error(data.message.join(', '));
         } else if (data.message) {
           message.error(data.message);
+        } else {
+          message.error('Validation failed. Please check your input and try again.');
         }
         break;
 
       case 429:
-        // Rate limited
         message.error('Too many requests. Please try again later.');
         break;
 
       case 500:
-        // Server error
         message.error('An internal server error occurred. Please try again later.');
         break;
 
+      case 502:
+        message.error('Bad gateway. Please try again later.');
+        break;
+
+      case 503:
+        message.error('Service temporarily unavailable. Please try again later.');
+        break;
+
+      case 504:
+        message.error('Gateway timeout. Please try again later.');
+        break;
+
       default:
-        // Other errors
+        // Other HTTP errors
         if (data.message) {
           message.error(data.message);
         } else {
-          message.error('An unexpected error occurred.');
+          message.error(`Request failed with status ${status}. Please try again.`);
         }
     }
   } else if (error.request) {
-    // Network error - check if we have cached data
-    if (environment.features.enableOfflineMode) {
+    // Network errors
+    if (error.code === 'ERR_NETWORK') {
+      message.error('Network error. Please check your connection and try again.');
+    } else if (error.code === 'ECONNABORTED') {
+      message.error('Request timeout. Please try again.');
+    } else if (environment.features.enableOfflineMode) {
       message.warning('Network error. Showing cached data if available.');
     } else {
       message.error('Network error. Please check your connection and try again.');
     }
   } else {
-    // Other errors
-    message.error('An unexpected error occurred.');
+    // Other errors (like business logic errors from services)
+    if (error.message) {
+      message.error(error.message);
+    } else {
+      message.error('An unexpected error occurred.');
+    }
   }
 
   return Promise.reject(error);
@@ -214,7 +229,7 @@ const createCacheKey = (url: string, params?: any): string => {
 // Utility function for building query parameters consistently
 const buildQueryParams = (filters: Record<string, any>): URLSearchParams => {
   const params = new URLSearchParams();
-  
+
   Object.entries(filters).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
       // Handle arrays by joining with commas
@@ -227,7 +242,7 @@ const buildQueryParams = (filters: Record<string, any>): URLSearchParams => {
       }
     }
   });
-  
+
   return params;
 };
 

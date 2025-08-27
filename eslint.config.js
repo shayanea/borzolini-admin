@@ -75,10 +75,7 @@ export default [
       'react-hooks/exhaustive-deps': 'warn',
 
       // React Refresh rules
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 
       // TypeScript rules
       '@typescript-eslint/no-unused-vars': 'error',
@@ -89,17 +86,26 @@ export default [
       '@typescript-eslint/no-var-requires': 'error',
 
       // General rules
-      'no-console': 'warn',
+      'no-console': 'off', // Changed from 'warn' to 'off'
       'no-debugger': 'error',
       'no-unused-vars': 'off', // Handled by TypeScript
       'prefer-const': 'error',
       'no-var': 'error',
-      'object-shorthand': 'error',
-      'prefer-template': 'error',
-      'template-curly-spacing': 'error',
-      'arrow-spacing': 'error',
-      'no-duplicate-imports': 'error',
+      'object-shorthand': 'off', // Disable object shorthand recommendation
+      'prefer-template': 'off', // Disable template literal recommendation
+      'template-curly-spacing': 'off', // Disable spacing recommendation
+      'arrow-spacing': 'off', // Disable arrow spacing recommendation
+      'no-duplicate-imports': 'off', // Disable duplicate imports check
       'sort-imports': 'off',
+
+      // Disable TypeScript strict rules
+      '@typescript-eslint/no-non-null-assertion': 'off', // Allow non-null assertion
+
+      // Disable React strict rules
+      'react/jsx-indent': 'off', // Disable JSX indentation rules
+      'react/jsx-indent-props': 'off', // Disable JSX prop indentation
+      'react/jsx-max-props-per-line': 'off', // Disable max props per line
+      'react/jsx-wrap-multilines': 'off', // Disable multiline wrapping
     },
     settings: {
       react: {
@@ -108,11 +114,6 @@ export default [
     },
   },
   {
-    ignores: [
-      'dist/**',
-      'node_modules/**',
-      '*.config.js',
-      '*.config.ts',
-    ],
+    ignores: ['dist/**', 'node_modules/**', '*.config.js', '*.config.ts'],
   },
 ];

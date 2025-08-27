@@ -3,6 +3,7 @@ export {
   APPOINTMENT_PRIORITY_COLORS,
   APPOINTMENT_STATUS_COLORS,
   APPOINTMENT_STATUSES,
+  APPOINTMENT_TYPES,
 } from './appointments';
 export { ACTIVITY_COLORS, ACTIVITY_TYPES, QUICK_ACTIONS } from './dashboard';
 export { DEFAULT_METRICS, METRIC_COLORS } from './reports';
@@ -24,14 +25,14 @@ export const QUERY_PARAMS = {
   // Pagination
   PAGE: 'page',
   LIMIT: 'limit',
-  
+
   // Search and filtering
   SEARCH: 'search',
   STATUS: 'status',
   TYPE: 'type',
   PRIORITY: 'priority',
   ROLE: 'role',
-  
+
   // Date filters
   DATE_FROM: 'date_from',
   DATE_TO: 'date_to',
@@ -39,7 +40,7 @@ export const QUERY_PARAMS = {
   END_DATE: 'endDate',
   TIME_FROM: 'timeFrom',
   TIME_TO: 'timeTo',
-  
+
   // Location filters
   CITY: 'city',
   COUNTRY: 'country',
@@ -48,27 +49,27 @@ export const QUERY_PARAMS = {
   PET_ID: 'pet_id',
   OWNER_ID: 'owner_id',
   VETERINARIAN_ID: 'veterinarianId',
-  
+
   // Boolean filters
   IS_TELEMEDICINE: 'is_telemedicine',
   IS_HOME_VISIT: 'is_home_visit',
   IS_VERIFIED: 'isVerified',
   INCLUDE_CANCELLED: 'includeCancelled',
-  
+
   // Cost and duration filters
   COST_MIN: 'cost_min',
   COST_MAX: 'cost_max',
   DURATION_MIN: 'duration_min',
   DURATION_MAX: 'duration_max',
-  
+
   // Sorting
   SORT_BY: 'sort_by',
   SORT_ORDER: 'sort_order',
-  
+
   // Array filters (comma-separated)
   VETERINARIAN_IDS: 'veterinarianIds',
   PET_TYPES: 'petTypes',
-  
+
   // Additional filters
   APPOINTMENT_TYPE: 'appointmentType',
   LAST_LOGIN_FROM: 'lastLoginFrom',

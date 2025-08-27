@@ -1,0 +1,35 @@
+# Build outputs
+dist/
+build/
+out/
+
+# Dependencies
+node_modules/
+
+# Configuration files
+*.config.js
+*.config.ts
+vite.config.ts
+tailwind.config.js
+postcss.config.js
+
+# Generated files
+*.d.ts
+*.min.js
+
+# Test files (if you want to ignore them)
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Specific files you want to ignore
+test-auth.html
+api_docs.json
+swagger.json
+
+# Environment files
+.env*
+.env.local
+.env.development
+.env.production

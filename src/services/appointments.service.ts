@@ -113,21 +113,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error('Failed to fetch appointments:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to view appointments.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to view appointments.');
-      } else if (error.response?.status === 404) {
-        throw new Error('Appointments service not found. Please contact support.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to fetch appointments. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -145,21 +132,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error('Failed to fetch my appointments:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to view your appointments.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to view appointments.');
-      } else if (error.response?.status === 404) {
-        throw new Error('My appointments service not found. Please contact support.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to fetch your appointments. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -181,21 +155,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error('Failed to fetch pet appointments:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to view pet appointments.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to view pet appointments.');
-      } else if (error.response?.status === 404) {
-        throw new Error('Pet appointments service not found. Please contact support.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to fetch pet appointments. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -220,21 +181,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error('Failed to fetch clinic appointments:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to view clinic appointments.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to view clinic appointments.');
-      } else if (error.response?.status === 404) {
-        throw new Error('Clinic appointments service not found. Please contact support.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to fetch clinic appointments. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -259,21 +207,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error('Failed to fetch staff appointments:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to view staff appointments.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to view staff appointments.');
-      } else if (error.response?.status === 404) {
-        throw new Error('Staff appointments service not found. Please contact support.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to fetch staff appointments. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -295,21 +230,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error('Failed to fetch appointment:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to view appointment details.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to view this appointment.');
-      } else if (error.response?.status === 404) {
-        throw new Error('Appointment not found. Please check the ID and try again.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to fetch appointment details. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -336,21 +258,8 @@ export class AppointmentsService {
       }
     } catch (error: any) {
       console.error('Failed to create appointment:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to create appointments.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to create appointments.');
-      } else if (error.response?.status === 422) {
-        throw new Error('Invalid appointment data. Please check your input and try again.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to create appointment. Please check your input and try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -375,23 +284,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error('Failed to update appointment:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to update appointments.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to update this appointment.');
-      } else if (error.response?.status === 404) {
-        throw new Error('Appointment not found. Please check the ID and try again.');
-      } else if (error.response?.status === 422) {
-        throw new Error('Invalid appointment data. Please check your input and try again.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to update appointment. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -418,23 +312,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error('Failed to update appointment status:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to update appointment status.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to update appointment status.');
-      } else if (error.response?.status === 404) {
-        throw new Error('Appointment not found. Please check the ID and try again.');
-      } else if (error.response?.status === 422) {
-        throw new Error('Invalid status data. Please check your input and try again.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to update appointment status. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -461,25 +340,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error('Failed to reschedule appointment:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to reschedule appointments.');
-      } else if (error.response?.status === 403) {
-        throw new Error(
-          'Access denied. You do not have permission to reschedule this appointment.'
-        );
-      } else if (error.response?.status === 404) {
-        throw new Error('Appointment not found. Please check the ID and try again.');
-      } else if (error.response?.status === 422) {
-        throw new Error('Invalid date data. Please check your input and try again.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to reschedule appointment. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -498,21 +360,8 @@ export class AppointmentsService {
       appointmentsCache.clear();
     } catch (error: any) {
       console.error('Failed to cancel appointment:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to cancel appointments.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to cancel this appointment.');
-      } else if (error.response?.status === 404) {
-        throw new Error('Appointment not found. Please check the ID and try again.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to cancel appointment. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -531,21 +380,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error("Failed to fetch today's appointments:", error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error("Authentication required. Please log in to view today's appointments.");
-      } else if (error.response?.status === 403) {
-        throw new Error("Access denied. You do not have permission to view today's appointments.");
-      } else if (error.response?.status === 404) {
-        throw new Error("Today's appointments service not found. Please contact support.");
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error("Failed to fetch today's appointments. Please try again.");
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -567,21 +403,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error('Failed to fetch upcoming appointments:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to view upcoming appointments.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to view upcoming appointments.');
-      } else if (error.response?.status === 404) {
-        throw new Error('Upcoming appointments service not found. Please contact support.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to fetch upcoming appointments. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -617,21 +440,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error('Failed to fetch available slots:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to view available time slots.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to view available time slots.');
-      } else if (error.response?.status === 404) {
-        throw new Error('Available slots service not found. Please contact support.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to fetch available time slots. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -650,21 +460,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error('Failed to fetch appointment stats:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to view statistics.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to view statistics.');
-      } else if (error.response?.status === 404) {
-        throw new Error('Statistics service not found. Please contact support.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to fetch appointment statistics. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -691,21 +488,8 @@ export class AppointmentsService {
       return response;
     } catch (error: any) {
       console.error('Failed to bulk update appointments:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to bulk update appointments.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to bulk update appointments.');
-      } else if (error.response?.status === 422) {
-        throw new Error('Invalid appointment data. Please check your input and try again.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to update appointments. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 
@@ -742,19 +526,8 @@ export class AppointmentsService {
       return await response.blob();
     } catch (error: any) {
       console.error('Failed to export appointments:', error);
-
-      // Handle specific error types
-      if (error.response?.status === 401) {
-        throw new Error('Authentication required. Please log in to export appointments.');
-      } else if (error.response?.status === 403) {
-        throw new Error('Access denied. You do not have permission to export appointments.');
-      } else if (error.response?.status >= 500) {
-        throw new Error('Server error. Please try again later.');
-      } else if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        throw new Error('Network error. Please check your connection and try again.');
-      }
-
-      throw new Error('Failed to export appointments. Please try again.');
+      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      throw error;
     }
   }
 }

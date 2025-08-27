@@ -1,13 +1,11 @@
-import {
-  APPOINTMENT_PRIORITIES,
-  APPOINTMENT_STATUSES,
-  APPOINTMENT_TYPES,
-} from '@/constants/appointments';
-import type { AppointmentPriority, AppointmentStatus, AppointmentType } from '@/types';
-import {
+import { APPOINTMENT_PRIORITIES, APPOINTMENT_STATUSES, APPOINTMENT_TYPES } from '@/constants';
+import type {
+  AppointmentPriority,
+  AppointmentStatus,
+  AppointmentType,
   AppointmentsFiltersProps,
   AppointmentsFilters as AppointmentsFiltersType,
-} from '@/types/appointments';
+} from '@/types';
 import { Button, Card, DatePicker, Input, Select, Space } from 'antd';
 import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 
