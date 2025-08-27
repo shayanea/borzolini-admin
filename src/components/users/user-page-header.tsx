@@ -5,14 +5,26 @@ import type { UserPageHeaderProps } from '@/types/user-management';
 
 const { Title, Text } = Typography;
 
-const UserPageHeader = ({ onRefresh, onExport, onAddUser, loading }: UserPageHeaderProps) => {
+interface UserPageHeaderPropsWithTitle extends UserPageHeaderProps {
+  title?: string;
+  subtitle?: string;
+}
+
+const UserPageHeader = ({ 
+  onRefresh, 
+  onExport, 
+  onAddUser, 
+  loading, 
+  title = 'Users',
+  subtitle = 'Manage clinic users and staff members'
+}: UserPageHeaderPropsWithTitle) => {
   return (
     <div className='flex items-center justify-between'>
       <div>
         <Title level={2} className='!mb-2'>
-          Users
+          {title}
         </Title>
-        <Text className='text-text-light'>Manage clinic users and staff members</Text>
+        <Text className='text-text-light'>{subtitle}</Text>
       </div>
 
       <Space>
@@ -28,7 +40,7 @@ const UserPageHeader = ({ onRefresh, onExport, onAddUser, loading }: UserPageHea
           className='bg-primary-navy border-primary-navy'
           onClick={onAddUser}
         >
-          Add User
+          Add {title === 'Veterinarians' ? 'Veterinarian' : 'User'}
         </Button>
       </Space>
     </div>

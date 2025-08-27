@@ -5,3 +5,4 @@ export { useCalendar } from './use-calendar';
 export { useDashboard } from './use-dashboard';
 export { useReports } from './use-reports';
 export { useSettings } from './use-settings';
+export { useUserManagement } from './use-user-management';

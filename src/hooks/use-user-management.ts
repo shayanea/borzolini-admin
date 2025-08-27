@@ -45,7 +45,7 @@ interface UseUserManagementReturn {
   setSelectedRowKeys: (keys: string[]) => void;
 }
 
-export const useUserManagement = (): UseUserManagementReturn => {
+export const useUserManagement = (roleFilter?: UserRole): UseUserManagementReturn => {
   // Basic state
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
@@ -76,7 +76,7 @@ export const useUserManagement = (): UseUserManagementReturn => {
         page: currentPage,
         limit: pageSize,
         search: searchText || undefined,
-        role: selectedRole || undefined,
+        role: roleFilter || selectedRole || undefined,
         status: selectedStatus || undefined,
         dateRange: dateRange || undefined,
         sortBy,
@@ -96,6 +96,7 @@ export const useUserManagement = (): UseUserManagementReturn => {
     currentPage,
     pageSize,
     searchText,
+    roleFilter,
     selectedRole,
     selectedStatus,
     dateRange,
@@ -106,7 +107,17 @@ export const useUserManagement = (): UseUserManagementReturn => {
   // Load users on component mount and when filters change
   useEffect(() => {
     fetchUsers();
-  }, [fetchUsers]);
+  }, [
+    currentPage,
+    pageSize,
+    searchText,
+    roleFilter,
+    selectedRole,
+    selectedStatus,
+    dateRange,
+    sortBy,
+    sortOrder,
+  ]);
 
   // Handle search
   const handleSearch = useCallback((value: string) => {

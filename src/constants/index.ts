@@ -8,6 +8,7 @@ export { ACTIVITY_COLORS, ACTIVITY_TYPES, QUICK_ACTIONS } from './dashboard';
 export { DEFAULT_METRICS, METRIC_COLORS } from './reports';
 export { ROUTES } from './routes';
 export { APPOINTMENT_DURATIONS, CURRENCIES, DEFAULT_SETTINGS, TIMEZONES } from './settings';
+export { theme } from './theme';
 export {
   ACCOUNT_STATUSES,
   DEFAULT_SORT_FIELD,

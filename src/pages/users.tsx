@@ -7,10 +7,15 @@ import {
 } from '@/components/users';
 
 import { Card } from 'antd';
+import { UserRole } from '@/types';
 import { useCallback } from 'react';
-import { useUserManagement } from '@/hooks/use-user-management';
+import { useUserManagement } from '@/hooks';
 
-const Users = () => {
+interface UsersProps {
+  roleFilter?: UserRole;
+}
+
+const Users = ({ roleFilter }: UsersProps) => {
   const {
     // State
     users,
@@ -42,7 +47,7 @@ const Users = () => {
     handleBulkDelete,
     handleExport,
     setSelectedRowKeys,
-  } = useUserManagement();
+  } = useUserManagement(roleFilter);
 
   const handleRefresh = useCallback(() => {
     window.location.reload();
@@ -60,6 +65,12 @@ const Users = () => {
         onExport={handleExport}
         onAddUser={handleAddUser}
         loading={loading}
+        title={roleFilter === 'veterinarian' ? 'Veterinarians' : 'Users'}
+        subtitle={
+          roleFilter === 'veterinarian'
+            ? 'Manage clinic veterinarians'
+            : 'Manage clinic users and staff members'
+        }
       />
 
       {/* Search and Filters */}

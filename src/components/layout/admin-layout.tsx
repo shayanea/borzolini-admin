@@ -27,9 +27,13 @@ import { Route, Routes } from 'react-router-dom';
 
 import { User } from '@/types';
 import { useAdminLayoutLogic } from './admin-layout.logic';
+import { useMemo } from 'react';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
+
+// Constants to prevent unnecessary re-renders
+const VETERINARIAN_ROLE_FILTER = 'veterinarian' as const;
 
 const renderHeader = (
   handleToggleCollapsed: () => void,
@@ -95,27 +99,6 @@ const renderHeader = (
   );
 };
 
-const renderContent = () => {
-  return (
-    <Content className='admin-content p-6 w-full'>
-      <div className='max-w-7xl mr-auto w-full'>
-        <Routes>
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/calendar' element={<Calendar />} />
-          <Route path='/appointments' element={<Appointments />} />
-          <Route path='/users' element={<Users />} />
-          <Route path='/veterinarians' element={<Users />} />
-          <Route path='/reports' element={<Reports />} />
-          <Route path='/settings' element={<Settings />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/api-health' element={<ApiHealth />} />
-          <Route path='/' element={<Dashboard />} />
-        </Routes>
-      </div>
-    </Content>
-  );
-};
-
 const AdminLayout = () => {
   const {
     collapsed,
@@ -126,6 +109,25 @@ const AdminLayout = () => {
     user,
     navigateToNewAppointment,
   } = useAdminLayoutLogic();
+
+  // Memoize the routes to prevent unnecessary re-renders
+  const routes = useMemo(
+    () => (
+      <Routes>
+        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/calendar' element={<Calendar />} />
+        <Route path='/appointments' element={<Appointments />} />
+        <Route path='/users' element={<Users />} />
+        <Route path='/veterinarians' element={<Users roleFilter={VETERINARIAN_ROLE_FILTER} />} />
+        <Route path='/reports' element={<Reports />} />
+        <Route path='/settings' element={<Settings />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path='/api-health' element={<ApiHealth />} />
+        <Route path='/' element={<Dashboard />} />
+      </Routes>
+    ),
+    []
+  );
 
   return (
     <Layout className='admin-layout'>
@@ -173,7 +175,9 @@ const AdminLayout = () => {
           user,
           collapsed
         )}
-        {renderContent()}
+        <Content className='admin-content p-6 w-full'>
+          <div className='max-w-7xl mr-auto w-full'>{routes}</div>
+        </Content>
       </Layout>
     </Layout>
   );

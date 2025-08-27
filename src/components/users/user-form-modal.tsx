@@ -16,22 +16,24 @@ const UserFormModal = ({
   const [form] = Form.useForm();
 
   React.useEffect(() => {
-    if (editingUser) {
-      form.setFieldsValue({
-        firstName: editingUser.firstName,
-        lastName: editingUser.lastName,
-        email: editingUser.email,
-        phone: editingUser.phone,
-        role: editingUser.role,
-        address: editingUser.address,
-        city: editingUser.city,
-        country: editingUser.country,
-        accountStatus: editingUser.accountStatus,
-      });
-    } else {
-      form.resetFields();
+    if (isVisible) {
+      if (editingUser) {
+        form.setFieldsValue({
+          firstName: editingUser.firstName,
+          lastName: editingUser.lastName,
+          email: editingUser.email,
+          phone: editingUser.phone,
+          role: editingUser.role,
+          address: editingUser.address,
+          city: editingUser.city,
+          country: editingUser.country,
+          accountStatus: editingUser.accountStatus,
+        });
+      } else {
+        form.resetFields();
+      }
     }
-  }, [editingUser, form]);
+  }, [editingUser, form, isVisible]);
 
   const handleSubmit = useCallback(
     (values: any) => {
@@ -41,17 +43,23 @@ const UserFormModal = ({
   );
 
   const handleCancel = useCallback(() => {
+    form.resetFields();
     onCancel();
-  }, [onCancel]);
+  }, [form, onCancel]);
+
+  // Don't render the form if modal is not visible
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <Modal
       title={editingUser ? 'Edit User' : 'Create New User'}
       open={isVisible}
-      onCancel={onCancel}
+      onCancel={handleCancel}
       footer={null}
       width={600}
-      destroyOnClose
+      destroyOnHidden={true}
     >
       <Form
         form={form}
