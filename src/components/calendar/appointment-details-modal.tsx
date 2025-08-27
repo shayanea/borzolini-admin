@@ -1,3 +1,4 @@
+import type { AppointmentDetailsModalProps, Clinic, Pet, Service } from '@/types/calendar-modals';
 import type { AppointmentPriority, AppointmentStatus, AppointmentType } from '@/types';
 import {
   Button,
@@ -16,44 +17,15 @@ import {
   message,
 } from 'antd';
 import { DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { UpdateAppointmentData } from '@/services/appointments.service';
-import type { Veterinarian } from '@/types/calendar';
 import { calendarService } from '@/services/calendar.service';
 import dayjs from 'dayjs';
 
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
-
-interface AppointmentDetailsModalProps {
-  visible: boolean;
-  onCancel: () => void;
-  onUpdate: (appointmentId: string, updates: UpdateAppointmentData) => Promise<void>;
-  onDelete: (appointmentId: string) => Promise<void>;
-  veterinarians: Veterinarian[];
-  appointment: any;
-}
-
-interface Pet {
-  id: string;
-  name: string;
-  type: string;
-  ownerName: string;
-}
-
-interface Clinic {
-  id: string;
-  name: string;
-}
-
-interface Service {
-  id: string;
-  name: string;
-  duration: number;
-  price: number;
-}
 
 const AppointmentDetailsModal = ({
   visible,
@@ -62,7 +34,7 @@ const AppointmentDetailsModal = ({
   onDelete,
   veterinarians,
   appointment,
-}) => {
+}: AppointmentDetailsModalProps) => {
   const [form] = Form.useForm();
   const [isEditing, setIsEditing] = useState(false);
   const [deleting, setDeleting] = useState(false);

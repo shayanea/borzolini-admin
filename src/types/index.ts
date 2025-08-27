@@ -218,6 +218,7 @@ export * from './appointments';
 
 // Calendar Types
 export * from './calendar';
+export * from './calendar-modals';
 
 // Reports Types
 export * from './reports';

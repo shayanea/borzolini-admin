@@ -1,3 +1,4 @@
+import type { AppointmentFormModalProps, Clinic, Pet, Service } from '@/types/calendar-modals';
 import type { AppointmentPriority, AppointmentStatus, AppointmentType } from '@/types';
 import {
   Button,
@@ -11,44 +12,15 @@ import {
   TimePicker,
   message,
 } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { CreateAppointmentData } from '@/services/appointments.service';
 import { SaveOutlined } from '@ant-design/icons';
-import type { Veterinarian } from '@/types/calendar';
 import { calendarService } from '@/services/calendar.service';
 import dayjs from 'dayjs';
 
 const { TextArea } = Input;
 const { Option } = Select;
-
-interface AppointmentFormModalProps {
-  visible: boolean;
-  onCancel: () => void;
-  onSubmit: (data: CreateAppointmentData) => Promise<void>;
-  loading?: boolean;
-  veterinarians: Veterinarian[];
-  currentDate?: dayjs.Dayjs;
-}
-
-interface Pet {
-  id: string;
-  name: string;
-  type: string;
-  ownerName: string;
-}
-
-interface Clinic {
-  id: string;
-  name: string;
-}
-
-interface Service {
-  id: string;
-  name: string;
-  duration: number;
-  price: number;
-}
 
 const AppointmentFormModal = ({
   visible,
@@ -57,7 +29,7 @@ const AppointmentFormModal = ({
   loading = false,
   veterinarians,
   currentDate = dayjs(),
-}) => {
+}: AppointmentFormModalProps) => {
   const [form] = Form.useForm();
   const [pets, setPets] = useState<Pet[]>([]);
   const [clinics, setClinics] = useState<Clinic[]>([]);
@@ -88,7 +60,6 @@ const AppointmentFormModal = ({
       setClinics(clinicsData);
       setServices(servicesData);
     } catch (error) {
-      console.error('Failed to load form data:', error);
       message.error('Failed to load form data. Please try again.');
     } finally {
       setLoadingData(false);
