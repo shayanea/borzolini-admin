@@ -12,7 +12,7 @@ const UserFormModal = ({
   loading,
   onCancel,
   onSubmit,
-}) => {
+}: UserFormModalProps) => {
   const [form] = Form.useForm();
 
   React.useEffect(() => {

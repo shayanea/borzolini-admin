@@ -1,30 +1,24 @@
-import React from 'react';
-import { Row, Col, Spin, Alert, Button } from 'antd';
-import { useDashboard } from '@/hooks/use-dashboard';
+import { Alert, Button, Col, Row, Spin } from 'antd';
 import {
   DashboardHeader,
-  StatisticsCards,
-  RecentActivity,
   QuickActions,
+  RecentActivity,
+  StatisticsCards,
   TopPerformingClinics,
 } from '@/components/dashboard';
 
+import { useDashboard } from '@/hooks/use-dashboard';
+
 const Dashboard = () => {
-  const {
-    stats,
-    loading,
-    error,
-    handleDateRangeChange,
-    handleClearFilters,
-    handleRefresh,
-  } = useDashboard();
+  const { stats, loading, error, handleDateRangeChange, handleClearFilters, handleRefresh } =
+    useDashboard();
 
   if (loading && !stats) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Spin size="large" className="mb-4" />
-          <div className="text-lg">Loading dashboard...</div>
+      <div className='min-h-screen flex items-center justify-center'>
+        <div className='text-center'>
+          <Spin size='large' className='mb-4' />
+          <div className='text-lg'>Loading dashboard...</div>
         </div>
       </div>
     );
@@ -32,14 +26,14 @@ const Dashboard = () => {
 
   if (error) {
     return (
-      <div className="space-y-6">
+      <div className='space-y-6'>
         <Alert
-          message="Error Loading Dashboard"
+          message='Error Loading Dashboard'
           description={error}
-          type="error"
+          type='error'
           showIcon
           action={
-            <Button size="small" danger onClick={handleRefresh}>
+            <Button size='small' danger onClick={handleRefresh}>
               Retry
             </Button>
           }
@@ -50,11 +44,11 @@ const Dashboard = () => {
 
   if (!stats) {
     return (
-      <div className="space-y-6">
+      <div className='space-y-6'>
         <Alert
-          message="No Data Available"
-          description="Unable to load dashboard statistics."
-          type="warning"
+          message='No Data Available'
+          description='Unable to load dashboard statistics.'
+          type='warning'
           showIcon
         />
       </div>
@@ -62,7 +56,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       {/* Page Header */}
       <DashboardHeader
         onDateRangeChange={handleDateRangeChange}

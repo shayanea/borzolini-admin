@@ -1,6 +1,6 @@
-import React from 'react';
 import { Button, Typography } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+
 import type { CalendarNavigationProps } from '@/types/calendar';
 
 const { Title } = Typography;
@@ -10,7 +10,7 @@ const CalendarNavigation = ({
   onPreviousDay,
   onNextDay,
   onToday,
-}) => {
+}: CalendarNavigationProps) => {
   return (
     <div className='flex items-center justify-between mb-6'>
       <div className='flex items-center space-x-4'>

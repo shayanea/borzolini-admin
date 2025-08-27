@@ -1,6 +1,11 @@
 import { Button, Result, Spin } from 'antd';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  emitAuthUnauthorized,
+  offAuthUnauthorized,
+  onAuthUnauthorized,
+} from '@/services/event-emitter.service';
 import { useAuth, useAuthStatus } from '@/hooks/use-auth';
 
 import { AuthService } from '@/services/auth.service';
@@ -9,11 +14,6 @@ import { ROUTES } from '@/constants';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requiredRole?: 'admin' | 'veterinarian' | 'staff' | 'patient';
-}
-
-// Custom event types
-interface AuthRedirectEvent {
-  detail: { path: string };
 }
 
 const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
@@ -47,17 +47,13 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
         // Try to get auth status from server
         const status = await AuthService.getAuthStatus();
         if (!status.isAuthenticated) {
-          // User is not authenticated on server, dispatch auth failure event
+          // User is not authenticated on server, emit auth failure event
           // instead of calling logout directly to prevent infinite loops
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('auth:unauthorized'));
-          }
+          emitAuthUnauthorized();
         }
       } catch (error) {
-        // Auth check failed, dispatch auth failure event
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('auth:unauthorized'));
-        }
+        // Auth check failed, emit auth failure event
+        emitAuthUnauthorized();
       } finally {
         setIsValidating(false);
       }
@@ -68,25 +64,17 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
 
   // Listen for authentication failure events
   useEffect(() => {
-    const handleAuthRedirect = (event: any) => {
-      const customEvent = event as AuthRedirectEvent;
-      const { path } = customEvent.detail;
-      if (path === ROUTES.LOGIN) {
-        navigate(ROUTES.LOGIN, { state: { from: location }, replace: true });
-      }
-    };
-
     const handleAuthFailure = () => {
       // Clear any local auth state and redirect to login
       navigate(ROUTES.LOGIN, { state: { from: location }, replace: true });
     };
 
-    window.addEventListener('auth:redirect', handleAuthRedirect);
-    window.addEventListener('auth:unauthorized', handleAuthFailure);
+    // Subscribe to auth events
+    onAuthUnauthorized(handleAuthFailure);
 
     return () => {
-      window.removeEventListener('auth:redirect', handleAuthRedirect);
-      window.removeEventListener('auth:unauthorized', handleAuthFailure);
+      // Cleanup event listeners
+      offAuthUnauthorized(handleAuthFailure);
     };
   }, [navigate, location]);
 

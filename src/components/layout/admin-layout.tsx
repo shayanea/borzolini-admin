@@ -1,4 +1,4 @@
-import { Appointments, Calendar, Dashboard, Reports, Settings, Users } from '@/pages';
+import { Appointments, Calendar, Dashboard, Profile, Reports, Settings, Users } from '@/pages';
 import {
   Avatar,
   Badge,
@@ -69,7 +69,7 @@ const renderHeader = (
               <Avatar
                 size={40}
                 icon={<UserOutlined />}
-                className='bg-gradient-to-r from-primary-orange to-primary-navy flex-shrink-0'
+                className='bg-gradient-to-r from-cyan-500 to-blue-500'
               />
               {!collapsed && (
                 <div className='text-left min-w-0'>
@@ -98,6 +98,7 @@ const renderContent = () => {
           <Route path='/veterinarians' element={<Users />} />
           <Route path='/reports' element={<Reports />} />
           <Route path='/settings' element={<Settings />} />
+          <Route path='/profile' element={<Profile />} />
           <Route path='/' element={<Dashboard />} />
         </Routes>
       </div>
@@ -122,14 +123,14 @@ const AdminLayout = () => {
         trigger={null}
         collapsible
         collapsed={collapsed}
-        className='admin-sidebar m-4 rounded-lg shadow-lg'
+        className='admin-sidebar m-4 rounded-xl shadow-lg'
         width={220}
         style={{ backgroundImage: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' }}
       >
         <div className='absolute inset-0 bg-pattern-dots opacity-10' />
         <div className='p-6 overflow-hidden'>
           <div className='flex items-center space-x-3'>
-            <div className='w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500'>
+            <div className='w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-r from-cyan-500 to-blue-500 '>
               <span className='text-white font-bold text-lg'>B</span>
             </div>
             <Title

@@ -1,15 +1,11 @@
-import React from 'react';
-import { Space, Button, Typography } from 'antd';
-
-const { Text } = Typography;
+import { Button, Space, Typography } from 'antd';
 
 import type { UserBulkActionsProps } from '@/types/user-management';
 
-const UserBulkActions = ({
-  selectedCount,
-  loading,
-  onBulkDelete,
-}) => {
+const { Text } = Typography;
+
+
+const UserBulkActions = ({ selectedCount, loading, onBulkDelete }: UserBulkActionsProps) => {
   if (selectedCount === 0) return null;
 
   return (

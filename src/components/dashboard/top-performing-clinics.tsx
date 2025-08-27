@@ -2,7 +2,6 @@ import { Avatar, Card, List } from 'antd';
 
 import type { DashboardStats } from '@/types';
 import { HomeOutlined } from '@ant-design/icons';
-import React from 'react';
 
 interface TopPerformingClinicsProps {
   stats: DashboardStats;

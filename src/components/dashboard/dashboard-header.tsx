@@ -2,7 +2,6 @@ import { Button, DatePicker, Space, Typography } from 'antd';
 import { FilterOutlined, ReloadOutlined } from '@ant-design/icons';
 
 import type { DashboardHeaderProps } from '@/types/dashboard';
-import React from 'react';
 
 const { Title, Text } = Typography;
 
@@ -11,7 +10,7 @@ const DashboardHeader = ({
   onClearFilters,
   onRefresh,
   loading,
-}) => {
+}: DashboardHeaderProps) => {
   return (
     <div className='space-y-6'>
       {/* Title and Welcome Message */}

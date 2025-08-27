@@ -1,10 +1,9 @@
+import { APPOINTMENT_PRIORITY_COLORS, APPOINTMENT_STATUS_COLORS } from '@/constants/appointments';
 import { Avatar, Button, Space, Table, Tag, Tooltip } from 'antd';
-import type { TablePaginationConfig } from 'antd/es/table';
 
-import { APPOINTMENT_STATUS_COLORS, APPOINTMENT_PRIORITY_COLORS } from '@/constants/appointments';
 import type { Appointment } from '@/types';
+import type { TablePaginationConfig } from 'antd/es/table';
 import { UserOutlined } from '@ant-design/icons';
-import React from 'react';
 
 interface AppointmentsTableProps {
   appointments: Appointment[];
@@ -14,7 +13,7 @@ interface AppointmentsTableProps {
     pageSize: number;
     total: number;
   };
-  onEdit: (id: string, data: any) => void;
+  onEdit: (id: string, data: Appointment) => Promise<Appointment>;
   onCancel: (id: string) => void;
   onPagination?: (page: number, pageSize: number) => void;
 }
@@ -26,7 +25,7 @@ const AppointmentsTable = ({
   onEdit,
   onCancel,
   onPagination,
-}) => {
+}: AppointmentsTableProps) => {
   const createActionHandlers = (appointment: Appointment) => {
     const handleEdit = () => onEdit(appointment.id, appointment);
     const handleCancel = () => onCancel(appointment.id);
@@ -35,9 +34,10 @@ const AppointmentsTable = ({
   };
 
   const formatAppointmentType = (type: string) => {
-    return type.split('_').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
+    return type
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   };
 
   const columns = [
@@ -53,9 +53,7 @@ const AppointmentsTable = ({
           />
           <div>
             <div className='font-medium'>Client ID: {appointment.owner_id}</div>
-            <div className='text-sm text-text-light'>
-              Pet ID: {appointment.pet_id}
-            </div>
+            <div className='text-sm text-text-light'>Pet ID: {appointment.pet_id}</div>
           </div>
         </div>
       ),
@@ -66,7 +64,7 @@ const AppointmentsTable = ({
       render: (appointment: Appointment) => (
         <div className='space-y-1'>
           <div>
-            <Tag color="blue">{formatAppointmentType(appointment.appointment_type)}</Tag>
+            <Tag color='blue'>{formatAppointmentType(appointment.appointment_type)}</Tag>
           </div>
           <div>
             <Tag color={APPOINTMENT_PRIORITY_COLORS[appointment.priority] || 'default'}>
@@ -85,8 +83,8 @@ const AppointmentsTable = ({
             {new Date(appointment.scheduled_date).toLocaleDateString()}
           </div>
           <div className='text-sm text-text-light'>
-            {new Date(appointment.scheduled_date).toLocaleTimeString()} 
-            ({appointment.duration_minutes} min)
+            {new Date(appointment.scheduled_date).toLocaleTimeString()}(
+            {appointment.duration_minutes} min)
           </div>
         </div>
       ),
@@ -96,9 +94,10 @@ const AppointmentsTable = ({
       key: 'status',
       render: (appointment: Appointment) => (
         <Tag color={APPOINTMENT_STATUS_COLORS[appointment.status] || 'default'}>
-          {appointment.status.split('_').map(word => 
-            word.charAt(0).toUpperCase() + word.slice(1)
-          ).join(' ')}
+          {appointment.status
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ')}
         </Tag>
       ),
     },
@@ -108,9 +107,7 @@ const AppointmentsTable = ({
       render: (appointment: Appointment) => (
         <div className='text-sm'>
           <div className='font-medium'>Clinic: {appointment.clinic_id}</div>
-          <div className='text-text-light'>
-            Staff: {appointment.staff_id || 'Unassigned'}
-          </div>
+          <div className='text-text-light'>Staff: {appointment.staff_id || 'Unassigned'}</div>
         </div>
       ),
     },
@@ -136,9 +133,9 @@ const AppointmentsTable = ({
             <Button size='small' onClick={handleEdit}>
               Edit
             </Button>
-            <Button 
-              size='small' 
-              danger 
+            <Button
+              size='small'
+              danger
               onClick={handleCancel}
               disabled={appointment.status === 'cancelled' || appointment.status === 'completed'}
             >
@@ -156,15 +153,17 @@ const AppointmentsTable = ({
     }
   };
 
-  const tablePagination = pagination ? {
-    current: pagination.current,
-    pageSize: pagination.pageSize,
-    total: pagination.total,
-    showSizeChanger: true,
-    showQuickJumper: true,
-    showTotal: (total: number, range: [number, number]) => 
-      `${range[0]}-${range[1]} of ${total} appointments`,
-  } : false;
+  const tablePagination = pagination
+    ? {
+        current: pagination.current,
+        pageSize: pagination.pageSize,
+        total: pagination.total,
+        showSizeChanger: true,
+        showQuickJumper: true,
+        showTotal: (total: number, range: [number, number]) =>
+          `${range[0]}-${range[1]} of ${total} appointments`,
+      }
+    : false;
 
   return (
     <Table

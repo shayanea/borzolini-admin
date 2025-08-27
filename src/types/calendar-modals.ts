@@ -1,10 +1,10 @@
 // Shared interfaces for calendar modals
 // Used by appointment-form-modal.tsx and appointment-details-modal.tsx
 
-import type { CreateAppointmentData, UpdateAppointmentData } from '@/services/appointments.service';
 import type { Appointment } from '@/types';
-import type { Veterinarian } from '@/types/calendar';
+import type { CreateAppointmentData } from '@/services/appointments.service';
 import type { Dayjs } from 'dayjs';
+import type { Veterinarian } from '@/types/calendar';
 
 // Shared data interfaces
 export interface Pet {
@@ -40,7 +40,7 @@ export interface AppointmentFormModalProps {
 export interface AppointmentDetailsModalProps {
   visible: boolean;
   onCancel: () => void;
-  onUpdate: (appointmentId: string, updates: UpdateAppointmentData) => Promise<void>;
+  onUpdate: (appointmentId: string, updates: Appointment) => Promise<void>;
   onDelete: (appointmentId: string) => Promise<void>;
   veterinarians: Veterinarian[];
   appointment: Appointment;

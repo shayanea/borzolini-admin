@@ -1,7 +1,7 @@
 import { Button, Typography } from 'antd';
-import React, { useCallback } from 'react';
 
 import type { VeterinarianSelectionProps } from '@/types/calendar';
+import { useCallback } from 'react';
 
 const { Text } = Typography;
 
@@ -11,7 +11,7 @@ const VeterinarianSelection = ({
   onToggleVeterinarian,
   onToggleAll,
   onAddNew,
-}) => {
+}: VeterinarianSelectionProps) => {
   const allSelected = selectedVeterinarians.length === veterinarians.length;
 
   const handleVeterinarianToggle = useCallback(

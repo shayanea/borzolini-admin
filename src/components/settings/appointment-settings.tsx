@@ -1,19 +1,16 @@
-import React from 'react';
-import { Card, Form, Input, Select, Row, Col } from 'antd';
+import { Card, Col, Form, Input, Row, Select } from 'antd';
+
 import { APPOINTMENT_DURATIONS } from '@/constants/settings';
 
 const { Option } = Select;
 
 const AppointmentSettings = () => {
   return (
-    <Card title="Appointment Settings" className="admin-card mb-6">
+    <Card title='Appointment Settings' className='admin-card mb-6'>
       <Row gutter={24}>
         <Col xs={24} md={12}>
-          <Form.Item
-            label="Default Appointment Duration (minutes)"
-            name="defaultDuration"
-          >
-            <Select placeholder="Select duration">
+          <Form.Item label='Default Appointment Duration (minutes)' name='defaultDuration'>
+            <Select placeholder='Select duration'>
               {APPOINTMENT_DURATIONS.map(duration => (
                 <Option key={duration.value} value={duration.value}>
                   {duration.label}
@@ -23,30 +20,21 @@ const AppointmentSettings = () => {
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
-          <Form.Item
-            label="Booking Lead Time (hours)"
-            name="bookingLeadTime"
-          >
-            <Input type="number" placeholder="24" />
+          <Form.Item label='Booking Lead Time (hours)' name='bookingLeadTime'>
+            <Input type='number' placeholder='24' />
           </Form.Item>
         </Col>
       </Row>
 
       <Row gutter={24}>
         <Col xs={24} md={12}>
-          <Form.Item
-            label="Cancellation Policy (hours)"
-            name="cancellationPolicy"
-          >
-            <Input type="number" placeholder="24" />
+          <Form.Item label='Cancellation Policy (hours)' name='cancellationPolicy'>
+            <Input type='number' placeholder='24' />
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
-          <Form.Item
-            label="Max Appointments per Day"
-            name="maxAppointments"
-          >
-            <Input type="number" placeholder="50" />
+          <Form.Item label='Max Appointments per Day' name='maxAppointments'>
+            <Input type='number' placeholder='50' />
           </Form.Item>
         </Col>
       </Row>

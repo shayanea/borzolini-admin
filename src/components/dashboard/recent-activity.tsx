@@ -8,7 +8,6 @@ import {
 } from '@ant-design/icons';
 
 import type { DashboardStats } from '@/types';
-import React from 'react';
 
 const { Text } = Typography;
 

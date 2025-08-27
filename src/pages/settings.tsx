@@ -1,38 +1,25 @@
-import React from 'react';
-import { Form, Button } from 'antd';
-import { SaveOutlined } from '@ant-design/icons';
-import { useSettings } from '@/hooks/use-settings';
 import {
-  SettingsHeader,
+  AppointmentSettings,
   GeneralSettings,
   NotificationSettings,
-  AppointmentSettings,
   SecuritySettings,
+  SettingsHeader,
 } from '@/components/settings';
+import { Button, Form } from 'antd';
+
+import { SaveOutlined } from '@ant-design/icons';
+import { useSettings } from '@/hooks/use-settings';
 
 const Settings = () => {
   const [form] = Form.useForm();
-  const {
-    initialValues,
-    handleResetDefaults,
-    handleSaveChanges,
-    onFinish,
-  } = useSettings();
+  const { initialValues, handleResetDefaults, handleSaveChanges, onFinish } = useSettings();
 
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       {/* Page Header */}
-      <SettingsHeader
-        onResetDefaults={handleResetDefaults}
-        onSaveChanges={handleSaveChanges}
-      />
+      <SettingsHeader onResetDefaults={handleResetDefaults} onSaveChanges={handleSaveChanges} />
 
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={onFinish}
-        initialValues={initialValues}
-      >
+      <Form form={form} layout='vertical' onFinish={onFinish} initialValues={initialValues}>
         {/* General Settings */}
         <GeneralSettings />
 
@@ -46,13 +33,13 @@ const Settings = () => {
         <SecuritySettings />
 
         {/* Save Button */}
-        <div className="text-center">
+        <div className='text-center'>
           <Button
-            type="primary"
-            htmlType="submit"
-            size="large"
+            type='primary'
+            htmlType='submit'
+            size='large'
             icon={<SaveOutlined />}
-            className="bg-primary-navy border-primary-navy hover:bg-primary-dark hover:border-primary-dark"
+            className='bg-primary-navy border-primary-navy hover:bg-primary-dark hover:border-primary-dark'
           >
             Save All Changes
           </Button>

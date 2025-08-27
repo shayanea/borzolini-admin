@@ -1,18 +1,11 @@
 import { Button, Space, Typography } from 'antd';
 import { ExportOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 
-import React from 'react';
 import type { UserPageHeaderProps } from '@/types/user-management';
 
 const { Title, Text } = Typography;
 
-
-const UserPageHeader = ({
-  onRefresh,
-  onExport,
-  onAddUser,
-  loading,
-}) => {
+const UserPageHeader = ({ onRefresh, onExport, onAddUser, loading }: UserPageHeaderProps) => {
   return (
     <div className='flex items-center justify-between'>
       <div>

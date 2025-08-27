@@ -1,5 +1,7 @@
 import type { Appointment, AppointmentPriority, AppointmentStatus, AppointmentType } from './index';
 
+import type { UpdateAppointmentData } from '@/services/appointments.service';
+
 export interface AppointmentsHeaderProps {
   onNewAppointment: (data: any) => void;
 }
@@ -12,7 +14,7 @@ export interface AppointmentsTableProps {
     pageSize: number;
     total: number;
   };
-  onEdit: (id: string, data: any) => void;
+  onEdit: (id: string, data: UpdateAppointmentData) => void;
   onCancel: (id: string) => void;
   onPagination?: (page: number, pageSize: number) => void;
 }

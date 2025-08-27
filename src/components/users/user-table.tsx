@@ -6,9 +6,13 @@ import {
   PhoneOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { ROLE_COLORS, STATUS_COLORS, USER_TABLE_COLUMNS, TABLE_PAGE_SIZES } from '@/constants/user-management';
+import {
+  ROLE_COLORS,
+  STATUS_COLORS,
+  TABLE_PAGE_SIZES,
+  USER_TABLE_COLUMNS,
+} from '@/constants/user-management';
 
-import React from 'react';
 import type { User } from '@/types';
 import type { UserTableProps } from '@/types/user-management';
 
@@ -24,12 +28,12 @@ const UserTable = ({
   onDeleteUser,
   onTableChange,
   onRowSelectionChange,
-}) => {
+}: UserTableProps) => {
   const createActionHandlers = (user: User) => {
     const handleViewUser = () => onViewUser(user);
     const handleEditUser = () => onEditUser(user);
     const handleDeleteUser = () => onDeleteUser(user.id);
-    
+
     return { handleViewUser, handleEditUser, handleDeleteUser };
   };
 
@@ -122,12 +126,7 @@ const UserTable = ({
               <Button size='small' icon={<EditOutlined />} onClick={handleEditUser} />
             </Tooltip>
             <Tooltip title='Delete User'>
-              <Button
-                size='small'
-                danger
-                icon={<DeleteOutlined />}
-                onClick={handleDeleteUser}
-              />
+              <Button size='small' danger icon={<DeleteOutlined />} onClick={handleDeleteUser} />
             </Tooltip>
           </Space>
         );

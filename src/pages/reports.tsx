@@ -1,27 +1,14 @@
-import React from 'react';
+import { ComingSoon, KeyMetrics, ReportCategories, ReportsHeader } from '@/components/reports';
+
 import { useReports } from '@/hooks/use-reports';
-import {
-  ReportsHeader,
-  KeyMetrics,
-  ReportCategories,
-  ComingSoon,
-} from '@/components/reports';
 
 const Reports = () => {
-  const {
-    metrics,
-    categories,
-    handleFilters,
-    handleExportReport,
-  } = useReports();
+  const { metrics, categories, handleFilters, handleExportReport } = useReports();
 
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       {/* Page Header */}
-      <ReportsHeader
-        onFilters={handleFilters}
-        onExportReport={handleExportReport}
-      />
+      <ReportsHeader onFilters={handleFilters} onExportReport={handleExportReport} />
 
       {/* Key Metrics */}
       <KeyMetrics metrics={metrics} />

@@ -1,7 +1,7 @@
-import React from 'react';
-import { Typography, Button, Space } from 'antd';
-import { CalendarOutlined } from '@ant-design/icons';
+import { Button, Space, Typography } from 'antd';
+
 import type { CalendarHeaderProps } from '@/types/calendar';
+import { CalendarOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 

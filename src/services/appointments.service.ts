@@ -1,7 +1,8 @@
-import { environment } from '@/config/environment';
 import type { Appointment, AppointmentPriority, AppointmentStatus, AppointmentType } from '@/types';
+
 import { apiService } from './api';
 import { appointmentsCache } from './cache.service';
+import { environment } from '@/config/environment';
 
 export interface CreateAppointmentData {
   appointment_type: AppointmentType;
@@ -257,7 +258,7 @@ export class AppointmentsService {
   /**
    * Update appointment
    */
-  static async update(id: string, data: UpdateAppointmentData): Promise<Appointment> {
+  static async update(id: string, data: Appointment): Promise<Appointment> {
     try {
       if (!id) {
         throw new Error('Appointment ID is required');

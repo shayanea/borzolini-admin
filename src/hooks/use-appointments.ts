@@ -1,13 +1,12 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { message } from 'antd';
-import type { Appointment, AppointmentStatus } from '@/types';
-import type { AppointmentsFilters } from '@/types/appointments';
 import AppointmentsService, {
+  type AppointmentStats,
   type CreateAppointmentData,
   type UpdateAppointmentData,
-  type AppointmentStats,
 } from '@/services/appointments.service';
-
+import type { Appointment, AppointmentStatus } from '@/types';
+import type { AppointmentsFilters } from '@/types/appointments';
+import { message } from 'antd';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export interface UseAppointmentsReturn {
   appointments: Appointment[];
@@ -27,11 +26,14 @@ export interface UseAppointmentsReturn {
   handlePagination: (page: number, pageSize: number) => void;
   handleExport: () => Promise<void>;
   handleNewAppointment: (data: CreateAppointmentData) => Promise<Appointment>;
-  handleEditAppointment: (id: string, data: UpdateAppointmentData) => Promise<Appointment>;
+  handleEditAppointment: (id: string, data: Appointment) => Promise<Appointment>;
   handleCancelAppointment: (id: string) => Promise<void>;
   handleUpdateStatus: (id: string, status: AppointmentStatus) => Promise<Appointment>;
   handleReschedule: (id: string, newDate: string) => Promise<Appointment>;
-  handleBulkUpdate: (appointmentIds: string[], updates: Partial<UpdateAppointmentData>) => Promise<Appointment[]>;
+  handleBulkUpdate: (
+    appointmentIds: string[],
+    updates: Partial<UpdateAppointmentData>
+  ) => Promise<Appointment[]>;
   refreshAppointments: () => void;
   refreshStats: () => void;
   clearError: () => void;
@@ -50,10 +52,10 @@ export const useAppointments = (): UseAppointmentsReturn => {
   });
   const [stats, setStats] = useState<AppointmentStats | null>(null);
   const [statsLoading, setStatsLoading] = useState(false);
-  
+
   // Ref to track if component is mounted
   const isMounted = useRef(true);
-  
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -65,7 +67,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
   const fetchAppointments = useCallback(
     async (filters: AppointmentsFilters = {}) => {
       if (!isMounted.current) return;
-      
+
       try {
         setLoading(true);
         setError(null);
@@ -93,7 +95,8 @@ export const useAppointments = (): UseAppointmentsReturn => {
         }
       } catch (error) {
         if (isMounted.current) {
-          const errorMessage = error instanceof Error ? error.message : 'Failed to load appointments';
+          const errorMessage =
+            error instanceof Error ? error.message : 'Failed to load appointments';
           setError(errorMessage);
           message.error(errorMessage);
         }
@@ -109,11 +112,11 @@ export const useAppointments = (): UseAppointmentsReturn => {
   // Fetch statistics
   const fetchStats = useCallback(async () => {
     if (!isMounted.current) return;
-    
+
     try {
       setStatsLoading(true);
       const statsData = await AppointmentsService.getStats();
-      
+
       if (isMounted.current) {
         setStats(statsData);
       }
@@ -167,9 +170,9 @@ export const useAppointments = (): UseAppointmentsReturn => {
   const handleExport = useCallback(async () => {
     try {
       setError(null);
-      
+
       const blob = await AppointmentsService.export(filters, 'csv');
-      
+
       // Create download link
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -179,7 +182,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
+
       message.success('Appointments exported successfully');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Export failed';
@@ -188,50 +191,58 @@ export const useAppointments = (): UseAppointmentsReturn => {
     }
   }, [filters]);
 
-  const handleNewAppointment = useCallback(async (data: CreateAppointmentData): Promise<Appointment> => {
-    try {
-      setError(null);
-      const newAppointment = await AppointmentsService.create(data);
-      
-      if (isMounted.current) {
-        setAppointments(prev => [newAppointment, ...prev]);
-        setPagination(prev => ({ ...prev, total: prev.total + 1 }));
-        message.success('Appointment created successfully');
-      }
-      
-      return newAppointment;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create appointment';
-      setError(errorMessage);
-      message.error(errorMessage);
-      throw error;
-    }
-  }, []);
+  const handleNewAppointment = useCallback(
+    async (data: CreateAppointmentData): Promise<Appointment> => {
+      try {
+        setError(null);
+        const newAppointment = await AppointmentsService.create(data);
 
-  const handleEditAppointment = useCallback(async (id: string, data: UpdateAppointmentData): Promise<Appointment> => {
-    try {
-      setError(null);
-      const updatedAppointment = await AppointmentsService.update(id, data);
-      
-      if (isMounted.current) {
-        setAppointments(prev => prev.map(apt => (apt.id === id ? updatedAppointment : apt)));
-        message.success('Appointment updated successfully');
+        if (isMounted.current) {
+          setAppointments(prev => [newAppointment, ...prev]);
+          setPagination(prev => ({ ...prev, total: prev.total + 1 }));
+          message.success('Appointment created successfully');
+        }
+
+        return newAppointment;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Failed to create appointment';
+        setError(errorMessage);
+        message.error(errorMessage);
+        throw error;
       }
-      
-      return updatedAppointment;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to update appointment';
-      setError(errorMessage);
-      message.error(errorMessage);
-      throw error;
-    }
-  }, []);
+    },
+    []
+  );
+
+  const handleEditAppointment = useCallback(
+    async (id: string, data: Appointment): Promise<Appointment> => {
+      try {
+        setError(null);
+        const updatedAppointment = await AppointmentsService.update(id, data);
+
+        if (isMounted.current) {
+          setAppointments(prev => prev.map(apt => (apt.id === id ? updatedAppointment : apt)));
+          message.success('Appointment updated successfully');
+        }
+
+        return updatedAppointment;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Failed to update appointment';
+        setError(errorMessage);
+        message.error(errorMessage);
+        throw error;
+      }
+    },
+    []
+  );
 
   const handleCancelAppointment = useCallback(async (id: string): Promise<void> => {
     try {
       setError(null);
       await AppointmentsService.cancel(id);
-      
+
       if (isMounted.current) {
         setAppointments(prev =>
           prev.map(apt => (apt.id === id ? { ...apt, status: 'cancelled' as const } : apt))
@@ -246,70 +257,82 @@ export const useAppointments = (): UseAppointmentsReturn => {
     }
   }, []);
 
-  const handleUpdateStatus = useCallback(async (id: string, status: AppointmentStatus): Promise<Appointment> => {
-    try {
-      setError(null);
-      const updatedAppointment = await AppointmentsService.updateStatus(id, status);
-      
-      if (isMounted.current) {
-        setAppointments(prev => prev.map(apt => (apt.id === id ? updatedAppointment : apt)));
-        message.success('Appointment status updated successfully');
-      }
-      
-      return updatedAppointment;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to update appointment status';
-      setError(errorMessage);
-      message.error(errorMessage);
-      throw error;
-    }
-  }, []);
+  const handleUpdateStatus = useCallback(
+    async (id: string, status: AppointmentStatus): Promise<Appointment> => {
+      try {
+        setError(null);
+        const updatedAppointment = await AppointmentsService.updateStatus(id, status);
 
-  const handleReschedule = useCallback(async (id: string, newDate: string): Promise<Appointment> => {
-    try {
-      setError(null);
-      const updatedAppointment = await AppointmentsService.reschedule(id, newDate);
-      
-      if (isMounted.current) {
-        setAppointments(prev => prev.map(apt => (apt.id === id ? updatedAppointment : apt)));
-        message.success('Appointment rescheduled successfully');
-      }
-      
-      return updatedAppointment;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to reschedule appointment';
-      setError(errorMessage);
-      message.error(errorMessage);
-      throw error;
-    }
-  }, []);
+        if (isMounted.current) {
+          setAppointments(prev => prev.map(apt => (apt.id === id ? updatedAppointment : apt)));
+          message.success('Appointment status updated successfully');
+        }
 
-  const handleBulkUpdate = useCallback(async (
-    appointmentIds: string[], 
-    updates: Partial<UpdateAppointmentData>
-  ): Promise<Appointment[]> => {
-    try {
-      setError(null);
-      const updatedAppointments = await AppointmentsService.bulkUpdate(appointmentIds, updates);
-      
-      if (isMounted.current) {
-        setAppointments(prev => 
-          prev.map(apt => {
-            const updated = updatedAppointments.find(u => u.id === apt.id);
-            return updated || apt;
-          })
-        );
-        message.success(`${appointmentIds.length} appointments updated successfully`);
+        return updatedAppointment;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Failed to update appointment status';
+        setError(errorMessage);
+        message.error(errorMessage);
+        throw error;
       }
-      
-      return updatedAppointments;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to update appointments';
-      setError(errorMessage);
-      message.error(errorMessage);
-      throw error;
-    }
-  }, []);
+    },
+    []
+  );
+
+  const handleReschedule = useCallback(
+    async (id: string, newDate: string): Promise<Appointment> => {
+      try {
+        setError(null);
+        const updatedAppointment = await AppointmentsService.reschedule(id, newDate);
+
+        if (isMounted.current) {
+          setAppointments(prev => prev.map(apt => (apt.id === id ? updatedAppointment : apt)));
+          message.success('Appointment rescheduled successfully');
+        }
+
+        return updatedAppointment;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Failed to reschedule appointment';
+        setError(errorMessage);
+        message.error(errorMessage);
+        throw error;
+      }
+    },
+    []
+  );
+
+  const handleBulkUpdate = useCallback(
+    async (
+      appointmentIds: string[],
+      updates: Partial<UpdateAppointmentData>
+    ): Promise<Appointment[]> => {
+      try {
+        setError(null);
+        const updatedAppointments = await AppointmentsService.bulkUpdate(appointmentIds, updates);
+
+        if (isMounted.current) {
+          setAppointments(prev =>
+            prev.map(apt => {
+              const updated = updatedAppointments.find(u => u.id === apt.id);
+              return updated || apt;
+            })
+          );
+          message.success(`${appointmentIds.length} appointments updated successfully`);
+        }
+
+        return updatedAppointments;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Failed to update appointments';
+        setError(errorMessage);
+        message.error(errorMessage);
+        throw error;
+      }
+    },
+    []
+  );
 
   const refreshAppointments = useCallback(() => {
     fetchAppointments(filters);

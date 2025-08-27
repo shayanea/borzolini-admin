@@ -3,7 +3,13 @@ import { DownloadOutlined, FilterOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
-const ReportsHeader = ({ onFilters, onExportReport }) => {
+const ReportsHeader = ({
+  onFilters,
+  onExportReport,
+}: {
+  onFilters: () => void;
+  onExportReport: () => void;
+}) => {
   return (
     <div className='flex items-center justify-between'>
       <div>

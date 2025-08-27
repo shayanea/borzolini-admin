@@ -1,13 +1,10 @@
-import { useState, useCallback, useEffect } from 'react';
-import dayjs from 'dayjs';
+import { AppointmentsService, type CreateAppointmentData } from '@/services/appointments.service';
 import { calendarService } from '@/services/calendar.service';
-import {
-  AppointmentsService,
-  type CreateAppointmentData,
-  type UpdateAppointmentData,
-} from '@/services/appointments.service';
-import type { Veterinarian, CalendarAppointment, CalendarFilters } from '@/types/calendar';
+import { Appointment } from '@/types';
+import type { CalendarAppointment, CalendarFilters, Veterinarian } from '@/types/calendar';
 import { message } from 'antd';
+import dayjs from 'dayjs';
+import { useCallback, useEffect, useState } from 'react';
 
 export const useCalendar = () => {
   const [currentDate, setCurrentDate] = useState(dayjs());
@@ -251,10 +248,7 @@ export const useCalendar = () => {
   };
 
   // Update appointment using AppointmentsService
-  const updateAppointment = async (
-    appointmentId: string,
-    updates: UpdateAppointmentData
-  ): Promise<void> => {
+  const updateAppointment = async (appointmentId: string, updates: Appointment): Promise<void> => {
     try {
       setLoading(true);
       await AppointmentsService.update(appointmentId, updates);

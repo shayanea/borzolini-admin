@@ -3,12 +3,15 @@ import {
   APPOINTMENT_STATUSES,
   APPOINTMENT_TYPES,
 } from '@/constants/appointments';
+import type { AppointmentPriority, AppointmentStatus, AppointmentType } from '@/types';
+import {
+  AppointmentsFiltersProps,
+  AppointmentsFilters as AppointmentsFiltersType,
+} from '@/types/appointments';
 import { Button, Card, DatePicker, Input, Select, Space } from 'antd';
 import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
-import React, { useState } from 'react';
 
-import type { AppointmentsFiltersProps } from '@/types/appointments';
-
+import { useState } from 'react';
 
 const { Search } = Input;
 const { RangePicker } = DatePicker;
@@ -18,7 +21,7 @@ const AppointmentsFilters = ({
   onSearch,
   onFilters,
   onExport,
-}) => {
+}: AppointmentsFiltersProps) => {
   const [filters, setFilters] = useState({
     status: undefined,
     type: undefined,
@@ -26,7 +29,10 @@ const AppointmentsFilters = ({
     dateRange: undefined,
   });
 
-  const handleFilterChange = (key: string, value: any) => {
+  const handleFilterChange = (
+    key: keyof AppointmentsFiltersType,
+    value: AppointmentStatus | AppointmentType | AppointmentPriority | [string, string] | undefined
+  ) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
     onFilters(newFilters);
