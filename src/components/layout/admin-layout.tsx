@@ -1,4 +1,13 @@
-import { Appointments, Calendar, Dashboard, Profile, Reports, Settings, Users } from '@/pages';
+import {
+  ApiHealth,
+  Appointments,
+  Calendar,
+  Dashboard,
+  Profile,
+  Reports,
+  Settings,
+  Users,
+} from '@/pages';
 import {
   Avatar,
   Badge,
@@ -99,6 +108,7 @@ const renderContent = () => {
           <Route path='/reports' element={<Reports />} />
           <Route path='/settings' element={<Settings />} />
           <Route path='/profile' element={<Profile />} />
+          <Route path='/api-health' element={<ApiHealth />} />
           <Route path='/' element={<Dashboard />} />
         </Routes>
       </div>

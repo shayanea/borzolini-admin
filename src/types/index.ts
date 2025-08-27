@@ -133,9 +133,32 @@ export interface Appointment {
   service_id?: string;
 }
 
-export type AppointmentStatus = 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled' | 'no_show' | 'rescheduled' | 'waiting';
+export type AppointmentStatus =
+  | 'pending'
+  | 'confirmed'
+  | 'in_progress'
+  | 'completed'
+  | 'cancelled'
+  | 'no_show'
+  | 'rescheduled'
+  | 'waiting';
 export type AppointmentPriority = 'low' | 'normal' | 'high' | 'urgent' | 'emergency';
-export type AppointmentType = 'consultation' | 'vaccination' | 'surgery' | 'follow_up' | 'emergency' | 'wellness_exam' | 'dental_cleaning' | 'laboratory_test' | 'imaging' | 'therapy' | 'grooming' | 'behavioral_training' | 'nutrition_consultation' | 'physical_therapy' | 'specialist_consultation';
+export type AppointmentType =
+  | 'consultation'
+  | 'vaccination'
+  | 'surgery'
+  | 'follow_up'
+  | 'emergency'
+  | 'wellness_exam'
+  | 'dental_cleaning'
+  | 'laboratory_test'
+  | 'imaging'
+  | 'therapy'
+  | 'grooming'
+  | 'behavioral_training'
+  | 'nutrition_consultation'
+  | 'physical_therapy'
+  | 'specialist_consultation';
 
 export interface CalendarEvent {
   id: string;
@@ -225,3 +248,6 @@ export * from './reports';
 
 // Settings Types
 export * from './settings';
+
+// API Health Types
+export * from './api-health';

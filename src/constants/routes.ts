@@ -10,4 +10,5 @@ export const ROUTES: Record<string, string> = {
   VETERINARIANS: '/veterinarians',
   HOME: '/',
   PATIENTS: '/patients',
+  API_HEALTH: '/api-health',
 };

@@ -1,3 +1,4 @@
+export { default as ApiHealth } from './api-health';
 export { default as Appointments } from './appointments';
 export { default as Calendar } from './calendar';
 export { default as Dashboard } from './dashboard';

@@ -3,6 +3,7 @@ import {
   DashboardOutlined,
   FileTextOutlined,
   LogoutOutlined,
+  MonitorOutlined,
   SettingOutlined,
   TeamOutlined,
   UserOutlined,
@@ -61,6 +62,12 @@ export const useAdminLayoutLogic = () => {
       label: 'Reports',
       icon: <FileTextOutlined />,
       onClick: () => navigate(ROUTES.REPORTS),
+    },
+    {
+      key: '/api-health',
+      label: 'API Health',
+      icon: <MonitorOutlined />,
+      onClick: () => navigate(ROUTES.API_HEALTH),
     },
     {
       key: '/settings',
