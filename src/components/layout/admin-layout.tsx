@@ -151,7 +151,8 @@ const AdminLayout = () => {
       </Sider>
 
       <Layout>
-        <Header className='admin-header px-6 flex items-center justify-between'>
+        <Header className='admin-header px-6'>
+          <div className='max-w-7xl mx-auto w-full flex items-center justify-between'>
           <div className='flex items-center space-x-4'>
             <Button
               type='text'
@@ -206,19 +207,22 @@ const AdminLayout = () => {
               </div>
             </Dropdown>
           </div>
+          </div>
         </Header>
 
         <Content className='admin-content p-6'>
-          <Routes>
-            <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/calendar' element={<Calendar />} />
-            <Route path='/appointments' element={<Appointments />} />
-            <Route path='/users' element={<Users />} />
-            <Route path='/veterinarians' element={<Users />} />
-            <Route path='/reports' element={<Reports />} />
-            <Route path='/settings' element={<Settings />} />
-            <Route path='/' element={<Dashboard />} />
-          </Routes>
+          <div className='max-w-7xl mx-auto w-full'>
+            <Routes>
+              <Route path='/dashboard' element={<Dashboard />} />
+              <Route path='/calendar' element={<Calendar />} />
+              <Route path='/appointments' element={<Appointments />} />
+              <Route path='/users' element={<Users />} />
+              <Route path='/veterinarians' element={<Users />} />
+              <Route path='/reports' element={<Reports />} />
+              <Route path='/settings' element={<Settings />} />
+              <Route path='/' element={<Dashboard />} />
+            </Routes>
+          </div>
         </Content>
       </Layout>
     </Layout>
