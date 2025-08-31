@@ -1,4 +1,4 @@
-import { initializeAuthListener, useAuthActions } from '@/stores/auth.store';
+import { useAuthActions } from '@/stores/auth.store';
 import { useCallback, useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
@@ -38,10 +38,8 @@ const App = () => {
     }
   }, [isAuthenticated, user, handleAuthFailure]);
 
-  // Initialize auth listener and clear any stale state on mount
+  // Clear any stale state on mount
   useEffect(() => {
-    initializeAuthListener();
-
     // Clear any stale error messages on app initialization
     clearError();
 

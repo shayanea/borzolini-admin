@@ -8,25 +8,13 @@ import axios, {
 
 import { environment } from '@/config/environment';
 import { message } from 'antd';
+import { emitAuthUnauthorized } from './event-emitter.service';
 
 // API Configuration
 const API_BASE_URL = environment.api.baseUrl;
 const API_TIMEOUT = environment.api.timeout;
 const RETRY_ATTEMPTS = environment.api.retryAttempts;
 const RETRY_DELAY = environment.api.retryDelay;
-
-// Custom event for authentication failures
-export const createAuthFailureEvent = () => {
-  if (typeof window !== 'undefined' && window.CustomEvent) {
-    return new window.CustomEvent('auth:unauthorized', {
-      detail: { timestamp: Date.now() },
-    });
-  }
-  // Fallback for environments without CustomEvent
-  const event = document.createEvent('CustomEvent');
-  event.initCustomEvent('auth:unauthorized', false, false, { timestamp: Date.now() });
-  return event;
-};
 
 // Create axios instance
 const api: AxiosInstance = axios.create({
@@ -117,10 +105,11 @@ api.interceptors.response.use(
         return api.request(originalRequest);
       } catch (refreshError) {
         pendingRequests = [];
-        // On refresh fail, dispatch auth failure event
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(createAuthFailureEvent());
+        // On refresh fail, emit auth failure event using event emitter service
+        if (environment.app.debug) {
+          console.log('Token refresh failed, emitting auth failure event:', refreshError);
         }
+        emitAuthUnauthorized();
         // Fall through to error handler
       } finally {
         isRefreshing = false;

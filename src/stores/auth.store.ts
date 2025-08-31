@@ -1,6 +1,7 @@
 import type { LoadingState, User } from '@/types';
 
 import { create } from 'zustand';
+import { emitAuthRedirect } from '@/services/event-emitter.service';
 import { persist } from 'zustand/middleware';
 
 interface AuthState {
@@ -21,21 +22,6 @@ interface AuthState {
   clearError: () => void;
   handleAuthFailure: () => void;
 }
-
-// Helper function to create custom events
-const createCustomEvent = (type: string, detail: any) => {
-  if (typeof window !== 'undefined') {
-    if (window.CustomEvent) {
-      return new window.CustomEvent(type, { detail });
-    } else {
-      // Fallback for older browsers
-      const event = document.createEvent('CustomEvent');
-      event.initCustomEvent(type, false, false, detail);
-      return event;
-    }
-  }
-  return null;
-};
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -83,6 +69,7 @@ export const useAuthStore = create<AuthState>()(
       clearError: () => set({ error: null }),
 
       handleAuthFailure: () => {
+        console.log('AuthStore: Handling auth failure, clearing state and emitting redirect');
         // Clear authentication state and redirect to login
         set({
           user: null,
@@ -91,13 +78,8 @@ export const useAuthStore = create<AuthState>()(
           error: 'Authentication expired. Please login again.',
         });
 
-        // Dispatch navigation event for React Router
-        if (typeof window !== 'undefined') {
-          const event = createCustomEvent('auth:redirect', { path: '/login' });
-          if (event) {
-            window.dispatchEvent(event);
-          }
-        }
+        // Emit redirect event using event emitter service
+        emitAuthRedirect('/login');
       },
     }),
     {
@@ -129,17 +111,3 @@ export const useAuthActions = () =>
     clearError: state.clearError,
     handleAuthFailure: state.handleAuthFailure,
   }));
-
-// Initialize auth failure listener when store is first used
-let isListenerInitialized = false;
-
-export const initializeAuthListener = () => {
-  if (isListenerInitialized || typeof window === 'undefined') return;
-
-  window.addEventListener('auth:unauthorized', () => {
-    const { handleAuthFailure } = useAuthStore.getState();
-    handleAuthFailure();
-  });
-
-  isListenerInitialized = true;
-};

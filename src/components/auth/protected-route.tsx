@@ -5,6 +5,8 @@ import {
   emitAuthUnauthorized,
   offAuthUnauthorized,
   onAuthUnauthorized,
+  onAuthRedirect,
+  offAuthRedirect,
 } from '@/services/event-emitter.service';
 import { useAuth, useAuthStatus } from '@/hooks/use-auth';
 
@@ -65,16 +67,25 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   // Listen for authentication failure events
   useEffect(() => {
     const handleAuthFailure = () => {
+      console.log('ProtectedRoute: Received auth unauthorized event');
       // Clear any local auth state and redirect to login
       navigate(ROUTES.LOGIN, { state: { from: location }, replace: true });
     };
 
+    const handleAuthRedirect = (data: { path: string }) => {
+      console.log('ProtectedRoute: Received auth redirect event to:', data.path);
+      // Handle redirect events from auth store
+      navigate(data.path, { state: { from: location }, replace: true });
+    };
+
     // Subscribe to auth events
     onAuthUnauthorized(handleAuthFailure);
+    onAuthRedirect(handleAuthRedirect);
 
     return () => {
       // Cleanup event listeners
       offAuthUnauthorized(handleAuthFailure);
+      offAuthRedirect(handleAuthRedirect);
     };
   }, [navigate, location]);
 
