@@ -4,6 +4,7 @@ import {
   UserFormModal,
   UserPageHeader,
   UserTable,
+  UserViewModal,
 } from '@/components/users';
 
 import { Card } from 'antd';
@@ -32,6 +33,8 @@ const Users = ({ roleFilter }: UsersProps) => {
     isModalVisible,
     editingUser,
     modalLoading,
+    isViewModalVisible,
+    viewingUser,
 
     // Actions
     handleSearch,
@@ -42,6 +45,8 @@ const Users = ({ roleFilter }: UsersProps) => {
     handleTableChange,
     showModal,
     hideModal,
+    showViewModal,
+    hideViewModal,
     handleSubmit,
     handleDeleteUser,
     handleBulkDelete,
@@ -104,7 +109,7 @@ const Users = ({ roleFilter }: UsersProps) => {
           selectedRowKeys={selectedRowKeys as never[]}
           onTableChange={handleTableChange}
           onRowSelectionChange={setSelectedRowKeys}
-          onViewUser={showModal}
+          onViewUser={showViewModal}
           onEditUser={showModal}
           onDeleteUser={handleDeleteUser}
         />
@@ -118,6 +123,9 @@ const Users = ({ roleFilter }: UsersProps) => {
         onCancel={hideModal}
         onSubmit={handleSubmit}
       />
+
+      {/* View User Modal */}
+      <UserViewModal isVisible={isViewModalVisible} user={viewingUser} onClose={hideViewModal} />
     </div>
   );
 };

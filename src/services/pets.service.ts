@@ -61,6 +61,11 @@ export class PetsService {
     return apiService.get<Pet[]>(`/pets/owner/${ownerId}`);
   }
 
+  // Get pets by user ID (admin endpoint)
+  static async getPetsByUserId(userId: string): Promise<Pet[]> {
+    return apiService.get<Pet[]>(`/pets/user/${userId}`);
+  }
+
   // Get pets by type
   static async getPetsByType(type: string): Promise<Pet[]> {
     return apiService.get<Pet[]>(`/pets/type/${type}`);

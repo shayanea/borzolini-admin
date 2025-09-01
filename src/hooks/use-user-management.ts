@@ -7,7 +7,7 @@ import UsersService, {
   UsersQueryParams,
 } from '@/services/users.service';
 import { useCallback, useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface UseUserManagementReturn {
   // State
@@ -27,6 +27,8 @@ interface UseUserManagementReturn {
   isModalVisible: boolean;
   editingUser: User | null;
   modalLoading: boolean;
+  isViewModalVisible: boolean;
+  viewingUser: User | null;
 
   // Actions
   setCurrentPage: (page: number) => void;
@@ -39,6 +41,8 @@ interface UseUserManagementReturn {
   handleTableChange: (pagination: any, filters: any, sorter: any) => void;
   showModal: (user?: User) => void;
   hideModal: () => void;
+  showViewModal: (user: User) => void;
+  hideViewModal: () => void;
   handleSubmit: (values: any) => Promise<void>;
   handleDeleteUser: (userId: string) => Promise<void>;
   handleBulkDelete: () => Promise<void>;
@@ -60,6 +64,8 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   // Modal states
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [isViewModalVisible, setIsViewModalVisible] = useState(false);
+  const [viewingUser, setViewingUser] = useState<User | null>(null);
 
   // Bulk operations
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
@@ -67,11 +73,19 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   const queryClient = useQueryClient();
 
   // Query for users
-  const {
-    data: usersResponse,
-    isLoading: loading,
-  } = useQuery({
-    queryKey: ['users', currentPage, pageSize, searchText, roleFilter, selectedRole, selectedStatus, dateRange, sortBy, sortOrder],
+  const { data: usersResponse, isLoading: loading } = useQuery({
+    queryKey: [
+      'users',
+      currentPage,
+      pageSize,
+      searchText,
+      roleFilter,
+      selectedRole,
+      selectedStatus,
+      dateRange,
+      sortBy,
+      sortOrder,
+    ],
     queryFn: async () => {
       const params: UsersQueryParams = {
         page: currentPage,
@@ -98,7 +112,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
       queryClient.invalidateQueries({ queryKey: ['users'] });
       hideModal();
     },
-    onError: (error) => {
+    onError: error => {
       console.error('Error creating user:', error);
       antMessage.error('Failed to create user');
       throw error;
@@ -113,7 +127,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
       queryClient.invalidateQueries({ queryKey: ['users'] });
       hideModal();
     },
-    onError: (error) => {
+    onError: error => {
       console.error('Error updating user:', error);
       antMessage.error('Failed to update user');
       throw error;
@@ -126,7 +140,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
       antMessage.success('User deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },
-    onError: (error) => {
+    onError: error => {
       console.error('Error deleting user:', error);
       antMessage.error('Failed to delete user');
       throw error;
@@ -140,7 +154,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
       setSelectedRowKeys([]);
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },
-    onError: (error) => {
+    onError: error => {
       console.error('Error bulk deleting users:', error);
       antMessage.error('Failed to delete selected users');
       throw error;
@@ -218,6 +232,18 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   const hideModal = useCallback(() => {
     setIsModalVisible(false);
     setEditingUser(null);
+  }, []);
+
+  // Show view modal
+  const showViewModal = useCallback((user: User) => {
+    setViewingUser(user);
+    setIsViewModalVisible(true);
+  }, []);
+
+  // Hide view modal
+  const hideViewModal = useCallback(() => {
+    setIsViewModalVisible(false);
+    setViewingUser(null);
   }, []);
 
   // Handle form submission
@@ -329,6 +355,8 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
     isModalVisible,
     editingUser,
     modalLoading: createUserMutation.isPending || updateUserMutation.isPending,
+    isViewModalVisible,
+    viewingUser,
 
     // Actions
     setCurrentPage,
@@ -341,6 +369,8 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
     handleTableChange,
     showModal,
     hideModal,
+    showViewModal,
+    hideViewModal,
     handleSubmit,
     handleDeleteUser,
     handleBulkDelete,
