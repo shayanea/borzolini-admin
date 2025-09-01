@@ -1,4 +1,5 @@
 import {
+  BankOutlined,
   CalendarOutlined,
   DashboardOutlined,
   FileTextOutlined,
@@ -7,7 +8,7 @@ import {
   SettingOutlined,
   TeamOutlined,
   UserOutlined,
-  BankOutlined,
+  HeartOutlined,
 } from '@/ui';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
@@ -63,6 +64,12 @@ export const useAdminLayoutLogic = () => {
       label: 'Veterinarians',
       icon: <TeamOutlined />,
       onClick: () => navigate(ROUTES.VETERINARIANS),
+    },
+    {
+      key: '/pets',
+      label: 'Pets',
+      icon: <HeartOutlined />,
+      onClick: () => navigate(ROUTES.PETS),
     },
     {
       key: '/reports',

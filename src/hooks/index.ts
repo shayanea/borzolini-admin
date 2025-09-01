@@ -1,10 +1,11 @@
 export { useApiHealth } from './use-api-health';
 export { useAppointments } from './use-appointments';
 export { useAuth } from './use-auth';
-export { useCalendarFormData } from './use-calendar-form-data';
 export { useCalendar } from './use-calendar';
+export { useCalendarFormData } from './use-calendar-form-data';
 export { useClinicManagement } from './use-clinic-management';
 export { useDashboard } from './use-dashboard';
+export { usePetManagement } from './use-pet-management';
 export { useReports } from './use-reports';
 export { useSettings } from './use-settings';
 export { useUserManagement } from './use-user-management';

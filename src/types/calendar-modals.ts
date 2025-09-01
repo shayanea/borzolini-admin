@@ -1,13 +1,14 @@
 // Shared interfaces for calendar modals
 // Used by appointment-form-modal.tsx and appointment-details-modal.tsx
 
-import type { Appointment } from '@/types';
 import type { CreateAppointmentData, UpdateAppointmentData } from '@/services/appointments.service';
+
+import type { Appointment } from '@/types';
 import type { Dayjs } from 'dayjs';
 import type { Veterinarian } from '@/types/calendar';
 
 // Shared data interfaces
-export interface Pet {
+export interface CalendarPet {
   id: string;
   name: string;
   type: string;

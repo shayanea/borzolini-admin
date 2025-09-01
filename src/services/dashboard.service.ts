@@ -30,7 +30,7 @@ export class DashboardService {
         ClinicsService.getClinics({ limit: 1000, ...filters }).catch(error => {
           // Handle authentication errors gracefully
           if (error.response?.status === 401) {
-            return { data: [], total: 0 };
+            return { clinics: [], total: 0, page: 1, limit: 10, totalPages: 0 };
           }
           throw error;
         }),
@@ -63,7 +63,7 @@ export class DashboardService {
         return this.getEmptyDashboardStats();
       }
 
-      if (!clinicsResponse || !clinicsResponse.data || !Array.isArray(clinicsResponse.data)) {
+      if (!clinicsResponse || !clinicsResponse.clinics || !Array.isArray(clinicsResponse.clinics)) {
         console.warn('DashboardService: Invalid clinics response structure:', clinicsResponse);
         // Return empty data instead of throwing error
         return this.getEmptyDashboardStats();
@@ -77,7 +77,7 @@ export class DashboardService {
 
       // Calculate totals with safe fallbacks
       const totalUsers = usersResponse.total || usersResponse.data.length || 0;
-      const totalClinics = clinicsResponse.total || clinicsResponse.data.length || 0;
+      const totalClinics = clinicsResponse.total || clinicsResponse.clinics.length || 0;
       const totalAppointments = appointmentsStats.total || 0;
 
       console.log('DashboardService: Calculated totals:', {
@@ -229,14 +229,14 @@ export class DashboardService {
         limit: 10,
         sortBy: 'rating',
         sortOrder: 'DESC',
-      }).catch(() => ({ data: [] }));
+      }).catch(() => ({ clinics: [], total: 0, page: 1, limit: 10, totalPages: 0 }));
 
-      if (!clinics?.data || !Array.isArray(clinics.data)) {
+      if (!clinics?.clinics || !Array.isArray(clinics.clinics)) {
         console.warn('Invalid clinics response structure:', clinics);
         return [];
       }
 
-      return clinics.data.slice(0, 5).map((clinic: any) => ({
+      return clinics.clinics.slice(0, 5).map((clinic: any) => ({
         id: clinic.id || 'unknown',
         name: clinic.name || 'Unknown Clinic',
         totalAppointments: 0, // Would need to fetch from appointments service
@@ -258,7 +258,7 @@ export class DashboardService {
       const users = await UsersService.getUsers({
         limit: 1000,
         dateRange: [cutoffDate.toISOString(), new Date().toISOString()],
-      }).catch(() => ({ data: [] }));
+      }).catch(() => ({ data: [], total: 0, page: 1, limit: 10, totalPages: 0 }));
 
       if (!users?.data || !Array.isArray(users.data)) {
         console.warn('Invalid users response structure in getNewUsersCount:', users);
@@ -280,14 +280,14 @@ export class DashboardService {
 
       const clinics = await ClinicsService.getClinics({
         limit: 1000,
-      }).catch(() => ({ data: [] }));
+      }).catch(() => ({ clinics: [], total: 0, page: 1, limit: 10, totalPages: 0 }));
 
-      if (!clinics?.data || !Array.isArray(clinics.data)) {
+      if (!clinics?.clinics || !Array.isArray(clinics.clinics)) {
         console.warn('Invalid clinics response structure in getNewClinicsCount:', clinics);
         return 0;
       }
 
-      return clinics.data.length;
+      return clinics.clinics.length;
     } catch (error) {
       console.error('Error fetching new clinics count:', error);
       return 0;
@@ -306,7 +306,7 @@ export class DashboardService {
           completed: 0,
           cancelled: 0,
         })),
-        UsersService.getUsers({ limit: 1000, ...filters }).catch(() => ({ data: [] })),
+        UsersService.getUsers({ limit: 1000, ...filters }).catch(() => ({ data: [], total: 0, page: 1, limit: 10, totalPages: 0 })),
       ]);
 
       // Validate responses

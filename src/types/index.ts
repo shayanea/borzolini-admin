@@ -261,3 +261,6 @@ export * from './settings';
 
 // API Health Types
 export * from './api-health';
+
+// Pets Types
+export * from './pets';

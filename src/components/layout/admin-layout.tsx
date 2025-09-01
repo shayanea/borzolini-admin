@@ -4,6 +4,7 @@ import {
   Calendar,
   Clinics,
   Dashboard,
+  Pets,
   Profile,
   Reports,
   Settings,
@@ -27,8 +28,8 @@ import {
 import { Route, Routes } from 'react-router-dom';
 
 import { User } from '@/types';
-import { useMemo } from 'react';
 import { useAdminLayoutLogic } from './admin-layout.logic';
+import { useMemo } from 'react';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -121,6 +122,7 @@ const AdminLayout = () => {
         <Route path='clinics' element={<Clinics />} />
         <Route path='users' element={<Users />} />
         <Route path='veterinarians' element={<Users roleFilter={VETERINARIAN_ROLE_FILTER} />} />
+        <Route path='pets' element={<Pets />} />
         <Route path='reports' element={<Reports />} />
         <Route path='settings' element={<Settings />} />
         <Route path='profile' element={<Profile />} />
@@ -174,7 +176,7 @@ const AdminLayout = () => {
           handleToggleCollapsed,
           navigateToNewAppointment,
           userMenuItems,
-          user,
+          user || null,
           collapsed
         )}
         <Content className='admin-content p-6 w-full'>

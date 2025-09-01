@@ -12,6 +12,7 @@ export {
   EyeTwoTone,
   FileTextOutlined,
   FilterOutlined,
+  HeartOutlined,
   LockOutlined,
   LogoutOutlined,
   MailOutlined,
