@@ -37,6 +37,7 @@ export default [
         FormData: 'readonly',
         URLSearchParams: 'readonly',
         Blob: 'readonly',
+        fetch: 'readonly',
       },
     },
     plugins: {

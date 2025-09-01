@@ -43,20 +43,6 @@ async function generateIcons() {
       console.log(`✅ Generated ${name}.png (${size}x${size})`);
     }
 
-    // Generate ICO file for favicon (multi-size)
-    const icoSizes = [16, 32, 48];
-    const icoBuffers = await Promise.all(
-      icoSizes.map(size =>
-        sharp(logoPath)
-          .resize(size, size, {
-            fit: 'contain',
-            background: { r: 255, g: 255, b: 255, alpha: 0 },
-          })
-          .png()
-          .toBuffer()
-      )
-    );
-
     // For now, we'll create a simple favicon.ico using the 32x32 version
     // Note: Creating a proper multi-size ICO file requires additional packages
     await sharp(logoPath)
