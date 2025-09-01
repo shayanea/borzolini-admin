@@ -14,7 +14,7 @@ export interface Pet {
   ownerName: string;
 }
 
-export interface Clinic {
+export interface CalendarClinic {
   id: string;
   name: string;
 }

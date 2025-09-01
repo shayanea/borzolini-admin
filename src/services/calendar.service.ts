@@ -10,6 +10,7 @@ import type {
 } from '@/types/calendar';
 
 import { apiService } from './api';
+import type { CalendarClinic } from '@/types/calendar-modals';
 
 export interface CalendarServiceInterface {
   // Core calendar data
@@ -42,7 +43,7 @@ export interface CalendarServiceInterface {
 
   // Additional data for forms
   getPets: () => Promise<any[]>;
-  getClinics: () => Promise<any[]>;
+  getClinics: () => Promise<CalendarClinic[]>;
   getServices: () => Promise<any[]>;
 }
 
@@ -286,7 +287,7 @@ class CalendarService implements CalendarServiceInterface {
   /**
    * Get all clinics for appointment forms
    */
-  async getClinics(): Promise<any[]> {
+  async getClinics(): Promise<CalendarClinic[]> {
     try {
       const response = await apiService.get<any>(`${this.clinicsUrl}?limit=100&isActive=true`);
       // Handle both array responses and paginated responses

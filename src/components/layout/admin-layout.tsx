@@ -2,6 +2,7 @@ import {
   ApiHealth,
   Appointments,
   Calendar,
+  Clinics,
   Dashboard,
   Profile,
   Reports,
@@ -117,6 +118,7 @@ const AdminLayout = () => {
         <Route path='dashboard' element={<Dashboard />} />
         <Route path='calendar' element={<Calendar />} />
         <Route path='appointments' element={<Appointments />} />
+        <Route path='clinics' element={<Clinics />} />
         <Route path='users' element={<Users />} />
         <Route path='veterinarians' element={<Users roleFilter={VETERINARIAN_ROLE_FILTER} />} />
         <Route path='reports' element={<Reports />} />

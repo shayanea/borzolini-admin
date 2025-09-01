@@ -26,7 +26,7 @@ export const useCalendarFormData = () => {
   } = useQuery({
     queryKey: ['calendar-clinics'],
     queryFn: async () => {
-      return await calendarService.getClinic();
+      return await calendarService.getClinics();
     },
     staleTime: CACHE_PRESETS.STABLE.staleTime,
     gcTime: CACHE_PRESETS.STABLE.gcTime,

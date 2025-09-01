@@ -250,6 +250,9 @@ export * from './appointments';
 export * from './calendar';
 export * from './calendar-modals';
 
+// Clinics Types
+export * from './clinics';
+
 // Reports Types
 export * from './reports';
 

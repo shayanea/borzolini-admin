@@ -2,8 +2,8 @@ import { Alert, Button, Card, Divider, Form, Input, Space, Typography } from 'an
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, UserOutlined } from '@ant-design/icons';
 
 import type { LoginCredentials } from '@/types';
-import { useAuth } from '@/hooks/use-auth';
 import { useCallback } from 'react';
+import { useLogin } from '@/hooks/use-auth';
 
 const { Title, Text } = Typography;
 
@@ -14,18 +14,18 @@ interface LoginFormProps {
 
 export const LoginForm = ({ onSwitchToRegister, onSwitchToForgotPassword }: LoginFormProps) => {
   const [form] = Form.useForm();
-  const { login, isLoading, loginMutation } = useAuth();
+  const loginMutation = useLogin();
 
   const handleFinish = useCallback(
     async (values: LoginCredentials) => {
       try {
-        await login(values);
+        loginMutation.mutate(values);
       } catch (error) {
         // Error is handled by the hook
         // Removed console.error for production
       }
     },
-    [login]
+    [loginMutation]
   );
 
   const handleForgotPassword = useCallback(() => {
@@ -49,7 +49,7 @@ export const LoginForm = ({ onSwitchToRegister, onSwitchToForgotPassword }: Logi
       <Card className='w-full max-w-md shadow-admin-lg p-8'>
         <div className='text-center mb-8'>
           <div className='mb-4'>
-            <div className='w-16 h-16 bg-gradient-to-r from-primary-navy to-primary-orange rounded-full flex items-center justify-center mx-auto'>
+            <div className='w-16 h-16 bg-blue-900 rounded-full flex items-center justify-center mx-auto'>
               <UserOutlined className='text-2xl text-white' />
             </div>
           </div>
@@ -114,10 +114,10 @@ export const LoginForm = ({ onSwitchToRegister, onSwitchToForgotPassword }: Logi
             <Button
               type='primary'
               htmlType='submit'
-              loading={isLoading}
+              loading={loginMutation.isPending}
               className='w-full h-12 bg-primary-navy hover:bg-primary-dark border-primary-navy hover:border-primary-dark'
             >
-              {isLoading ? 'Signing In...' : 'Sign In'}
+              {loginMutation.isPending ? 'Signing In...' : 'Sign In'}
             </Button>
           </Form.Item>
         </Form>

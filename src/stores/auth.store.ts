@@ -1,7 +1,7 @@
 import type { LoadingState, User } from '@/types';
 
-import { create } from 'zustand';
 import { emitAuthRedirect } from '@/services/event-emitter.service';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface AuthState {
@@ -77,6 +77,13 @@ export const useAuthStore = create<AuthState>()(
           loading: 'idle',
           error: 'Authentication expired. Please login again.',
         });
+
+        // Clear persisted state from localStorage
+        try {
+          localStorage.removeItem('auth-storage');
+        } catch (error) {
+          console.warn('Failed to clear auth storage:', error);
+        }
 
         // Emit redirect event using event emitter service
         emitAuthRedirect('/login');

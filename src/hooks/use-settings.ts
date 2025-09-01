@@ -1,14 +1,15 @@
-import { useCallback } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { message } from 'antd';
+import type { Settings, SettingsFormValues } from '@/types/settings';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import { DEFAULT_SETTINGS } from '@/constants/settings';
-import type { SettingsFormValues, Settings } from '@/types/settings';
+import { message } from 'antd';
+import { useCallback } from 'react';
 
 // Mock service - replace with real service when available
 const SettingsService = {
   getSettings: async (): Promise<Settings> => {
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise(resolve => window.setTimeout(resolve, 300));
     return {
       ...DEFAULT_SETTINGS,
       id: '1',
@@ -24,21 +25,21 @@ const SettingsService = {
       passwordExpiry: 90,
     };
   },
-  
+
   updateSettings: async (settings: Partial<SettingsFormValues>): Promise<Settings> => {
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => window.setTimeout(resolve, 500));
     return {
       ...DEFAULT_SETTINGS,
       ...settings,
     } as Settings;
   },
-  
+
   resetToDefaults: async (): Promise<Settings> => {
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise(resolve => window.setTimeout(resolve, 300));
     return DEFAULT_SETTINGS as Settings;
-  }
+  },
 };
 
 export const useSettings = () => {
@@ -60,12 +61,12 @@ export const useSettings = () => {
   // Mutation for updating settings
   const updateSettingsMutation = useMutation({
     mutationFn: SettingsService.updateSettings,
-    onSuccess: (updatedSettings) => {
+    onSuccess: updatedSettings => {
       // Update the cache with new settings
       queryClient.setQueryData(['settings'], updatedSettings);
       message.success('Settings updated successfully');
     },
-    onError: (error) => {
+    onError: error => {
       console.error('Failed to update settings:', error);
       message.error('Failed to update settings. Please try again.');
     },
@@ -74,12 +75,12 @@ export const useSettings = () => {
   // Mutation for resetting to defaults
   const resetDefaultsMutation = useMutation({
     mutationFn: SettingsService.resetToDefaults,
-    onSuccess: (defaultSettings) => {
+    onSuccess: defaultSettings => {
       // Update the cache with default settings
       queryClient.setQueryData(['settings'], defaultSettings);
       message.success('Settings reset to defaults successfully');
     },
-    onError: (error) => {
+    onError: error => {
       console.error('Failed to reset settings:', error);
       message.error('Failed to reset settings. Please try again.');
     },
@@ -89,13 +90,19 @@ export const useSettings = () => {
     await resetDefaultsMutation.mutateAsync();
   }, [resetDefaultsMutation]);
 
-  const handleSaveChanges = useCallback(async (values: SettingsFormValues) => {
-    await updateSettingsMutation.mutateAsync(values);
-  }, [updateSettingsMutation]);
+  const handleSaveChanges = useCallback(
+    async (values: SettingsFormValues) => {
+      await updateSettingsMutation.mutateAsync(values);
+    },
+    [updateSettingsMutation]
+  );
 
-  const onFinish = useCallback(async (values: SettingsFormValues) => {
-    await handleSaveChanges(values);
-  }, [handleSaveChanges]);
+  const onFinish = useCallback(
+    async (values: SettingsFormValues) => {
+      await handleSaveChanges(values);
+    },
+    [handleSaveChanges]
+  );
 
   // Use settings data or fallback to defaults
   const initialValues: SettingsFormValues = {
@@ -107,20 +114,20 @@ export const useSettings = () => {
     // Data
     settings,
     initialValues,
-    
+
     // Loading states
     settingsLoading,
     updateLoading: updateSettingsMutation.isPending,
     resetLoading: resetDefaultsMutation.isPending,
-    
+
     // Error states
     settingsError,
-    
+
     // Actions
     handleResetDefaults,
     handleSaveChanges,
     onFinish,
-    
+
     // Utilities
     refetchSettings,
   };

@@ -1,4 +1,5 @@
 export {
+  BankOutlined,
   BellOutlined,
   CalendarOutlined,
   DashboardOutlined,

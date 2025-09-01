@@ -7,6 +7,7 @@ import {
   SettingOutlined,
   TeamOutlined,
   UserOutlined,
+  BankOutlined,
 } from '@/ui';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
@@ -44,6 +45,12 @@ export const useAdminLayoutLogic = () => {
       label: 'Appointments',
       icon: <FileTextOutlined />,
       onClick: () => navigate(ROUTES.APPOINTMENTS),
+    },
+    {
+      key: '/clinics',
+      label: 'Clinics',
+      icon: <BankOutlined />,
+      onClick: () => navigate(ROUTES.CLINICS),
     },
     {
       key: '/users',

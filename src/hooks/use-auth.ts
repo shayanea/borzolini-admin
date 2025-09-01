@@ -4,8 +4,8 @@ import type {
   LoginCredentials,
   RegisterData,
   ResetPasswordData,
+  User,
 } from '@/types';
-import { useAuthActions, useAuthStore } from '@/stores/auth.store';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { AuthService } from '@/services/auth.service';
@@ -13,65 +13,102 @@ import { ROUTES } from '@/constants';
 import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
-export const useAuth = () => {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { user, isAuthenticated } = useAuthStore();
-  const {
-    login: loginStore,
-    logout: logoutStore,
-    setLoading,
-    setError,
-    handleAuthFailure,
-  } = useAuthActions();
+interface AuthResponse {
+  user: User;
+  message?: string;
+}
 
-  // Login mutation
-  const loginMutation = useMutation({
-    mutationFn: AuthService.login,
+// API functions using the existing AuthService
+const authApi = {
+  login: (data: LoginCredentials): Promise<AuthResponse> => AuthService.login(data),
+  register: (data: RegisterData): Promise<AuthResponse> => AuthService.register(data),
+  getCurrentUser: (): Promise<User> => AuthService.getCurrentUser(),
+  logout: (): Promise<{ message: string }> => AuthService.logout(),
+  changePassword: (data: ChangePasswordData): Promise<{ message: string }> =>
+    AuthService.changePassword(data),
+  forgotPassword: (data: ForgotPasswordData): Promise<{ message: string }> =>
+    AuthService.forgotPassword(data),
+  resetPassword: (data: ResetPasswordData): Promise<{ message: string }> =>
+    AuthService.resetPassword(data),
+  verifyEmail: (token: string): Promise<{ message: string }> => AuthService.verifyEmail(token),
+  resendVerification: (email: string): Promise<{ message: string }> =>
+    AuthService.resendVerification(email),
+};
+
+// Custom hooks following PWA pattern
+export function useLogin() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: authApi.login,
     onSuccess: data => {
-      loginStore(data.user);
+      queryClient.setQueryData(['current-user'], data.user);
+      queryClient.invalidateQueries({ queryKey: ['current-user'] });
       message.success('Login successful!');
       navigate(ROUTES.DASHBOARD);
     },
     onError: (error: any) => {
-      setError(error.response?.data?.message || 'Login failed');
-      message.error('Login failed. Please check your credentials.');
+      message.error(
+        error.response?.data?.message || 'Login failed. Please check your credentials.'
+      );
     },
   });
+}
 
-  // Register mutation
-  const registerMutation = useMutation({
-    mutationFn: AuthService.register,
-    onSuccess: () => {
+export function useRegister() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: authApi.register,
+    onSuccess: data => {
+      queryClient.setQueryData(['current-user'], data.user);
+      queryClient.invalidateQueries({ queryKey: ['current-user'] });
       message.success('Registration successful! Please check your email to verify your account.');
       navigate(ROUTES.LOGIN);
     },
     onError: (error: any) => {
-      setError(error.response?.data?.message || 'Registration failed');
-      message.error('Registration failed. Please try again.');
+      message.error(error.response?.data?.message || 'Registration failed. Please try again.');
     },
   });
+}
 
-  // Logout mutation
-  const logoutMutation = useMutation({
-    mutationFn: AuthService.logout,
+export function useCurrentUser() {
+  return useQuery({
+    queryKey: ['current-user'],
+    queryFn: authApi.getCurrentUser,
+    retry: false, // Don't retry on auth failures
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false, // Prevent refetch on window focus
+    refetchOnMount: false, // Prevent refetch on mount if data exists
+  });
+}
+
+export function useLogout() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: authApi.logout,
     onSuccess: () => {
-      logoutStore();
+      queryClient.setQueryData(['current-user'], null);
       queryClient.clear();
       message.success('Logged out successfully');
       navigate(ROUTES.LOGIN);
     },
     onError: () => {
       // Even if logout fails, clear local state
-      logoutStore();
+      queryClient.setQueryData(['current-user'], null);
       queryClient.clear();
       navigate(ROUTES.LOGIN);
     },
   });
+}
 
-  // Change password mutation
-  const changePasswordMutation = useMutation({
-    mutationFn: AuthService.changePassword,
+export function useChangePassword() {
+  return useMutation({
+    mutationFn: authApi.changePassword,
     onSuccess: () => {
       message.success('Password changed successfully!');
     },
@@ -79,10 +116,11 @@ export const useAuth = () => {
       message.error(error.response?.data?.message || 'Failed to change password');
     },
   });
+}
 
-  // Forgot password mutation
-  const forgotPasswordMutation = useMutation({
-    mutationFn: AuthService.forgotPassword,
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: authApi.forgotPassword,
     onSuccess: () => {
       message.success('Password reset email sent! Please check your inbox.');
     },
@@ -90,10 +128,13 @@ export const useAuth = () => {
       message.error(error.response?.data?.message || 'Failed to send reset email');
     },
   });
+}
 
-  // Reset password mutation
-  const resetPasswordMutation = useMutation({
-    mutationFn: AuthService.resetPassword,
+export function useResetPassword() {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: authApi.resetPassword,
     onSuccess: () => {
       message.success('Password reset successfully! You can now login with your new password.');
       navigate(ROUTES.LOGIN);
@@ -102,10 +143,11 @@ export const useAuth = () => {
       message.error(error.response?.data?.message || 'Failed to reset password');
     },
   });
+}
 
-  // Verify email mutation
-  const verifyEmailMutation = useMutation({
-    mutationFn: AuthService.verifyEmail,
+export function useVerifyEmail() {
+  return useMutation({
+    mutationFn: authApi.verifyEmail,
     onSuccess: () => {
       message.success('Email verified successfully!');
     },
@@ -113,10 +155,11 @@ export const useAuth = () => {
       message.error(error.response?.data?.message || 'Failed to verify email');
     },
   });
+}
 
-  // Resend verification mutation
-  const resendVerificationMutation = useMutation({
-    mutationFn: AuthService.resendVerification,
+export function useResendVerification() {
+  return useMutation({
+    mutationFn: authApi.resendVerification,
     onSuccess: () => {
       message.success('Verification email sent! Please check your inbox.');
     },
@@ -124,72 +167,25 @@ export const useAuth = () => {
       message.error(error.response?.data?.message || 'Failed to resend verification email');
     },
   });
+}
 
-  // Login function
-  const login = async (credentials: LoginCredentials) => {
-    setLoading('loading');
-    try {
-      await loginMutation.mutateAsync(credentials);
-    } finally {
-      setLoading('idle');
-    }
-  };
-
-  // Register function
-  const register = async (data: RegisterData) => {
-    setLoading('loading');
-    try {
-      await registerMutation.mutateAsync(data);
-    } finally {
-      setLoading('idle');
-    }
-  };
-
-  // Logout function
-  const logout = async () => {
-    setLoading('loading');
-    try {
-      await logoutMutation.mutateAsync();
-    } finally {
-      setLoading('idle');
-    }
-  };
-
-  // Change password function
-  const changePassword = async (data: ChangePasswordData) => {
-    await changePasswordMutation.mutateAsync(data);
-  };
-
-  // Forgot password function
-  const forgotPassword = async (data: ForgotPasswordData) => {
-    await forgotPasswordMutation.mutateAsync(data);
-  };
-
-  // Reset password function
-  const resetPassword = async (data: ResetPasswordData) => {
-    await resetPasswordMutation.mutateAsync(data);
-  };
-
-  // Verify email function
-  const verifyEmail = async (token: string) => {
-    await verifyEmailMutation.mutateAsync(token);
-  };
-
-  // Resend verification function
-  const resendVerification = async (email: string) => {
-    await resendVerificationMutation.mutateAsync(email);
-  };
-
-  // Handle authentication failure manually
-  const triggerAuthFailure = () => {
-    handleAuthFailure();
-  };
+// Legacy useAuth hook for backward compatibility
+export const useAuth = () => {
+  const { data: user, isLoading, error } = useCurrentUser();
+  const loginMutation = useLogin();
+  const registerMutation = useRegister();
+  const logoutMutation = useLogout();
+  const changePasswordMutation = useChangePassword();
+  const forgotPasswordMutation = useForgotPassword();
+  const resetPasswordMutation = useResetPassword();
+  const verifyEmailMutation = useVerifyEmail();
+  const resendVerificationMutation = useResendVerification();
 
   return {
     // State
     user,
-    isAuthenticated,
-    isLoading: loginMutation.isPending || registerMutation.isPending || logoutMutation.isPending,
+    isAuthenticated: !!user && !error,
+    isLoading,
 
     // Mutations
     loginMutation,
@@ -202,15 +198,14 @@ export const useAuth = () => {
     resendVerificationMutation,
 
     // Actions
-    login,
-    register,
-    logout,
-    changePassword,
-    forgotPassword,
-    resetPassword,
-    verifyEmail,
-    resendVerification,
-    triggerAuthFailure,
+    login: loginMutation.mutate,
+    register: registerMutation.mutate,
+    logout: logoutMutation.mutate,
+    changePassword: changePasswordMutation.mutate,
+    forgotPassword: forgotPasswordMutation.mutate,
+    resetPassword: resetPasswordMutation.mutate,
+    verifyEmail: verifyEmailMutation.mutate,
+    resendVerification: resendVerificationMutation.mutate,
   };
 };
 

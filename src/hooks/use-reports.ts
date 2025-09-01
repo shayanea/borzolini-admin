@@ -54,20 +54,29 @@ export const useReports = (filters: ReportFilters = {}) => {
 
   // Mutation for exporting reports
   const exportReportMutation = useMutation({
-    mutationFn: ({ filters, format }: { filters: ReportFilters; format: 'csv' | 'pdf' }) =>
-      ReportsService.exportReport(),
-    onSuccess: (blob, { format }) => {
+    mutationFn: ({
+      filters: _filters,
+      format: _format,
+    }: {
+      filters: ReportFilters;
+      format: 'csv' | 'pdf';
+    }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      console.log('Exporting report with filters:', _filters, 'format:', _format);
+      return ReportsService.exportReport();
+    },
+    onSuccess: (blob, { format: _format }) => {
       // Create download link
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `report-${new Date().toISOString().split('T')[0]}.${format}`;
+      link.download = `report-${new Date().toISOString().split('T')[0]}.${_format}`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      message.success(`Report exported successfully as ${format.toUpperCase()}`);
+      message.success(`Report exported successfully as ${_format.toUpperCase()}`);
     },
     onError: error => {
       console.error('Export failed:', error);

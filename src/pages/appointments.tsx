@@ -31,8 +31,9 @@ const Appointments = () => {
     clearError,
   } = useAppointments();
 
-  console.log(appointments.length);
-  console.log(loading);
+  console.log('Appointments data:', appointments);
+  console.log('Appointments length:', appointments.length);
+  console.log('Loading state:', loading);
 
   // Show loading spinner for initial load
   if (loading) {

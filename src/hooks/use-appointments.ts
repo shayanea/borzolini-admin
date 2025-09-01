@@ -301,8 +301,38 @@ export const useAppointments = (): UseAppointmentsReturn => {
     // React Query handles errors automatically
   }, []);
 
-  // Extract data from queries
-  const appointments = appointmentsData?.appointments || [];
+  // Extract and validate data from queries
+  const appointments = (appointmentsData?.appointments || []).map(appointment => ({
+    ...appointment,
+    priority: appointment.priority || 'normal',
+    status: appointment.status || 'pending',
+    appointment_type: appointment.appointment_type || 'consultation',
+    scheduled_date: appointment.scheduled_date || new Date().toISOString(),
+    duration_minutes: appointment.duration_minutes || 30,
+    notes: appointment.notes || '',
+    reason: appointment.reason || '',
+    symptoms: appointment.symptoms || '',
+    diagnosis: appointment.diagnosis || '',
+    treatment_plan: appointment.treatment_plan || '',
+    prescriptions: appointment.prescriptions || [],
+    follow_up_instructions: appointment.follow_up_instructions || '',
+    cost: appointment.cost || 0,
+    payment_status: appointment.payment_status || 'pending',
+    is_telemedicine: appointment.is_telemedicine || false,
+    telemedicine_link: appointment.telemedicine_link || '',
+    home_visit_address: appointment.home_visit_address || '',
+    is_home_visit: appointment.is_home_visit || false,
+    reminder_settings: appointment.reminder_settings || {},
+    is_active: appointment.is_active ?? true,
+    created_at: appointment.created_at || new Date().toISOString(),
+    updated_at: appointment.updated_at || new Date().toISOString(),
+    owner_id: appointment.owner_id || '',
+    pet_id: appointment.pet_id || '',
+    clinic_id: appointment.clinic_id || '',
+    staff_id: appointment.staff_id || '',
+    service_id: appointment.service_id || '',
+  }));
+  
   const error = queryError ? (queryError instanceof Error ? queryError.message : 'An error occurred') : null;
 
   return {
