@@ -1,46 +1,10 @@
-import type { Settings, SettingsFormValues } from '@/types/settings';
+import type { SettingsFormValues } from '@/types/settings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { DEFAULT_SETTINGS } from '@/constants/settings';
+import { SettingsService } from '@/services/settings.service';
 import { message } from 'antd';
 import { useCallback } from 'react';
-
-// Mock service - replace with real service when available
-const SettingsService = {
-  getSettings: async (): Promise<Settings> => {
-    // Simulate API call
-    await new Promise(resolve => window.setTimeout(resolve, 300));
-    return {
-      ...DEFAULT_SETTINGS,
-      id: '1',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      businessHours: '09:00-17:00',
-      notificationEmail: 'admin@clinic.com',
-      defaultDuration: 30,
-      bookingLeadTime: 24,
-      cancellationPolicy: 24,
-      maxAppointments: 50,
-      sessionTimeout: 30,
-      passwordExpiry: 90,
-    };
-  },
-
-  updateSettings: async (settings: Partial<SettingsFormValues>): Promise<Settings> => {
-    // Simulate API call
-    await new Promise(resolve => window.setTimeout(resolve, 500));
-    return {
-      ...DEFAULT_SETTINGS,
-      ...settings,
-    } as Settings;
-  },
-
-  resetToDefaults: async (): Promise<Settings> => {
-    // Simulate API call
-    await new Promise(resolve => window.setTimeout(resolve, 300));
-    return DEFAULT_SETTINGS as Settings;
-  },
-};
 
 export const useSettings = () => {
   const queryClient = useQueryClient();
@@ -56,6 +20,8 @@ export const useSettings = () => {
     queryFn: () => SettingsService.getSettings(),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 15 * 60 * 1000, // 15 minutes
+    retry: 2,
+    retryDelay: 1000,
   });
 
   // Mutation for updating settings
@@ -99,7 +65,12 @@ export const useSettings = () => {
 
   const onFinish = useCallback(
     async (values: SettingsFormValues) => {
-      await handleSaveChanges(values);
+      try {
+        await handleSaveChanges(values);
+      } catch (error) {
+        console.error('Failed to save settings:', error);
+        // Error handling is already done in the mutation
+      }
     },
     [handleSaveChanges]
   );
