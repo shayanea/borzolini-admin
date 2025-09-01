@@ -1,11 +1,9 @@
-import type { Clinic } from '@/types';
+import ClinicsService, { ClinicsQueryParams, UpdateClinicData } from '@/services/clinics.service';
 import { Modal, message as antMessage } from 'antd';
-import ClinicsService, {
-  UpdateClinicData,
-  ClinicsQueryParams,
-} from '@/services/clinics.service';
 import { useCallback, useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import type { Clinic } from '@/types';
 
 interface UseClinicManagementReturn {
   // State
@@ -62,11 +60,17 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
   const queryClient = useQueryClient();
 
   // Query for clinics
-  const {
-    data: clinicsResponse,
-    isLoading: loading,
-  } = useQuery({
-    queryKey: ['clinics', currentPage, pageSize, searchText, selectedCity, selectedStatus, sortBy, sortOrder],
+  const { data: clinicsResponse, isLoading: loading } = useQuery({
+    queryKey: [
+      'clinics',
+      currentPage,
+      pageSize,
+      searchText,
+      selectedCity,
+      selectedStatus,
+      sortBy,
+      sortOrder,
+    ],
     queryFn: async () => {
       const params: ClinicsQueryParams = {
         page: currentPage,
@@ -134,7 +138,7 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
   });
 
   // Computed values
-  const clinics = clinicsResponse?.data || [];
+  const clinics = clinicsResponse?.clinics || [];
   const total = clinicsResponse?.total || 0;
 
   // Handlers
@@ -160,19 +164,22 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
     setCurrentPage(1);
   }, []);
 
-  const handleTableChange = useCallback((pagination: any, _filters: any, sorter: any) => {
-    if (pagination.current !== currentPage) {
-      setCurrentPage(pagination.current);
-    }
-    if (pagination.pageSize !== pageSize) {
-      setPageSize(pagination.pageSize);
-      setCurrentPage(1);
-    }
-    if (sorter.field !== sortBy || sorter.order !== sortOrder) {
-      setSortBy(sorter.field || 'name');
-      setSortOrder(sorter.order === 'ascend' ? 'ASC' : 'DESC');
-    }
-  }, [currentPage, pageSize, sortBy, sortOrder]);
+  const handleTableChange = useCallback(
+    (pagination: any, _filters: any, sorter: any) => {
+      if (pagination.current !== currentPage) {
+        setCurrentPage(pagination.current);
+      }
+      if (pagination.pageSize !== pageSize) {
+        setPageSize(pagination.pageSize);
+        setCurrentPage(1);
+      }
+      if (sorter.field !== sortBy || sorter.order !== sortOrder) {
+        setSortBy(sorter.field || 'name');
+        setSortOrder(sorter.order === 'ascend' ? 'ASC' : 'DESC');
+      }
+    },
+    [currentPage, pageSize, sortBy, sortOrder]
+  );
 
   const showModal = useCallback((clinic?: Clinic) => {
     setEditingClinic(clinic || null);
@@ -184,29 +191,35 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
     setEditingClinic(null);
   }, []);
 
-  const handleSubmit = useCallback(async (values: any) => {
-    if (editingClinic) {
-      await updateClinicMutation.mutateAsync({
-        id: editingClinic.id,
-        data: values,
-      });
-    } else {
-      await createClinicMutation.mutateAsync(values);
-    }
-  }, [editingClinic, updateClinicMutation, createClinicMutation]);
+  const handleSubmit = useCallback(
+    async (values: any) => {
+      if (editingClinic) {
+        await updateClinicMutation.mutateAsync({
+          id: editingClinic.id,
+          data: values,
+        });
+      } else {
+        await createClinicMutation.mutateAsync(values);
+      }
+    },
+    [editingClinic, updateClinicMutation, createClinicMutation]
+  );
 
-  const handleDeleteClinic = useCallback(async (clinicId: string) => {
-    Modal.confirm({
-      title: 'Are you sure you want to delete this clinic?',
-      content: 'This action cannot be undone.',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
-      onOk: async () => {
-        await deleteClinicMutation.mutateAsync(clinicId);
-      },
-    });
-  }, [deleteClinicMutation]);
+  const handleDeleteClinic = useCallback(
+    async (clinicId: string) => {
+      Modal.confirm({
+        title: 'Are you sure you want to delete this clinic?',
+        content: 'This action cannot be undone.',
+        okText: 'Yes',
+        okType: 'danger',
+        cancelText: 'No',
+        onOk: async () => {
+          await deleteClinicMutation.mutateAsync(clinicId);
+        },
+      });
+    },
+    [deleteClinicMutation]
+  );
 
   const handleBulkDelete = useCallback(async () => {
     if (selectedRowKeys.length === 0) return;

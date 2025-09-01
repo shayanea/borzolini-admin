@@ -103,7 +103,7 @@ export interface ClinicsQueryParams {
 export class ClinicsService {
   // Get all clinics with pagination and filters
   static async getClinics(params: ClinicsQueryParams = {}): Promise<{
-    data: Clinic[];
+    clinics: Clinic[];
     total: number;
     page: number;
     limit: number;

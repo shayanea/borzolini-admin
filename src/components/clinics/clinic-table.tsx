@@ -1,7 +1,8 @@
 import { Badge, Button, Space, Table, Tag, Typography } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+
+import type { Clinic } from '@/types';
 import type { ColumnsType } from 'antd/es/table';
-import type { Clinic, ClinicService } from '@/types';
 
 const { Text, Link } = Typography;
 
@@ -30,14 +31,11 @@ const ClinicTable = ({
       dataIndex: 'name',
       key: 'name',
       sorter: true,
-      render: (name: string, record: Clinic) => (
+      render: (name: string) => (
         <div className='flex flex-col'>
           <Link className='font-medium text-text-primary hover:text-primary-navy'>
-            {name}
+            <Text ellipsis={{ tooltip: name }}>{name}</Text>
           </Link>
-          {record.description && (
-            <Text className='text-text-secondary text-sm'>{record.description}</Text>
-          )}
         </div>
       ),
     },
@@ -46,12 +44,19 @@ const ClinicTable = ({
       key: 'location',
       render: (_, record: Clinic) => (
         <div className='flex flex-col'>
-          <Text className='text-text-primary'>{record.address}</Text>
-          <Text className='text-text-secondary text-sm'>
+          <Text className='text-text-primary' ellipsis={{ tooltip: record.address }}>
+            {record.address}
+          </Text>
+          <Text
+            className='text-text-secondary text-sm'
+            ellipsis={{ tooltip: `${record.city}, ${record.country}` }}
+          >
             {record.city}, {record.country}
           </Text>
           {record.postalCode && (
-            <Text className='text-text-secondary text-sm'>{record.postalCode}</Text>
+            <Text className='text-text-secondary text-sm' ellipsis={{ tooltip: record.postalCode }}>
+              {record.postalCode}
+            </Text>
           )}
         </div>
       ),
@@ -61,11 +66,15 @@ const ClinicTable = ({
       key: 'contact',
       render: (_, record: Clinic) => (
         <div className='flex flex-col'>
-          <Text className='text-text-primary'>{record.phone}</Text>
-          <Text className='text-text-secondary text-sm'>{record.email}</Text>
+          <Text className='text-text-primary' ellipsis={{ tooltip: record.phone }}>
+            {record.phone}
+          </Text>
+          <Text className='text-text-secondary text-sm' ellipsis={{ tooltip: record.email }}>
+            {record.email}
+          </Text>
           {record.website && (
             <Link href={record.website} target='_blank' className='text-sm'>
-              {record.website}
+              <Text ellipsis={{ tooltip: record.website }}>{record.website}</Text>
             </Link>
           )}
         </div>
@@ -86,7 +95,10 @@ const ClinicTable = ({
                 backgroundColor: rating >= 4 ? '#52c41a' : rating >= 3 ? '#faad14' : '#f5222d',
               }}
             />
-            <Text className='text-text-secondary text-sm'>
+            <Text
+              className='text-text-secondary text-sm'
+              ellipsis={{ tooltip: `(${record.totalReviews} reviews)` }}
+            >
               ({record.totalReviews} reviews)
             </Text>
           </div>
@@ -98,11 +110,6 @@ const ClinicTable = ({
       key: 'services',
       render: (_, record: Clinic) => (
         <div className='flex flex-wrap gap-1'>
-          {record.services.slice(0, 3).map((service: ClinicService) => (
-            <Tag key={service.id} color='blue' className='text-xs'>
-              {service.name}
-            </Tag>
-          ))}
           {record.services.length > 3 && (
             <Tag color='default' className='text-xs'>
               +{record.services.length - 3} more
@@ -116,10 +123,7 @@ const ClinicTable = ({
       dataIndex: 'isActive',
       key: 'isActive',
       render: (isActive: boolean) => (
-        <Badge
-          status={isActive ? 'success' : 'default'}
-          text={isActive ? 'Active' : 'Inactive'}
-        />
+        <Badge status={isActive ? 'success' : 'default'} text={isActive ? 'Active' : 'Inactive'} />
       ),
     },
     {

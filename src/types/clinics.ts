@@ -10,7 +10,7 @@ export interface Clinic {
   email: string;
   website?: string;
   operatingHours: ClinicOperatingHours[];
-  services: ClinicService[];
+  services: string[] | ClinicService[];
   staff: ClinicStaff[];
   photos: ClinicPhoto[];
   reviews: ClinicReview[];
