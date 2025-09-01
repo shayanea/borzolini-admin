@@ -2,9 +2,75 @@ import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Switc
 import { useCallback, useEffect, useState } from 'react';
 
 import type { PetFormModalProps } from '@/types';
-import { PetsService } from '@/services/pets.service';
 
 const { Option } = Select;
+
+// Common breeds by type - moved outside component to prevent recreation on every render
+const COMMON_BREEDS: Record<string, string[]> = {
+  dog: [
+    'Labrador',
+    'Golden Retriever',
+    'German Shepherd',
+    'Bulldog',
+    'Poodle',
+    'Beagle',
+    'Rottweiler',
+    'Yorkshire Terrier',
+  ],
+  cat: [
+    'Persian',
+    'Maine Coon',
+    'British Shorthair',
+    'Ragdoll',
+    'Siamese',
+    'American Shorthair',
+    'Scottish Fold',
+    'Sphynx',
+  ],
+  bird: [
+    'Canary',
+    'Parakeet',
+    'Cockatiel',
+    'Lovebird',
+    'Finch',
+    'Cockatoo',
+    'Macaw',
+    'African Grey',
+  ],
+  fish: ['Goldfish', 'Betta', 'Guppy', 'Angelfish', 'Tetra', 'Cichlid', 'Molly', 'Platy'],
+  rabbit: [
+    'Holland Lop',
+    'Netherland Dwarf',
+    'Mini Rex',
+    'Lionhead',
+    'Flemish Giant',
+    'English Lop',
+    'French Lop',
+    'American Fuzzy Lop',
+  ],
+  hamster: ['Syrian', 'Dwarf Campbell', 'Dwarf Winter White', 'Roborovski', 'Chinese', 'European'],
+  guinea_pig: [
+    'American',
+    'Abyssinian',
+    'Peruvian',
+    'Silkie',
+    'Teddy',
+    'Texel',
+    'Coronet',
+    'Lunkarya',
+  ],
+  reptile: [
+    'Bearded Dragon',
+    'Leopard Gecko',
+    'Ball Python',
+    'Corn Snake',
+    'Green Iguana',
+    'Blue Tongue Skink',
+    'Crested Gecko',
+    'Tortoise',
+  ],
+  other: ['Ferret', 'Chinchilla', 'Hedgehog', 'Sugar Glider', 'Rat', 'Mouse', 'Gerbil', 'Degus'],
+};
 
 const PetFormModal = ({
   isVisible,
@@ -14,12 +80,11 @@ const PetFormModal = ({
   onSubmit,
 }: PetFormModalProps) => {
   const [form] = Form.useForm();
-  const [petTypes, setPetTypes] = useState<string[]>([]);
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedType, setSelectedType] = useState<string>('');
 
-  // Common pet types as fallback
-  const commonPetTypes = [
+  // Common pet types - using static list since API endpoint doesn't exist
+  const petTypes = [
     'dog',
     'cat',
     'bird',
@@ -30,96 +95,6 @@ const PetFormModal = ({
     'reptile',
     'other',
   ];
-
-  // Common breeds by type
-  const commonBreeds: Record<string, string[]> = {
-    dog: [
-      'Labrador',
-      'Golden Retriever',
-      'German Shepherd',
-      'Bulldog',
-      'Poodle',
-      'Beagle',
-      'Rottweiler',
-      'Yorkshire Terrier',
-    ],
-    cat: [
-      'Persian',
-      'Maine Coon',
-      'British Shorthair',
-      'Ragdoll',
-      'Siamese',
-      'American Shorthair',
-      'Scottish Fold',
-      'Sphynx',
-    ],
-    bird: [
-      'Canary',
-      'Parakeet',
-      'Cockatiel',
-      'Lovebird',
-      'Finch',
-      'Cockatoo',
-      'Macaw',
-      'African Grey',
-    ],
-    fish: ['Goldfish', 'Betta', 'Guppy', 'Angelfish', 'Tetra', 'Cichlid', 'Molly', 'Platy'],
-    rabbit: [
-      'Holland Lop',
-      'Netherland Dwarf',
-      'Mini Rex',
-      'Lionhead',
-      'Flemish Giant',
-      'English Lop',
-      'French Lop',
-      'American Fuzzy Lop',
-    ],
-    hamster: [
-      'Syrian',
-      'Dwarf Campbell',
-      'Dwarf Winter White',
-      'Roborovski',
-      'Chinese',
-      'European',
-    ],
-    guinea_pig: [
-      'American',
-      'Abyssinian',
-      'Peruvian',
-      'Silkie',
-      'Teddy',
-      'Texel',
-      'Coronet',
-      'Lunkarya',
-    ],
-    reptile: [
-      'Bearded Dragon',
-      'Leopard Gecko',
-      'Ball Python',
-      'Corn Snake',
-      'Green Iguana',
-      'Blue Tongue Skink',
-      'Crested Gecko',
-      'Tortoise',
-    ],
-    other: ['Ferret', 'Chinchilla', 'Hedgehog', 'Sugar Glider', 'Rat', 'Mouse', 'Gerbil', 'Degus'],
-  };
-
-  useEffect(() => {
-    const fetchPetTypes = async () => {
-      try {
-        const types = await PetsService.getPetTypes();
-        setPetTypes(types.length > 0 ? types : commonPetTypes);
-      } catch (error) {
-        console.error('Failed to fetch pet types:', error);
-        setPetTypes(commonPetTypes);
-      }
-    };
-
-    if (isVisible) {
-      fetchPetTypes();
-    }
-  }, [isVisible]);
 
   useEffect(() => {
     if (isVisible) {
@@ -145,21 +120,12 @@ const PetFormModal = ({
   }, [editingPet, form, isVisible]);
 
   useEffect(() => {
-    const fetchBreeds = async () => {
-      if (selectedType) {
-        try {
-          const typeBreeds = await PetsService.getPetBreeds(selectedType);
-          setBreeds(typeBreeds.length > 0 ? typeBreeds : commonBreeds[selectedType] || []);
-        } catch (error) {
-          console.error('Failed to fetch breeds:', error);
-          setBreeds(commonBreeds[selectedType] || []);
-        }
-      } else {
-        setBreeds([]);
-      }
-    };
-
-    fetchBreeds();
+    // Use static breeds data since API endpoint doesn't exist
+    if (selectedType) {
+      setBreeds(COMMON_BREEDS[selectedType] || []);
+    } else {
+      setBreeds([]);
+    }
   }, [selectedType]);
 
   const handleSubmit = useCallback(

@@ -1,5 +1,6 @@
 import {
   AppointmentSettings,
+  BasicSettings,
   GeneralSettings,
   NotificationSettings,
   SecuritySettings,
@@ -66,6 +67,9 @@ const Settings = () => {
         initialValues={initialValues}
         disabled={settingsLoading || updateLoading}
       >
+        {/* Basic Settings */}
+        <BasicSettings />
+
         {/* General Settings */}
         <GeneralSettings />
 

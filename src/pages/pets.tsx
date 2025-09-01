@@ -108,7 +108,7 @@ const PetsPage: React.FC = () => {
   );
 
   // Bulk actions
-  const selectedPets = pets.filter(pet => localSelectedRowKeys.includes(pet.id));
+  const selectedPets = pets?.filter(pet => localSelectedRowKeys.includes(pet.id));
 
   const handleBulkDelete = useCallback(() => {
     Modal.confirm({

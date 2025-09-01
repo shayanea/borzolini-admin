@@ -89,15 +89,8 @@ export class PetsService {
     return apiService.delete<{ message: string }>(`/pets/${id}`);
   }
 
-  // Get pet types
-  static async getPetTypes(): Promise<string[]> {
-    return apiService.get<string[]>('/pets/types');
-  }
-
-  // Get pet breeds by type
-  static async getPetBreeds(type: string): Promise<string[]> {
-    return apiService.get<string[]>(`/pets/breeds/${type}`);
-  }
+  // Note: Pet types and breeds endpoints don't exist in the API
+  // Using static data in components instead
 }
 
 export default PetsService;

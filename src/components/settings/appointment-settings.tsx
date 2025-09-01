@@ -9,7 +9,10 @@ const AppointmentSettings = () => {
     <Card title='Appointment Settings' className='admin-card mb-6'>
       <Row gutter={24}>
         <Col xs={24} md={12}>
-          <Form.Item label='Default Appointment Duration (minutes)' name='defaultDuration'>
+          <Form.Item
+            label='Default Appointment Duration (minutes)'
+            name={['appointmentSettings', 'defaultAppointmentDuration']}
+          >
             <Select placeholder='Select duration'>
               {APPOINTMENT_DURATIONS.map(duration => (
                 <Option key={duration.value} value={duration.value}>
@@ -20,7 +23,10 @@ const AppointmentSettings = () => {
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
-          <Form.Item label='Booking Lead Time (hours)' name='bookingLeadTime'>
+          <Form.Item
+            label='Booking Lead Time (hours)'
+            name={['appointmentSettings', 'bookingLeadTime']}
+          >
             <Input type='number' placeholder='24' />
           </Form.Item>
         </Col>
@@ -28,12 +34,18 @@ const AppointmentSettings = () => {
 
       <Row gutter={24}>
         <Col xs={24} md={12}>
-          <Form.Item label='Cancellation Policy (hours)' name='cancellationPolicy'>
+          <Form.Item
+            label='Cancellation Policy (hours)'
+            name={['appointmentSettings', 'cancellationPolicy']}
+          >
             <Input type='number' placeholder='24' />
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
-          <Form.Item label='Max Appointments per Day' name='maxAppointments'>
+          <Form.Item
+            label='Max Appointments per Day'
+            name={['appointmentSettings', 'maxAppointmentsPerDay']}
+          >
             <Input type='number' placeholder='50' />
           </Form.Item>
         </Col>

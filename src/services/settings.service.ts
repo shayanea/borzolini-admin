@@ -29,41 +29,32 @@ export class SettingsService {
     return apiService.get<Settings>('/settings/defaults');
   }
 
+  // Update default settings
+  static async updateDefaultSettings(settings: Partial<SettingsFormValues>): Promise<Settings> {
+    return apiService.patch<Settings>('/settings/default', settings);
+  }
+
   // Update specific setting category
   static async updateGeneralSettings(
-    settings: Partial<
-      Pick<SettingsFormValues, 'clinicName' | 'timezone' | 'currency' | 'businessHours'>
-    >
+    settings: Partial<SettingsFormValues['generalSettings']>
   ): Promise<Settings> {
     return apiService.patch<Settings>('/settings/general', settings);
   }
 
   static async updateNotificationSettings(
-    settings: Partial<
-      Pick<
-        SettingsFormValues,
-        'notifications' | 'emailNotifications' | 'smsNotifications' | 'notificationEmail'
-      >
-    >
+    settings: Partial<SettingsFormValues['notificationSettings']>
   ): Promise<Settings> {
     return apiService.patch<Settings>('/settings/notifications', settings);
   }
 
   static async updateAppointmentSettings(
-    settings: Partial<
-      Pick<
-        SettingsFormValues,
-        'defaultDuration' | 'bookingLeadTime' | 'cancellationPolicy' | 'maxAppointments'
-      >
-    >
+    settings: Partial<SettingsFormValues['appointmentSettings']>
   ): Promise<Settings> {
     return apiService.patch<Settings>('/settings/appointments', settings);
   }
 
   static async updateSecuritySettings(
-    settings: Partial<
-      Pick<SettingsFormValues, 'sessionTimeout' | 'passwordExpiry' | 'twoFactorAuth'>
-    >
+    settings: Partial<SettingsFormValues['securitySettings']>
   ): Promise<Settings> {
     return apiService.patch<Settings>('/settings/security', settings);
   }

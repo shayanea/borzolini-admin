@@ -24,11 +24,44 @@ export const APPOINTMENT_DURATIONS = [
 ] as const;
 
 export const DEFAULT_SETTINGS = {
-  clinicName: 'Borzolini Veterinary Clinic',
-  timezone: 'America/New_York',
-  currency: 'USD',
-  notifications: true,
-  emailNotifications: true,
-  smsNotifications: false,
-  twoFactorAuth: false,
+  name: 'default',
+  description: 'Default clinic settings',
+  generalSettings: {
+    clinicName: 'Borzolini Veterinary Clinic',
+    currency: 'USD',
+    timezone: 'America/New_York',
+    businessHours: '8:00 AM - 6:00 PM',
+  },
+  notificationSettings: {
+    email: {
+      appointments: true,
+      reminders: true,
+      healthAlerts: true,
+      marketing: true,
+      newsletter: true,
+    },
+    sms: {
+      appointments: true,
+      reminders: true,
+      healthAlerts: true,
+    },
+    push: {
+      appointments: true,
+      reminders: true,
+      healthAlerts: true,
+    },
+  },
+  appointmentSettings: {
+    defaultAppointmentDuration: 30,
+    bookingLeadTime: 24,
+    cancellationPolicy: 24,
+    maxAppointmentsPerDay: 50,
+  },
+  securitySettings: {
+    sessionTimeout: 30,
+    passwordExpiry: 90,
+    twoFactorAuthentication: false,
+  },
+  isActive: true,
+  isDefault: false,
 } as const;

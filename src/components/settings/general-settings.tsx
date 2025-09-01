@@ -10,7 +10,7 @@ const GeneralSettings = () => {
         <Col xs={24} md={12}>
           <Form.Item
             label='Clinic Name'
-            name='clinicName'
+            name={['generalSettings', 'clinicName']}
             rules={[{ required: true, message: 'Please enter clinic name' }]}
           >
             <Input placeholder='Enter clinic name' />
@@ -19,7 +19,7 @@ const GeneralSettings = () => {
         <Col xs={24} md={12}>
           <Form.Item
             label='Timezone'
-            name='timezone'
+            name={['generalSettings', 'timezone']}
             rules={[{ required: true, message: 'Please select timezone' }]}
           >
             <Select placeholder='Select timezone'>
@@ -37,7 +37,7 @@ const GeneralSettings = () => {
         <Col xs={24} md={12}>
           <Form.Item
             label='Currency'
-            name='currency'
+            name={['generalSettings', 'currency']}
             rules={[{ required: true, message: 'Please select currency' }]}
           >
             <Select placeholder='Select currency'>
@@ -50,7 +50,7 @@ const GeneralSettings = () => {
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
-          <Form.Item label='Business Hours' name='businessHours'>
+          <Form.Item label='Business Hours' name={['generalSettings', 'businessHours']}>
             <Input placeholder='e.g., 8:00 AM - 6:00 PM' />
           </Form.Item>
         </Col>

@@ -26,7 +26,7 @@ export const useSettings = () => {
 
   // Mutation for updating settings
   const updateSettingsMutation = useMutation({
-    mutationFn: SettingsService.updateSettings,
+    mutationFn: SettingsService.updateDefaultSettings,
     onSuccess: updatedSettings => {
       // Update the cache with new settings
       queryClient.setQueryData(['settings'], updatedSettings);

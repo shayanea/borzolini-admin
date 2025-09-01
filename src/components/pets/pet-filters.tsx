@@ -17,7 +17,7 @@ const PetFilters = ({
   onActiveFilter,
   onClearFilters,
 }: PetFiltersProps) => {
-  // Common pet types
+  // Common pet types - using static list since API endpoint doesn't exist
   const petTypes = [
     'dog',
     'cat',

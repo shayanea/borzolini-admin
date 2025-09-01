@@ -1,19 +1,44 @@
 import type { Pet, PetFormData, UsePetManagementReturn } from '@/types';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { CACHE_PRESETS } from '@/constants';
 import { PetsService } from '@/services/pets.service';
 import { message } from 'antd';
+import { useAuth } from '@/hooks/use-auth';
+
+// Query keys for React Query
+const PETS_KEYS = {
+  all: ['pets'] as const,
+  lists: () => [...PETS_KEYS.all, 'list'] as const,
+  list: (filters: Record<string, any>, pagination: Record<string, any>) =>
+    [...PETS_KEYS.lists(), { filters, pagination }] as const,
+  details: () => [...PETS_KEYS.all, 'detail'] as const,
+  detail: (id: string) => [...PETS_KEYS.details(), id] as const,
+};
 
 export const usePetManagement = (): UsePetManagementReturn => {
-  const [pets, setPets] = useState<Pet[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const { isAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
+
+  // Local state for UI
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
-  const [total, setTotal] = useState<number>(0);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [petTypes, setPetTypes] = useState<string[]>([]);
-  const [breeds] = useState<string[]>([]);
+
+  // Pet types are now static - no need to fetch from API
+  const petTypes: string[] = [
+    'dog',
+    'cat',
+    'bird',
+    'fish',
+    'rabbit',
+    'hamster',
+    'guinea_pig',
+    'reptile',
+    'other',
+  ];
+  const breeds: string[] = [];
 
   const [filters, setFilters] = useState({
     search: '',
@@ -22,12 +47,17 @@ export const usePetManagement = (): UsePetManagementReturn => {
     isActive: undefined as boolean | undefined,
   });
 
-  // Fetch pets with current filters and pagination
-  const fetchPets = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  // React Query for fetching pets
+  const {
+    data: petsData,
+    isLoading: loading,
+    error: queryError,
+    refetch: fetchPets,
+  } = useQuery({
+    queryKey: PETS_KEYS.list(filters, { currentPage, pageSize }),
+    queryFn: async () => {
+      if (!isAuthenticated) return { data: [], total: 0, page: 1, limit: 10, totalPages: 0 };
 
-    try {
       const params = {
         page: currentPage,
         limit: pageSize,
@@ -39,27 +69,30 @@ export const usePetManagement = (): UsePetManagementReturn => {
         sortOrder: 'DESC' as const,
       };
 
-      const response = await PetsService.getPets(params);
-      setPets(response.data);
-      setTotal(response.total);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch pets';
-      setError(errorMessage);
-      message.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, [currentPage, pageSize, filters]);
+      return await PetsService.getPets(params);
+    },
+    enabled: isAuthenticated,
+    staleTime: CACHE_PRESETS.STANDARD.staleTime,
+    gcTime: CACHE_PRESETS.STANDARD.gcTime,
+    retry: (failureCount, error: any) => {
+      // Don't retry on authentication errors
+      if (error?.response?.status === 401) {
+        return false;
+      }
+      return failureCount < 2;
+    },
+  });
 
-  // Fetch pet types
-  const fetchPetTypes = useCallback(async () => {
-    try {
-      const types = await PetsService.getPetTypes();
-      setPetTypes(types);
-    } catch (err) {
-      console.error('Failed to fetch pet types:', err);
-    }
-  }, []);
+  // Extract data from query result
+  const pets = petsData?.data || [];
+  const total = petsData?.total || 0;
+  const error = queryError
+    ? queryError instanceof Error
+      ? queryError.message
+      : 'Failed to fetch pets'
+    : null;
+
+  // Pet types are now static - no need to fetch from API
 
   // Table change handler
   const handleTableChange = useCallback((pagination: any) => {
@@ -103,59 +136,69 @@ export const usePetManagement = (): UsePetManagementReturn => {
     setCurrentPage(1);
   }, []);
 
-  // CRUD operations
+  // Mutations for CRUD operations
+  const createPetMutation = useMutation({
+    mutationFn: PetsService.createPet,
+    onSuccess: () => {
+      // Invalidate and refetch pets list
+      queryClient.invalidateQueries({ queryKey: PETS_KEYS.lists() });
+      message.success('Pet created successfully');
+    },
+    onError: (error: any) => {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create pet';
+      message.error(errorMessage);
+    },
+  });
+
+  const updatePetMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: PetFormData }) =>
+      PetsService.updatePet(id, data),
+    onSuccess: (_: any, { id }: { id: string; data: PetFormData }) => {
+      // Invalidate and refetch pets list and specific pet detail
+      queryClient.invalidateQueries({ queryKey: PETS_KEYS.lists() });
+      queryClient.invalidateQueries({ queryKey: PETS_KEYS.detail(id) });
+      message.success('Pet updated successfully');
+    },
+    onError: (error: any) => {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update pet';
+      message.error(errorMessage);
+    },
+  });
+
+  const deletePetMutation = useMutation({
+    mutationFn: PetsService.deletePet,
+    onSuccess: (_: any, id: string) => {
+      // Invalidate and refetch pets list and remove specific pet detail from cache
+      queryClient.invalidateQueries({ queryKey: PETS_KEYS.lists() });
+      queryClient.removeQueries({ queryKey: PETS_KEYS.detail(id) });
+      message.success('Pet deleted successfully');
+    },
+    onError: (error: any) => {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete pet';
+      message.error(errorMessage);
+    },
+  });
+
+  // CRUD operation handlers
   const handleCreatePet = useCallback(
     async (data: PetFormData) => {
-      setLoading(true);
-      try {
-        await PetsService.createPet(data);
-        message.success('Pet created successfully');
-        await fetchPets();
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to create pet';
-        message.error(errorMessage);
-        throw err;
-      } finally {
-        setLoading(false);
-      }
+      await createPetMutation.mutateAsync(data);
     },
-    [fetchPets]
+    [createPetMutation]
   );
 
   const handleUpdatePet = useCallback(
     async (id: string, data: PetFormData) => {
-      setLoading(true);
-      try {
-        await PetsService.updatePet(id, data);
-        message.success('Pet updated successfully');
-        await fetchPets();
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to update pet';
-        message.error(errorMessage);
-        throw err;
-      } finally {
-        setLoading(false);
-      }
+      await updatePetMutation.mutateAsync({ id, data });
     },
-    [fetchPets]
+    [updatePetMutation]
   );
 
   const handleDeletePet = useCallback(
     async (id: string) => {
-      setLoading(true);
-      try {
-        await PetsService.deletePet(id);
-        message.success('Pet deleted successfully');
-        await fetchPets();
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to delete pet';
-        message.error(errorMessage);
-        throw err;
-      } finally {
-        setLoading(false);
-      }
+      await deletePetMutation.mutateAsync(id);
     },
-    [fetchPets]
+    [deletePetMutation]
   );
 
   // View and edit handlers
@@ -169,20 +212,13 @@ export const usePetManagement = (): UsePetManagementReturn => {
     console.log('Edit pet:', pet);
   }, []);
 
-  // Initial data fetch
-  useEffect(() => {
-    fetchPets();
-    fetchPetTypes();
-  }, [fetchPets, fetchPetTypes]);
-
-  // Refetch when filters change
-  useEffect(() => {
-    fetchPets();
-  }, [fetchPets]);
-
   return {
     pets,
-    loading,
+    loading:
+      loading ||
+      createPetMutation.isPending ||
+      updatePetMutation.isPending ||
+      deletePetMutation.isPending,
     error,
     currentPage,
     pageSize,
@@ -191,7 +227,7 @@ export const usePetManagement = (): UsePetManagementReturn => {
     filters,
     petTypes,
     breeds,
-    fetchPets,
+    fetchPets: () => fetchPets().then(() => {}),
     handleTableChange,
     handleRowSelectionChange,
     handleSearch,
