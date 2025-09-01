@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Divider, Form, Input, Space, Typography } from 'antd';
+import { Alert, Button, Card, Form, Input, Typography } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, UserOutlined } from '@ant-design/icons';
 
 import type { LoginCredentials } from '@/types';
@@ -7,12 +7,7 @@ import { useLogin } from '@/hooks/use-auth';
 
 const { Title, Text } = Typography;
 
-interface LoginFormProps {
-  onSwitchToRegister?: () => void;
-  onSwitchToForgotPassword?: () => void;
-}
-
-export const LoginForm = ({ onSwitchToRegister, onSwitchToForgotPassword }: LoginFormProps) => {
+export const LoginForm = () => {
   const [form] = Form.useForm();
   const loginMutation = useLogin();
 
@@ -27,18 +22,6 @@ export const LoginForm = ({ onSwitchToRegister, onSwitchToForgotPassword }: Logi
     },
     [loginMutation]
   );
-
-  const handleForgotPassword = useCallback(() => {
-    if (onSwitchToForgotPassword) {
-      onSwitchToForgotPassword();
-    }
-  }, [onSwitchToForgotPassword]);
-
-  const handleRegister = useCallback(() => {
-    if (onSwitchToRegister) {
-      onSwitchToRegister();
-    }
-  }, [onSwitchToRegister]);
 
   const handleIconRender = useCallback((visible: boolean) => {
     return visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />;
@@ -121,37 +104,6 @@ export const LoginForm = ({ onSwitchToRegister, onSwitchToForgotPassword }: Logi
             </Button>
           </Form.Item>
         </Form>
-
-        <Divider className='!my-6'>
-          <Text className='text-text-light'>or</Text>
-        </Divider>
-
-        <Space direction='vertical' className='w-full' size='middle'>
-          <Button
-            type='link'
-            onClick={handleForgotPassword}
-            className='w-full text-primary-orange hover:text-primary-dark'
-          >
-            Forgot your password?
-          </Button>
-
-          <div className='text-center'>
-            <Text className='text-text-light'>Don't have an account? </Text>
-            <Button
-              type='link'
-              onClick={handleRegister}
-              className='!p-0 !h-auto text-primary-orange hover:text-primary-dark font-medium'
-            >
-              Sign up here
-            </Button>
-          </div>
-        </Space>
-
-        <div className='mt-8 text-center'>
-          <Text className='text-xs text-text-light'>
-            By signing in, you agree to our Terms of Service and Privacy Policy
-          </Text>
-        </div>
       </Card>
     </div>
   );

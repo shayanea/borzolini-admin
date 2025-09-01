@@ -94,23 +94,23 @@ const Appointments = () => {
               <div className='text-sm text-gray-600'>Total</div>
             </div>
             <div className='bg-white p-4 rounded-lg shadow border'>
-              <div className='text-2xl font-bold text-blue-600'>{stats.pending}</div>
+              <div className='text-2xl font-bold text-blue-600'>0</div>
               <div className='text-sm text-gray-600'>Pending</div>
             </div>
             <div className='bg-white p-4 rounded-lg shadow border'>
-              <div className='text-2xl font-bold text-green-600'>{stats.confirmed}</div>
+              <div className='text-2xl font-bold text-green-600'>0</div>
               <div className='text-sm text-gray-600'>Confirmed</div>
             </div>
             <div className='bg-white p-4 rounded-lg shadow border'>
-              <div className='text-2xl font-bold text-orange-600'>{stats.in_progress}</div>
+              <div className='text-2xl font-bold text-orange-600'>0</div>
               <div className='text-sm text-gray-600'>In Progress</div>
             </div>
             <div className='bg-white p-4 rounded-lg shadow border'>
-              <div className='text-2xl font-bold text-purple-600'>{stats.completed}</div>
+              <div className='text-2xl font-bold text-purple-600'>0</div>
               <div className='text-sm text-gray-600'>Completed</div>
             </div>
             <div className='bg-white p-4 rounded-lg shadow border'>
-              <div className='text-2xl font-bold text-red-600'>{stats.today}</div>
+              <div className='text-2xl font-bold text-red-600'>0</div>
               <div className='text-sm text-gray-600'>Today</div>
             </div>
           </div>
