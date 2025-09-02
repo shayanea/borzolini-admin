@@ -1,28 +1,93 @@
 import { apiService } from './api';
 
+// Owner interface based on API response structure
+export interface PetOwner {
+  id: string;
+  email: string;
+  phone: string;
+  firstName: string;
+  lastName: string;
+  passwordHash: string;
+  role: string;
+  avatar: string;
+  dateOfBirth: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  preferredLanguage: string;
+  timezone: string;
+  gender: string;
+  emergencyContactName: string;
+  emergencyContactPhone: string;
+  emergencyContactRelationship: string;
+  medicalHistory: string;
+  allergies: string;
+  medications: string;
+  insuranceProvider?: string;
+  insurancePolicyNumber?: string;
+  insuranceGroupNumber?: string;
+  insuranceExpiryDate?: string;
+  notes?: string;
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
+  isActive: boolean;
+  refreshToken?: string;
+  refreshTokenExpiresAt?: string;
+  emailVerificationToken?: string;
+  emailVerificationExpiresAt?: string;
+  phoneVerificationOTP?: string;
+  phoneVerificationExpiresAt?: string;
+  passwordResetToken?: string;
+  passwordResetExpiresAt?: string;
+  passwordUpdatedAt?: string;
+  loginAttempts: number;
+  lockedUntil?: string;
+  lastLoginAt?: string;
+  profileCompletionPercentage: number;
+  accountStatus: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Pet {
   id: string;
   name: string;
-  type: string;
+  species: string;
   breed?: string;
-  age?: number;
-  weight?: number;
-  ownerName: string;
-  ownerEmail?: string;
-  ownerPhone?: string;
-  microchipId?: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
+  gender: string;
+  date_of_birth: string;
+  weight: string;
+  size: string;
+  color: string;
+  microchip_number?: string;
+  is_spayed_neutered: boolean;
+  is_vaccinated: boolean;
+  medical_history: string;
+  behavioral_notes: string;
+  dietary_requirements: string;
+  allergies: string[];
+  medications: string[];
+  emergency_contact: string;
+  emergency_phone: string;
+  photo_url?: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  owner_id: string;
+  owner: PetOwner;
 }
 
 export interface PetsQueryParams {
   page?: number;
   limit?: number;
   search?: string;
-  type?: string;
-  ownerName?: string;
+  species?: string;
+  breed?: string;
+  gender?: string;
+  size?: string;
   isActive?: boolean;
+  ownerName?: string;
   sortBy?: string;
   sortOrder?: 'ASC' | 'DESC';
 }
@@ -30,7 +95,7 @@ export interface PetsQueryParams {
 export class PetsService {
   // Get all pets with pagination and filters
   static async getPets(params: PetsQueryParams = {}): Promise<{
-    data: Pet[];
+    pets: Pet[];
     total: number;
     page: number;
     limit: number;
@@ -41,7 +106,10 @@ export class PetsService {
     if (params.page) queryParams.append('page', params.page.toString());
     if (params.limit) queryParams.append('limit', params.limit.toString());
     if (params.search) queryParams.append('search', params.search);
-    if (params.type) queryParams.append('type', params.type);
+    if (params.species) queryParams.append('species', params.species);
+    if (params.breed) queryParams.append('breed', params.breed);
+    if (params.gender) queryParams.append('gender', params.gender);
+    if (params.size) queryParams.append('size', params.size);
     if (params.ownerName) queryParams.append('ownerName', params.ownerName);
     if (params.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
     if (params.sortBy) queryParams.append('sortBy', params.sortBy);
@@ -72,14 +140,16 @@ export class PetsService {
   }
 
   // Create new pet
-  static async createPet(data: Omit<Pet, 'id' | 'createdAt' | 'updatedAt'>): Promise<Pet> {
+  static async createPet(
+    data: Omit<Pet, 'id' | 'created_at' | 'updated_at' | 'owner'>
+  ): Promise<Pet> {
     return apiService.post<Pet>('/pets', data);
   }
 
   // Update pet
   static async updatePet(
     id: string,
-    data: Partial<Omit<Pet, 'id' | 'createdAt' | 'updatedAt'>>
+    data: Partial<Omit<Pet, 'id' | 'created_at' | 'updated_at' | 'owner'>>
   ): Promise<Pet> {
     return apiService.put<Pet>(`/pets/${id}`, data);
   }

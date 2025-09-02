@@ -55,8 +55,8 @@ export const useReports = (filters: ReportFilters = {}) => {
   // Mutation for exporting reports
   const exportReportMutation = useMutation({
     mutationFn: ({
-      filters: _filters,
-      format: _format,
+      filters: _filters, // eslint-disable-line @typescript-eslint/no-unused-vars
+      format: _format, // eslint-disable-line @typescript-eslint/no-unused-vars
     }: {
       filters: ReportFilters;
       format: 'csv' | 'pdf';

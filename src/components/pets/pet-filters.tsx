@@ -6,32 +6,56 @@ import type { PetFiltersProps } from '@/types';
 const { Search } = Input;
 const { Option } = Select;
 
+// Common pet species - using static list
+const petSpecies = [
+  'dog',
+  'cat',
+  'bird',
+  'fish',
+  'rabbit',
+  'hamster',
+  'guinea_pig',
+  'reptile',
+  'other',
+];
+
+// Common breeds based on API examples
+const breeds = [
+  'Ragdoll',
+  'Border Collie',
+  'Maine Coon',
+  'Cavalier King Charles Spaniel',
+  'German Shepherd',
+  'Persian',
+  'Labrador Retriever',
+  'Golden Retriever',
+  'Domestic Shorthair',
+];
+
+const genders = ['male', 'female'];
+const sizes = ['small', 'medium', 'large'];
+
 const PetFilters = ({
   searchText,
-  selectedType,
+  selectedSpecies,
+  selectedBreed,
+  selectedGender,
+  selectedSize,
   selectedOwner,
   isActiveFilter,
   onSearch,
-  onTypeFilter,
+  onSpeciesFilter,
+  onBreedFilter,
+  onGenderFilter,
+  onSizeFilter,
   onOwnerFilter,
   onActiveFilter,
   onClearFilters,
+  owners = [],
 }: PetFiltersProps) => {
-  // Common pet types - using static list since API endpoint doesn't exist
-  const petTypes = [
-    'dog',
-    'cat',
-    'bird',
-    'fish',
-    'rabbit',
-    'hamster',
-    'guinea_pig',
-    'reptile',
-    'other',
-  ];
-
   return (
     <Card className='admin-card admin-filters'>
+      {/* First Row */}
       <Row gutter={[16, 16]} className='mb-4'>
         <Col xs={24} sm={12} md={6}>
           <Search
@@ -45,19 +69,68 @@ const PetFilters = ({
         </Col>
         <Col xs={24} sm={12} md={4}>
           <Select
-            placeholder='Pet Type'
+            placeholder='Species'
             allowClear
-            value={selectedType}
-            onChange={onTypeFilter}
+            value={selectedSpecies}
+            onChange={onSpeciesFilter}
             className='w-full'
           >
-            {petTypes.map(type => (
-              <Option key={type} value={type}>
-                {type.charAt(0).toUpperCase() + type.slice(1)}
+            {petSpecies.map(species => (
+              <Option key={species} value={species}>
+                {species.charAt(0).toUpperCase() + species.slice(1)}
               </Option>
             ))}
           </Select>
         </Col>
+        <Col xs={24} sm={12} md={4}>
+          <Select
+            placeholder='Breed'
+            allowClear
+            value={selectedBreed}
+            onChange={onBreedFilter}
+            className='w-full'
+          >
+            {breeds.map(breed => (
+              <Option key={breed} value={breed}>
+                {breed}
+              </Option>
+            ))}
+          </Select>
+        </Col>
+        <Col xs={24} sm={12} md={4}>
+          <Select
+            placeholder='Gender'
+            allowClear
+            value={selectedGender}
+            onChange={onGenderFilter}
+            className='w-full'
+          >
+            {genders.map(gender => (
+              <Option key={gender} value={gender}>
+                {gender.charAt(0).toUpperCase() + gender.slice(1)}
+              </Option>
+            ))}
+          </Select>
+        </Col>
+        <Col xs={24} sm={12} md={4}>
+          <Select
+            placeholder='Size'
+            allowClear
+            value={selectedSize}
+            onChange={onSizeFilter}
+            className='w-full'
+          >
+            {sizes.map(size => (
+              <Option key={size} value={size}>
+                {size.charAt(0).toUpperCase() + size.slice(1)}
+              </Option>
+            ))}
+          </Select>
+        </Col>
+      </Row>
+
+      {/* Second Row */}
+      <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} md={4}>
           <Select
             placeholder='Owner'
@@ -65,9 +138,14 @@ const PetFilters = ({
             value={selectedOwner}
             onChange={onOwnerFilter}
             className='w-full'
+            showSearch
+            optionFilterProp='children'
           >
-            {/* This would be populated with actual owner names from the data */}
-            <Option value='all'>All Owners</Option>
+            {owners.map(owner => (
+              <Option key={owner.id} value={owner.id}>
+                {owner.firstName} {owner.lastName}
+              </Option>
+            ))}
           </Select>
         </Col>
         <Col xs={24} sm={12} md={4}>

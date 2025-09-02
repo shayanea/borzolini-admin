@@ -21,8 +21,28 @@ export interface User {
   verified?: boolean;
   profileCompletion?: number;
   timestamp?: string;
+
+  // Admin-specific properties (only present when accessed by admin)
+  isAdminView?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
+  requiresAttention?: boolean;
+  adminProperties?: AdminUserProperties;
+
   // Allow for additional properties
   [key: string]: any;
+}
+
+// Admin-specific user properties interface
+export interface AdminUserProperties {
+  isNewUser: boolean;
+  accountAge: string;
+  lastActivityStatus: string;
+  profileCompleteness: number;
+  verificationStatus: 'Fully verified' | 'Partially verified' | 'Unverified';
+  riskLevel: 'low' | 'medium' | 'high';
+  managementNotes: string;
+  priority: 'low' | 'normal' | 'high' | 'urgent';
 }
 
 export type UserRole = 'admin' | 'veterinarian' | 'staff' | 'patient';
@@ -264,3 +284,6 @@ export * from './api-health';
 
 // Pets Types
 export * from './pets';
+
+// Reviews Types
+export * from './reviews';

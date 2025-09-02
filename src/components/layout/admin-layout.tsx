@@ -7,6 +7,7 @@ import {
   Pets,
   Profile,
   Reports,
+  Reviews,
   Settings,
   Users,
 } from '@/pages';
@@ -124,6 +125,7 @@ const AdminLayout = () => {
         <Route path='veterinarians' element={<Users roleFilter={VETERINARIAN_ROLE_FILTER} />} />
         <Route path='pets' element={<Pets />} />
         <Route path='reports' element={<Reports />} />
+        <Route path='reviews' element={<Reviews />} />
         <Route path='settings' element={<Settings />} />
         <Route path='profile' element={<Profile />} />
         <Route path='api-health' element={<ApiHealth />} />

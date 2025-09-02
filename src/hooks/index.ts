@@ -7,5 +7,6 @@ export { useClinicManagement } from './use-clinic-management';
 export { useDashboard } from './use-dashboard';
 export { usePetManagement } from './use-pet-management';
 export { useReports } from './use-reports';
+export { useReviews } from './use-reviews';
 export { useSettings } from './use-settings';
 export { useUserManagement } from './use-user-management';

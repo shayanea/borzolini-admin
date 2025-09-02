@@ -1,20 +1,31 @@
-import type { Pet, PetsQueryParams } from '@/services/pets.service';
+import type { Pet, PetOwner, PetsQueryParams } from '@/services/pets.service';
 
 // Re-export service types for convenience
-export type { Pet, PetsQueryParams };
+export type { Pet, PetOwner, PetsQueryParams };
 
 // Pet form data for create/update operations
 export interface PetFormData {
   name: string;
-  type: string;
+  species: string;
   breed?: string;
-  age?: number;
-  weight?: number;
-  ownerName: string;
-  ownerEmail?: string;
-  ownerPhone?: string;
-  microchipId?: string;
-  isActive: boolean;
+  gender: string;
+  date_of_birth: string;
+  weight: string;
+  size: string;
+  color: string;
+  microchip_number?: string;
+  is_spayed_neutered: boolean;
+  is_vaccinated: boolean;
+  medical_history: string;
+  behavioral_notes: string;
+  dietary_requirements: string;
+  allergies: string[];
+  medications: string[];
+  emergency_contact: string;
+  emergency_phone: string;
+  photo_url?: string;
+  is_active: boolean;
+  owner_id: string;
 }
 
 // Pet table props
@@ -35,14 +46,21 @@ export interface PetTableProps {
 // Pet filters props
 export interface PetFiltersProps {
   searchText: string;
-  selectedType: string;
-  selectedOwner: string;
+  selectedSpecies: string | null;
+  selectedBreed: string | null;
+  selectedGender: string | null;
+  selectedSize: string | null;
+  selectedOwner: string | null;
   isActiveFilter: boolean | undefined;
   onSearch: (value: string) => void;
-  onTypeFilter: (value: string) => void;
+  onSpeciesFilter: (value: string | null) => void;
+  onBreedFilter: (value: string | null) => void;
+  onGenderFilter: (value: string | null) => void;
+  onSizeFilter: (value: string | null) => void;
   onOwnerFilter: (value: string) => void;
   onActiveFilter: (value: boolean | undefined) => void;
   onClearFilters: () => void;
+  owners?: PetOwner[];
 }
 
 // Pet form modal props
@@ -65,18 +83,27 @@ export interface UsePetManagementReturn {
   selectedRowKeys: React.Key[];
   filters: {
     search: string;
-    type: string;
+    species: string | null;
+    breed: string | null;
+    gender: string | null;
+    size: string | null;
     ownerName: string;
     isActive: boolean | undefined;
   };
-  petTypes: string[];
+  petSpecies: string[];
   breeds: string[];
+  genders: string[];
+  sizes: string[];
+  owners: PetOwner[];
   // Actions
   fetchPets: () => Promise<void>;
   handleTableChange: (pagination: any, filters: any, sorter: any) => void;
   handleRowSelectionChange: (selectedRowKeys: React.Key[], selectedRows: Pet[]) => void;
   handleSearch: (value: string) => void;
-  handleTypeFilter: (value: string) => void;
+  handleSpeciesFilter: (value: string | null) => void;
+  handleBreedFilter: (value: string | null) => void;
+  handleGenderFilter: (value: string | null) => void;
+  handleSizeFilter: (value: string | null) => void;
   handleOwnerFilter: (value: string) => void;
   handleActiveFilter: (value: boolean | undefined) => void;
   handleClearFilters: () => void;
@@ -124,9 +151,15 @@ export interface PetStatistics {
 // Pet form validation rules
 export interface PetFormValidation {
   name: { required: boolean; message: string }[];
-  type: { required: boolean; message: string }[];
-  ownerName: { required: boolean; message: string }[];
-  ownerEmail?: { type: string; message: string }[];
-  age?: { type: string; message: string; min?: number; max?: number }[];
-  weight?: { type: string; message: string; min?: number; max?: number }[];
+  species: { required: boolean; message: string }[];
+  gender: { required: boolean; message: string }[];
+  date_of_birth: { required: boolean; message: string; type: string }[];
+  size: { required: boolean; message: string }[];
+  color: { required: boolean; message: string }[];
+  emergency_contact: { required: boolean; message: string }[];
+  emergency_phone: { required: boolean; message: string; pattern?: RegExp }[];
+  owner_id: { required: boolean; message: string }[];
+  medical_history?: { type: string; message: string }[];
+  behavioral_notes?: { type: string; message: string }[];
+  dietary_requirements?: { type: string; message: string }[];
 }

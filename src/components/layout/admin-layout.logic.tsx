@@ -11,9 +11,10 @@ import {
   UserOutlined,
 } from '@/ui';
 import { MenuProps, Tag } from 'antd';
-import { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useMemo, useState } from 'react';
 
+import { MessageOutlined } from '@ant-design/icons';
 import { ROUTES } from '@/constants';
 import { useAuth } from '@/hooks/use-auth';
 
@@ -81,6 +82,17 @@ export const useAdminLayoutLogic = () => {
       ),
       icon: <FileTextOutlined />,
       onClick: () => navigate(ROUTES.REPORTS),
+    },
+    {
+      key: '/reviews',
+      label: (
+        <div className='flex items-center justify-between w-full'>
+          <span>Reviews</span>
+          <Tag color='green'>Soon</Tag>
+        </div>
+      ),
+      icon: <MessageOutlined />,
+      onClick: () => navigate(ROUTES.REVIEWS),
     },
     {
       key: '/api-health',

@@ -36,6 +36,10 @@ export const environment = {
       ttl: parseInt(import.meta.env.VITE_CACHE_CALENDAR_TTL || '300000'), // 5 minutes
       maxSize: parseInt(import.meta.env.VITE_CACHE_CALENDAR_MAX_SIZE || '50'),
     },
+    reviews: {
+      ttl: parseInt(import.meta.env.VITE_CACHE_REVIEWS_TTL || '300000'), // 5 minutes
+      maxSize: parseInt(import.meta.env.VITE_CACHE_REVIEWS_MAX_SIZE || '100'),
+    },
   },
 } as const;
 

@@ -21,11 +21,15 @@ const PetsPage: React.FC = () => {
     pageSize,
     total,
     filters,
+    owners,
     fetchPets,
     handleTableChange,
     handleRowSelectionChange,
     handleSearch,
-    handleTypeFilter,
+    handleSpeciesFilter,
+    handleBreedFilter,
+    handleGenderFilter,
+    handleSizeFilter,
     handleOwnerFilter,
     handleActiveFilter,
     handleClearFilters,
@@ -132,7 +136,7 @@ const PetsPage: React.FC = () => {
   const handleBulkActivate = useCallback(async () => {
     try {
       await Promise.all(
-        selectedPets.map(pet => handleUpdatePet(pet.id, { ...pet, isActive: true }))
+        selectedPets.map(pet => handleUpdatePet(pet.id, { ...pet, is_active: true }))
       );
       setLocalSelectedRowKeys([]);
     } catch (error) {
@@ -143,7 +147,7 @@ const PetsPage: React.FC = () => {
   const handleBulkDeactivate = useCallback(async () => {
     try {
       await Promise.all(
-        selectedPets.map(pet => handleUpdatePet(pet.id, { ...pet, isActive: false }))
+        selectedPets.map(pet => handleUpdatePet(pet.id, { ...pet, is_active: false }))
       );
       setLocalSelectedRowKeys([]);
     } catch (error) {
@@ -162,11 +166,18 @@ const PetsPage: React.FC = () => {
 
       <PetFilters
         searchText={filters.search}
-        selectedType={filters.type}
+        selectedSpecies={filters.species}
+        selectedBreed={filters.breed}
+        selectedGender={filters.gender}
+        selectedSize={filters.size}
         selectedOwner={filters.ownerName}
         isActiveFilter={filters.isActive}
+        owners={owners}
         onSearch={handleSearch}
-        onTypeFilter={handleTypeFilter}
+        onSpeciesFilter={handleSpeciesFilter}
+        onBreedFilter={handleBreedFilter}
+        onGenderFilter={handleGenderFilter}
+        onSizeFilter={handleSizeFilter}
         onOwnerFilter={handleOwnerFilter}
         onActiveFilter={handleActiveFilter}
         onClearFilters={handleClearFilters}

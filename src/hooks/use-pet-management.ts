@@ -1,5 +1,5 @@
 import type { Pet, PetFormData, UsePetManagementReturn } from '@/types';
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { CACHE_PRESETS } from '@/constants';
@@ -7,11 +7,27 @@ import { PetsService } from '@/services/pets.service';
 import { message } from 'antd';
 import { useAuth } from '@/hooks/use-auth';
 
+// Types for query parameters
+interface PetsFilters {
+  search?: string;
+  species?: string | null;
+  breed?: string | null;
+  gender?: string | null;
+  size?: string | null;
+  ownerName?: string;
+  isActive?: boolean;
+}
+
+interface PetsPagination {
+  currentPage: number;
+  pageSize: number;
+}
+
 // Query keys for React Query
 const PETS_KEYS = {
   all: ['pets'] as const,
   lists: () => [...PETS_KEYS.all, 'list'] as const,
-  list: (filters: Record<string, any>, pagination: Record<string, any>) =>
+  list: (filters: PetsFilters, pagination: PetsPagination) =>
     [...PETS_KEYS.lists(), { filters, pagination }] as const,
   details: () => [...PETS_KEYS.all, 'detail'] as const,
   detail: (id: string) => [...PETS_KEYS.details(), id] as const,
@@ -26,8 +42,8 @@ export const usePetManagement = (): UsePetManagementReturn => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-  // Pet types are now static - no need to fetch from API
-  const petTypes: string[] = [
+  // Pet species, breeds, genders, and sizes based on API structure
+  const petSpecies: string[] = [
     'dog',
     'cat',
     'bird',
@@ -38,13 +54,39 @@ export const usePetManagement = (): UsePetManagementReturn => {
     'reptile',
     'other',
   ];
-  const breeds: string[] = [];
 
-  const [filters, setFilters] = useState({
+  // Common breeds based on the API examples
+  const breeds: string[] = [
+    'Ragdoll',
+    'Border Collie',
+    'Maine Coon',
+    'Cavalier King Charles Spaniel',
+    'German Shepherd',
+    'Persian',
+    'Labrador Retriever',
+    'Golden Retriever',
+    'Domestic Shorthair',
+  ];
+
+  const genders: string[] = ['male', 'female'];
+  const sizes: string[] = ['small', 'medium', 'large'];
+
+  const [filters, setFilters] = useState<{
+    search: string;
+    species: string | null;
+    breed: string | null;
+    gender: string | null;
+    size: string | null;
+    ownerName: string;
+    isActive: boolean | undefined;
+  }>({
     search: '',
-    type: '',
+    species: null,
+    breed: null,
+    gender: null,
+    size: null,
     ownerName: '',
-    isActive: undefined as boolean | undefined,
+    isActive: undefined,
   });
 
   // React Query for fetching pets
@@ -56,16 +98,17 @@ export const usePetManagement = (): UsePetManagementReturn => {
   } = useQuery({
     queryKey: PETS_KEYS.list(filters, { currentPage, pageSize }),
     queryFn: async () => {
-      if (!isAuthenticated) return { data: [], total: 0, page: 1, limit: 10, totalPages: 0 };
-
       const params = {
         page: currentPage,
         limit: pageSize,
         search: filters.search || undefined,
-        type: filters.type || undefined,
+        species: filters.species || undefined,
+        breed: filters.breed || undefined,
+        gender: filters.gender || undefined,
+        size: filters.size || undefined,
         ownerName: filters.ownerName || undefined,
         isActive: filters.isActive,
-        sortBy: 'createdAt',
+        sortBy: 'created_at',
         sortOrder: 'DESC' as const,
       };
 
@@ -74,17 +117,21 @@ export const usePetManagement = (): UsePetManagementReturn => {
     enabled: isAuthenticated,
     staleTime: CACHE_PRESETS.STANDARD.staleTime,
     gcTime: CACHE_PRESETS.STANDARD.gcTime,
-    retry: (failureCount, error: any) => {
+    retry: (failureCount, error: unknown) => {
       // Don't retry on authentication errors
-      if (error?.response?.status === 401) {
-        return false;
+      const hadError = error && typeof error === 'object' && 'response' in error;
+      if (hadError) {
+        const response = (error as { response: { status: number } }).response;
+        if (response?.status === 401) {
+          return false;
+        }
       }
       return failureCount < 2;
     },
   });
 
   // Extract data from query result
-  const pets = petsData?.data || [];
+  const pets = React.useMemo(() => petsData?.pets || [], [petsData?.pets]);
   const total = petsData?.total || 0;
   const error = queryError
     ? queryError instanceof Error
@@ -92,12 +139,23 @@ export const usePetManagement = (): UsePetManagementReturn => {
       : 'Failed to fetch pets'
     : null;
 
+  // Extract unique owners from pets data
+  const owners = React.useMemo(() => {
+    const ownerMap = new Map();
+    pets.forEach(pet => {
+      if (pet.owner && !ownerMap.has(pet.owner.id)) {
+        ownerMap.set(pet.owner.id, pet.owner);
+      }
+    });
+    return Array.from(ownerMap.values());
+  }, [pets]);
+
   // Pet types are now static - no need to fetch from API
 
   // Table change handler
-  const handleTableChange = useCallback((pagination: any) => {
-    setCurrentPage(pagination.current);
-    setPageSize(pagination.pageSize);
+  const handleTableChange = useCallback((pagination: { current?: number; pageSize?: number }) => {
+    if (pagination.current) setCurrentPage(pagination.current);
+    if (pagination.pageSize) setPageSize(pagination.pageSize);
   }, []);
 
   // Row selection change handler
@@ -111,8 +169,23 @@ export const usePetManagement = (): UsePetManagementReturn => {
     setCurrentPage(1);
   }, []);
 
-  const handleTypeFilter = useCallback((value: string) => {
-    setFilters(prev => ({ ...prev, type: value }));
+  const handleSpeciesFilter = useCallback((value: string | null) => {
+    setFilters(prev => ({ ...prev, species: value }));
+    setCurrentPage(1);
+  }, []);
+
+  const handleBreedFilter = useCallback((value: string | null) => {
+    setFilters(prev => ({ ...prev, breed: value }));
+    setCurrentPage(1);
+  }, []);
+
+  const handleGenderFilter = useCallback((value: string | null) => {
+    setFilters(prev => ({ ...prev, gender: value }));
+    setCurrentPage(1);
+  }, []);
+
+  const handleSizeFilter = useCallback((value: string | null) => {
+    setFilters(prev => ({ ...prev, size: value }));
     setCurrentPage(1);
   }, []);
 
@@ -129,7 +202,10 @@ export const usePetManagement = (): UsePetManagementReturn => {
   const handleClearFilters = useCallback(() => {
     setFilters({
       search: '',
-      type: '',
+      species: null,
+      breed: null,
+      gender: null,
+      size: null,
       ownerName: '',
       isActive: undefined,
     });
@@ -138,28 +214,43 @@ export const usePetManagement = (): UsePetManagementReturn => {
 
   // Mutations for CRUD operations
   const createPetMutation = useMutation({
-    mutationFn: PetsService.createPet,
+    mutationFn: (data: PetFormData) => {
+      // Map PetFormData to the expected service format
+      const petData = {
+        ...data,
+        is_active: data.is_active,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      return PetsService.createPet(petData);
+    },
     onSuccess: () => {
       // Invalidate and refetch pets list
       queryClient.invalidateQueries({ queryKey: PETS_KEYS.lists() });
       message.success('Pet created successfully');
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       const errorMessage = error instanceof Error ? error.message : 'Failed to create pet';
       message.error(errorMessage);
     },
   });
 
   const updatePetMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: PetFormData }) =>
-      PetsService.updatePet(id, data),
-    onSuccess: (_: any, { id }: { id: string; data: PetFormData }) => {
+    mutationFn: ({ id, data }: { id: string; data: PetFormData }) => {
+      // Map PetFormData to the expected service format
+      const petData = {
+        ...data,
+        updated_at: new Date().toISOString(),
+      };
+      return PetsService.updatePet(id, petData);
+    },
+    onSuccess: (_: unknown, { id }: { id: string; data: PetFormData }) => {
       // Invalidate and refetch pets list and specific pet detail
       queryClient.invalidateQueries({ queryKey: PETS_KEYS.lists() });
       queryClient.invalidateQueries({ queryKey: PETS_KEYS.detail(id) });
       message.success('Pet updated successfully');
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       const errorMessage = error instanceof Error ? error.message : 'Failed to update pet';
       message.error(errorMessage);
     },
@@ -167,13 +258,13 @@ export const usePetManagement = (): UsePetManagementReturn => {
 
   const deletePetMutation = useMutation({
     mutationFn: PetsService.deletePet,
-    onSuccess: (_: any, id: string) => {
+    onSuccess: (_: unknown, id: string) => {
       // Invalidate and refetch pets list and remove specific pet detail from cache
       queryClient.invalidateQueries({ queryKey: PETS_KEYS.lists() });
       queryClient.removeQueries({ queryKey: PETS_KEYS.detail(id) });
       message.success('Pet deleted successfully');
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       const errorMessage = error instanceof Error ? error.message : 'Failed to delete pet';
       message.error(errorMessage);
     },
@@ -225,13 +316,19 @@ export const usePetManagement = (): UsePetManagementReturn => {
     total,
     selectedRowKeys,
     filters,
-    petTypes,
+    petSpecies,
     breeds,
+    genders,
+    sizes,
+    owners,
     fetchPets: () => fetchPets().then(() => {}),
     handleTableChange,
     handleRowSelectionChange,
     handleSearch,
-    handleTypeFilter,
+    handleSpeciesFilter,
+    handleBreedFilter,
+    handleGenderFilter,
+    handleSizeFilter,
     handleOwnerFilter,
     handleActiveFilter,
     handleClearFilters,

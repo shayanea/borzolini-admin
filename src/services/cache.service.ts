@@ -98,10 +98,15 @@ export const calendarCache = new CacheService({
   ttl: environment.cache.calendar?.ttl || 300000, // 5 minutes default
   maxSize: environment.cache.calendar?.maxSize || 50, // 50 items default
 });
+export const reviewsCache = new CacheService({
+  ttl: environment.cache.reviews?.ttl || 300000, // 5 minutes default
+  maxSize: environment.cache.reviews?.maxSize || 100, // 100 items default
+});
 
 // Start cleanup intervals
 appointmentsCache.startCleanupInterval();
 usersCache.startCleanupInterval();
 calendarCache.startCleanupInterval();
+reviewsCache.startCleanupInterval();
 
 export default CacheService;
