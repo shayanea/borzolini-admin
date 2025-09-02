@@ -28,9 +28,7 @@ export const useDashboard = () => {
   } = useQuery({
     queryKey: DASHBOARD_KEYS.stats(filters),
     queryFn: async () => {
-      console.log('useDashboard: Fetching dashboard stats with filters:', filters);
       const result = await DashboardService.getDashboardStats(filters);
-      console.log('useDashboard: Received dashboard stats:', result);
       return result;
     },
     enabled: isAuthenticated,
@@ -53,9 +51,7 @@ export const useDashboard = () => {
   } = useQuery({
     queryKey: DASHBOARD_KEYS.charts(filters),
     queryFn: async () => {
-      console.log('useDashboard: Fetching dashboard charts with filters:', filters);
       const result = await DashboardService.getDashboardCharts(filters);
-      console.log('useDashboard: Received dashboard charts:', result);
       return result;
     },
     enabled: isAuthenticated,
@@ -136,16 +132,6 @@ export const useDashboard = () => {
     }
     return null;
   }, [isAuthenticated, chartsError]);
-
-  // Debug logging
-  console.log('useDashboard: Current state:', {
-    isAuthenticated,
-    loading,
-    error,
-    stats,
-    chartsData,
-    filters,
-  });
 
   return {
     // Data

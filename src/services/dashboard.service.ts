@@ -16,8 +16,6 @@ export class DashboardService {
   // Get comprehensive dashboard statistics
   static async getDashboardStats(filters: DashboardFilters = {}): Promise<DashboardStats> {
     try {
-      console.log('DashboardService: Starting to fetch dashboard stats with filters:', filters);
-
       // Fetch data in parallel for better performance
       const [usersResponse, clinicsResponse, appointmentsStats] = await Promise.all([
         UsersService.getUsers({ limit: 1000, ...filters }).catch(error => {
@@ -50,12 +48,6 @@ export class DashboardService {
         }),
       ]);
 
-      console.log('DashboardService: Raw API responses:', {
-        usersResponse,
-        clinicsResponse,
-        appointmentsStats,
-      });
-
       // Validate responses and provide fallbacks
       if (!usersResponse || !usersResponse.data || !Array.isArray(usersResponse.data)) {
         console.warn('DashboardService: Invalid users response structure:', usersResponse);
@@ -80,21 +72,10 @@ export class DashboardService {
       const totalClinics = clinicsResponse.total || clinicsResponse.clinics.length || 0;
       const totalAppointments = appointmentsStats.total || 0;
 
-      console.log('DashboardService: Calculated totals:', {
-        totalUsers,
-        totalClinics,
-        totalAppointments,
-      });
-
       // Filter users by role with proper null checking
       const veterinarians =
         usersResponse.data.filter((user: User) => user?.role === 'veterinarian') || [];
       const patients = usersResponse.data.filter((user: User) => user?.role === 'patient') || [];
-
-      console.log('DashboardService: Filtered users:', {
-        veterinarians: veterinarians.length,
-        patients: patients.length,
-      });
 
       // Calculate growth rate (mock for now - would need historical data)
       const growthRate = 12.5; // This would come from historical comparison
@@ -127,7 +108,6 @@ export class DashboardService {
         topPerformingClinics,
         recentActivity,
       };
-      console.log('DashboardService: Dashboard stats calculated successfully:', result);
       return result;
     } catch (error: any) {
       console.error('DashboardService: Error fetching dashboard stats:', error);
@@ -306,7 +286,13 @@ export class DashboardService {
           completed: 0,
           cancelled: 0,
         })),
-        UsersService.getUsers({ limit: 1000, ...filters }).catch(() => ({ data: [], total: 0, page: 1, limit: 10, totalPages: 0 })),
+        UsersService.getUsers({ limit: 1000, ...filters }).catch(() => ({
+          data: [],
+          total: 0,
+          page: 1,
+          limit: 10,
+          totalPages: 0,
+        })),
       ]);
 
       // Validate responses

@@ -1,5 +1,5 @@
-import { ApiHealthState, HealthCheckResponse, HealthStatus } from '@/types/api-health';
 import { CACHE_PRESETS, GC_TIMES, STALE_TIMES } from '@/constants';
+import { ApiHealthState, HealthCheckResponse, HealthStatus } from '@/types/api-health';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { apiHealthService } from '@/services/api-health.service';
@@ -45,13 +45,64 @@ export const useApiHealth = () => {
     gcTime: GC_TIMES.VERY_SHORT,
   });
 
+  // Query for database health
+  const { data: databaseHealth, refetch: refetchDatabaseHealth } = useQuery({
+    queryKey: ['database-health'],
+    queryFn: async () => {
+      return await apiHealthService.getDatabaseHealth();
+    },
+    staleTime: CACHE_PRESETS.ACTIVE.staleTime,
+    gcTime: CACHE_PRESETS.ACTIVE.gcTime,
+  });
+
+  // Query for detailed system metrics
+  const { data: systemMetrics, refetch: refetchSystemMetrics } = useQuery({
+    queryKey: ['system-metrics'],
+    queryFn: async () => {
+      return await apiHealthService.getDetailedHealth();
+    },
+    staleTime: CACHE_PRESETS.ACTIVE.staleTime,
+    gcTime: CACHE_PRESETS.ACTIVE.gcTime,
+  });
+
+  // Query for analytics health
+  const { data: analyticsHealth, refetch: refetchAnalyticsHealth } = useQuery({
+    queryKey: ['analytics-health'],
+    queryFn: async () => {
+      return await apiHealthService.getAnalyticsHealth();
+    },
+    staleTime: CACHE_PRESETS.ACTIVE.staleTime,
+    gcTime: CACHE_PRESETS.ACTIVE.gcTime,
+  });
+
+  // Query for analytics status
+  const { data: analyticsStatus, refetch: refetchAnalyticsStatus } = useQuery({
+    queryKey: ['analytics-status'],
+    queryFn: async () => {
+      return await apiHealthService.getAnalyticsStatus();
+    },
+    staleTime: CACHE_PRESETS.ACTIVE.staleTime,
+    gcTime: CACHE_PRESETS.ACTIVE.gcTime,
+  });
+
   // Mutation for running full health check
   const runFullHealthCheckMutation = useMutation({
     mutationFn: async () => {
-      // Run all health checks in parallel
-      const [apiHealthResult, endpointTestsResult] = await Promise.all([
+      // Run all health checks in parallel (including detailed metrics and analytics)
+      const [
+        apiHealthResult,
+        endpointTestsResult,
+        systemMetricsResult,
+        databaseHealthResult,
+        analyticsHealthResult,
+        analyticsStatusResult,
+      ] = await Promise.all([
         refetchApiHealth(),
         refetchEndpointTests(),
+        refetchSystemMetrics(),
+        refetchDatabaseHealth(),
+        refetchAnalyticsHealth(),
+        refetchAnalyticsStatus(),
       ]);
 
       // Determine overall status
@@ -67,13 +118,29 @@ export const useApiHealth = () => {
         overallStatus = 'degraded';
       }
 
-      // Update system health
+      // Update system health and related caches
       queryClient.setQueryData(['system-health'], overallStatus);
+      if (systemMetricsResult.data) {
+        queryClient.setQueryData(['system-metrics'], systemMetricsResult.data);
+      }
+      if (databaseHealthResult.data) {
+        queryClient.setQueryData(['database-health'], databaseHealthResult.data);
+      }
+      if (analyticsHealthResult.data) {
+        queryClient.setQueryData(['analytics-health'], analyticsHealthResult.data);
+      }
+      if (analyticsStatusResult.data) {
+        queryClient.setQueryData(['analytics-status'], analyticsStatusResult.data);
+      }
 
       return {
         overallStatus,
         apiHealth: apiHealthResult.data,
         endpointTests: endpointTestsResult.data,
+        systemMetrics: systemMetricsResult.data,
+        databaseHealth: databaseHealthResult.data,
+        analyticsHealth: analyticsHealthResult.data,
+        analyticsStatus: analyticsStatusResult.data,
       };
     },
     onSuccess: () => {
@@ -130,6 +197,10 @@ export const useApiHealth = () => {
 
   return {
     ...state,
+    databaseHealth,
+    systemMetrics,
+    analyticsHealth,
+    analyticsStatus,
     checkApiHealth,
     testEndpoints,
     getSystemHealth,
