@@ -11,23 +11,10 @@ export interface GeneralSettings {
 }
 
 export interface NotificationSettings {
-  email: {
-    appointments: boolean;
-    reminders: boolean;
-    healthAlerts: boolean;
-    marketing: boolean;
-    newsletter: boolean;
-  };
-  sms: {
-    appointments: boolean;
-    reminders: boolean;
-    healthAlerts: boolean;
-  };
-  push: {
-    appointments: boolean;
-    reminders: boolean;
-    healthAlerts: boolean;
-  };
+  enableNotifications: boolean;
+  emailNotifications: boolean;
+  smsNotifications: boolean;
+  notificationEmail: string;
 }
 
 export interface AppointmentSettings {

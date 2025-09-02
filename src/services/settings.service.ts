@@ -8,10 +8,9 @@ export interface SettingsQueryParams {
 
 export class SettingsService {
   // Get current settings
-  static async getSettings(params: SettingsQueryParams = {}): Promise<Settings> {
-    const queryParams = apiService.buildQueryParams(params);
-    const url = `/settings${queryParams ? `?${queryParams}` : ''}`;
-    return apiService.get<Settings>(url);
+  static async getSettings(): Promise<Settings> {
+    // Get the default settings since that's what we're working with in the admin
+    return this.getDefaultSettings();
   }
 
   // Update settings
@@ -26,7 +25,7 @@ export class SettingsService {
 
   // Get default settings
   static async getDefaultSettings(): Promise<Settings> {
-    return apiService.get<Settings>('/settings/defaults');
+    return apiService.get<Settings>('/settings/default');
   }
 
   // Update default settings

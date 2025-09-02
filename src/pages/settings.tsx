@@ -1,15 +1,16 @@
+import { Alert, Button, Form, Spin } from 'antd';
 import {
   AppointmentSettings,
   BasicSettings,
   GeneralSettings,
-  NotificationSettings,
   SecuritySettings,
   SettingsHeader,
 } from '@/components/settings';
-import { Alert, Button, Form, Spin } from 'antd';
 
-import { useSettings } from '@/hooks/use-settings';
 import { SaveOutlined } from '@ant-design/icons';
+import { useSettings } from '@/hooks/use-settings';
+
+// TODO: Add notification settings
 
 const Settings = () => {
   const [form] = Form.useForm();
@@ -72,9 +73,6 @@ const Settings = () => {
 
         {/* General Settings */}
         <GeneralSettings />
-
-        {/* Notification Settings */}
-        <NotificationSettings />
 
         {/* Appointment Settings */}
         <AppointmentSettings />

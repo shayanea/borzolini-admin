@@ -1,7 +1,7 @@
-import type { SettingsFormValues } from '@/types/settings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { DEFAULT_SETTINGS } from '@/constants/settings';
+import type { SettingsFormValues } from '@/types/settings';
 import { SettingsService } from '@/services/settings.service';
 import { message } from 'antd';
 import { useCallback } from 'react';
@@ -20,8 +20,6 @@ export const useSettings = () => {
     queryFn: () => SettingsService.getSettings(),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 15 * 60 * 1000, // 15 minutes
-    retry: 2,
-    retryDelay: 1000,
   });
 
   // Mutation for updating settings

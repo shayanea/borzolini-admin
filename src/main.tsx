@@ -21,7 +21,7 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: CACHE_PRESETS.STANDARD.staleTime,
       gcTime: CACHE_PRESETS.STANDARD.gcTime,
-      retry: 1,
+      retry: 0,
       refetchOnWindowFocus: false,
     },
   },

@@ -1,58 +1,15 @@
-import { Card, Col, Divider, Form, Row, Switch, Typography } from 'antd';
-import React from 'react';
+import { Card, Col, Form, Input, Row, Switch } from 'antd';
 
-const { Title } = Typography;
+import React from 'react';
 
 const NotificationSettings: React.FC = () => {
   return (
     <Card title='Notification Settings' className='admin-card mb-6'>
-      {/* Email Notifications */}
-      <Title level={5}>Email Notifications</Title>
       <Row gutter={24}>
         <Col xs={24} md={12}>
           <Form.Item
-            label='Appointments'
-            name={['notificationSettings', 'email', 'appointments']}
-            valuePropName='checked'
-          >
-            <Switch />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={12}>
-          <Form.Item
-            label='Reminders'
-            name={['notificationSettings', 'email', 'reminders']}
-            valuePropName='checked'
-          >
-            <Switch />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={24}>
-        <Col xs={24} md={12}>
-          <Form.Item
-            label='Health Alerts'
-            name={['notificationSettings', 'email', 'healthAlerts']}
-            valuePropName='checked'
-          >
-            <Switch />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={12}>
-          <Form.Item
-            label='Marketing'
-            name={['notificationSettings', 'email', 'marketing']}
-            valuePropName='checked'
-          >
-            <Switch />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={24}>
-        <Col xs={24} md={12}>
-          <Form.Item
-            label='Newsletter'
-            name={['notificationSettings', 'email', 'newsletter']}
+            label='Enable Notifications'
+            name={['notificationSettings', 'enableNotifications']}
             valuePropName='checked'
           >
             <Switch />
@@ -60,15 +17,11 @@ const NotificationSettings: React.FC = () => {
         </Col>
       </Row>
 
-      <Divider />
-
-      {/* SMS Notifications */}
-      <Title level={5}>SMS Notifications</Title>
       <Row gutter={24}>
         <Col xs={24} md={12}>
           <Form.Item
-            label='Appointments'
-            name={['notificationSettings', 'sms', 'appointments']}
+            label='Email Notifications'
+            name={['notificationSettings', 'emailNotifications']}
             valuePropName='checked'
           >
             <Switch />
@@ -76,19 +29,8 @@ const NotificationSettings: React.FC = () => {
         </Col>
         <Col xs={24} md={12}>
           <Form.Item
-            label='Reminders'
-            name={['notificationSettings', 'sms', 'reminders']}
-            valuePropName='checked'
-          >
-            <Switch />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={24}>
-        <Col xs={24} md={12}>
-          <Form.Item
-            label='Health Alerts'
-            name={['notificationSettings', 'sms', 'healthAlerts']}
+            label='SMS Notifications'
+            name={['notificationSettings', 'smsNotifications']}
             valuePropName='checked'
           >
             <Switch />
@@ -96,38 +38,17 @@ const NotificationSettings: React.FC = () => {
         </Col>
       </Row>
 
-      <Divider />
-
-      {/* Push Notifications */}
-      <Title level={5}>Push Notifications</Title>
       <Row gutter={24}>
         <Col xs={24} md={12}>
           <Form.Item
-            label='Appointments'
-            name={['notificationSettings', 'push', 'appointments']}
-            valuePropName='checked'
+            label='Notification Email'
+            name={['notificationSettings', 'notificationEmail']}
+            rules={[
+              { required: true, message: 'Please enter notification email' },
+              { type: 'email', message: 'Please enter a valid email address' },
+            ]}
           >
-            <Switch />
-          </Form.Item>
-        </Col>
-        <Col xs={24} md={12}>
-          <Form.Item
-            label='Reminders'
-            name={['notificationSettings', 'push', 'reminders']}
-            valuePropName='checked'
-          >
-            <Switch />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={24}>
-        <Col xs={24} md={12}>
-          <Form.Item
-            label='Health Alerts'
-            name={['notificationSettings', 'push', 'healthAlerts']}
-            valuePropName='checked'
-          >
-            <Switch />
+            <Input placeholder='admin@clinic.com' />
           </Form.Item>
         </Col>
       </Row>

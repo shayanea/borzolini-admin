@@ -33,23 +33,10 @@ export const DEFAULT_SETTINGS = {
     businessHours: '8:00 AM - 6:00 PM',
   },
   notificationSettings: {
-    email: {
-      appointments: true,
-      reminders: true,
-      healthAlerts: true,
-      marketing: true,
-      newsletter: true,
-    },
-    sms: {
-      appointments: true,
-      reminders: true,
-      healthAlerts: true,
-    },
-    push: {
-      appointments: true,
-      reminders: true,
-      healthAlerts: true,
-    },
+    enableNotifications: true,
+    emailNotifications: true,
+    smsNotifications: false,
+    notificationEmail: 'admin@clinic.com',
   },
   appointmentSettings: {
     defaultAppointmentDuration: 30,
