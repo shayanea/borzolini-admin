@@ -1,3 +1,4 @@
+import { AnalyticsHealth, AnalyticsStatus } from '@/types';
 import {
   BarChartOutlined,
   CheckCircleOutlined,
@@ -6,15 +7,13 @@ import {
 } from '@ant-design/icons';
 import { Card, Col, Row, Space, Statistic, Tag, Tooltip } from 'antd';
 
-import React from 'react';
-
 interface AnalyticsHealthCardProps {
-  analyticsHealth: any;
-  analyticsStatus: any;
+  analyticsHealth: AnalyticsHealth | null;
+  analyticsStatus: AnalyticsStatus | null;
   isLoading: boolean;
 }
 
-const getStatusIcon = (status: string) => {
+const getStatusIcon = (status: AnalyticsHealth['status']) => {
   switch (status) {
     case 'ok':
     case 'healthy':
@@ -22,14 +21,13 @@ const getStatusIcon = (status: string) => {
     case 'degraded':
       return <ExclamationCircleOutlined className='text-yellow-500' />;
     case 'error':
-    case 'unhealthy':
       return <CloseCircleOutlined className='text-red-500' />;
     default:
       return <ExclamationCircleOutlined className='text-gray-500' />;
   }
 };
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: AnalyticsHealth['status']) => {
   switch (status) {
     case 'ok':
     case 'healthy':
@@ -37,14 +35,13 @@ const getStatusColor = (status: string) => {
     case 'degraded':
       return 'warning';
     case 'error':
-    case 'unhealthy':
       return 'error';
     default:
       return 'default';
   }
 };
 
-const renderConfigurationDetails = (analyticsStatus: any) => (
+const renderConfigurationDetails = (analyticsStatus: AnalyticsStatus) => (
   <div className='mt-4'>
     <h4 className='text-sm font-medium text-gray-700 mb-2'>Configuration Details</h4>
     <div className='bg-gray-50 p-3 rounded-lg'>
@@ -85,11 +82,11 @@ const renderLastUpdated = (timestamp: string) => (
   </div>
 );
 
-export const AnalyticsHealthCard: React.FC<AnalyticsHealthCardProps> = ({
+export const AnalyticsHealthCard = ({
   analyticsHealth,
   analyticsStatus,
   isLoading,
-}) => {
+}: AnalyticsHealthCardProps) => {
   const isHealthy = analyticsHealth?.status === 'ok' || analyticsHealth?.status === 'healthy';
   const isEnabled = analyticsStatus?.enabled || analyticsHealth?.analytics;
   const isConfigured = analyticsStatus?.configured;

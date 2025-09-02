@@ -1,21 +1,17 @@
-import { Button, Card, Col, DatePicker, Input, Row, Select } from 'antd';
+import { Button, Card, Col, Input, Row, Select } from 'antd';
 import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 
 import { USER_ROLES } from '@/constants/user-management';
 import type { UserFiltersProps } from '@/types/user-management';
-import dayjs from 'dayjs';
 
 const { Search } = Input;
 const { Option } = Select;
-const { RangePicker } = DatePicker;
 
 const UserFilters = ({
   searchText,
   selectedRole,
-  dateRange,
   onSearch,
   onRoleFilter,
-  onDateRangeChange,
   onClearFilters,
 }: UserFiltersProps) => {
   return (
@@ -59,14 +55,7 @@ const UserFilters = ({
             <Option value={ACCOUNT_STATUSES.PENDING}>Pending</Option>
           </Select>
         </Col> */}
-        <Col xs={24} sm={12} md={6}>
-          <RangePicker
-            placeholder={['Start Date', 'End Date']}
-            value={dateRange ? [dayjs(dateRange[0]), dayjs(dateRange[1])] : null}
-            onChange={onDateRangeChange}
-            className='w-full'
-          />
-        </Col>
+
         <Col xs={24} sm={12} md={4}>
           <Button icon={<FilterOutlined />} onClick={onClearFilters} className='w-full'>
             Clear Filters

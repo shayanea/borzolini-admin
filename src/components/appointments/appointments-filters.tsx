@@ -6,8 +6,8 @@ import type {
   AppointmentsFiltersProps,
   AppointmentsFilters as AppointmentsFiltersType,
 } from '@/types';
-import { Button, Card, DatePicker, Input, Select, Space } from 'antd';
 import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Card, DatePicker, Input, Select, Space } from 'antd';
 
 import { useState } from 'react';
 
@@ -57,13 +57,13 @@ const AppointmentsFilters = ({
     <Card className='admin-card'>
       <div className='space-y-4'>
         {/* Search Bar */}
-        <div className='flex items-center justify-between'>
+        <div className='flex flex-col sm:flex-row items-center justify-between gap-3'>
           <Search
             placeholder='Search appointments...'
             allowClear
             value={searchText}
             onSearch={onSearch}
-            style={{ width: 300 }}
+            className='w-full sm:w-80'
             prefix={<SearchOutlined />}
           />
           <Space>
@@ -72,12 +72,12 @@ const AppointmentsFilters = ({
         </div>
 
         {/* Filters */}
-        <div className='flex items-center space-x-4'>
+        <div className='flex flex-wrap items-center gap-4'>
           <div className='flex items-center space-x-2'>
             <span className='text-sm font-medium'>Status:</span>
             <Select
               placeholder='All Statuses'
-              style={{ width: 150 }}
+              className='w-40'
               value={filters.status}
               onChange={value => handleFilterChange('status', value)}
               allowClear
@@ -94,7 +94,7 @@ const AppointmentsFilters = ({
             <span className='text-sm font-medium'>Type:</span>
             <Select
               placeholder='All Types'
-              style={{ width: 150 }}
+              className='w-40'
               value={filters.type}
               onChange={value => handleFilterChange('type', value)}
               allowClear
@@ -111,7 +111,7 @@ const AppointmentsFilters = ({
             <span className='text-sm font-medium'>Priority:</span>
             <Select
               placeholder='All Priorities'
-              style={{ width: 150 }}
+              className='w-40'
               value={filters.priority}
               onChange={value => handleFilterChange('priority', value)}
               allowClear
@@ -140,6 +140,7 @@ const AppointmentsFilters = ({
                 }
               }}
               placeholder={['Start Date', 'End Date']}
+              className='w-full sm:w-auto'
             />
           </div>
 

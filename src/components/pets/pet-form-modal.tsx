@@ -158,7 +158,7 @@ const PetFormModal = ({
       onCancel={handleCancel}
       footer={null}
       width={700}
-      destroyOnClose={true}
+      destroyOnHidden={true}
     >
       <Form
         form={form}

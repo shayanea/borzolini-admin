@@ -18,11 +18,9 @@ export interface UserFiltersProps {
   searchText: string;
   selectedRole: UserRole | null;
   selectedStatus: AccountStatus | null;
-  dateRange: [string, string] | null;
   onSearch: (value: string) => void;
   onRoleFilter: (value: UserRole | null) => void;
   onStatusFilter: (value: AccountStatus | null) => void;
-  onDateRangeChange: (dates: any, dateStrings: [string, string]) => void;
   onClearFilters: () => void;
 }
 

@@ -169,9 +169,9 @@ export class AppointmentsService {
         throw new Error('Clinic ID is required');
       }
 
-      const params = date ? `?date=${date}` : '';
+      const params = date ? `&date=${date}` : '';
       const response = await apiService.get<Appointment[]>(
-        `/appointments/clinic/${clinicId}${params}`
+        `/appointments/clinic/${clinicId}?limit=5${params}`
       );
 
       if (!Array.isArray(response)) {

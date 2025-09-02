@@ -3,14 +3,21 @@ import {
   ClinicFilters,
   ClinicFormModal,
   ClinicPageHeader,
+  ClinicStaffModal,
   ClinicTable,
 } from '@/components/clinics';
+import { useCallback, useMemo, useState } from 'react';
 
 import { Card } from 'antd';
-import { useCallback } from 'react';
+import type { Clinic } from '@/types';
+import ClinicAppointmentsModal from '@/components/clinics/clinic-appointments-modal';
 import { useClinicManagement } from '@/hooks';
 
 const Clinics = () => {
+  const [viewClinic, setViewClinic] = useState<Clinic | null>(null);
+  const [staffClinic, setStaffClinic] = useState<Clinic | null>(null);
+  const isAppointmentsModalVisible = useMemo(() => !!viewClinic, [viewClinic]);
+  const isStaffModalVisible = useMemo(() => !!staffClinic, [staffClinic]);
   const {
     // State
     clinics,
@@ -49,6 +56,22 @@ const Clinics = () => {
   const handleAddClinic = useCallback(() => {
     showModal();
   }, [showModal]);
+
+  const handleViewClinic = useCallback((clinic: Clinic) => {
+    setViewClinic(clinic);
+  }, []);
+
+  const handleCloseAppointmentsModal = useCallback(() => {
+    setViewClinic(null);
+  }, []);
+
+  const handleViewStaff = useCallback((clinic: Clinic) => {
+    setStaffClinic(clinic);
+  }, []);
+
+  const handleCloseStaffModal = useCallback(() => {
+    setStaffClinic(null);
+  }, []);
 
   return (
     <div className='space-y-6'>
@@ -96,11 +119,13 @@ const Clinics = () => {
           }}
           rowSelection={{
             selectedRowKeys,
-            onChange: setSelectedRowKeys,
+            onChange: keys => setSelectedRowKeys(keys as string[]),
           }}
           onChange={handleTableChange}
           onEdit={showModal}
           onDelete={handleDeleteClinic}
+          onView={handleViewClinic}
+          onViewStaff={handleViewStaff}
         />
       </Card>
 
@@ -111,6 +136,18 @@ const Clinics = () => {
         onSubmit={handleSubmit}
         loading={modalLoading}
         editingClinic={editingClinic}
+      />
+
+      <ClinicAppointmentsModal
+        visible={isAppointmentsModalVisible}
+        clinic={viewClinic}
+        onClose={handleCloseAppointmentsModal}
+      />
+
+      <ClinicStaffModal
+        visible={isStaffModalVisible}
+        clinic={staffClinic}
+        onClose={handleCloseStaffModal}
       />
     </div>
   );

@@ -27,7 +27,6 @@ const Users = ({ roleFilter }: UsersProps) => {
     searchText,
     selectedRole,
     selectedStatus,
-    dateRange,
     selectedRowKeys,
     bulkLoading,
     isModalVisible,
@@ -40,7 +39,6 @@ const Users = ({ roleFilter }: UsersProps) => {
     handleSearch,
     handleRoleFilter,
     handleStatusFilter,
-    handleDateRangeChange,
     clearFilters,
     handleTableChange,
     showModal,
@@ -83,11 +81,9 @@ const Users = ({ roleFilter }: UsersProps) => {
         searchText={searchText}
         selectedRole={selectedRole}
         selectedStatus={selectedStatus}
-        dateRange={dateRange}
         onSearch={handleSearch}
         onRoleFilter={handleRoleFilter}
         onStatusFilter={handleStatusFilter}
-        onDateRangeChange={handleDateRangeChange}
         onClearFilters={clearFilters}
       />
 

@@ -40,3 +40,17 @@ export interface ApiHealthState {
 }
 
 export type HealthStatus = 'healthy' | 'unhealthy' | 'degraded';
+
+export interface AnalyticsHealth {
+  status: 'ok' | 'healthy' | 'degraded' | 'error';
+  error?: string;
+  timestamp?: string;
+  analytics?: boolean; // health endpoint may include this flag
+}
+
+export interface AnalyticsStatus {
+  enabled?: boolean;
+  configured?: boolean;
+  websiteId?: string;
+  apiUrl?: string;
+}

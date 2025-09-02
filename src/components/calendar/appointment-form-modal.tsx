@@ -1,7 +1,4 @@
-import type { AppointmentFormModalProps } from '@/types/calendar-modals';
 import type { AppointmentPriority, AppointmentStatus, AppointmentType } from '@/types';
-import type { CreateAppointmentData } from '@/services/appointments.service';
-import React, { useEffect, useState } from 'react';
 import {
   Button,
   DatePicker,
@@ -14,9 +11,13 @@ import {
   TimePicker,
   message,
 } from 'antd';
-import { useCalendarFormData } from '@/hooks/use-calendar-form-data';
+import React, { useEffect, useState } from 'react';
+
+import type { AppointmentFormModalProps } from '@/types/calendar-modals';
+import type { CreateAppointmentData } from '@/services/appointments.service';
 import { SaveOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { useCalendarFormData } from '@/hooks/use-calendar-form-data';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -136,7 +137,7 @@ export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
       onCancel={handleCancel}
       footer={null}
       width={800}
-      destroyOnClose
+      destroyOnHidden
     >
       <Form
         form={form}

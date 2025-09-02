@@ -231,7 +231,7 @@ const AppointmentDetailsModal = ({
       onCancel={onCancel}
       footer={null}
       width={900}
-      destroyOnClose
+      destroyOnHidden
     >
       <Tabs defaultActiveKey='details'>
         <TabPane tab='Details' key='details'>

@@ -1,19 +1,22 @@
 import { Badge, Button, Space, Table, Tag, Typography } from 'antd';
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import type { ColumnsType, TableProps } from 'antd/es/table';
+import { DeleteOutlined, EditOutlined, EyeOutlined, TeamOutlined } from '@ant-design/icons';
 
 import type { Clinic } from '@/types';
-import type { ColumnsType } from 'antd/es/table';
+import type { TablePaginationConfig } from 'antd';
 
 const { Text, Link } = Typography;
 
 interface ClinicTableProps {
   clinics: Clinic[];
   loading?: boolean;
-  pagination?: any;
-  rowSelection?: any;
-  onChange?: (pagination: any, filters: any, sorter: any) => void;
+  pagination?: TablePaginationConfig;
+  rowSelection?: TableProps<Clinic>['rowSelection'];
+  onChange?: TableProps<Clinic>['onChange'];
   onEdit: (clinic: Clinic) => void;
   onDelete: (clinicId: string) => void;
+  onView?: (clinic: Clinic) => void;
+  onViewStaff?: (clinic: Clinic) => void;
 }
 
 const ClinicTable = ({
@@ -24,6 +27,8 @@ const ClinicTable = ({
   onChange,
   onEdit,
   onDelete,
+  onView,
+  onViewStaff,
 }: ClinicTableProps) => {
   const columns: ColumnsType<Clinic> = [
     {
@@ -122,6 +127,7 @@ const ClinicTable = ({
       title: 'Status',
       dataIndex: 'isActive',
       key: 'isActive',
+      width: 120,
       render: (isActive: boolean) => (
         <Badge status={isActive ? 'success' : 'default'} text={isActive ? 'Active' : 'Inactive'} />
       ),
@@ -138,6 +144,15 @@ const ClinicTable = ({
             size='small'
             className='text-primary-navy hover:text-primary-dark'
             title='View Details'
+            onClick={() => onView && onView(record)}
+          />
+          <Button
+            type='text'
+            icon={<TeamOutlined />}
+            size='small'
+            className='text-primary-navy hover:text-primary-dark'
+            title='View Staff & Veterinarians'
+            onClick={() => onViewStaff && onViewStaff(record)}
           />
           <Button
             type='text'

@@ -1,10 +1,10 @@
 import { APPOINTMENT_PRIORITY_COLORS, APPOINTMENT_STATUS_COLORS } from '@/constants/appointments';
 import { Avatar, Button, Space, Table, Tag, Tooltip } from 'antd';
+import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
+import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 
 import type { Appointment } from '@/types';
-import type { TablePaginationConfig } from 'antd/es/table';
 import type { UpdateAppointmentData } from '@/services/appointments.service';
-import { UserOutlined } from '@ant-design/icons';
 
 export interface AppointmentsHeaderProps {
   onNewAppointment: (data: any) => void;
@@ -73,10 +73,11 @@ const AppointmentsTable = ({
       .join(' ');
   };
 
-  const columns = [
+  const columns: ColumnsType<Appointment> = [
     {
       title: 'Client & Pet',
       key: 'client',
+      width: 240,
       render: (appointment: Appointment) => (
         <div className='flex items-center space-x-3'>
           <Avatar
@@ -94,6 +95,7 @@ const AppointmentsTable = ({
     {
       title: 'Type & Priority',
       key: 'type_priority',
+      width: 180,
       render: (appointment: Appointment) => (
         <div className='space-y-1'>
           <div>
@@ -116,6 +118,7 @@ const AppointmentsTable = ({
     {
       title: 'Date & Time',
       key: 'datetime',
+      width: 170,
       render: (appointment: Appointment) => (
         <div>
           <div className='font-medium'>
@@ -135,6 +138,8 @@ const AppointmentsTable = ({
     {
       title: 'Status',
       key: 'status',
+      width: 120,
+      align: 'center',
       render: (appointment: Appointment) => (
         <Tag color={APPOINTMENT_STATUS_COLORS[appointment.status] || 'default'}>
           {appointment.status
@@ -149,6 +154,7 @@ const AppointmentsTable = ({
     {
       title: 'Clinic & Staff',
       key: 'clinic_staff',
+      width: 220,
       render: (appointment: Appointment) => (
         <div className='text-sm'>
           <div className='font-medium'>Clinic: {appointment.clinic_id || 'Unknown'}</div>
@@ -159,37 +165,45 @@ const AppointmentsTable = ({
     {
       title: 'Notes',
       key: 'notes',
+      width: 300,
+      ellipsis: true,
       render: (appointment: Appointment) => (
         <Tooltip title={appointment.notes || 'No notes'}>
-          <div className='text-sm text-text-light max-w-xs truncate'>
-            {appointment.notes || 'No notes'}
-          </div>
+          <div className='text-sm text-text-light truncate'>{appointment.notes || 'No notes'}</div>
         </Tooltip>
       ),
     },
     {
       title: 'Actions',
       key: 'actions',
+      width: 110,
+      align: 'center',
       render: (appointment: Appointment) => {
         const { handleEdit, handleCancel } = createActionHandlers(appointment);
 
         return (
-          <Space>
-            <Button size='small' onClick={handleEdit}>
-              Edit
-            </Button>
+          <Space size='small'>
             <Button
+              type='text'
+              icon={<EditOutlined />}
+              size='small'
+              className='text-primary-navy hover:text-primary-dark'
+              title='Edit Appointment'
+              onClick={handleEdit}
+            />
+            <Button
+              type='text'
+              icon={<DeleteOutlined />}
               size='small'
               danger
+              title='Cancel Appointment'
               onClick={handleCancel}
               disabled={
                 !appointment.status ||
                 appointment.status === 'cancelled' ||
                 appointment.status === 'completed'
               }
-            >
-              Cancel
-            </Button>
+            />
           </Space>
         );
       },
@@ -270,9 +284,12 @@ const AppointmentsTable = ({
       dataSource={safeAppointments}
       rowKey={record => record?.id || Math.random().toString()}
       loading={loading}
+      size='middle'
       pagination={tablePagination}
       onChange={handleTableChange}
-      scroll={{ x: 1200 }}
+      scroll={{ x: 1300 }}
+      className='appointments-table admin-table'
+      rowClassName={() => 'hover:bg-gray-50'}
     />
   );
 };

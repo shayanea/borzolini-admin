@@ -84,7 +84,7 @@ const ClinicFormModal = ({
       onOk={handleSubmit}
       confirmLoading={loading}
       width={800}
-      destroyOnClose
+      destroyOnHidden
       okText={isEditing ? 'Update' : 'Create'}
       cancelText='Cancel'
     >

@@ -107,7 +107,7 @@ const UserViewModal = ({ isVisible, user, onClose }: UserViewModalProps) => {
         </Button>,
       ]}
       width={900}
-      destroyOnClose
+      destroyOnHidden={true}
     >
       <div className='space-y-6'>
         {/* User Information */}
@@ -190,15 +190,22 @@ const UserViewModal = ({ isVisible, user, onClose }: UserViewModalProps) => {
               <Text type='secondary'>No pets found for this user.</Text>
             </div>
           ) : (
-            <Table
-              columns={petColumns}
-              dataSource={pets}
-              rowKey='id'
-              loading={petsLoading}
-              pagination={false}
-              size='small'
-              scroll={{ x: 600 }}
-            />
+            <div className='w-full'>
+              <Table
+                columns={petColumns}
+                dataSource={pets}
+                rowKey='id'
+                loading={petsLoading}
+                pagination={{
+                  position: ['bottomCenter'],
+                  pageSize: 5,
+                  showSizeChanger: false,
+                  // You can add more pagination props as needed
+                }}
+                size='small'
+                scroll={{ x: 600 }}
+              />
+            </div>
           )}
         </Card>
       </div>
