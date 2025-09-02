@@ -1,11 +1,14 @@
 import { Alert, Empty } from 'antd';
 import {
+  AppointmentViewModal,
   AppointmentsFilters,
   AppointmentsHeader,
   AppointmentsTable,
 } from '@/components/appointments';
 import { ExclamationCircleOutlined, LockOutlined } from '@ant-design/icons';
+import { useCallback, useState } from 'react';
 
+import type { Appointment } from '@/types';
 import ErrorBoundary from '@/components/common/error-boundary';
 import LoadingSpinner from '@/components/common/loading-spinner';
 import { useAppointments } from '@/hooks/use-appointments';
@@ -25,15 +28,48 @@ const Appointments = () => {
     handleFilters,
     handlePagination,
     handleExport,
-    handleNewAppointment,
     handleEditAppointment,
     handleCancelAppointment,
     clearError,
   } = useAppointments();
 
-  console.log('Appointments data:', appointments);
-  console.log('Appointments length:', appointments.length);
-  console.log('Loading state:', loading);
+  // Modal states
+  const [isViewModalVisible, setIsViewModalVisible] = useState<boolean>(false);
+  const [viewingAppointment, setViewingAppointment] = useState<Appointment | null>(null);
+
+  const handleViewAppointment = useCallback((appointment: Appointment) => {
+    setViewingAppointment(appointment);
+    setIsViewModalVisible(true);
+  }, []);
+
+  const handleViewModalCancel = useCallback(() => {
+    setIsViewModalVisible(false);
+    setViewingAppointment(null);
+  }, []);
+
+  const handleUpdateAppointment = useCallback(
+    async (id: string, updates: Partial<Appointment>) => {
+      try {
+        // Convert the updates to the format expected by the API
+        const updateData = {
+          status: updates.status,
+          priority: updates.priority,
+          notes: updates.notes,
+          reason: updates.reason,
+          symptoms: updates.symptoms,
+          diagnosis: updates.diagnosis,
+          treatment_plan: updates.treatment_plan,
+          follow_up_instructions: updates.follow_up_instructions,
+        };
+
+        await handleEditAppointment(id, updateData);
+      } catch (error) {
+        console.error('Failed to update appointment:', error);
+        throw error;
+      }
+    },
+    [handleEditAppointment]
+  );
 
   // Show loading spinner for initial load
   if (loading) {
@@ -76,7 +112,7 @@ const Appointments = () => {
         )}
 
         {/* Page Header */}
-        <AppointmentsHeader onNewAppointment={handleNewAppointment} />
+        <AppointmentsHeader />
 
         {/* Search and Filters */}
         <AppointmentsFilters
@@ -122,7 +158,7 @@ const Appointments = () => {
             appointments={appointments}
             loading={loading}
             pagination={pagination}
-            onEdit={handleEditAppointment}
+            onView={handleViewAppointment}
             onCancel={handleCancelAppointment}
             onPagination={handlePagination}
           />
@@ -136,6 +172,15 @@ const Appointments = () => {
             <LoadingSpinner size='small' text='Updating appointments...' />
           </div>
         )}
+
+        {/* Appointment View Modal */}
+        <AppointmentViewModal
+          visible={isViewModalVisible}
+          appointment={viewingAppointment}
+          onCancel={handleViewModalCancel}
+          onUpdate={handleUpdateAppointment}
+          loading={loading}
+        />
       </div>
     </ErrorBoundary>
   );

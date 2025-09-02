@@ -25,14 +25,19 @@ const ReportsHeader = ({
         <Button icon={<FilterOutlined />} onClick={onFilters}>
           Filters
         </Button>
-        <Button
-          icon={<DownloadOutlined />}
-          type='primary'
-          className='bg-primary-navy border-primary-navy'
-          onClick={onExportReport}
-        >
-          Export Report
-        </Button>
+        <div className='relative'>
+          <Button
+            icon={<DownloadOutlined />}
+            type='primary'
+            className='bg-primary-navy border-primary-navy'
+            onClick={onExportReport}
+          >
+            Export Report
+          </Button>
+          <span className='absolute -top-2 -right-2 text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full'>
+            Soon
+          </span>
+        </div>
       </Space>
     </div>
   );

@@ -1,11 +1,8 @@
-import { Button, Typography } from 'antd';
-
-import type { AppointmentsHeaderProps } from '@/types/appointments';
-import { PlusOutlined } from '@ant-design/icons';
+import { Typography } from 'antd';
 
 const { Title, Text } = Typography;
 
-const AppointmentsHeader = ({ onNewAppointment }: AppointmentsHeaderProps) => {
+const AppointmentsHeader = () => {
   return (
     <div className='flex items-center justify-between'>
       <div>
@@ -14,15 +11,6 @@ const AppointmentsHeader = ({ onNewAppointment }: AppointmentsHeaderProps) => {
         </Title>
         <Text className='text-text-light'>Manage clinic appointments and schedules</Text>
       </div>
-
-      <Button
-        type='primary'
-        icon={<PlusOutlined />}
-        className='bg-primary-navy border-primary-navy'
-        onClick={onNewAppointment}
-      >
-        New Appointment
-      </Button>
     </div>
   );
 };

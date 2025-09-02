@@ -41,17 +41,14 @@ const PetFilters = ({
   selectedBreed,
   selectedGender,
   selectedSize,
-  selectedOwner,
   isActiveFilter,
   onSearch,
   onSpeciesFilter,
   onBreedFilter,
   onGenderFilter,
   onSizeFilter,
-  onOwnerFilter,
   onActiveFilter,
   onClearFilters,
-  owners = [],
 }: PetFiltersProps) => {
   return (
     <Card className='admin-card admin-filters'>
@@ -131,23 +128,6 @@ const PetFilters = ({
 
       {/* Second Row */}
       <Row gutter={[16, 16]}>
-        <Col xs={24} sm={12} md={4}>
-          <Select
-            placeholder='Owner'
-            allowClear
-            value={selectedOwner}
-            onChange={onOwnerFilter}
-            className='w-full'
-            showSearch
-            optionFilterProp='children'
-          >
-            {owners.map(owner => (
-              <Option key={owner.id} value={owner.id}>
-                {owner.firstName} {owner.lastName}
-              </Option>
-            ))}
-          </Select>
-        </Col>
         <Col xs={24} sm={12} md={4}>
           <Select
             placeholder='Status'

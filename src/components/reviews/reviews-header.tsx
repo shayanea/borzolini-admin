@@ -1,11 +1,11 @@
 import { Button, Card, Space, Statistic, Typography } from 'antd';
 import {
-  PlusOutlined,
   DownloadOutlined,
-  StarOutlined,
   EyeOutlined,
   FlagOutlined,
-  MessageOutlined
+  MessageOutlined,
+  PlusOutlined,
+  StarOutlined,
 } from '@ant-design/icons';
 
 import type { ReviewStats } from '@/types';
@@ -19,12 +19,7 @@ export interface ReviewsHeaderProps {
   onExport?: () => void;
 }
 
-const ReviewsHeader = ({
-  stats,
-  statsLoading,
-  onNewReview,
-  onExport,
-}: ReviewsHeaderProps) => {
+const ReviewsHeader = ({ stats, statsLoading, onNewReview, onExport }: ReviewsHeaderProps) => {
   return (
     <div className='reviews-header space-y-6'>
       {/* Header */}
@@ -33,24 +28,19 @@ const ReviewsHeader = ({
           <Title level={2} className='mb-2'>
             Reviews Management
           </Title>
-          <p className='text-text-light'>
-            Manage and moderate customer reviews across all clinics
-          </p>
+          <p className='text-text-light'>Manage and moderate customer reviews across all clinics</p>
         </div>
 
         <Space>
-          <Button
-            icon={<DownloadOutlined />}
-            onClick={onExport}
-            disabled={statsLoading}
-          >
-            Export
-          </Button>
-          <Button
-            type='primary'
-            icon={<PlusOutlined />}
-            onClick={onNewReview}
-          >
+          <div className='relative'>
+            <Button icon={<DownloadOutlined />} onClick={onExport} disabled={statsLoading}>
+              Export
+            </Button>
+            <span className='absolute -top-2 -right-2 text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full'>
+              Soon
+            </span>
+          </div>
+          <Button type='primary' icon={<PlusOutlined />} onClick={onNewReview}>
             Add Review
           </Button>
         </Space>

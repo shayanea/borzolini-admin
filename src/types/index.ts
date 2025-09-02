@@ -158,6 +158,93 @@ export interface Appointment {
   clinic_id: string;
   staff_id?: string;
   service_id?: string;
+  // Nested objects from API response
+  pet?: {
+    id: string;
+    name: string;
+    species: string;
+    breed: string;
+    gender: string;
+    date_of_birth: string;
+    weight: string;
+    size: string;
+    color: string;
+    microchip_number?: string;
+    is_spayed_neutered: boolean;
+    is_vaccinated: boolean;
+    medical_history?: string;
+    behavioral_notes?: string;
+    dietary_requirements?: string;
+    allergies: string[];
+    medications: string[];
+    emergency_contact?: string;
+    emergency_phone?: string;
+    photo_url?: string;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+    owner_id: string;
+  };
+  clinic?: {
+    id: string;
+    name: string;
+    description?: string;
+    address: string;
+    city: string;
+    state: string;
+    postal_code: string;
+    country: string;
+    phone: string;
+    email: string;
+    website?: string;
+    logo_url?: string;
+    banner_url?: string;
+    rating: number;
+    total_reviews: number;
+    is_verified: boolean;
+    is_active: boolean;
+    operating_hours: Record<string, any>;
+    emergency_contact?: string;
+    emergency_phone?: string;
+    services: string[];
+    specializations: string[];
+    payment_methods: string[];
+    insurance_providers: string[];
+    created_at: string;
+    updated_at: string;
+  };
+  staff?: {
+    id: string;
+    clinic_id: string;
+    user_id: string;
+    role: string;
+    specialization?: string;
+    license_number?: string;
+    experience_years?: number;
+    education: string[];
+    certifications: string[];
+    bio?: string;
+    profile_photo_url?: string;
+    is_active: boolean;
+    hire_date?: string;
+    termination_date?: string;
+    created_at: string;
+    updated_at: string;
+  };
+  service?: {
+    id: string;
+    clinic_id: string;
+    name: string;
+    description?: string;
+    category: string;
+    duration_minutes: number;
+    price: string;
+    currency: string;
+    is_active: boolean;
+    requires_appointment: boolean;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 export type AppointmentStatus =

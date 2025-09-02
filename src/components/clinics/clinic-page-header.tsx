@@ -39,14 +39,19 @@ const ClinicPageHeader = ({
           Refresh
         </Button>
 
-        <Button
-          icon={<DownloadOutlined />}
-          onClick={onExport}
-          loading={loading}
-          className='flex items-center'
-        >
-          Export
-        </Button>
+        <div className='relative'>
+          <Button
+            icon={<DownloadOutlined />}
+            onClick={onExport}
+            loading={loading}
+            className='flex items-center'
+          >
+            Export
+          </Button>
+          <span className='absolute -top-2 -right-2 text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full'>
+            Soon
+          </span>
+        </div>
 
         <Button
           type='primary'

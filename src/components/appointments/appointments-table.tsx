@@ -1,10 +1,18 @@
 import { APPOINTMENT_PRIORITY_COLORS, APPOINTMENT_STATUS_COLORS } from '@/constants/appointments';
-import { Avatar, Button, Space, Table, Tag, Tooltip } from 'antd';
+import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
+import {
+  CalendarOutlined,
+  ClockCircleOutlined,
+  DeleteOutlined,
+  EnvironmentOutlined,
+  EyeOutlined,
+  PhoneOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 
 import type { Appointment } from '@/types';
-import type { UpdateAppointmentData } from '@/services/appointments.service';
+import { TABLE_PAGE_SIZES } from '@/constants';
 
 export interface AppointmentsHeaderProps {
   onNewAppointment: (data: any) => void;
@@ -18,7 +26,7 @@ export interface AppointmentsTableProps {
     pageSize: number;
     total: number;
   };
-  onEdit: (id: string, data: UpdateAppointmentData) => Promise<Appointment>;
+  onView: (appointment: Appointment) => void;
   onCancel: (id: string) => void;
   onPagination?: (page: number, pageSize: number) => void;
 }
@@ -27,42 +35,17 @@ const AppointmentsTable = ({
   appointments,
   loading,
   pagination,
-  onEdit,
+  onView,
   onCancel,
   onPagination,
 }: AppointmentsTableProps) => {
   const createActionHandlers = (appointment: Appointment) => {
-    const handleEdit = () => {
-      // Convert Appointment to UpdateAppointmentData by extracting only updatable fields
-      const updateData: UpdateAppointmentData = {
-        appointment_type: appointment.appointment_type as any, // Cast to AppointmentType
-        status: appointment.status || 'pending',
-        priority: appointment.priority || 'normal',
-        scheduled_date: appointment.scheduled_date || new Date().toISOString(),
-        duration_minutes: appointment.duration_minutes || 30,
-        notes: appointment.notes || '',
-        reason: appointment.reason || '',
-        symptoms: appointment.symptoms || '',
-        diagnosis: appointment.diagnosis || '',
-        treatment_plan: appointment.treatment_plan || '',
-        prescriptions: appointment.prescriptions || [],
-        follow_up_instructions: appointment.follow_up_instructions || '',
-        cost: appointment.cost || 0,
-        payment_status: appointment.payment_status || 'pending',
-        is_telemedicine: appointment.is_telemedicine || false,
-        telemedicine_link: appointment.telemedicine_link || '',
-        home_visit_address: appointment.home_visit_address || '',
-        is_home_visit: appointment.is_home_visit || false,
-        pet_id: appointment.pet_id || '',
-        clinic_id: appointment.clinic_id || '',
-        staff_id: appointment.staff_id || '',
-        service_id: appointment.service_id || '',
-      };
-      onEdit(appointment.id || '', updateData);
+    const handleView = () => {
+      onView(appointment);
     };
     const handleCancel = () => onCancel(appointment.id || '');
 
-    return { handleEdit, handleCancel };
+    return { handleView, handleCancel };
   };
 
   const formatAppointmentType = (type: string) => {
@@ -73,36 +56,73 @@ const AppointmentsTable = ({
       .join(' ');
   };
 
+  const getPetSpeciesColor = (species: string): string => {
+    const speciesColors: Record<string, string> = {
+      dog: 'blue',
+      cat: 'orange',
+      bird: 'green',
+      fish: 'cyan',
+      rabbit: 'purple',
+      hamster: 'magenta',
+      guinea_pig: 'lime',
+      reptile: 'volcano',
+      other: 'default',
+    };
+    return speciesColors[species.toLowerCase()] || 'default';
+  };
+
+  const getGenderColor = (gender: string): string => {
+    const genderColors: Record<string, string> = {
+      male: 'blue',
+      female: 'pink',
+    };
+    return genderColors[gender.toLowerCase()] || 'default';
+  };
+
   const columns: ColumnsType<Appointment> = [
     {
-      title: 'Client & Pet',
-      key: 'client',
-      width: 240,
+      title: 'Pet & Owner',
+      key: 'pet_owner',
+      width: 280,
       render: (appointment: Appointment) => (
         <div className='flex items-center space-x-3'>
           <Avatar
             size={40}
+            src={appointment.pet?.photo_url}
             icon={<UserOutlined />}
             className='bg-gradient-to-r from-cyan-500 to-blue-500'
           />
-          <div>
-            <div className='font-medium'>Client ID: {appointment.owner_id || 'Unknown'}</div>
-            <div className='text-sm text-text-light'>Pet ID: {appointment.pet_id || 'Unknown'}</div>
+          <div className='flex-1'>
+            <div className='font-medium'>{appointment.pet?.name || 'Unknown Pet'}</div>
+            <div className='text-sm text-text-light'>
+              {appointment.pet?.breed
+                ? `${appointment.pet.breed} ${appointment.pet.species}`
+                : appointment.pet?.species || 'Unknown Species'}
+            </div>
+            <div className='text-xs text-text-light'>
+              Owner ID: {appointment.owner_id || 'Unknown'}
+            </div>
+            {appointment.pet?.emergency_contact && (
+              <div className='text-xs text-text-light flex items-center'>
+                <PhoneOutlined className='mr-1' />
+                {appointment.pet.emergency_contact}
+              </div>
+            )}
           </div>
         </div>
       ),
     },
     {
-      title: 'Type & Priority',
-      key: 'type_priority',
-      width: 180,
+      title: 'Service & Type',
+      key: 'service_type',
+      width: 200,
       render: (appointment: Appointment) => (
         <div className='space-y-1'>
           <div>
             <Tag color='blue'>
-              {appointment.appointment_type
-                ? formatAppointmentType(appointment.appointment_type)
-                : 'Unknown'}
+              {appointment.service?.name ||
+                formatAppointmentType(appointment.appointment_type) ||
+                'Unknown Service'}
             </Tag>
           </div>
           <div>
@@ -112,21 +132,28 @@ const AppointmentsTable = ({
                 : 'Normal'}
             </Tag>
           </div>
+          {appointment.service?.price && (
+            <div className='text-xs text-text-light'>
+              ${appointment.service.price} {appointment.service.currency}
+            </div>
+          )}
         </div>
       ),
     },
     {
       title: 'Date & Time',
       key: 'datetime',
-      width: 170,
+      width: 180,
       render: (appointment: Appointment) => (
         <div>
-          <div className='font-medium'>
+          <div className='font-medium flex items-center'>
+            <CalendarOutlined className='mr-1 text-xs' />
             {appointment.scheduled_date
               ? new Date(appointment.scheduled_date).toLocaleDateString()
               : 'No date set'}
           </div>
-          <div className='text-sm text-text-light'>
+          <div className='text-sm text-text-light flex items-center'>
+            <ClockCircleOutlined className='mr-1 text-xs' />
             {appointment.scheduled_date
               ? new Date(appointment.scheduled_date).toLocaleTimeString()
               : ''}
@@ -141,31 +168,98 @@ const AppointmentsTable = ({
       width: 120,
       align: 'center',
       render: (appointment: Appointment) => (
-        <Tag color={APPOINTMENT_STATUS_COLORS[appointment.status] || 'default'}>
-          {appointment.status
-            ? appointment.status
-                .split('_')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(' ')
-            : 'Unknown'}
-        </Tag>
+        <Badge
+          status={
+            appointment.status === 'confirmed'
+              ? 'success'
+              : appointment.status === 'pending'
+                ? 'processing'
+                : appointment.status === 'cancelled'
+                  ? 'error'
+                  : 'default'
+          }
+          text={
+            <Tag color={APPOINTMENT_STATUS_COLORS[appointment.status] || 'default'}>
+              {appointment.status
+                ? appointment.status
+                    .split('_')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ')
+                : 'Unknown'}
+            </Tag>
+          }
+        />
       ),
     },
     {
       title: 'Clinic & Staff',
       key: 'clinic_staff',
-      width: 220,
+      width: 250,
       render: (appointment: Appointment) => (
         <div className='text-sm'>
-          <div className='font-medium'>Clinic: {appointment.clinic_id || 'Unknown'}</div>
-          <div className='text-text-light'>Staff: {appointment.staff_id || 'Unassigned'}</div>
+          <div className='font-medium flex items-center'>
+            <EnvironmentOutlined className='mr-1 text-xs' />
+            {appointment.clinic?.name || 'Unknown Clinic'}
+          </div>
+          <div className='text-text-light'>
+            {appointment.clinic?.city && appointment.clinic?.state
+              ? `${appointment.clinic.city}, ${appointment.clinic.state}`
+              : 'Location not specified'}
+          </div>
+          <div className='text-xs text-text-light'>
+            Staff: {appointment.staff?.specialization || appointment.staff?.role || 'Unassigned'}
+          </div>
+          {appointment.staff?.license_number && (
+            <div className='text-xs text-text-light'>
+              License: {appointment.staff.license_number}
+            </div>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: 'Pet Details',
+      key: 'pet_details',
+      width: 200,
+      render: (appointment: Appointment) => (
+        <div className='space-y-1'>
+          {appointment.pet && (
+            <>
+              <div className='flex gap-1'>
+                <Tag color={getPetSpeciesColor(appointment.pet.species)}>
+                  {appointment.pet.species.charAt(0).toUpperCase() +
+                    appointment.pet.species.slice(1)}
+                </Tag>
+                <Tag color={getGenderColor(appointment.pet.gender)}>{appointment.pet.gender}</Tag>
+              </div>
+              <div className='text-xs text-text-light'>Weight: {appointment.pet.weight} kg</div>
+              <div className='text-xs text-text-light'>
+                Age:{' '}
+                {appointment.pet.date_of_birth
+                  ? Math.floor(
+                      (new Date().getTime() - new Date(appointment.pet.date_of_birth).getTime()) /
+                        (365.25 * 24 * 60 * 60 * 1000)
+                    )
+                  : 'Unknown'}{' '}
+                years
+              </div>
+              <div className='flex gap-1'>
+                <Tag color={appointment.pet.is_vaccinated ? 'green' : 'red'}>
+                  {appointment.pet.is_vaccinated ? 'Vaccinated' : 'Not Vaccinated'}
+                </Tag>
+                <Tag color={appointment.pet.is_spayed_neutered ? 'green' : 'orange'}>
+                  {appointment.pet.is_spayed_neutered ? 'Spayed/Neutered' : 'Not Spayed/Neutered'}
+                </Tag>
+              </div>
+            </>
+          )}
         </div>
       ),
     },
     {
       title: 'Notes',
       key: 'notes',
-      width: 300,
+      width: 250,
       ellipsis: true,
       render: (appointment: Appointment) => (
         <Tooltip title={appointment.notes || 'No notes'}>
@@ -179,31 +273,33 @@ const AppointmentsTable = ({
       width: 110,
       align: 'center',
       render: (appointment: Appointment) => {
-        const { handleEdit, handleCancel } = createActionHandlers(appointment);
+        const { handleView, handleCancel } = createActionHandlers(appointment);
 
         return (
           <Space size='small'>
-            <Button
-              type='text'
-              icon={<EditOutlined />}
-              size='small'
-              className='text-primary-navy hover:text-primary-dark'
-              title='Edit Appointment'
-              onClick={handleEdit}
-            />
-            <Button
-              type='text'
-              icon={<DeleteOutlined />}
-              size='small'
-              danger
-              title='Cancel Appointment'
-              onClick={handleCancel}
-              disabled={
-                !appointment.status ||
-                appointment.status === 'cancelled' ||
-                appointment.status === 'completed'
-              }
-            />
+            <Tooltip title='View Appointment Details'>
+              <Button
+                type='text'
+                icon={<EyeOutlined />}
+                size='small'
+                className='text-primary-navy hover:text-primary-dark'
+                onClick={handleView}
+              />
+            </Tooltip>
+            <Tooltip title='Cancel Appointment'>
+              <Button
+                type='text'
+                icon={<DeleteOutlined />}
+                size='small'
+                danger
+                onClick={handleCancel}
+                disabled={
+                  !appointment.status ||
+                  appointment.status === 'cancelled' ||
+                  appointment.status === 'completed'
+                }
+              />
+            </Tooltip>
           </Space>
         );
       },
@@ -216,6 +312,10 @@ const AppointmentsTable = ({
     }
   };
 
+  const handleShowTotal = (total: number, range: [number, number]) => {
+    return `${range[0]}-${range[1]} of ${total} appointments`;
+  };
+
   const tablePagination = pagination
     ? {
         current: pagination.current,
@@ -223,8 +323,8 @@ const AppointmentsTable = ({
         total: pagination.total,
         showSizeChanger: true,
         showQuickJumper: true,
-        showTotal: (total: number, range: [number, number]) =>
-          `${range[0]}-${range[1]} of ${total} appointments`,
+        showTotal: handleShowTotal,
+        pageSizeOptions: TABLE_PAGE_SIZES.map(String),
       }
     : false;
 
@@ -279,18 +379,20 @@ const AppointmentsTable = ({
   }
 
   return (
-    <Table
-      columns={columns}
-      dataSource={safeAppointments}
-      rowKey={record => record?.id || Math.random().toString()}
-      loading={loading}
-      size='middle'
-      pagination={tablePagination}
-      onChange={handleTableChange}
-      scroll={{ x: 1300 }}
-      className='appointments-table admin-table'
-      rowClassName={() => 'hover:bg-gray-50'}
-    />
+    <div className='admin-card'>
+      <Table
+        columns={columns}
+        dataSource={safeAppointments}
+        rowKey={record => record?.id || Math.random().toString()}
+        loading={loading}
+        size='middle'
+        pagination={tablePagination}
+        onChange={handleTableChange}
+        scroll={{ x: 'max-content', y: 'calc(100vh - 400px)' }}
+        className='appointments-table custom-scrollbar'
+        rowClassName={() => 'hover:bg-gray-50'}
+      />
+    </div>
   );
 };
 

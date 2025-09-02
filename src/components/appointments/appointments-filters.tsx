@@ -6,8 +6,8 @@ import type {
   AppointmentsFiltersProps,
   AppointmentsFilters as AppointmentsFiltersType,
 } from '@/types';
-import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Card, DatePicker, Input, Select, Space } from 'antd';
+import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 
 import { useState } from 'react';
 
@@ -67,7 +67,12 @@ const AppointmentsFilters = ({
             prefix={<SearchOutlined />}
           />
           <Space>
-            <Button onClick={onExport}>Export</Button>
+            <div className='relative'>
+              <Button onClick={onExport}>Export</Button>
+              <span className='absolute -top-2 -right-2 text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full'>
+                Soon
+              </span>
+            </div>
           </Space>
         </div>
 

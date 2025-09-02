@@ -132,7 +132,7 @@ export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
 
   return (
     <Modal
-      title='Create New Appointment'
+      title='Edit Appointment'
       open={visible}
       onCancel={handleCancel}
       footer={null}
@@ -364,7 +364,7 @@ export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
             loading={loading}
             className='bg-primary-navy border-primary-navy'
           >
-            Create Appointment
+            Update Appointment
           </Button>
         </div>
       </Form>

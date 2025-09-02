@@ -50,17 +50,14 @@ export interface PetFiltersProps {
   selectedBreed: string | null;
   selectedGender: string | null;
   selectedSize: string | null;
-  selectedOwner: string | null;
   isActiveFilter: boolean | undefined;
   onSearch: (value: string) => void;
   onSpeciesFilter: (value: string | null) => void;
   onBreedFilter: (value: string | null) => void;
   onGenderFilter: (value: string | null) => void;
   onSizeFilter: (value: string | null) => void;
-  onOwnerFilter: (value: string) => void;
   onActiveFilter: (value: boolean | undefined) => void;
   onClearFilters: () => void;
-  owners?: PetOwner[];
 }
 
 // Pet form modal props
@@ -104,7 +101,6 @@ export interface UsePetManagementReturn {
   handleBreedFilter: (value: string | null) => void;
   handleGenderFilter: (value: string | null) => void;
   handleSizeFilter: (value: string | null) => void;
-  handleOwnerFilter: (value: string) => void;
   handleActiveFilter: (value: boolean | undefined) => void;
   handleClearFilters: () => void;
   handleCreatePet: (data: PetFormData) => Promise<void>;

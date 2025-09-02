@@ -114,7 +114,7 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
                 title={
                   <span className='text-sm font-medium text-text-primary'>Monthly Revenue</span>
                 }
-                value={stats.revenueThisMonth}
+                value={0}
                 suffix='USD'
                 valueStyle={{
                   color: '#fca311',
@@ -125,9 +125,7 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
               />
               <div className='mt-2 flex items-center justify-center'>
                 <RiseOutlined className='text-green-500 mr-1' />
-                <Text className='text-green-500 text-sm font-medium'>
-                  +{stats.growthRate}% from last month
-                </Text>
+                <Text className='text-green-500 text-sm font-medium'>+0% from last month</Text>
               </div>
             </div>
           </Card>

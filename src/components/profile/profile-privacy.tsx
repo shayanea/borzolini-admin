@@ -344,14 +344,19 @@ export const ProfilePrivacy: React.FC<ProfilePrivacyProps> = ({ user, onSuccess,
         <DownloadOutlined className='text-xl text-primary-navy' />,
         <div className='space-y-4'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            <Button
-              icon={<DownloadOutlined />}
-              onClick={() => setIsDataExportModalVisible(true)}
-              className='h-auto p-4 flex flex-col items-center space-y-2'
-            >
-              <span className='font-medium'>Export My Data</span>
-              <span className='text-xs text-gray-500'>Download all your data</span>
-            </Button>
+            <div className='relative'>
+              <Button
+                icon={<DownloadOutlined />}
+                onClick={() => setIsDataExportModalVisible(true)}
+                className='h-auto p-4 flex flex-col items-center space-y-2'
+              >
+                <span className='font-medium'>Export My Data</span>
+                <span className='text-xs text-gray-500'>Download all your data</span>
+              </Button>
+              <span className='absolute -top-2 -right-2 text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full'>
+                Soon
+              </span>
+            </div>
 
             <Button
               danger

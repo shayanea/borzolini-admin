@@ -10,13 +10,13 @@ interface UserPageHeaderPropsWithTitle extends UserPageHeaderProps {
   subtitle?: string;
 }
 
-const UserPageHeader = ({ 
-  onRefresh, 
-  onExport, 
-  onAddUser, 
-  loading, 
+const UserPageHeader = ({
+  onRefresh,
+  onExport,
+  onAddUser,
+  loading,
   title = 'Users',
-  subtitle = 'Manage clinic users and staff members'
+  subtitle = 'Manage clinic users and staff members',
 }: UserPageHeaderPropsWithTitle) => {
   return (
     <div className='flex items-center justify-between'>
@@ -31,9 +31,14 @@ const UserPageHeader = ({
         <Button icon={<ReloadOutlined />} onClick={onRefresh} loading={loading}>
           Refresh
         </Button>
-        <Button icon={<ExportOutlined />} onClick={onExport}>
-          Export
-        </Button>
+        <div className='relative'>
+          <Button icon={<ExportOutlined />} onClick={onExport}>
+            Export
+          </Button>
+          <span className='absolute -top-2 -right-2 text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full'>
+            Soon
+          </span>
+        </div>
         <Button
           type='primary'
           icon={<PlusOutlined />}

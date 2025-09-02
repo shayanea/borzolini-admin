@@ -21,7 +21,6 @@ const PetsPage: React.FC = () => {
     pageSize,
     total,
     filters,
-    owners,
     fetchPets,
     handleTableChange,
     handleRowSelectionChange,
@@ -30,7 +29,6 @@ const PetsPage: React.FC = () => {
     handleBreedFilter,
     handleGenderFilter,
     handleSizeFilter,
-    handleOwnerFilter,
     handleActiveFilter,
     handleClearFilters,
     handleCreatePet,
@@ -170,15 +168,12 @@ const PetsPage: React.FC = () => {
         selectedBreed={filters.breed}
         selectedGender={filters.gender}
         selectedSize={filters.size}
-        selectedOwner={filters.ownerName}
         isActiveFilter={filters.isActive}
-        owners={owners}
         onSearch={handleSearch}
         onSpeciesFilter={handleSpeciesFilter}
         onBreedFilter={handleBreedFilter}
         onGenderFilter={handleGenderFilter}
         onSizeFilter={handleSizeFilter}
-        onOwnerFilter={handleOwnerFilter}
         onActiveFilter={handleActiveFilter}
         onClearFilters={handleClearFilters}
       />
