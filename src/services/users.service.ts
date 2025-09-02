@@ -1,4 +1,4 @@
-import type { AccountStatus, PaginatedResponse, User, UserRole } from '@/types';
+import type { PaginatedResponse, User, UserRole } from '@/types';
 
 import { apiService } from './api';
 
@@ -22,7 +22,7 @@ export interface UpdateUserData {
   city?: string;
   country?: string;
   role?: UserRole;
-  accountStatus?: AccountStatus;
+  isActive?: boolean;
 }
 
 export interface UsersQueryParams {
@@ -30,7 +30,7 @@ export interface UsersQueryParams {
   limit?: number;
   search?: string;
   role?: UserRole;
-  status?: AccountStatus;
+  isActive?: boolean;
   dateRange?: [string, string];
   sortBy?: string;
   sortOrder?: 'ASC' | 'DESC';
@@ -86,7 +86,7 @@ export class UsersService {
 
   // Update user
   static async updateUser(id: string, data: UpdateUserData): Promise<User> {
-    return apiService.patch<User>(`/users/${id}`, data);
+    return apiService.put<User>(`/users/${id}`, data);
   }
 
   // Delete user
@@ -183,7 +183,7 @@ export class UsersService {
 
     if (params.search) queryParams.append('search', params.search);
     if (params.role) queryParams.append('role', params.role);
-    if (params.status) queryParams.append('status', params.status);
+    if (params.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
     if (params.dateRange) {
       queryParams.append('startDate', params.dateRange[0]);
       queryParams.append('endDate', params.dateRange[1]);

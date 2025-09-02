@@ -1,8 +1,8 @@
 import { Alert, Button, Form, Spin } from 'antd';
 import {
   AppointmentSettings,
-  BasicSettings,
   GeneralSettings,
+  NotificationSettings,
   SecuritySettings,
   SettingsHeader,
 } from '@/components/settings';
@@ -22,6 +22,7 @@ const Settings = () => {
     updateLoading,
     resetLoading,
     settingsError,
+    refetchSettings,
   } = useSettings();
 
   const handleSave = () => {
@@ -47,7 +48,7 @@ const Settings = () => {
           type='error'
           showIcon
           action={
-            <Button size='small' onClick={() => window.location.reload()}>
+            <Button size='small' onClick={() => refetchSettings()}>
               Refresh Page
             </Button>
           }
@@ -68,11 +69,11 @@ const Settings = () => {
         initialValues={initialValues}
         disabled={settingsLoading || updateLoading}
       >
-        {/* Basic Settings */}
-        <BasicSettings />
-
         {/* General Settings */}
         <GeneralSettings />
+
+        {/* Notification Settings */}
+        <NotificationSettings />
 
         {/* Appointment Settings */}
         <AppointmentSettings />

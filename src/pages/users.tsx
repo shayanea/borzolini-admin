@@ -26,7 +26,7 @@ const Users = ({ roleFilter }: UsersProps) => {
     pageSize,
     searchText,
     selectedRole,
-    selectedStatus,
+    selectedIsActive,
     selectedRowKeys,
     bulkLoading,
     isModalVisible,
@@ -38,7 +38,7 @@ const Users = ({ roleFilter }: UsersProps) => {
     // Actions
     handleSearch,
     handleRoleFilter,
-    handleStatusFilter,
+    handleIsActiveFilter,
     clearFilters,
     handleTableChange,
     showModal,
@@ -50,10 +50,11 @@ const Users = ({ roleFilter }: UsersProps) => {
     handleBulkDelete,
     handleExport,
     setSelectedRowKeys,
+    refetch,
   } = useUserManagement(roleFilter);
 
   const handleRefresh = useCallback(() => {
-    window.location.reload();
+    refetch();
   }, []);
 
   const handleAddUser = useCallback(() => {
@@ -80,10 +81,10 @@ const Users = ({ roleFilter }: UsersProps) => {
       <UserFilters
         searchText={searchText}
         selectedRole={selectedRole}
-        selectedStatus={selectedStatus}
+        selectedIsActive={selectedIsActive}
         onSearch={handleSearch}
         onRoleFilter={handleRoleFilter}
-        onStatusFilter={handleStatusFilter}
+        onIsActiveFilter={handleIsActiveFilter}
         onClearFilters={clearFilters}
       />
 

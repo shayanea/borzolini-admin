@@ -1,12 +1,12 @@
-import { BellOutlined, UserOutlined, LockOutlined, SafetyOutlined } from '@/ui';
+import { BellOutlined, LockOutlined, SafetyOutlined, UserOutlined } from '@/ui';
 import { Card, Tabs, message } from 'antd';
-import { useState } from 'react';
 
 import { ProfileInformation } from '@/components/profile/profile-information';
 import { ProfileNotifications } from '@/components/profile/profile-notifications';
 import { ProfilePrivacy } from '@/components/profile/profile-privacy';
 import { ProfileSecurity } from '@/components/profile/profile-security';
 import { useAuth } from '@/hooks/use-auth';
+import { useState } from 'react';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -60,12 +60,10 @@ const Profile = () => {
               </span>
               <span
                 className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  user.accountStatus === 'active'
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-red-100 text-red-800'
+                  user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                 }`}
               >
-                {user.accountStatus}
+                {user.isActive ? 'Active' : 'Inactive'}
               </span>
             </div>
           </div>

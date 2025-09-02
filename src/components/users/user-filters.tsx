@@ -10,8 +10,10 @@ const { Option } = Select;
 const UserFilters = ({
   searchText,
   selectedRole,
+  selectedIsActive,
   onSearch,
   onRoleFilter,
+  onIsActiveFilter,
   onClearFilters,
 }: UserFiltersProps) => {
   return (
@@ -41,20 +43,18 @@ const UserFilters = ({
             <Option value={USER_ROLES.PATIENT}>Patient</Option>
           </Select>
         </Col>
-        {/* <Col xs={24} sm={12} md={4}>
+        <Col xs={24} sm={12} md={4}>
           <Select
             placeholder='Status'
             allowClear
-            value={selectedStatus}
-            onChange={onStatusFilter}
+            value={selectedIsActive}
+            onChange={onIsActiveFilter}
             className='w-full'
           >
-            <Option value={ACCOUNT_STATUSES.ACTIVE}>Active</Option>
-            <Option value={ACCOUNT_STATUSES.INACTIVE}>Inactive</Option>
-            <Option value={ACCOUNT_STATUSES.SUSPENDED}>Suspended</Option>
-            <Option value={ACCOUNT_STATUSES.PENDING}>Pending</Option>
+            <Option value={true}>Active</Option>
+            <Option value={false}>Inactive</Option>
           </Select>
-        </Col> */}
+        </Col>
 
         <Col xs={24} sm={12} md={4}>
           <Button icon={<FilterOutlined />} onClick={onClearFilters} className='w-full'>

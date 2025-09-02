@@ -1,7 +1,7 @@
-import { ACCOUNT_STATUSES, USER_ROLES } from '@/constants/user-management';
-import { Button, Col, Form, Input, Modal, Row, Select, Space } from 'antd';
+import { Button, Col, Form, Input, Modal, Row, Select, Space, Switch } from 'antd';
 import React, { useCallback } from 'react';
 
+import { USER_ROLES } from '@/constants/user-management';
 import type { UserFormModalProps } from '@/types/user-management';
 
 const { Option } = Select;
@@ -27,7 +27,7 @@ const UserFormModal = ({
           address: editingUser.address,
           city: editingUser.city,
           country: editingUser.country,
-          accountStatus: editingUser.accountStatus,
+          isActive: editingUser.isActive,
         });
       } else {
         form.resetFields();
@@ -67,7 +67,7 @@ const UserFormModal = ({
         onFinish={handleSubmit}
         initialValues={{
           role: USER_ROLES.PATIENT,
-          accountStatus: ACCOUNT_STATUSES.ACTIVE,
+          isActive: true,
         }}
       >
         <Row gutter={16}>
@@ -140,17 +140,8 @@ const UserFormModal = ({
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              name='accountStatus'
-              label='Account Status'
-              rules={[{ required: true, message: 'Please select status' }]}
-            >
-              <Select placeholder='Select Status'>
-                <Option value={ACCOUNT_STATUSES.ACTIVE}>Active</Option>
-                <Option value={ACCOUNT_STATUSES.INACTIVE}>Inactive</Option>
-                <Option value={ACCOUNT_STATUSES.SUSPENDED}>Suspended</Option>
-                <Option value={ACCOUNT_STATUSES.PENDING}>Pending</Option>
-              </Select>
+            <Form.Item name='isActive' label='Account Status' valuePropName='checked'>
+              <Switch checkedChildren='Active' unCheckedChildren='Inactive' />
             </Form.Item>
           </Col>
         </Row>

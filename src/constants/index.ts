@@ -12,9 +12,9 @@ export { ROUTES } from './routes';
 export { APPOINTMENT_DURATIONS, CURRENCIES, DEFAULT_SETTINGS, TIMEZONES } from './settings';
 export { theme } from './theme';
 export {
-  ACCOUNT_STATUSES,
   DEFAULT_SORT_FIELD,
   DEFAULT_SORT_ORDER,
+  IS_ACTIVE_COLORS,
   ROLE_COLORS,
   TABLE_PAGE_SIZES,
   USER_ROLES,

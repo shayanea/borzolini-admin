@@ -12,7 +12,7 @@ export interface User {
   isEmailVerified?: boolean;
   isPhoneVerified?: boolean;
   profileCompletionPercentage?: number;
-  accountStatus?: AccountStatus;
+  isActive?: boolean;
   lastLoginAt?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -60,7 +60,7 @@ export interface AuthStatus {
     isEmailVerified: boolean;
     isPhoneVerified: boolean;
     profileCompletionPercentage: number;
-    accountStatus: AccountStatus;
+    isActive: boolean;
   };
   lastLoginAt?: string;
 }
@@ -228,7 +228,7 @@ export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
 export interface TableFilters {
   search?: string;
   role?: UserRole;
-  status?: AccountStatus;
+  isActive?: boolean;
   dateRange?: [string, string];
 }
 

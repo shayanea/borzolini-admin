@@ -68,26 +68,12 @@ const UserTable = ({
     {
       title: 'Verification',
       key: USER_TABLE_COLUMNS.VERIFICATION,
-      width: 200,
       render: (user: User) => {
-        const isEmailVerified = user.isEmailVerified ?? user.verified ?? false;
-        const isPhoneVerified = user.isPhoneVerified ?? false;
-        const profileCompletion = user.profileCompletionPercentage ?? user.profileCompletion ?? 0;
-
         return (
-          <div className='space-y-1'>
-            <div className='flex items-center space-x-2'>
-              <Badge
-                status={isEmailVerified ? 'success' : 'error'}
-                text={<span className='text-xs'>{isEmailVerified ? 'Email ✓' : 'Email ✗'}</span>}
-              />
-              <Badge
-                status={isPhoneVerified ? 'success' : 'error'}
-                text={<span className='text-xs'>{isPhoneVerified ? 'Phone ✓' : 'Phone ✗'}</span>}
-              />
-            </div>
-            <div className='text-xs text-text-light'>Profile: {profileCompletion}% complete</div>
-          </div>
+          <Badge
+            status={user.isActive ? 'success' : 'error'}
+            text={<span className='text-xs'>{user.isActive ? 'Active' : 'Inactive'}</span>}
+          />
         );
       },
     },

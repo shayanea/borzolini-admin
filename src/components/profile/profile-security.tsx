@@ -1,9 +1,9 @@
+import { Alert, Button, Card, Divider, Form, Input, Switch } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, SecurityScanOutlined } from '@/ui';
-import { Alert, Button, Card, Form, Input, Switch, Divider } from 'antd';
-import { useState } from 'react';
 
 import { AuthService } from '@/services/auth.service';
 import { User } from '@/types';
+import { useState } from 'react';
 
 interface ProfileSecurityProps {
   user: User;
@@ -290,19 +290,15 @@ export const ProfileSecurity: React.FC<ProfileSecurityProps> = ({ user, onSucces
             <div>
               <h4 className='font-medium text-gray-900'>Account Status</h4>
               <p className='text-sm text-gray-500'>
-                {user.accountStatus === 'active'
-                  ? 'Your account is active'
-                  : 'Your account has restrictions'}
+                {user.isActive ? 'Your account is active' : 'Your account has restrictions'}
               </p>
             </div>
             <div
               className={`px-3 py-1 rounded-full text-xs font-medium ${
-                user.accountStatus === 'active'
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-red-100 text-red-800'
+                user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
               }`}
             >
-              {user.accountStatus}
+              {user.isActive ? 'Active' : 'Inactive'}
             </div>
           </div>
         </div>

@@ -1,13 +1,19 @@
-import type { AccountStatus, User, UserRole } from '@/types';
 import { DEFAULT_SORT_FIELD, DEFAULT_SORT_ORDER } from '@/constants/user-management';
 import { Modal, message as antMessage } from 'antd';
+import type { PaginatedResponse, User, UserRole } from '@/types';
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import UsersService, {
   CreateUserData,
   UpdateUserData,
   UsersQueryParams,
 } from '@/services/users.service';
 import { useCallback, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface UseUserManagementReturn {
   // State
@@ -18,7 +24,7 @@ interface UseUserManagementReturn {
   pageSize: number;
   searchText: string;
   selectedRole: UserRole | null;
-  selectedStatus: AccountStatus | null;
+  selectedIsActive: boolean | null;
   dateRange: [string, string] | null;
   sortBy: string;
   sortOrder: 'ASC' | 'DESC';
@@ -35,7 +41,7 @@ interface UseUserManagementReturn {
   setPageSize: (size: number) => void;
   handleSearch: (value: string) => void;
   handleRoleFilter: (value: UserRole | null) => void;
-  handleStatusFilter: (value: AccountStatus | null) => void;
+  handleIsActiveFilter: (value: boolean | null) => void;
   handleDateRangeChange: (dates: any) => void;
   clearFilters: () => void;
   handleTableChange: (pagination: any, filters: any, sorter: any) => void;
@@ -48,6 +54,11 @@ interface UseUserManagementReturn {
   handleBulkDelete: () => Promise<void>;
   handleExport: () => Promise<void>;
   setSelectedRowKeys: (keys: string[]) => void;
+
+  // Utils
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<PaginatedResponse<User>, Error>>;
 }
 
 export const useUserManagement = (roleFilter?: UserRole): UseUserManagementReturn => {
@@ -56,7 +67,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   const [pageSize, setPageSize] = useState(10);
   const [searchText, setSearchText] = useState('');
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
-  const [selectedStatus, setSelectedStatus] = useState<AccountStatus | null>(null);
+  const [selectedIsActive, setSelectedIsActive] = useState<boolean | null>(null);
   const [dateRange, setDateRange] = useState<[string, string] | null>(null);
   const [sortBy, setSortBy] = useState<string>(DEFAULT_SORT_FIELD);
   const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>(DEFAULT_SORT_ORDER);
@@ -73,7 +84,11 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   const queryClient = useQueryClient();
 
   // Query for users
-  const { data: usersResponse, isLoading: loading } = useQuery({
+  const {
+    data: usersResponse,
+    isLoading: loading,
+    refetch,
+  } = useQuery({
     queryKey: [
       'users',
       currentPage,
@@ -81,7 +96,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
       searchText,
       roleFilter,
       selectedRole,
-      selectedStatus,
+      selectedIsActive,
       dateRange,
       sortBy,
       sortOrder,
@@ -92,7 +107,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
         limit: pageSize,
         search: searchText || undefined,
         role: roleFilter || selectedRole || undefined,
-        status: selectedStatus || undefined,
+        isActive: selectedIsActive !== null ? selectedIsActive : undefined,
         dateRange: dateRange || undefined,
         sortBy,
         sortOrder,
@@ -177,9 +192,9 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
     setCurrentPage(1);
   }, []);
 
-  // Handle status filter
-  const handleStatusFilter = useCallback((value: AccountStatus | null) => {
-    setSelectedStatus(value);
+  // Handle isActive filter
+  const handleIsActiveFilter = useCallback((value: boolean | null) => {
+    setSelectedIsActive(value);
     setCurrentPage(1);
   }, []);
 
@@ -197,7 +212,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   const clearFilters = useCallback(() => {
     setSearchText('');
     setSelectedRole(null);
-    setSelectedStatus(null);
+    setSelectedIsActive(null);
     setDateRange(null);
     setSortBy(DEFAULT_SORT_FIELD);
     setSortOrder(DEFAULT_SORT_ORDER);
@@ -259,7 +274,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
           city: values.city,
           country: values.country,
           role: values.role,
-          accountStatus: values.accountStatus,
+          isActive: values.isActive,
         };
 
         await updateUserMutation.mutateAsync({ userId: editingUser.id, data: updateData });
@@ -316,7 +331,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
       const params: UsersQueryParams = {
         search: searchText || undefined,
         role: selectedRole || undefined,
-        status: selectedStatus || undefined,
+        isActive: selectedIsActive !== null ? selectedIsActive : undefined,
         dateRange: dateRange || undefined,
       };
 
@@ -335,7 +350,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
       console.error('Error exporting users:', error);
       antMessage.error('Failed to export users');
     }
-  }, [searchText, selectedRole, selectedStatus, dateRange]);
+  }, [searchText, selectedRole, selectedIsActive, dateRange]);
 
   return {
     // State
@@ -346,7 +361,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
     pageSize,
     searchText,
     selectedRole,
-    selectedStatus,
+    selectedIsActive,
     dateRange,
     sortBy,
     sortOrder,
@@ -363,7 +378,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
     setPageSize,
     handleSearch,
     handleRoleFilter,
-    handleStatusFilter,
+    handleIsActiveFilter,
     handleDateRangeChange,
     clearFilters,
     handleTableChange,
@@ -376,5 +391,8 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
     handleBulkDelete,
     handleExport,
     setSelectedRowKeys,
+
+    // Utils
+    refetch,
   };
 };

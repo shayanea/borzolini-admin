@@ -3,17 +3,17 @@ import {
   CalendarOutlined,
   DashboardOutlined,
   FileTextOutlined,
+  HeartOutlined,
   LogoutOutlined,
   MonitorOutlined,
   SettingOutlined,
   TeamOutlined,
   UserOutlined,
-  HeartOutlined,
 } from '@/ui';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { MenuProps, Tag } from 'antd';
 import { useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { MenuProps } from 'antd';
 import { ROUTES } from '@/constants';
 import { useAuth } from '@/hooks/use-auth';
 
@@ -73,7 +73,12 @@ export const useAdminLayoutLogic = () => {
     },
     {
       key: '/reports',
-      label: 'Reports',
+      label: (
+        <div className='flex items-center justify-between w-full'>
+          <span>Reports</span>
+          <Tag color='green'>Soon</Tag>
+        </div>
+      ),
       icon: <FileTextOutlined />,
       onClick: () => navigate(ROUTES.REPORTS),
     },

@@ -164,8 +164,8 @@ const UserViewModal = ({ isVisible, user, onClose }: UserViewModalProps) => {
             </Descriptions.Item>
             <Descriptions.Item label='Account Status'>
               <Badge
-                status={user.accountStatus === 'active' ? 'success' : 'default'}
-                text={user.accountStatus === 'active' ? 'Active' : 'Inactive'}
+                status={user.isActive ? 'success' : 'default'}
+                text={user.isActive ? 'Active' : 'Inactive'}
               />
             </Descriptions.Item>
           </Descriptions>

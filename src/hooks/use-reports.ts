@@ -61,8 +61,6 @@ export const useReports = (filters: ReportFilters = {}) => {
       filters: ReportFilters;
       format: 'csv' | 'pdf';
     }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      console.log('Exporting report with filters:', _filters, 'format:', _format);
       return ReportsService.exportReport();
     },
     onSuccess: (blob, { format: _format }) => {
@@ -85,7 +83,6 @@ export const useReports = (filters: ReportFilters = {}) => {
   });
 
   const handleFilters = useCallback(() => {
-    console.log('Filters clicked');
     // This could trigger a refetch with new filters
     refetchMetrics();
   }, [refetchMetrics]);

@@ -5,13 +5,6 @@ export const USER_ROLES = {
   PATIENT: 'patient',
 } as const;
 
-export const ACCOUNT_STATUSES = {
-  ACTIVE: 'active',
-  INACTIVE: 'inactive',
-  SUSPENDED: 'suspended',
-  PENDING: 'pending',
-} as const;
-
 export const TABLE_PAGE_SIZES = [10, 20, 50, 100] as const;
 
 export const DEFAULT_SORT_FIELD = 'createdAt';
@@ -33,9 +26,7 @@ export const ROLE_COLORS = {
   [USER_ROLES.PATIENT]: 'default',
 } as const;
 
-export const STATUS_COLORS = {
-  [ACCOUNT_STATUSES.ACTIVE]: 'green',
-  [ACCOUNT_STATUSES.INACTIVE]: 'red',
-  [ACCOUNT_STATUSES.SUSPENDED]: 'orange',
-  [ACCOUNT_STATUSES.PENDING]: 'default',
+export const IS_ACTIVE_COLORS = {
+  true: 'green',
+  false: 'red',
 } as const;

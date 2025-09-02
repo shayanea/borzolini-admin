@@ -1,4 +1,4 @@
-import type { AccountStatus, User, UserRole } from './index';
+import type { User, UserRole } from './index';
 
 export interface UserTableProps {
   users: User[];
@@ -17,10 +17,10 @@ export interface UserTableProps {
 export interface UserFiltersProps {
   searchText: string;
   selectedRole: UserRole | null;
-  selectedStatus: AccountStatus | null;
+  selectedIsActive: boolean | null;
   onSearch: (value: string) => void;
   onRoleFilter: (value: UserRole | null) => void;
-  onStatusFilter: (value: AccountStatus | null) => void;
+  onIsActiveFilter: (value: boolean | null) => void;
   onClearFilters: () => void;
 }
 
@@ -55,5 +55,5 @@ export interface UserFormValues {
   address?: string;
   city?: string;
   country?: string;
-  accountStatus?: string;
+  isActive?: boolean;
 }
