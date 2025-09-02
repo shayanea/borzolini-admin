@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react';
 
 import ClinicsService from '@/services/clinics.service';
 import type { ColumnsType } from 'antd/es/table';
-import UsersService from '@/services/users.service';
 
 interface ClinicStaffWithUser extends ClinicStaff {
   user?: User | null;
@@ -30,25 +29,16 @@ const ClinicStaffModal = ({ visible, clinic, onClose }: ClinicStaffModalProps) =
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  console.log(clinic?.id);
+
   useEffect(() => {
     const fetchStaff = async () => {
       if (!visible || !clinic) return;
       setLoading(true);
       setError(null);
       try {
-        const staffList = await ClinicsService.getClinicStaff(clinic.id);
-        // Enrich with user details in parallel, ignore errors per-user
-        const enriched = await Promise.all(
-          staffList.map(async member => {
-            try {
-              const user = await UsersService.getUserById(member.userId);
-              return { ...member, user } as ClinicStaffWithUser;
-            } catch {
-              return { ...member, user: null } as ClinicStaffWithUser;
-            }
-          })
-        );
-        setStaff(enriched);
+        const response = await ClinicsService.getClinicStaff(clinic.id);
+        setStaff(response.staff);
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : 'Failed to load clinic staff';
         setError(message);
@@ -68,7 +58,7 @@ const ClinicStaffModal = ({ visible, clinic, onClose }: ClinicStaffModalProps) =
         render: (_, record) => (
           <div className='flex items-center space-x-2'>
             <Avatar size={28} className='bg-primary-navy/10 text-primary-navy'>
-              {record.user?.firstName?.[0]?.toUpperCase() || record.userId[0]?.toUpperCase()}
+              {record.user?.firstName?.[0]?.toUpperCase() || record.user?.id?.toUpperCase()}
             </Avatar>
             <div className='flex flex-col'>
               <Text

@@ -154,8 +154,22 @@ export class ClinicsService {
   }
 
   // Get clinic staff
-  static async getClinicStaff(clinicId: string): Promise<ClinicStaff[]> {
-    return apiService.get<ClinicStaff[]>(`/clinics/${clinicId}/staff`);
+  static async getClinicStaff(
+    clinicId: string
+  ): Promise<{
+    staff: ClinicStaff[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
+    return apiService.get<{
+      staff: ClinicStaff[];
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    }>(`/clinics/${clinicId}/staff`);
   }
 
   // Add staff member to clinic
