@@ -1,5 +1,7 @@
+import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Button, Space, Typography } from 'antd';
-import { DownloadOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
+
+import { ExportButton } from '@/components/common';
 
 const { Title, Text } = Typography;
 
@@ -8,8 +10,11 @@ interface ClinicPageHeaderProps {
   subtitle: string;
   loading?: boolean;
   onRefresh: () => void;
-  onExport: () => void;
+  onExportCSV: () => Promise<Blob>;
+  onExportExcel: () => Promise<Blob>;
   onAddClinic: () => void;
+  filters?: Record<string, any>;
+  estimatedRecordCount?: number;
 }
 
 const ClinicPageHeader = ({
@@ -17,8 +22,11 @@ const ClinicPageHeader = ({
   subtitle,
   loading = false,
   onRefresh,
-  onExport,
+  onExportCSV,
+  onExportExcel,
   onAddClinic,
+  filters = {},
+  estimatedRecordCount = 0,
 }: ClinicPageHeaderProps) => {
   return (
     <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
@@ -39,19 +47,14 @@ const ClinicPageHeader = ({
           Refresh
         </Button>
 
-        <div className='relative'>
-          <Button
-            icon={<DownloadOutlined />}
-            onClick={onExport}
-            loading={loading}
-            className='flex items-center'
-          >
-            Export
-          </Button>
-          <span className='absolute -top-2 -right-2 text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full'>
-            Soon
-          </span>
-        </div>
+        <ExportButton
+          entityType='clinics'
+          exportCSV={onExportCSV}
+          exportExcel={onExportExcel}
+          filters={filters}
+          estimatedRecordCount={estimatedRecordCount}
+          disabled={loading}
+        />
 
         <Button
           type='primary'

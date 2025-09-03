@@ -20,11 +20,11 @@ interface ClinicFormValues {
   address: string;
   city: string;
   country: string;
-  postalCode?: string;
+  postal_code?: string;
   phone: string;
   email: string;
   website?: string;
-  isActive: boolean;
+  is_active: boolean;
 }
 
 const ClinicFormModal = ({
@@ -47,16 +47,16 @@ const ClinicFormModal = ({
         address: editingClinic.address,
         city: editingClinic.city,
         country: editingClinic.country,
-        postalCode: editingClinic.postalCode || '',
+        postal_code: editingClinic.postal_code || '',
         phone: editingClinic.phone,
         email: editingClinic.email,
         website: editingClinic.website || '',
-        isActive: editingClinic.isActive,
+        is_active: editingClinic.is_active,
       });
     } else if (visible && !editingClinic) {
       form.resetFields();
       form.setFieldsValue({
-        isActive: true,
+        is_active: true,
         country: 'United States',
       });
     }
@@ -117,7 +117,10 @@ const ClinicFormModal = ({
               label='Phone Number'
               rules={[
                 { required: true, message: 'Please enter phone number' },
-                { pattern: /^[+]?[1-9][\d]{0,15}$/, message: 'Please enter a valid phone number' },
+                {
+                  pattern: /^[+]?[\d\s\-\(\)\.]{7,20}$/,
+                  message: 'Please enter a valid phone number',
+                },
               ]}
             >
               <Input placeholder='Enter phone number' />
@@ -183,7 +186,7 @@ const ClinicFormModal = ({
 
           <Col span={8}>
             <Form.Item
-              name='postalCode'
+              name='postal_code'
               label='Postal Code'
               rules={[
                 { pattern: /^[0-9A-Za-z\s-]{3,10}$/, message: 'Please enter a valid postal code' },
@@ -221,7 +224,7 @@ const ClinicFormModal = ({
 
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item name='isActive' label='Status' valuePropName='checked'>
+            <Form.Item name='is_active' label='Status' valuePropName='checked'>
               <Switch checkedChildren='Active' unCheckedChildren='Inactive' />
             </Form.Item>
           </Col>

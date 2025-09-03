@@ -182,7 +182,7 @@ export const ProfileInformation: React.FC<ProfileInformationProps> = ({
                 label='Phone Number'
                 rules={[
                   {
-                    pattern: /^[+]?[1-9][\d]{0,15}$/,
+                    pattern: /^[+]?[\d\s\-\(\)\.]{7,20}$/,
                     message: 'Please enter a valid phone number',
                   },
                 ]}

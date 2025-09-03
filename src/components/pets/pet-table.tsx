@@ -206,6 +206,7 @@ const PetTable = ({
           showQuickJumper: true,
           showTotal: handleShowTotal,
           pageSizeOptions: TABLE_PAGE_SIZES.map(String),
+          position: ['bottomCenter'],
         }}
         onChange={onTableChange}
         rowSelection={{

@@ -1,5 +1,9 @@
 import { DEFAULT_SORT_FIELD, DEFAULT_SORT_ORDER } from '@/constants/user-management';
-import { Modal, message as antMessage } from 'antd';
+import UsersService, {
+  CreateUserData,
+  UpdateUserData,
+  UsersQueryParams,
+} from '@/services/users.service';
 import type { PaginatedResponse, User, UserRole } from '@/types';
 import {
   QueryObserverResult,
@@ -8,11 +12,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import UsersService, {
-  CreateUserData,
-  UpdateUserData,
-  UsersQueryParams,
-} from '@/services/users.service';
+import { message as antMessage } from 'antd';
 import { useCallback, useState } from 'react';
 
 interface UseUserManagementReturn {
@@ -28,8 +28,7 @@ interface UseUserManagementReturn {
   dateRange: [string, string] | null;
   sortBy: string;
   sortOrder: 'ASC' | 'DESC';
-  selectedRowKeys: string[];
-  bulkLoading: boolean;
+
   isModalVisible: boolean;
   editingUser: User | null;
   modalLoading: boolean;
@@ -51,9 +50,9 @@ interface UseUserManagementReturn {
   hideViewModal: () => void;
   handleSubmit: (values: any) => Promise<void>;
   handleDeleteUser: (userId: string) => Promise<void>;
-  handleBulkDelete: () => Promise<void>;
-  handleExport: () => Promise<void>;
-  setSelectedRowKeys: (keys: string[]) => void;
+
+  handleExportCSV: () => Promise<Blob>;
+  handleExportExcel: () => Promise<Blob>;
 
   // Utils
   refetch: (
@@ -77,9 +76,6 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
   const [viewingUser, setViewingUser] = useState<User | null>(null);
-
-  // Bulk operations
-  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
   const queryClient = useQueryClient();
 
@@ -158,20 +154,6 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
     onError: error => {
       console.error('Error deleting user:', error);
       antMessage.error('Failed to delete user');
-      throw error;
-    },
-  });
-
-  const bulkDeleteUsersMutation = useMutation({
-    mutationFn: UsersService.bulkDeleteUsers,
-    onSuccess: (_, variables) => {
-      antMessage.success(`${variables.length} users deleted successfully`);
-      setSelectedRowKeys([]);
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-    },
-    onError: error => {
-      console.error('Error bulk deleting users:', error);
-      antMessage.error('Failed to delete selected users');
       throw error;
     },
   });
@@ -306,50 +288,28 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
     [deleteUserMutation]
   );
 
-  // Handle bulk operations
-  const handleBulkDelete = useCallback(async () => {
-    if (selectedRowKeys.length === 0) {
-      antMessage.warning('Please select users to delete');
-      return;
-    }
+  // Handle export to CSV
+  const handleExportCSV = useCallback(async () => {
+    const params: UsersQueryParams = {
+      search: searchText || undefined,
+      role: selectedRole || undefined,
+      isActive: selectedIsActive !== null ? selectedIsActive : undefined,
+      dateRange: dateRange || undefined,
+    };
 
-    Modal.confirm({
-      title: 'Delete Selected Users',
-      content: `Are you sure you want to delete ${selectedRowKeys.length} selected users? This action cannot be undone.`,
-      okText: 'Delete',
-      okType: 'danger',
-      cancelText: 'Cancel',
-      onOk: async () => {
-        await bulkDeleteUsersMutation.mutateAsync(selectedRowKeys);
-      },
-    });
-  }, [selectedRowKeys, bulkDeleteUsersMutation]);
+    return await UsersService.exportUsersToCSV(params);
+  }, [searchText, selectedRole, selectedIsActive, dateRange]);
 
-  // Handle export
-  const handleExport = useCallback(async () => {
-    try {
-      const params: UsersQueryParams = {
-        search: searchText || undefined,
-        role: selectedRole || undefined,
-        isActive: selectedIsActive !== null ? selectedIsActive : undefined,
-        dateRange: dateRange || undefined,
-      };
+  // Handle export to Excel
+  const handleExportExcel = useCallback(async () => {
+    const params: UsersQueryParams = {
+      search: searchText || undefined,
+      role: selectedRole || undefined,
+      isActive: selectedIsActive !== null ? selectedIsActive : undefined,
+      dateRange: dateRange || undefined,
+    };
 
-      const blob = await UsersService.exportUsers(params);
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `users-export-${new Date().toISOString().split('T')[0]}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      antMessage.success('Users exported successfully');
-    } catch (error) {
-      console.error('Error exporting users:', error);
-      antMessage.error('Failed to export users');
-    }
+    return await UsersService.exportUsersToExcel(params);
   }, [searchText, selectedRole, selectedIsActive, dateRange]);
 
   return {
@@ -365,8 +325,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
     dateRange,
     sortBy,
     sortOrder,
-    selectedRowKeys,
-    bulkLoading: bulkDeleteUsersMutation.isPending,
+
     isModalVisible,
     editingUser,
     modalLoading: createUserMutation.isPending || updateUserMutation.isPending,
@@ -388,9 +347,9 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
     hideViewModal,
     handleSubmit,
     handleDeleteUser,
-    handleBulkDelete,
-    handleExport,
-    setSelectedRowKeys,
+
+    handleExportCSV,
+    handleExportExcel,
 
     // Utils
     refetch,

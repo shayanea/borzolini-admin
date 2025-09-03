@@ -2,7 +2,6 @@ import { Alert, Empty, Modal } from 'antd';
 import type { CreateReviewData, UpdateReviewData } from '@/services/reviews.service';
 import { ExclamationCircleOutlined, LockOutlined } from '@ant-design/icons';
 import {
-  ReviewsBulkActions,
   ReviewsFilters,
   ReviewsFormModal,
   ReviewsHeader,
@@ -19,7 +18,7 @@ import { useState } from 'react';
 
 const Reviews = () => {
   const { isAuthenticated } = useAuthStore();
-  const [selectedReviews, setSelectedReviews] = useState<string[]>([]);
+
   const [formModalVisible, setFormModalVisible] = useState(false);
   const [responseModalVisible, setResponseModalVisible] = useState(false);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
@@ -48,7 +47,6 @@ const Reviews = () => {
     handleAddResponse,
     handleUpdateResponse,
 
-    handleBulkAction,
     clearError,
   } = useReviews();
 
@@ -136,19 +134,6 @@ const Reviews = () => {
     setRespondingReview(null);
   };
 
-  const handleBulkActionSubmit = async (actionData: {
-    action: 'publish' | 'unpublish' | 'delete' | 'flag' | 'unflag' | 'verify' | 'unverify';
-    reviewIds: string[];
-    reason?: string;
-  }) => {
-    try {
-      await handleBulkAction(actionData);
-      setSelectedReviews([]);
-    } catch (error) {
-      // Error is handled by the hook
-    }
-  };
-
   const handleDeleteConfirm = (id: string) => {
     Modal.confirm({
       title: 'Delete Review',
@@ -224,14 +209,6 @@ const Reviews = () => {
           onNewReview={handleNewReviewClick}
           onExport={handleExport}
         />
-
-        {/* Bulk Actions */}
-        {selectedReviews.length > 0 && (
-          <ReviewsBulkActions
-            selectedReviews={selectedReviews}
-            onBulkAction={handleBulkActionSubmit}
-          />
-        )}
 
         {/* Filters */}
         <ReviewsFilters

@@ -1,7 +1,8 @@
-import ClinicsService, { ClinicsQueryParams, UpdateClinicData } from '@/services/clinics.service';
+import ClinicsService from '@/services/clinics.service';
+import type { ClinicsQueryParams } from '@/types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Modal, message as antMessage } from 'antd';
 import { useCallback, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { Clinic } from '@/types';
 
@@ -19,9 +20,6 @@ interface UseClinicManagementReturn {
   sortOrder: 'ASC' | 'DESC';
   selectedRowKeys: string[];
   bulkLoading: boolean;
-  isModalVisible: boolean;
-  editingClinic: Clinic | null;
-  modalLoading: boolean;
 
   // Actions
   setCurrentPage: (page: number) => void;
@@ -31,12 +29,10 @@ interface UseClinicManagementReturn {
   handleStatusFilter: (value: boolean | null) => void;
   clearFilters: () => void;
   handleTableChange: (pagination: any, filters: any, sorter: any) => void;
-  showModal: (clinic?: Clinic) => void;
-  hideModal: () => void;
-  handleSubmit: (values: any) => Promise<void>;
   handleDeleteClinic: (clinicId: string) => Promise<void>;
   handleBulkDelete: () => Promise<void>;
-  handleExport: () => Promise<void>;
+  handleExportCSV: () => Promise<Blob>;
+  handleExportExcel: () => Promise<Blob>;
   setSelectedRowKeys: (keys: string[]) => void;
 }
 
@@ -49,10 +45,6 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
   const [selectedStatus, setSelectedStatus] = useState<boolean | null>(null);
   const [sortBy, setSortBy] = useState<string>('name');
   const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('ASC');
-
-  // Modal states
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editingClinic, setEditingClinic] = useState<Clinic | null>(null);
 
   // Bulk operations
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
@@ -89,30 +81,6 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
   });
 
   // Mutations
-  const createClinicMutation = useMutation({
-    mutationFn: ClinicsService.createClinic,
-    onSuccess: () => {
-      antMessage.success('Clinic created successfully');
-      queryClient.invalidateQueries({ queryKey: ['clinics'] });
-      hideModal();
-    },
-    onError: (error: any) => {
-      antMessage.error(error?.response?.data?.message || 'Failed to create clinic');
-    },
-  });
-
-  const updateClinicMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdateClinicData }) =>
-      ClinicsService.updateClinic(id, data),
-    onSuccess: () => {
-      antMessage.success('Clinic updated successfully');
-      queryClient.invalidateQueries({ queryKey: ['clinics'] });
-      hideModal();
-    },
-    onError: (error: any) => {
-      antMessage.error(error?.response?.data?.message || 'Failed to update clinic');
-    },
-  });
 
   const deleteClinicMutation = useMutation({
     mutationFn: ClinicsService.deleteClinic,
@@ -181,30 +149,6 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
     [currentPage, pageSize, sortBy, sortOrder]
   );
 
-  const showModal = useCallback((clinic?: Clinic) => {
-    setEditingClinic(clinic || null);
-    setIsModalVisible(true);
-  }, []);
-
-  const hideModal = useCallback(() => {
-    setIsModalVisible(false);
-    setEditingClinic(null);
-  }, []);
-
-  const handleSubmit = useCallback(
-    async (values: any) => {
-      if (editingClinic) {
-        await updateClinicMutation.mutateAsync({
-          id: editingClinic.id,
-          data: values,
-        });
-      } else {
-        await createClinicMutation.mutateAsync(values);
-      }
-    },
-    [editingClinic, updateClinicMutation, createClinicMutation]
-  );
-
   const handleDeleteClinic = useCallback(
     async (clinicId: string) => {
       Modal.confirm({
@@ -236,27 +180,20 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
     });
   }, [selectedRowKeys, bulkDeleteMutation]);
 
-  const handleExport = useCallback(async () => {
-    try {
-      const blob = await ClinicsService.exportClinics({
-        search: searchText || undefined,
-        city: selectedCity || undefined,
-        isActive: selectedStatus !== null ? selectedStatus : undefined,
-      });
+  const handleExportCSV = useCallback(async () => {
+    return await ClinicsService.exportClinicsToCSV({
+      search: searchText || undefined,
+      city: selectedCity || undefined,
+      isActive: selectedStatus !== null ? selectedStatus : undefined,
+    });
+  }, [searchText, selectedCity, selectedStatus]);
 
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `clinics-${new Date().toISOString().split('T')[0]}.csv`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-
-      antMessage.success('Clinics exported successfully');
-    } catch (error: any) {
-      antMessage.error(error?.response?.data?.message || 'Failed to export clinics');
-    }
+  const handleExportExcel = useCallback(async () => {
+    return await ClinicsService.exportClinicsToExcel({
+      search: searchText || undefined,
+      city: selectedCity || undefined,
+      isActive: selectedStatus !== null ? selectedStatus : undefined,
+    });
   }, [searchText, selectedCity, selectedStatus]);
 
   return {
@@ -273,9 +210,6 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
     sortOrder,
     selectedRowKeys,
     bulkLoading: bulkDeleteMutation.isPending,
-    isModalVisible,
-    editingClinic,
-    modalLoading: createClinicMutation.isPending || updateClinicMutation.isPending,
 
     // Actions
     setCurrentPage,
@@ -285,12 +219,10 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
     handleStatusFilter,
     clearFilters,
     handleTableChange,
-    showModal,
-    hideModal,
-    handleSubmit,
     handleDeleteClinic,
     handleBulkDelete,
-    handleExport,
+    handleExportCSV,
+    handleExportExcel,
     setSelectedRowKeys,
   };
 };

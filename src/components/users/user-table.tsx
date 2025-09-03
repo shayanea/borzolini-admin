@@ -1,4 +1,5 @@
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
+import { ROLE_COLORS, TABLE_PAGE_SIZES, USER_TABLE_COLUMNS } from '@/constants';
+import type { User, UserTableProps } from '@/types';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -6,8 +7,7 @@ import {
   PhoneOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { ROLE_COLORS, TABLE_PAGE_SIZES, USER_TABLE_COLUMNS } from '@/constants';
-import type { User, UserTableProps } from '@/types';
+import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 
 const UserTable = ({
   users,
@@ -15,12 +15,11 @@ const UserTable = ({
   currentPage = 1,
   pageSize = 10,
   total = 0,
-  selectedRowKeys = [],
+
   onViewUser,
   onEditUser,
   onDeleteUser,
   onTableChange,
-  onRowSelectionChange,
 }: UserTableProps) => {
   const createActionHandlers = (user: User) => {
     const handleViewUser = () => onViewUser(user);
@@ -127,12 +126,9 @@ const UserTable = ({
         showQuickJumper: true,
         showTotal: handleShowTotal,
         pageSizeOptions: TABLE_PAGE_SIZES.map(String),
+        position: ['bottomCenter'],
       }}
       onChange={onTableChange}
-      rowSelection={{
-        selectedRowKeys,
-        onChange: onRowSelectionChange,
-      }}
     />
   );
 };

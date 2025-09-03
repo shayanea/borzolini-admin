@@ -1,5 +1,4 @@
 import { Avatar, Button, Rate, Space, Table, Tag, Tooltip, Typography } from 'antd';
-import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import {
   CheckCircleOutlined,
   DeleteOutlined,
@@ -10,8 +9,9 @@ import {
   MessageOutlined,
   StarOutlined,
   UserOutlined,
-  WarningOutlined
+  WarningOutlined,
 } from '@ant-design/icons';
+import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 
 import type { Review } from '@/types';
 import type { UpdateReviewData } from '@/services/reviews.service';
@@ -109,9 +109,7 @@ const ReviewsTable = ({
             className='bg-gradient-to-r from-cyan-500 to-blue-500'
           />
           <div>
-            <div className='font-medium'>
-              {review.userName || review.userId || 'Unknown User'}
-            </div>
+            <div className='font-medium'>{review.userName || review.userId || 'Unknown User'}</div>
             <div className='text-sm text-text-light'>
               {review.clinicName || review.clinicId || 'Unknown Clinic'}
             </div>
@@ -149,9 +147,7 @@ const ReviewsTable = ({
       width: 150,
       render: (review: Review) => (
         <div className='space-y-1'>
-          <Tag color={getStatusColor(review)}>
-            {getStatusText(review)}
-          </Tag>
+          <Tag color={getStatusColor(review)}>{getStatusText(review)}</Tag>
           {review.response && (
             <div className='flex items-center space-x-1'>
               <MessageOutlined className='text-xs text-green-600' />
@@ -161,9 +157,7 @@ const ReviewsTable = ({
           {review.helpfulVotes > 0 && (
             <div className='flex items-center space-x-1'>
               <StarOutlined className='text-xs text-yellow-600' />
-              <span className='text-xs text-yellow-600'>
-                {review.helpfulVotes} helpful
-              </span>
+              <span className='text-xs text-yellow-600'>{review.helpfulVotes} helpful</span>
             </div>
           )}
         </div>
@@ -175,12 +169,8 @@ const ReviewsTable = ({
       width: 120,
       render: (review: Review) => (
         <div className='text-sm'>
-          <div className='font-medium'>
-            {new Date(review.createdAt).toLocaleDateString()}
-          </div>
-          <div className='text-text-light'>
-            {new Date(review.createdAt).toLocaleTimeString()}
-          </div>
+          <div className='font-medium'>{new Date(review.createdAt).toLocaleDateString()}</div>
+          <div className='text-text-light'>{new Date(review.createdAt).toLocaleTimeString()}</div>
         </div>
       ),
     },
@@ -290,8 +280,8 @@ const ReviewsTable = ({
     ...pagination,
     showSizeChanger: true,
     showQuickJumper: true,
-    showTotal: (total, range) =>
-      `${range[0]}-${range[1]} of ${total} reviews`,
+    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} reviews`,
+    position: ['bottomCenter'],
     onChange: (page, pageSize) => {
       onPagination?.(page, pageSize);
     },

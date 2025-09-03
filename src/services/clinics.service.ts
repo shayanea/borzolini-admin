@@ -1,104 +1,14 @@
+import type {
+  Clinic,
+  ClinicPhoto,
+  ClinicReview,
+  ClinicService,
+  ClinicsQueryParams,
+  ClinicStaff,
+  CreateClinicData,
+  UpdateClinicData,
+} from '@/types';
 import { apiService } from './api';
-
-export interface Clinic {
-  id: string;
-  name: string;
-  description?: string;
-  address: string;
-  city: string;
-  country: string;
-  postalCode?: string;
-  phone: string;
-  email: string;
-  website?: string;
-  operatingHours: ClinicOperatingHours[];
-  services: ClinicService[];
-  staff: ClinicStaff[];
-  photos: ClinicPhoto[];
-  reviews: ClinicReview[];
-  rating: number;
-  totalReviews: number;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ClinicOperatingHours {
-  id: string;
-  dayOfWeek: number; // 0-6 (Sunday-Saturday)
-  openTime: string;
-  closeTime: string;
-  isClosed: boolean;
-}
-
-export interface ClinicService {
-  id: string;
-  name: string;
-  description: string;
-  duration: number; // in minutes
-  price: number;
-  isActive: boolean;
-}
-
-export interface ClinicStaff {
-  id: string;
-  userId: string;
-  role: 'veterinarian' | 'nurse' | 'receptionist' | 'technician';
-  specialization?: string;
-  isActive: boolean;
-  joinedAt: string;
-}
-
-export interface ClinicPhoto {
-  id: string;
-  url: string;
-  caption?: string;
-  isPrimary: boolean;
-  uploadedAt: string;
-}
-
-export interface ClinicReview {
-  id: string;
-  userId: string;
-  rating: number;
-  comment: string;
-  createdAt: string;
-}
-
-export interface CreateClinicData {
-  name: string;
-  description?: string;
-  address: string;
-  city: string;
-  country: string;
-  postalCode?: string;
-  phone: string;
-  email: string;
-  website?: string;
-}
-
-export interface UpdateClinicData {
-  name?: string;
-  description?: string;
-  address?: string;
-  city?: string;
-  country?: string;
-  postalCode?: string;
-  phone?: string;
-  email?: string;
-  website?: string;
-  isActive?: boolean;
-}
-
-export interface ClinicsQueryParams {
-  page?: number;
-  limit?: number;
-  search?: string;
-  city?: string;
-  isActive?: boolean;
-  sortBy?: string;
-  sortOrder?: 'ASC' | 'DESC';
-}
 
 export class ClinicsService {
   // Get all clinics with pagination and filters
@@ -120,7 +30,13 @@ export class ClinicsService {
     if (params.sortOrder) queryParams.append('sortOrder', params.sortOrder);
 
     const url = `/clinics${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-    return apiService.get(url);
+    return apiService.get<{
+      clinics: Clinic[];
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    }>(url);
   }
 
   // Get clinic by ID
@@ -154,9 +70,7 @@ export class ClinicsService {
   }
 
   // Get clinic staff
-  static async getClinicStaff(
-    clinicId: string
-  ): Promise<{
+  static async getClinicStaff(clinicId: string): Promise<{
     staff: ClinicStaff[];
     total: number;
     page: number;
@@ -268,21 +182,68 @@ export class ClinicsService {
     });
   }
 
-  // Export clinics
-  static async exportClinics(params: ClinicsQueryParams = {}): Promise<Blob> {
+  // Export clinics to CSV
+  static async exportClinicsToCSV(params: ClinicsQueryParams = {}): Promise<Blob> {
     const queryParams = new URLSearchParams();
 
-    if (params.search) queryParams.append('search', params.search);
+    if (params.name) queryParams.append('name', params.name);
     if (params.city) queryParams.append('city', params.city);
-    if (params.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
+    if (params.state) queryParams.append('state', params.state);
+    if (params.is_verified !== undefined)
+      queryParams.append('is_verified', params.is_verified.toString());
+    if (params.is_active !== undefined)
+      queryParams.append('is_active', params.is_active.toString());
+    if (params.services) queryParams.append('services', params.services);
+    if (params.specializations) queryParams.append('specializations', params.specializations);
+    if (params.rating_min !== undefined)
+      queryParams.append('rating_min', params.rating_min.toString());
+    if (params.rating_max !== undefined)
+      queryParams.append('rating_max', params.rating_max.toString());
 
-    const url = `/clinics/export${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const url = `/clinics/export/csv${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
 
-    const response = await apiService.get(url, {
-      responseType: 'blob',
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
     });
 
-    return response;
+    if (!response.ok) {
+      throw new Error('Export failed');
+    }
+
+    return await response.blob();
+  }
+
+  // Export clinics to Excel
+  static async exportClinicsToExcel(params: ClinicsQueryParams = {}): Promise<Blob> {
+    const queryParams = new URLSearchParams();
+
+    if (params.name) queryParams.append('name', params.name);
+    if (params.city) queryParams.append('city', params.city);
+    if (params.state) queryParams.append('state', params.state);
+    if (params.is_verified !== undefined)
+      queryParams.append('is_verified', params.is_verified.toString());
+    if (params.is_active !== undefined)
+      queryParams.append('is_active', params.is_active.toString());
+    if (params.services) queryParams.append('services', params.services);
+    if (params.specializations) queryParams.append('specializations', params.specializations);
+    if (params.rating_min !== undefined)
+      queryParams.append('rating_min', params.rating_min.toString());
+    if (params.rating_max !== undefined)
+      queryParams.append('rating_max', params.rating_max.toString());
+
+    const url = `/clinics/export/excel${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Export failed');
+    }
+
+    return await response.blob();
   }
 }
 

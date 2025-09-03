@@ -1,5 +1,4 @@
 import ReviewsService, {
-  type BulkReviewAction,
   type CreateReviewData,
   type CreateReviewResponseData,
   type UpdateReviewData,
@@ -47,7 +46,7 @@ export interface UseReviewsReturn {
   handleUpdateResponse: (id: string, data: UpdateReviewResponseData) => Promise<Review>;
   handleDeleteResponse: (id: string) => Promise<Review>;
   handleVote: (id: string, isHelpful: boolean) => Promise<Review>;
-  handleBulkAction: (actionData: BulkReviewAction) => Promise<Review[]>;
+
   refreshReviews: () => void;
   refreshStats: () => void;
   refreshMetrics: () => void;
@@ -350,22 +349,6 @@ export const useReviews = (): UseReviewsReturn => {
     },
   });
 
-  const bulkActionMutation = useMutation({
-    mutationFn: ReviewsService.bulkAction,
-    onSuccess: (_, { action, reviewIds }) => {
-      message.success(`${reviewIds.length} reviews ${action}d successfully`);
-      queryClient.invalidateQueries({ queryKey: ['reviews'] });
-      queryClient.invalidateQueries({ queryKey: ['review-stats'] });
-      queryClient.invalidateQueries({ queryKey: ['pending-reviews'] });
-      queryClient.invalidateQueries({ queryKey: ['flagged-reviews'] });
-    },
-    onError: error => {
-      const errorMessage = error instanceof Error ? error.message : 'Bulk action failed';
-      message.error(errorMessage);
-      throw error;
-    },
-  });
-
   const handleSearch = useCallback((value: string) => {
     setSearchText(value);
     setFilters(prev => ({
@@ -498,13 +481,6 @@ export const useReviews = (): UseReviewsReturn => {
     [voteMutation]
   );
 
-  const handleBulkAction = useCallback(
-    async (actionData: BulkReviewAction): Promise<Review[]> => {
-      return await bulkActionMutation.mutateAsync(actionData);
-    },
-    [bulkActionMutation]
-  );
-
   const refreshReviews = useCallback(() => {
     refetchReviews();
   }, [refetchReviews]);
@@ -582,7 +558,7 @@ export const useReviews = (): UseReviewsReturn => {
     handleUpdateResponse,
     handleDeleteResponse,
     handleVote,
-    handleBulkAction,
+
     refreshReviews,
     refreshStats,
     refreshMetrics,

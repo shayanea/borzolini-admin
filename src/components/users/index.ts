@@ -1,4 +1,3 @@
-export { default as UserBulkActions } from './user-bulk-actions';
 export { default as UserFilters } from './user-filters';
 export { default as UserFormModal } from './user-form-modal';
 export { default as UserPageHeader } from './user-page-header';

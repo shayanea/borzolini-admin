@@ -177,25 +177,52 @@ export class UsersService {
     });
   }
 
-  // Export users
-  static async exportUsers(params: UsersQueryParams = {}): Promise<Blob> {
+  // Export users to CSV
+  static async exportUsersToCSV(params: UsersQueryParams = {}): Promise<Blob> {
     const queryParams = new URLSearchParams();
 
+    if (params.page) queryParams.append('page', params.page.toString());
+    if (params.limit) queryParams.append('limit', params.limit.toString());
     if (params.search) queryParams.append('search', params.search);
     if (params.role) queryParams.append('role', params.role);
     if (params.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
-    if (params.dateRange) {
-      queryParams.append('startDate', params.dateRange[0]);
-      queryParams.append('endDate', params.dateRange[1]);
-    }
 
-    const url = `/users/export${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const url = `/users/export/csv${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
 
-    const response = await apiService.get(url, {
-      responseType: 'blob',
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
     });
 
-    return response;
+    if (!response.ok) {
+      throw new Error('Export failed');
+    }
+
+    return await response.blob();
+  }
+
+  // Export users to Excel
+  static async exportUsersToExcel(params: UsersQueryParams = {}): Promise<Blob> {
+    const queryParams = new URLSearchParams();
+
+    if (params.page) queryParams.append('page', params.page.toString());
+    if (params.limit) queryParams.append('limit', params.limit.toString());
+    if (params.search) queryParams.append('search', params.search);
+    if (params.role) queryParams.append('role', params.role);
+    if (params.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
+
+    const url = `/users/export/excel${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Export failed');
+    }
+
+    return await response.blob();
   }
 }
 

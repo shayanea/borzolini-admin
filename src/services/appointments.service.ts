@@ -2,7 +2,6 @@ import type { Appointment, AppointmentPriority, AppointmentStatus, AppointmentTy
 
 import { apiService } from './api';
 import { appointmentsCache } from './cache.service';
-import { environment } from '@/config/environment';
 
 export interface CreateAppointmentData {
   appointment_type: AppointmentType;
@@ -494,12 +493,9 @@ export class AppointmentsService {
   }
 
   /**
-   * Export appointments
+   * Export appointments to CSV
    */
-  static async export(
-    filters: AppointmentsFilters = {},
-    format: 'csv' | 'excel' = 'csv'
-  ): Promise<Blob> {
+  static async exportToCSV(filters: AppointmentsFilters = {}): Promise<Blob> {
     try {
       const params = new URLSearchParams();
 
@@ -509,15 +505,12 @@ export class AppointmentsService {
         }
       });
 
-      params.append('format', format);
+      const url = `/appointments/export/csv${params.toString() ? `?${params.toString()}` : ''}`;
 
-      const response = await window.fetch(
-        `${environment.api.baseUrl}/appointments/export?${params.toString()}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-        }
-      );
+      const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      });
 
       if (!response.ok) {
         throw new Error('Export failed');
@@ -525,8 +518,38 @@ export class AppointmentsService {
 
       return await response.blob();
     } catch (error: any) {
-      console.error('Failed to export appointments:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
+      console.error('Failed to export appointments to CSV:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Export appointments to Excel
+   */
+  static async exportToExcel(filters: AppointmentsFilters = {}): Promise<Blob> {
+    try {
+      const params = new URLSearchParams();
+
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          params.append(key, String(value));
+        }
+      });
+
+      const url = `/appointments/export/excel${params.toString() ? `?${params.toString()}` : ''}`;
+
+      const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Export failed');
+      }
+
+      return await response.blob();
+    } catch (error: any) {
+      console.error('Failed to export appointments to Excel:', error);
       throw error;
     }
   }

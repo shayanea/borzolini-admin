@@ -131,28 +131,6 @@ const PetsPage: React.FC = () => {
     });
   }, [localSelectedRowKeys, handleDeletePet]);
 
-  const handleBulkActivate = useCallback(async () => {
-    try {
-      await Promise.all(
-        selectedPets.map(pet => handleUpdatePet(pet.id, { ...pet, is_active: true }))
-      );
-      setLocalSelectedRowKeys([]);
-    } catch (error) {
-      // Error is already handled in the hook
-    }
-  }, [selectedPets, handleUpdatePet]);
-
-  const handleBulkDeactivate = useCallback(async () => {
-    try {
-      await Promise.all(
-        selectedPets.map(pet => handleUpdatePet(pet.id, { ...pet, is_active: false }))
-      );
-      setLocalSelectedRowKeys([]);
-    } catch (error) {
-      // Error is already handled in the hook
-    }
-  }, [selectedPets, handleUpdatePet]);
-
   return (
     <div className='space-y-6'>
       <PetPageHeader
@@ -182,8 +160,6 @@ const PetsPage: React.FC = () => {
         selectedRowKeys={localSelectedRowKeys}
         selectedPets={selectedPets}
         onBulkDelete={handleBulkDelete}
-        onBulkActivate={handleBulkActivate}
-        onBulkDeactivate={handleBulkDeactivate}
         loading={loading}
       />
 

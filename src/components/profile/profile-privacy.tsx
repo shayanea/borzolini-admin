@@ -353,7 +353,7 @@ export const ProfilePrivacy: React.FC<ProfilePrivacyProps> = ({ user, onSuccess,
                 <span className='font-medium'>Export My Data</span>
                 <span className='text-xs text-gray-500'>Download all your data</span>
               </Button>
-              <span className='absolute -top-2 -right-2 text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full'>
+              <span className='absolute -top-4 -right-4 text-xs bg-orange-100 text-orange-600 p-1 rounded-md'>
                 Soon
               </span>
             </div>

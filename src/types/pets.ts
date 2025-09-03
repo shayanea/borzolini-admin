@@ -115,8 +115,6 @@ export interface PetBulkActionsProps {
   selectedRowKeys: React.Key[];
   selectedPets: Pet[];
   onBulkDelete: () => void;
-  onBulkActivate: () => void;
-  onBulkDeactivate: () => void;
   loading?: boolean;
 }
 

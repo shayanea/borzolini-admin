@@ -24,10 +24,16 @@ interface UserViewModalProps {
   isVisible: boolean;
   user: User | null;
   onClose: () => void;
+  hidePetsSection?: boolean;
 }
 
-const UserViewModal = ({ isVisible, user, onClose }: UserViewModalProps) => {
-  // Fetch user's pets
+const UserViewModal = ({
+  isVisible,
+  user,
+  onClose,
+  hidePetsSection = false,
+}: UserViewModalProps) => {
+  // Fetch user's pets (only when pets section should be shown)
   const {
     data: pets = [],
     isLoading: petsLoading,
@@ -35,7 +41,7 @@ const UserViewModal = ({ isVisible, user, onClose }: UserViewModalProps) => {
   } = useQuery({
     queryKey: ['user-pets', user?.id],
     queryFn: () => PetsService.getPetsByUserId(user!.id),
-    enabled: !!user?.id && isVisible,
+    enabled: !!user?.id && isVisible && !hidePetsSection,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 
@@ -171,43 +177,45 @@ const UserViewModal = ({ isVisible, user, onClose }: UserViewModalProps) => {
           </Descriptions>
         </Card>
 
-        {/* User's Pets */}
-        <Card
-          title={
-            <div className='flex items-center justify-between'>
-              <span>User's Pets</span>
-              {petsLoading && <Spin size='small' />}
-            </div>
-          }
-          size='small'
-        >
-          {petsError ? (
-            <div className='text-center py-4'>
-              <Text type='danger'>Failed to load pets. Please try again.</Text>
-            </div>
-          ) : pets.length === 0 ? (
-            <div className='text-center py-4'>
-              <Text type='secondary'>No pets found for this user.</Text>
-            </div>
-          ) : (
-            <div className='w-full'>
-              <Table
-                columns={petColumns}
-                dataSource={pets}
-                rowKey='id'
-                loading={petsLoading}
-                pagination={{
-                  position: ['bottomCenter'],
-                  pageSize: 5,
-                  showSizeChanger: false,
-                  // You can add more pagination props as needed
-                }}
-                size='small'
-                scroll={{ x: 600 }}
-              />
-            </div>
-          )}
-        </Card>
+        {/* User's Pets - Only show when not hidden */}
+        {!hidePetsSection && (
+          <Card
+            title={
+              <div className='flex items-center justify-between'>
+                <span>User's Pets</span>
+                {petsLoading && <Spin size='small' />}
+              </div>
+            }
+            size='small'
+          >
+            {petsError ? (
+              <div className='text-center py-4'>
+                <Text type='danger'>Failed to load pets. Please try again.</Text>
+              </div>
+            ) : pets.length === 0 ? (
+              <div className='text-center py-4'>
+                <Text type='secondary'>No pets found for this user.</Text>
+              </div>
+            ) : (
+              <div className='w-full'>
+                <Table
+                  columns={petColumns}
+                  dataSource={pets}
+                  rowKey='id'
+                  loading={petsLoading}
+                  pagination={{
+                    position: ['bottomCenter'],
+                    pageSize: 5,
+                    showSizeChanger: false,
+                    // You can add more pagination props as needed
+                  }}
+                  size='small'
+                  scroll={{ x: 600 }}
+                />
+              </div>
+            )}
+          </Card>
+        )}
       </div>
     </Modal>
   );

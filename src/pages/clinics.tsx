@@ -1,19 +1,21 @@
 import {
   ClinicBulkActions,
   ClinicFilters,
-  ClinicFormModal,
   ClinicPageHeader,
   ClinicStaffModal,
   ClinicTable,
 } from '@/components/clinics';
 import { useCallback, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { Card } from 'antd';
-import type { Clinic } from '@/types';
 import ClinicAppointmentsModal from '@/components/clinics/clinic-appointments-modal';
+import { ROUTES } from '@/constants';
 import { useClinicManagement } from '@/hooks';
+import type { Clinic } from '@/types';
+import { Card } from 'antd';
 
 const Clinics = () => {
+  const navigate = useNavigate();
   const [viewClinic, setViewClinic] = useState<Clinic | null>(null);
   const [staffClinic, setStaffClinic] = useState<Clinic | null>(null);
   const isAppointmentsModalVisible = useMemo(() => !!viewClinic, [viewClinic]);
@@ -30,9 +32,6 @@ const Clinics = () => {
     selectedStatus,
     selectedRowKeys,
     bulkLoading,
-    isModalVisible,
-    editingClinic,
-    modalLoading,
 
     // Actions
     handleSearch,
@@ -40,12 +39,10 @@ const Clinics = () => {
     handleStatusFilter,
     clearFilters,
     handleTableChange,
-    showModal,
-    hideModal,
-    handleSubmit,
     handleDeleteClinic,
     handleBulkDelete,
-    handleExport,
+    handleExportCSV,
+    handleExportExcel,
     setSelectedRowKeys,
   } = useClinicManagement();
 
@@ -54,8 +51,8 @@ const Clinics = () => {
   }, []);
 
   const handleAddClinic = useCallback(() => {
-    showModal();
-  }, [showModal]);
+    navigate(ROUTES.CLINIC_CREATE);
+  }, [navigate]);
 
   const handleViewClinic = useCallback((clinic: Clinic) => {
     setViewClinic(clinic);
@@ -73,16 +70,30 @@ const Clinics = () => {
     setStaffClinic(null);
   }, []);
 
+  const handleEditClinic = useCallback(
+    (clinic: Clinic) => {
+      navigate(`${ROUTES.CLINIC_EDIT}/${clinic.id}`);
+    },
+    [navigate]
+  );
+
   return (
     <div className='space-y-6'>
       {/* Page Header */}
       <ClinicPageHeader
         onRefresh={handleRefresh}
-        onExport={handleExport}
+        onExportCSV={handleExportCSV}
+        onExportExcel={handleExportExcel}
         onAddClinic={handleAddClinic}
         loading={loading}
         title='Clinics'
         subtitle='Manage clinic locations and information'
+        filters={{
+          search: searchText,
+          city: selectedCity,
+          isActive: selectedStatus,
+        }}
+        estimatedRecordCount={total}
       />
 
       {/* Search and Filters */}
@@ -123,21 +134,12 @@ const Clinics = () => {
             onChange: keys => setSelectedRowKeys(keys as string[]),
           }}
           onChange={handleTableChange}
-          onEdit={showModal}
+          onEdit={handleEditClinic}
           onDelete={handleDeleteClinic}
           onView={handleViewClinic}
           onViewStaff={handleViewStaff}
         />
       </Card>
-
-      {/* Clinic Form Modal */}
-      <ClinicFormModal
-        visible={isModalVisible}
-        onCancel={hideModal}
-        onSubmit={handleSubmit}
-        loading={modalLoading}
-        editingClinic={editingClinic}
-      />
 
       <ClinicAppointmentsModal
         visible={isAppointmentsModalVisible}

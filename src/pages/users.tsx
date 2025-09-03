@@ -1,5 +1,4 @@
 import {
-  UserBulkActions,
   UserFilters,
   UserFormModal,
   UserPageHeader,
@@ -7,10 +6,10 @@ import {
   UserViewModal,
 } from '@/components/users';
 
-import { Card } from 'antd';
-import { UserRole } from '@/types';
-import { useCallback } from 'react';
 import { useUserManagement } from '@/hooks';
+import { UserRole } from '@/types';
+import { Card } from 'antd';
+import { useCallback } from 'react';
 
 interface UsersProps {
   roleFilter?: UserRole;
@@ -27,8 +26,7 @@ const Users = ({ roleFilter }: UsersProps) => {
     searchText,
     selectedRole,
     selectedIsActive,
-    selectedRowKeys,
-    bulkLoading,
+
     isModalVisible,
     editingUser,
     modalLoading,
@@ -47,9 +45,10 @@ const Users = ({ roleFilter }: UsersProps) => {
     hideViewModal,
     handleSubmit,
     handleDeleteUser,
-    handleBulkDelete,
-    handleExport,
-    setSelectedRowKeys,
+
+    handleExportCSV,
+    handleExportExcel,
+
     refetch,
   } = useUserManagement(roleFilter);
 
@@ -66,7 +65,8 @@ const Users = ({ roleFilter }: UsersProps) => {
       {/* Page Header */}
       <UserPageHeader
         onRefresh={handleRefresh}
-        onExport={handleExport}
+        onExportCSV={handleExportCSV}
+        onExportExcel={handleExportExcel}
         onAddUser={handleAddUser}
         loading={loading}
         title={roleFilter === 'veterinarian' ? 'Veterinarians' : 'Users'}
@@ -75,6 +75,12 @@ const Users = ({ roleFilter }: UsersProps) => {
             ? 'Manage clinic veterinarians'
             : 'Manage clinic users and staff members'
         }
+        filters={{
+          search: searchText,
+          role: selectedRole,
+          isActive: selectedIsActive,
+        }}
+        estimatedRecordCount={total}
       />
 
       {/* Search and Filters */}
@@ -88,13 +94,6 @@ const Users = ({ roleFilter }: UsersProps) => {
         onClearFilters={clearFilters}
       />
 
-      {/* Bulk Actions */}
-      <UserBulkActions
-        selectedCount={selectedRowKeys.length}
-        loading={bulkLoading}
-        onBulkDelete={handleBulkDelete}
-      />
-
       {/* Users Table */}
       <Card className='admin-card'>
         <UserTable
@@ -103,9 +102,7 @@ const Users = ({ roleFilter }: UsersProps) => {
           currentPage={currentPage}
           pageSize={pageSize}
           total={total}
-          selectedRowKeys={selectedRowKeys as never[]}
           onTableChange={handleTableChange}
-          onRowSelectionChange={setSelectedRowKeys}
           onViewUser={showViewModal}
           onEditUser={showModal}
           onDeleteUser={handleDeleteUser}
@@ -122,7 +119,12 @@ const Users = ({ roleFilter }: UsersProps) => {
       />
 
       {/* View User Modal */}
-      <UserViewModal isVisible={isViewModalVisible} user={viewingUser} onClose={hideViewModal} />
+      <UserViewModal
+        isVisible={isViewModalVisible}
+        user={viewingUser}
+        onClose={hideViewModal}
+        hidePetsSection={roleFilter === 'veterinarian'}
+      />
     </div>
   );
 };

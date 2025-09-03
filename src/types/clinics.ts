@@ -4,21 +4,34 @@ export interface Clinic {
   description?: string;
   address: string;
   city: string;
+  state?: string;
   country: string;
-  postalCode?: string;
+  postal_code?: string;
   phone: string;
   email: string;
   website?: string;
+  logo_url?: string;
+  banner_url?: string;
+  emergency_contact?: string;
+  emergency_phone?: string;
+  services: string[];
+  specializations: string[];
+  operating_hours?: Record<string, OperatingHours>;
   operatingHours: ClinicOperatingHours[];
-  services: string[] | ClinicService[];
   staff: ClinicStaff[];
   photos: ClinicPhoto[];
   reviews: ClinicReview[];
   rating: number;
   totalReviews: number;
-  isActive: boolean;
+  is_active: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface OperatingHours {
+  open: string;
+  close: string;
+  closed: boolean;
 }
 
 export interface ClinicOperatingHours {
@@ -68,11 +81,19 @@ export interface CreateClinicData {
   description?: string;
   address: string;
   city: string;
+  state?: string;
   country: string;
-  postalCode?: string;
+  postal_code?: string;
   phone: string;
   email: string;
   website?: string;
+  logo_url?: string;
+  banner_url?: string;
+  emergency_contact?: string;
+  emergency_phone?: string;
+  services?: string[];
+  specializations?: string[];
+  operating_hours?: Record<string, OperatingHours>;
 }
 
 export interface UpdateClinicData {
@@ -80,12 +101,20 @@ export interface UpdateClinicData {
   description?: string;
   address?: string;
   city?: string;
+  state?: string;
   country?: string;
-  postalCode?: string;
+  postal_code?: string;
   phone?: string;
   email?: string;
   website?: string;
-  isActive?: boolean;
+  logo_url?: string;
+  banner_url?: string;
+  emergency_contact?: string;
+  emergency_phone?: string;
+  services?: string[];
+  specializations?: string[];
+  operating_hours?: Record<string, OperatingHours>;
+  is_active?: boolean;
 }
 
 export interface ClinicsQueryParams {

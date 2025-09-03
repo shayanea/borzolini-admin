@@ -159,6 +159,56 @@ export class PetsService {
     return apiService.delete<{ message: string }>(`/pets/${id}`);
   }
 
+  // Export pets to CSV
+  static async exportPetsToCSV(params: PetsQueryParams = {}): Promise<Blob> {
+    const queryParams = new URLSearchParams();
+
+    if (params.page) queryParams.append('page', params.page.toString());
+    if (params.limit) queryParams.append('limit', params.limit.toString());
+    if (params.species) queryParams.append('species', params.species);
+    if (params.gender) queryParams.append('gender', params.gender);
+    if (params.size) queryParams.append('size', params.size);
+    if (params.search) queryParams.append('search', params.search);
+
+    const url = `/pets/export/csv${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Export failed');
+    }
+
+    return await response.blob();
+  }
+
+  // Export pets to Excel
+  static async exportPetsToExcel(params: PetsQueryParams = {}): Promise<Blob> {
+    const queryParams = new URLSearchParams();
+
+    if (params.page) queryParams.append('page', params.page.toString());
+    if (params.limit) queryParams.append('limit', params.limit.toString());
+    if (params.species) queryParams.append('species', params.species);
+    if (params.gender) queryParams.append('gender', params.gender);
+    if (params.size) queryParams.append('size', params.size);
+    if (params.search) queryParams.append('search', params.search);
+
+    const url = `/pets/export/excel${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Export failed');
+    }
+
+    return await response.blob();
+  }
+
   // Note: Pet types and breeds endpoints don't exist in the API
   // Using static data in components instead
 }

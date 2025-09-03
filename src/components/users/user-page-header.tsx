@@ -1,22 +1,30 @@
+import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Button, Space, Typography } from 'antd';
-import { ExportOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 
+import { ExportButton } from '@/components/common';
 import type { UserPageHeaderProps } from '@/types/user-management';
 
 const { Title, Text } = Typography;
 
-interface UserPageHeaderPropsWithTitle extends UserPageHeaderProps {
+interface UserPageHeaderPropsWithTitle extends Omit<UserPageHeaderProps, 'onExport'> {
   title?: string;
   subtitle?: string;
+  onExportCSV: () => Promise<Blob>;
+  onExportExcel: () => Promise<Blob>;
+  filters?: Record<string, any>;
+  estimatedRecordCount?: number;
 }
 
 const UserPageHeader = ({
   onRefresh,
-  onExport,
+  onExportCSV,
+  onExportExcel,
   onAddUser,
   loading,
   title = 'Users',
   subtitle = 'Manage clinic users and staff members',
+  filters = {},
+  estimatedRecordCount = 0,
 }: UserPageHeaderPropsWithTitle) => {
   return (
     <div className='flex items-center justify-between'>
@@ -31,14 +39,14 @@ const UserPageHeader = ({
         <Button icon={<ReloadOutlined />} onClick={onRefresh} loading={loading}>
           Refresh
         </Button>
-        <div className='relative'>
-          <Button icon={<ExportOutlined />} onClick={onExport}>
-            Export
-          </Button>
-          <span className='absolute -top-2 -right-2 text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full'>
-            Soon
-          </span>
-        </div>
+        <ExportButton
+          entityType={title === 'Veterinarians' ? 'veterinarians' : 'users'}
+          exportCSV={onExportCSV}
+          exportExcel={onExportExcel}
+          filters={filters}
+          estimatedRecordCount={estimatedRecordCount}
+          disabled={loading}
+        />
         <Button
           type='primary'
           icon={<PlusOutlined />}
