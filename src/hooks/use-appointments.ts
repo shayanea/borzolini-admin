@@ -6,9 +6,9 @@ import AppointmentsService, {
 import { useAuthStore } from '@/stores/auth.store';
 import type { Appointment, AppointmentStatus } from '@/types';
 import type { AppointmentsFilters } from '@/types/appointments';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
 import { useCallback, useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export interface UseAppointmentsReturn {
   appointments: Appointment[];
@@ -75,17 +75,17 @@ export const useAppointments = (): UseAppointmentsReturn => {
     queryKey: ['appointments', filters, pagination.current, pagination.pageSize],
     queryFn: async () => {
       if (!isAuthenticated) return { appointments: [], total: 0 };
-      
+
       const apiFilters = getApiFilters();
       const response = await AppointmentsService.getAll({
         ...apiFilters,
         page: pagination.current,
         limit: pagination.pageSize,
       });
-      
+
       // Update pagination total
       setPagination(prev => ({ ...prev, total: response.total }));
-      
+
       return response;
     },
     enabled: isAuthenticated,
@@ -118,7 +118,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
       queryClient.invalidateQueries({ queryKey: ['appointment-stats'] });
     },
-    onError: (error) => {
+    onError: error => {
       const errorMessage = error instanceof Error ? error.message : 'Failed to create appointment';
       message.error(errorMessage);
       throw error;
@@ -133,7 +133,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
       queryClient.invalidateQueries({ queryKey: ['appointment-stats'] });
     },
-    onError: (error) => {
+    onError: error => {
       const errorMessage = error instanceof Error ? error.message : 'Failed to update appointment';
       message.error(errorMessage);
       throw error;
@@ -147,7 +147,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
       queryClient.invalidateQueries({ queryKey: ['appointment-stats'] });
     },
-    onError: (error) => {
+    onError: error => {
       const errorMessage = error instanceof Error ? error.message : 'Failed to cancel appointment';
       message.error(errorMessage);
       throw error;
@@ -162,8 +162,9 @@ export const useAppointments = (): UseAppointmentsReturn => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
       queryClient.invalidateQueries({ queryKey: ['appointment-stats'] });
     },
-    onError: (error) => {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to update appointment status';
+    onError: error => {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to update appointment status';
       message.error(errorMessage);
       throw error;
     },
@@ -177,22 +178,28 @@ export const useAppointments = (): UseAppointmentsReturn => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
       queryClient.invalidateQueries({ queryKey: ['appointment-stats'] });
     },
-    onError: (error) => {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to reschedule appointment';
+    onError: error => {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to reschedule appointment';
       message.error(errorMessage);
       throw error;
     },
   });
 
   const bulkUpdateMutation = useMutation({
-    mutationFn: ({ appointmentIds, updates }: { appointmentIds: string[]; updates: Partial<UpdateAppointmentData> }) =>
-      AppointmentsService.bulkUpdate(appointmentIds, updates),
+    mutationFn: ({
+      appointmentIds,
+      updates,
+    }: {
+      appointmentIds: string[];
+      updates: Partial<UpdateAppointmentData>;
+    }) => AppointmentsService.bulkUpdate(appointmentIds, updates),
     onSuccess: (_, { appointmentIds }) => {
       message.success(`${appointmentIds.length} appointments updated successfully`);
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
       queryClient.invalidateQueries({ queryKey: ['appointment-stats'] });
     },
-    onError: (error) => {
+    onError: error => {
       const errorMessage = error instanceof Error ? error.message : 'Failed to update appointments';
       message.error(errorMessage);
       throw error;
@@ -227,7 +234,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
   const handleExport = useCallback(async () => {
     try {
       const apiFilters = getApiFilters();
-      const blob = await AppointmentsService.export(apiFilters, 'csv');
+      const blob = await AppointmentsService.exportToCSV(apiFilters);
 
       // Create download link
       const url = window.URL.createObjectURL(blob);
@@ -261,9 +268,12 @@ export const useAppointments = (): UseAppointmentsReturn => {
     [updateAppointmentMutation]
   );
 
-  const handleCancelAppointment = useCallback(async (id: string): Promise<void> => {
-    await cancelAppointmentMutation.mutateAsync(id);
-  }, [cancelAppointmentMutation]);
+  const handleCancelAppointment = useCallback(
+    async (id: string): Promise<void> => {
+      await cancelAppointmentMutation.mutateAsync(id);
+    },
+    [cancelAppointmentMutation]
+  );
 
   const handleUpdateStatus = useCallback(
     async (id: string, status: AppointmentStatus): Promise<Appointment> => {
@@ -332,8 +342,12 @@ export const useAppointments = (): UseAppointmentsReturn => {
     staff_id: appointment.staff_id || '',
     service_id: appointment.service_id || '',
   }));
-  
-  const error = queryError ? (queryError instanceof Error ? queryError.message : 'An error occurred') : null;
+
+  const error = queryError
+    ? queryError instanceof Error
+      ? queryError.message
+      : 'An error occurred'
+    : null;
 
   return {
     appointments,

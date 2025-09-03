@@ -80,6 +80,31 @@ export interface AppointmentsResponse {
 
 export interface AppointmentStats {
   total: number;
+  byStatus: {
+    pending: number;
+    confirmed: number;
+    in_progress: number;
+    completed: number;
+    cancelled: number;
+    no_show: number;
+  };
+  byType: {
+    consultation: number;
+    vaccination: number;
+    surgery: number;
+    follow_up: number;
+    emergency: number;
+    wellness_exam: number;
+    dental_cleaning: number;
+    laboratory_test: number;
+    imaging: number;
+    therapy: number;
+    grooming: number;
+    behavioral_training: number;
+    nutrition_consultation: number;
+    physical_therapy: number;
+    specialist_consultation: number;
+  };
   pending: number;
   confirmed: number;
   in_progress: number;
