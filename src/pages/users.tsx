@@ -6,10 +6,10 @@ import {
   UserViewModal,
 } from '@/components/users';
 
-import { useUserManagement } from '@/hooks';
-import { UserRole } from '@/types';
 import { Card } from 'antd';
+import { UserRole } from '@/types';
 import { useCallback } from 'react';
+import { useUserManagement } from '@/hooks';
 
 interface UsersProps {
   roleFilter?: UserRole;
@@ -54,7 +54,7 @@ const Users = ({ roleFilter }: UsersProps) => {
 
   const handleRefresh = useCallback(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
   const handleAddUser = useCallback(() => {
     showModal();
@@ -102,6 +102,8 @@ const Users = ({ roleFilter }: UsersProps) => {
           currentPage={currentPage}
           pageSize={pageSize}
           total={total}
+          selectedRowKeys={[]}
+          onRowSelectionChange={() => {}}
           onTableChange={handleTableChange}
           onViewUser={showViewModal}
           onEditUser={showModal}

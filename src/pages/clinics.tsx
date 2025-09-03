@@ -6,13 +6,13 @@ import {
   ClinicTable,
 } from '@/components/clinics';
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
+import { Card } from 'antd';
+import type { Clinic } from '@/types';
 import ClinicAppointmentsModal from '@/components/clinics/clinic-appointments-modal';
 import { ROUTES } from '@/constants';
 import { useClinicManagement } from '@/hooks';
-import type { Clinic } from '@/types';
-import { Card } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const Clinics = () => {
   const navigate = useNavigate();
@@ -44,11 +44,14 @@ const Clinics = () => {
     handleExportCSV,
     handleExportExcel,
     setSelectedRowKeys,
+
+    // Utils
+    refetch,
   } = useClinicManagement();
 
   const handleRefresh = useCallback(() => {
-    window.location.reload();
-  }, []);
+    refetch();
+  }, [refetch]);
 
   const handleAddClinic = useCallback(() => {
     navigate(ROUTES.CLINIC_CREATE);

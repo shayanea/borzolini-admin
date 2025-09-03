@@ -1,14 +1,13 @@
 import { Alert, Button, Card, Col, Row, Space, Spin, Typography, message } from 'antd';
 import { ExclamationCircleOutlined, MonitorOutlined, ReloadOutlined } from '@ant-design/icons';
-import React, { useEffect, useState } from 'react';
 
 import { AnalyticsHealthCard } from '@/components/api-health/analytics-health-card';
 import { CacheStatusCard } from '@/components/api-health/cache-status-card';
 import { DatabaseHealthCard } from '@/components/api-health/database-health-card';
 import { EndpointHealthTable } from '@/components/api-health/endpoint-health-table';
 import { HealthStatusCard } from '@/components/api-health/health-status-card';
+import React from 'react';
 import { SystemMetricsCard } from '@/components/api-health/system-metrics-card';
-import { apiHealthService } from '@/services/api-health.service';
 import { useApiHealth } from '@/hooks/use-api-health';
 
 const ApiHealthPage: React.FC = () => {
@@ -23,32 +22,14 @@ const ApiHealthPage: React.FC = () => {
     systemMetrics,
     analyticsHealth,
     analyticsStatus,
+    cacheStatus,
+    cacheLoading,
     refreshHealthStatus,
   } = useApiHealth();
 
-  const [cacheStatus, setCacheStatus] = useState<Record<string, unknown>>({});
-  const [cacheLoading, setCacheLoading] = useState(false);
-
-  const loadCacheStatus = async () => {
-    setCacheLoading(true);
-    try {
-      const status = await apiHealthService.getCacheStatus();
-      setCacheStatus(status);
-    } catch (error) {
-      setCacheStatus({ error: 'Failed to load cache status' });
-    } finally {
-      setCacheLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadCacheStatus();
-  }, []);
-
   const handleRefreshAll = async () => {
     try {
-      await Promise.all([refreshHealthStatus(), loadCacheStatus()]);
-      message.success('All health checks refreshed successfully');
+      await refreshHealthStatus();
     } catch (error) {
       message.error('Some health checks failed to refresh');
     }

@@ -1,10 +1,10 @@
-import ClinicsService from '@/services/clinics.service';
-import type { ClinicsQueryParams } from '@/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Modal, message as antMessage } from 'antd';
 import { useCallback, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { Clinic } from '@/types';
+import type { ClinicsQueryParams } from '@/types';
+import ClinicsService from '@/services/clinics.service';
 
 interface UseClinicManagementReturn {
   // State
@@ -34,6 +34,9 @@ interface UseClinicManagementReturn {
   handleExportCSV: () => Promise<Blob>;
   handleExportExcel: () => Promise<Blob>;
   setSelectedRowKeys: (keys: string[]) => void;
+
+  // Utils
+  refetch: () => void;
 }
 
 export const useClinicManagement = (): UseClinicManagementReturn => {
@@ -52,7 +55,11 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
   const queryClient = useQueryClient();
 
   // Query for clinics
-  const { data: clinicsResponse, isLoading: loading } = useQuery({
+  const {
+    data: clinicsResponse,
+    isLoading: loading,
+    refetch,
+  } = useQuery({
     queryKey: [
       'clinics',
       currentPage,
@@ -224,5 +231,6 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
     handleExportCSV,
     handleExportExcel,
     setSelectedRowKeys,
+    refetch,
   };
 };

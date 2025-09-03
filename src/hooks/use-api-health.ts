@@ -1,5 +1,5 @@
-import { CACHE_PRESETS, GC_TIMES, STALE_TIMES } from '@/constants';
 import { ApiHealthState, HealthCheckResponse, HealthStatus } from '@/types/api-health';
+import { CACHE_PRESETS, GC_TIMES, STALE_TIMES } from '@/constants';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { apiHealthService } from '@/services/api-health.service';
@@ -85,6 +85,20 @@ export const useApiHealth = () => {
     gcTime: CACHE_PRESETS.ACTIVE.gcTime,
   });
 
+  // Query for cache status
+  const {
+    data: cacheStatus = {},
+    isLoading: cacheLoading,
+    refetch: refetchCacheStatus,
+  } = useQuery({
+    queryKey: ['cache-status'],
+    queryFn: async () => {
+      return await apiHealthService.getCacheStatus();
+    },
+    staleTime: CACHE_PRESETS.ACTIVE.staleTime,
+    gcTime: CACHE_PRESETS.ACTIVE.gcTime,
+  });
+
   // Mutation for running full health check
   const runFullHealthCheckMutation = useMutation({
     mutationFn: async () => {
@@ -96,6 +110,7 @@ export const useApiHealth = () => {
         databaseHealthResult,
         analyticsHealthResult,
         analyticsStatusResult,
+        cacheStatusResult,
       ] = await Promise.all([
         refetchApiHealth(),
         refetchEndpointTests(),
@@ -103,6 +118,7 @@ export const useApiHealth = () => {
         refetchDatabaseHealth(),
         refetchAnalyticsHealth(),
         refetchAnalyticsStatus(),
+        refetchCacheStatus(),
       ]);
 
       // Determine overall status
@@ -132,6 +148,9 @@ export const useApiHealth = () => {
       if (analyticsStatusResult.data) {
         queryClient.setQueryData(['analytics-status'], analyticsStatusResult.data);
       }
+      if (cacheStatusResult.data) {
+        queryClient.setQueryData(['cache-status'], cacheStatusResult.data);
+      }
 
       return {
         overallStatus,
@@ -141,6 +160,7 @@ export const useApiHealth = () => {
         databaseHealth: databaseHealthResult.data,
         analyticsHealth: analyticsHealthResult.data,
         analyticsStatus: analyticsStatusResult.data,
+        cacheStatus: cacheStatusResult.data,
       };
     },
     onSuccess: () => {
@@ -201,6 +221,8 @@ export const useApiHealth = () => {
     systemMetrics,
     analyticsHealth,
     analyticsStatus,
+    cacheStatus,
+    cacheLoading,
     checkApiHealth,
     testEndpoints,
     getSystemHealth,
