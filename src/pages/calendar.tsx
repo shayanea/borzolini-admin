@@ -63,7 +63,7 @@ const CalendarPage = () => {
 
   if (error) {
     return (
-      <div className='p-6'>
+      <div className='p-2'>
         <div className='bg-red-50 border border-red-200 rounded-lg p-4'>
           <h3 className='text-red-800 font-medium'>Error Loading Calendar</h3>
           <p className='text-red-600 mt-1'>{error}</p>
@@ -79,7 +79,7 @@ const CalendarPage = () => {
   }
 
   return (
-    <div className='p-6 space-y-6'>
+    <div className='p-2 space-y-4'>
       {/* Header */}
       <CalendarHeader onNewAppointment={handleNewAppointment} onFilters={handleFilters} />
 

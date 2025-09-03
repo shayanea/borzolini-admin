@@ -215,14 +215,7 @@ export const usePetManagement = (): UsePetManagementReturn => {
   // Mutations for CRUD operations
   const createPetMutation = useMutation({
     mutationFn: (data: PetFormData) => {
-      // Map PetFormData to the expected service format
-      const petData = {
-        ...data,
-        is_active: data.is_active,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-      return PetsService.createPet(petData);
+      return PetsService.createPet(data);
     },
     onSuccess: () => {
       // Invalidate and refetch pets list
@@ -236,14 +229,8 @@ export const usePetManagement = (): UsePetManagementReturn => {
   });
 
   const updatePetMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: PetFormData }) => {
-      // Map PetFormData to the expected service format
-      const petData = {
-        ...data,
-        updated_at: new Date().toISOString(),
-      };
-      return PetsService.updatePet(id, petData);
-    },
+    mutationFn: ({ id, data }: { id: string; data: PetFormData }) =>
+      PetsService.updatePet(id, data),
     onSuccess: (_: unknown, { id }: { id: string; data: PetFormData }) => {
       // Invalidate and refetch pets list and specific pet detail
       queryClient.invalidateQueries({ queryKey: PETS_KEYS.lists() });

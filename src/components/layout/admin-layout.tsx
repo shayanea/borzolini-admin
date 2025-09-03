@@ -30,8 +30,8 @@ import {
 import { Route, Routes } from 'react-router-dom';
 
 import { User } from '@/types';
-import { useMemo } from 'react';
 import { useAdminLayoutLogic } from './admin-layout.logic';
+import { useMemo } from 'react';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -144,9 +144,14 @@ const AdminLayout = () => {
         trigger={null}
         collapsible
         collapsed={collapsed}
-        className='admin-sidebar m-4 rounded-xl shadow-lg'
+        className='admin-sidebar fixed left-0 top-0 h-full z-50 m-4 rounded-xl shadow-lg'
         width={220}
-        style={{ backgroundImage: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)' }}
+        style={{
+          backgroundImage: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+          height: 'calc(100vh - 2rem)',
+          marginTop: '1rem',
+          marginBottom: '1rem',
+        }}
       >
         <div className='absolute inset-0 bg-pattern-dots opacity-10' />
         <div className='p-6 overflow-hidden'>
@@ -176,7 +181,14 @@ const AdminLayout = () => {
           }}
         />
       </Sider>
-      <Layout className='m-4 rounded-lg shadow-lg bg-white h-full w-full overflow-hidden'>
+      <Layout
+        className='ml-4 rounded-lg shadow-lg bg-white h-full w-full overflow-hidden'
+        style={{
+          marginLeft: collapsed ? '7rem' : '16rem',
+          transition: 'margin-left 0.2s ease-in-out',
+          minHeight: '100vh',
+        }}
+      >
         {renderHeader(
           handleToggleCollapsed,
           navigateToNewAppointment,

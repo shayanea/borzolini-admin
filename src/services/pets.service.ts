@@ -151,7 +151,7 @@ export class PetsService {
     id: string,
     data: Partial<Omit<Pet, 'id' | 'created_at' | 'updated_at' | 'owner'>>
   ): Promise<Pet> {
-    return apiService.put<Pet>(`/pets/${id}`, data);
+    return apiService.patch<Pet>(`/pets/${id}`, data);
   }
 
   // Delete pet

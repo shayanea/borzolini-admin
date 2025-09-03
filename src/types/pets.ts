@@ -101,6 +101,7 @@ export interface UsePetManagementReturn {
   handleBreedFilter: (value: string | null) => void;
   handleGenderFilter: (value: string | null) => void;
   handleSizeFilter: (value: string | null) => void;
+  handleOwnerFilter: (value: string) => void;
   handleActiveFilter: (value: boolean | undefined) => void;
   handleClearFilters: () => void;
   handleCreatePet: (data: PetFormData) => Promise<void>;
@@ -152,7 +153,6 @@ export interface PetFormValidation {
   color: { required: boolean; message: string }[];
   emergency_contact: { required: boolean; message: string }[];
   emergency_phone: { required: boolean; message: string; pattern?: RegExp }[];
-  owner_id: { required: boolean; message: string }[];
   medical_history?: { type: string; message: string }[];
   behavioral_notes?: { type: string; message: string }[];
   dietary_requirements?: { type: string; message: string }[];

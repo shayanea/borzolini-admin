@@ -1,21 +1,12 @@
-import React, { useState } from 'react';
+import { Button, Card, Col, Input, Row, Select, Space, Switch, TimePicker } from 'antd';
 import {
-  Button,
-  Card,
-  Col,
-  Input,
-  Row,
-  Select,
-  Space,
-  Switch,
-  TimePicker,
-} from 'antd';
-import {
+  ClearOutlined,
   FilterOutlined,
   SearchOutlined,
-  ClearOutlined,
   SortAscendingOutlined,
 } from '@ant-design/icons';
+import React, { useState } from 'react';
+
 import type { CalendarFilters } from '@/types/calendar';
 import dayjs from 'dayjs';
 
@@ -95,47 +86,45 @@ const CalendarFiltersComponent: React.FC<CalendarFiltersComponentProps> = ({
   };
 
   return (
-    <Card className="admin-card mb-6">
-      <div className="space-y-4">
+    <Card className='admin-card mb-6'>
+      <div className='space-y-4'>
         {/* Search and Basic Filters Row */}
-        <Row gutter={[16, 16]} align="middle">
+        <Row gutter={[16, 16]} align='middle'>
           <Col xs={24} sm={12} md={8} lg={6}>
             <Search
-              placeholder="Search appointments..."
+              placeholder='Search appointments...'
               allowClear
               value={searchText}
               onSearch={handleSearch}
-              onChange={(e) => onSearch(e.target.value)}
+              onChange={e => onSearch(e.target.value)}
               prefix={<SearchOutlined />}
               loading={loading}
             />
           </Col>
-          
+
           <Col xs={24} sm={12} md={8} lg={6}>
             <Select
-              placeholder="All Priorities"
+              placeholder='All Priorities'
               allowClear
               value={filters.priority}
-              onChange={(value) => handleFilterChange('priority', value)}
-              className="w-full"
+              onChange={value => handleFilterChange('priority', value)}
+              className='w-full'
             >
               {PRIORITY_OPTIONS.map(option => (
                 <Option key={option.value} value={option.value}>
-                  <span className={`text-${option.color}-600 font-medium`}>
-                    {option.label}
-                  </span>
+                  <span className={`text-${option.color}-600 font-medium`}>{option.label}</span>
                 </Option>
               ))}
             </Select>
           </Col>
-          
+
           <Col xs={24} sm={12} md={8} lg={6}>
             <Select
-              placeholder="All Types"
+              placeholder='All Types'
               allowClear
               value={filters.appointmentType}
-              onChange={(value) => handleFilterChange('appointmentType', value)}
-              className="w-full"
+              onChange={value => handleFilterChange('appointmentType', value)}
+              className='w-full'
             >
               {APPOINTMENT_TYPE_OPTIONS.map(option => (
                 <Option key={option.value} value={option.value}>
@@ -144,23 +133,20 @@ const CalendarFiltersComponent: React.FC<CalendarFiltersComponentProps> = ({
               ))}
             </Select>
           </Col>
-          
+        </Row>
+
+        <Row>
           <Col xs={24} sm={12} md={8} lg={6}>
             <Space>
               <Button
                 icon={<FilterOutlined />}
                 onClick={() => setIsExpanded(!isExpanded)}
                 type={isExpanded ? 'primary' : 'default'}
-                size="small"
+                size='small'
               >
                 {isExpanded ? 'Hide' : 'Show'} Advanced
               </Button>
-              <Button
-                icon={<ClearOutlined />}
-                onClick={clearAllFilters}
-                size="small"
-                danger
-              >
+              <Button icon={<ClearOutlined />} onClick={clearAllFilters} size='small' danger>
                 Clear All
               </Button>
             </Space>
@@ -169,18 +155,18 @@ const CalendarFiltersComponent: React.FC<CalendarFiltersComponentProps> = ({
 
         {/* Advanced Filters (Expandable) */}
         {isExpanded && (
-          <div className="border-t pt-4 space-y-4">
+          <div className='border-t pt-4 space-y-4'>
             <Row gutter={[16, 16]}>
               {/* Status Filter */}
               <Col xs={24} sm={12} md={8} lg={6}>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Status</label>
+                <div className='space-y-2'>
+                  <label className='text-sm font-medium text-gray-700'>Status</label>
                   <Select
-                    placeholder="All Statuses"
+                    placeholder='All Statuses'
                     allowClear
                     value={filters.status}
-                    onChange={(value) => handleFilterChange('status', value)}
-                    className="w-full"
+                    onChange={value => handleFilterChange('status', value)}
+                    className='w-full'
                   >
                     {STATUS_OPTIONS.map(option => (
                       <Option key={option.value} value={option.value}>
@@ -193,22 +179,22 @@ const CalendarFiltersComponent: React.FC<CalendarFiltersComponentProps> = ({
 
               {/* Time Range Filter */}
               <Col xs={24} sm={12} md={8} lg={6}>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Time Range</label>
-                  <div className="flex space-x-2">
+                <div className='space-y-2'>
+                  <label className='text-sm font-medium text-gray-700'>Time Range</label>
+                  <div className='flex space-x-2'>
                     <TimePicker
-                      placeholder="From"
-                      format="HH:mm"
+                      placeholder='From'
+                      format='HH:mm'
                       value={filters.timeFrom ? dayjs(filters.timeFrom, 'HH:mm') : null}
-                      onChange={(time) => handleFilterChange('timeFrom', time?.format('HH:mm'))}
-                      className="flex-1"
+                      onChange={time => handleFilterChange('timeFrom', time?.format('HH:mm'))}
+                      className='flex-1'
                     />
                     <TimePicker
-                      placeholder="To"
-                      format="HH:mm"
+                      placeholder='To'
+                      format='HH:mm'
                       value={filters.timeTo ? dayjs(filters.timeTo, 'HH:mm') : null}
-                      onChange={(time) => handleFilterChange('timeTo', time?.format('HH:mm'))}
-                      className="flex-1"
+                      onChange={time => handleFilterChange('timeTo', time?.format('HH:mm'))}
+                      className='flex-1'
                     />
                   </div>
                 </div>
@@ -216,24 +202,24 @@ const CalendarFiltersComponent: React.FC<CalendarFiltersComponentProps> = ({
 
               {/* Visit Type Filters */}
               <Col xs={24} sm={12} md={8} lg={6}>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Visit Type</label>
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2">
+                <div className='space-y-2'>
+                  <label className='text-sm font-medium text-gray-700'>Visit Type</label>
+                  <div className='space-y-2'>
+                    <div className='flex items-center space-x-2'>
                       <Switch
                         checked={filters.isTelemedicine || false}
-                        onChange={(checked) => handleFilterChange('isTelemedicine', checked)}
-                        size="small"
+                        onChange={checked => handleFilterChange('isTelemedicine', checked)}
+                        size='small'
                       />
-                      <span className="text-sm">Telemedicine</span>
+                      <span className='text-sm'>Telemedicine</span>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className='flex items-center space-x-2'>
                       <Switch
                         checked={filters.isHomeVisit || false}
-                        onChange={(checked) => handleFilterChange('isHomeVisit', checked)}
-                        size="small"
+                        onChange={checked => handleFilterChange('isHomeVisit', checked)}
+                        size='small'
                       />
-                      <span className="text-sm">Home Visit</span>
+                      <span className='text-sm'>Home Visit</span>
                     </div>
                   </div>
                 </div>
@@ -241,15 +227,15 @@ const CalendarFiltersComponent: React.FC<CalendarFiltersComponentProps> = ({
 
               {/* Sorting Options */}
               <Col xs={24} sm={12} md={8} lg={6}>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Sort By</label>
-                  <div className="flex space-x-2">
+                <div className='space-y-2'>
+                  <label className='text-sm font-medium text-gray-700'>Sort By</label>
+                  <div className='flex space-x-2'>
                     <Select
-                      placeholder="Sort by"
+                      placeholder='Sort by'
                       allowClear
                       value={filters.sortBy}
-                      onChange={(value) => handleFilterChange('sortBy', value)}
-                      className="flex-1"
+                      onChange={value => handleFilterChange('sortBy', value)}
+                      className='flex-1'
                     >
                       {SORT_OPTIONS.map(option => (
                         <Option key={option.value} value={option.value}>
@@ -258,15 +244,15 @@ const CalendarFiltersComponent: React.FC<CalendarFiltersComponentProps> = ({
                       ))}
                     </Select>
                     <Select
-                      placeholder="Order"
+                      placeholder='Order'
                       value={filters.sortOrder || 'asc'}
-                      onChange={(value) => handleFilterChange('sortOrder', value)}
-                      className="w-20"
+                      onChange={value => handleFilterChange('sortOrder', value)}
+                      className='w-20'
                     >
-                      <Option value="asc">
+                      <Option value='asc'>
                         <SortAscendingOutlined />
                       </Option>
-                      <Option value="desc">
+                      <Option value='desc'>
                         <SortAscendingOutlined style={{ transform: 'scaleY(-1)' }} />
                       </Option>
                     </Select>
@@ -278,12 +264,12 @@ const CalendarFiltersComponent: React.FC<CalendarFiltersComponentProps> = ({
             {/* Additional Options */}
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={12} md={8} lg={6}>
-                <div className="flex items-center space-x-2">
+                <div className='flex items-center space-x-2'>
                   <Switch
                     checked={filters.includeCancelled || false}
-                    onChange={(checked) => handleFilterChange('includeCancelled', checked)}
+                    onChange={checked => handleFilterChange('includeCancelled', checked)}
                   />
-                  <span className="text-sm">Include Cancelled Appointments</span>
+                  <span className='text-sm'>Include Cancelled Appointments</span>
                 </div>
               </Col>
             </Row>

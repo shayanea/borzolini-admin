@@ -1,7 +1,7 @@
 import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Switch } from 'antd';
+import type { PetFormData, PetFormModalProps } from '@/types';
 import { useCallback, useEffect, useState } from 'react';
 
-import type { PetFormModalProps } from '@/types';
 import dayjs from 'dayjs';
 
 const { Option } = Select;
@@ -126,8 +126,6 @@ const PetFormModal = ({
           emergency_contact: editingPet.emergency_contact,
           emergency_phone: editingPet.emergency_phone,
           photo_url: editingPet.photo_url,
-          is_active: editingPet.is_active,
-          owner_id: editingPet.owner_id,
         });
         setSelectedSpecies(editingPet.species);
       } else {
@@ -147,8 +145,23 @@ const PetFormModal = ({
   }, [selectedSpecies]);
 
   const handleSubmit = useCallback(
-    (values: any) => {
-      onSubmit(values);
+    (values: Record<string, any>) => {
+      // Transform form data to match API expectations
+      const transformedValues = {
+        ...values,
+        // Convert dayjs object to ISO string
+        date_of_birth: values.date_of_birth ? values.date_of_birth.format('YYYY-MM-DD') : '',
+        // Convert weight string to number
+        weight: values.weight ? parseFloat(values.weight).toString() : '',
+        // Ensure arrays are properly formatted
+        allergies: values.allergies || [],
+        medications: values.medications || [],
+        // Ensure boolean values are properly set
+        is_spayed_neutered: Boolean(values.is_spayed_neutered),
+        is_vaccinated: Boolean(values.is_vaccinated),
+      } as PetFormData;
+
+      onSubmit(transformedValues);
     },
     [onSubmit]
   );
@@ -183,7 +196,6 @@ const PetFormModal = ({
         layout='vertical'
         onFinish={handleSubmit}
         initialValues={{
-          is_active: true,
           is_spayed_neutered: false,
           is_vaccinated: false,
           allergies: [],
@@ -198,9 +210,13 @@ const PetFormModal = ({
               <Form.Item
                 name='name'
                 label='Pet Name'
-                rules={[{ required: true, message: 'Please enter pet name' }]}
+                rules={[
+                  { required: true, message: 'Please enter pet name' },
+                  { min: 1, message: 'Pet name must be at least 1 character' },
+                  { max: 100, message: 'Pet name must be less than 100 characters' },
+                ]}
               >
-                <Input placeholder='Pet Name' />
+                <Input placeholder='Pet Name' maxLength={100} />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -222,7 +238,11 @@ const PetFormModal = ({
 
           <Row gutter={16}>
             <Col span={8}>
-              <Form.Item name='breed' label='Breed'>
+              <Form.Item
+                name='breed'
+                label='Breed'
+                rules={[{ max: 100, message: 'Breed must be less than 100 characters' }]}
+              >
                 <Select placeholder='Select Breed' disabled={!selectedSpecies}>
                   {breeds.map(breed => (
                     <Option key={breed} value={breed}>
@@ -275,13 +295,30 @@ const PetFormModal = ({
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name='weight' label='Weight (kg)'>
-                <Input placeholder='Weight in kg' />
+              <Form.Item
+                name='weight'
+                label='Weight (kg)'
+                rules={[
+                  {
+                    validator: (_, value) => {
+                      if (value && (isNaN(parseFloat(value)) || parseFloat(value) < 0)) {
+                        return Promise.reject('Weight must be a valid positive number');
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
+                <Input placeholder='Weight in kg' type='number' step='0.1' min='0' />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name='color' label='Color'>
-                <Input placeholder='Pet color' />
+              <Form.Item
+                name='color'
+                label='Color'
+                rules={[{ max: 100, message: 'Color must be less than 100 characters' }]}
+              >
+                <Input placeholder='Pet color' maxLength={100} />
               </Form.Item>
             </Col>
           </Row>
@@ -292,8 +329,12 @@ const PetFormModal = ({
           <h3 className='text-lg font-semibold mb-4'>Medical Information</h3>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name='microchip_number' label='Microchip Number'>
-                <Input placeholder='Microchip number' />
+              <Form.Item
+                name='microchip_number'
+                label='Microchip Number'
+                rules={[{ max: 50, message: 'Microchip number must be less than 50 characters' }]}
+              >
+                <Input placeholder='Microchip number' maxLength={50} />
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -346,49 +387,38 @@ const PetFormModal = ({
               <Form.Item
                 name='emergency_contact'
                 label='Emergency Contact Name'
-                rules={[{ required: true, message: 'Please enter emergency contact name' }]}
+                rules={[
+                  { required: true, message: 'Please enter emergency contact name' },
+                  { max: 255, message: 'Emergency contact name must be less than 255 characters' },
+                ]}
               >
-                <Input placeholder='Emergency contact name' />
+                <Input placeholder='Emergency contact name' maxLength={255} />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 name='emergency_phone'
                 label='Emergency Phone'
-                rules={[{ required: true, message: 'Please enter emergency phone' }]}
+                rules={[
+                  { required: true, message: 'Please enter emergency phone' },
+                  { max: 20, message: 'Emergency phone must be less than 20 characters' },
+                ]}
               >
-                <Input placeholder='Emergency phone number' />
+                <Input placeholder='Emergency phone number' maxLength={20} />
               </Form.Item>
             </Col>
           </Row>
-        </div>
-
-        {/* Owner Information */}
-        <div className='mb-6'>
-          <h3 className='text-lg font-semibold mb-4'>Owner Information</h3>
-          <Form.Item
-            name='owner_id'
-            label='Owner ID'
-            rules={[{ required: true, message: 'Please enter owner ID' }]}
-          >
-            <Input placeholder='Owner ID' />
-          </Form.Item>
         </div>
 
         {/* Photo and Status */}
         <div className='mb-6'>
-          <Row gutter={16}>
-            <Col span={18}>
-              <Form.Item name='photo_url' label='Photo URL'>
-                <Input placeholder='Photo URL' />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name='is_active' label='Active Status' valuePropName='checked'>
-                <Switch checkedChildren='Active' unCheckedChildren='Inactive' />
-              </Form.Item>
-            </Col>
-          </Row>
+          <Form.Item
+            name='photo_url'
+            label='Photo URL'
+            rules={[{ max: 500, message: 'Photo URL must be less than 500 characters' }]}
+          >
+            <Input placeholder='Photo URL' maxLength={500} />
+          </Form.Item>
         </div>
 
         <Form.Item className='mb-0'>
