@@ -42,10 +42,6 @@ const RecentActivity = ({ stats }: RecentActivityProps) => {
     }
   };
 
-  const handleViewAll = () => {
-    // TODO: Navigate to full activity page
-  };
-
   function renderActivityItem(item: any) {
     return (
       <List.Item>
@@ -84,18 +80,7 @@ const RecentActivity = ({ stats }: RecentActivityProps) => {
   const hasActivity = stats.recentActivity && stats.recentActivity.length > 0;
 
   return (
-    <Card
-      title='Recent Activity'
-      className='admin-card border-0 shadow-sm'
-      extra={
-        <Text
-          className='text-primary-navy cursor-pointer hover:underline font-medium'
-          onClick={handleViewAll}
-        >
-          View All
-        </Text>
-      }
-    >
+    <Card title='Recent Activity' className='admin-card border-0 shadow-sm'>
       {hasActivity ? (
         <List
           itemLayout='horizontal'

@@ -1,4 +1,4 @@
-import { Avatar, Card, List } from 'antd';
+import { Avatar, Card, List, Tag } from 'antd';
 
 import type { DashboardStats } from '@/types';
 import { HomeOutlined } from '@ant-design/icons';
@@ -39,7 +39,15 @@ const TopPerformingClinics = ({ stats }: TopPerformingClinicsProps) => {
   };
 
   return (
-    <Card title='Top Performing Clinics' className='admin-card'>
+    <Card
+      title={
+        <div className='flex items-center gap-2'>
+          Top Performing Clinics
+          <Tag color='orange'>Soon</Tag>
+        </div>
+      }
+      className='admin-card'
+    >
       <List
         itemLayout='horizontal'
         dataSource={stats.topPerformingClinics}

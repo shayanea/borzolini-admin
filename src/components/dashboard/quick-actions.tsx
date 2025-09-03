@@ -1,17 +1,22 @@
 import { CalendarOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
 import { Card, Space } from 'antd';
 
+import { ROUTES } from '@/constants';
+import { useNavigate } from 'react-router-dom';
+
 const QuickActions = () => {
+  const navigate = useNavigate();
+
   const handleNewAppointment = () => {
-    // TODO: Navigate to new appointment form
+    navigate(ROUTES.CALENDAR);
   };
 
   const handleAddPatient = () => {
-    // TODO: Navigate to add patient form
+    navigate(ROUTES.PETS);
   };
 
   const handleAddClinic = () => {
-    // TODO: Navigate to add clinic form
+    navigate(ROUTES.CLINIC_CREATE);
   };
 
   const actions = [
