@@ -30,7 +30,12 @@ const CalendarGrid = ({
   return (
     <div className='calendar-grid border border-gray-200 rounded-lg overflow-hidden'>
       {/* Header row with veterinarian names */}
-      <div className='grid grid-cols-[100px_repeat(auto-fit,minmax(200px,1fr))] bg-gray-50 border-b border-gray-200'>
+      <div
+        className='grid bg-gray-50 border-b border-gray-200'
+        style={{
+          gridTemplateColumns: `100px repeat(${veterinarians.length}, minmax(200px, 1fr))`,
+        }}
+      >
         <div className='p-3 font-semibold text-gray-700 border-r border-gray-200'>Time</div>
         {veterinarians.map(vet => (
           <div
@@ -51,7 +56,10 @@ const CalendarGrid = ({
       {timeSlots.map(time => (
         <div
           key={time}
-          className='grid grid-cols-[100px_repeat(auto-fit,minmax(200px,1fr))] border-b border-gray-200 last:border-b-0'
+          className='grid border-b border-gray-200 last:border-b-0'
+          style={{
+            gridTemplateColumns: `100px repeat(${veterinarians.length}, minmax(200px, 1fr))`,
+          }}
         >
           {/* Time column */}
           <div className='p-3 text-sm text-gray-600 border-r border-gray-200 bg-gray-50 font-medium'>
