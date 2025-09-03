@@ -29,11 +29,11 @@ const ClinicStaffModal = ({ visible, clinic, onClose }: ClinicStaffModalProps) =
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  console.log(clinic?.id);
-
   useEffect(() => {
     const fetchStaff = async () => {
-      if (!visible || !clinic) return;
+      if (!visible || !clinic) {
+        return;
+      }
       setLoading(true);
       setError(null);
       try {
@@ -107,14 +107,31 @@ const ClinicStaffModal = ({ visible, clinic, onClose }: ClinicStaffModalProps) =
       },
       {
         title: 'Joined',
-        dataIndex: 'joinedAt',
-        key: 'joinedAt',
-        render: (value: string) => new Date(value).toLocaleDateString(),
-        sorter: (a, b) => new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime(),
+        dataIndex: 'hire_date',
+        key: 'hire_date',
+        render: (value: string) => {
+          if (!value) return <Text type='secondary'>-</Text>;
+          const date = new Date(value);
+          if (isNaN(date.getTime())) return <Text type='secondary'>Invalid Date</Text>;
+          return date.toLocaleDateString();
+        },
+        sorter: (a, b) => {
+          const dateA = new Date(a.joinedAt);
+          const dateB = new Date(b.joinedAt);
+          if (isNaN(dateA.getTime()) && isNaN(dateB.getTime())) return 0;
+          if (isNaN(dateA.getTime())) return 1;
+          if (isNaN(dateB.getTime())) return -1;
+          return dateA.getTime() - dateB.getTime();
+        },
       },
     ],
     []
   );
+
+  // Don't render the modal if clinic is null
+  if (!clinic) {
+    return null;
+  }
 
   return (
     <Modal
@@ -124,7 +141,7 @@ const ClinicStaffModal = ({ visible, clinic, onClose }: ClinicStaffModalProps) =
             <Text className='!mb-0 !text-text-primary text-lg font-semibold'>
               Clinic Staff & Veterinarians
             </Text>
-            {clinic && <Text className='text-text-secondary text-sm'>Clinic: {clinic.name}</Text>}
+            <Text className='text-text-secondary text-sm'>Clinic: {clinic.name}</Text>
           </div>
         </div>
       }

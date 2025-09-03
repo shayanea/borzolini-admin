@@ -116,6 +116,7 @@ const Clinics = () => {
             showQuickJumper: true,
             showTotal: (total: number, range: [number, number]) =>
               `${range[0]}-${range[1]} of ${total} clinics`,
+            position: ['bottomCenter'],
           }}
           rowSelection={{
             selectedRowKeys,
