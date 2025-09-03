@@ -18,7 +18,7 @@ export class DashboardService {
       }
 
       const queryString = params.toString();
-      const url = `/api/dashboard/stats${queryString ? `?${queryString}` : ''}`;
+      const url = `/dashboard/stats${queryString ? `?${queryString}` : ''}`;
 
       const response = await api.get(url);
 
@@ -127,7 +127,7 @@ export class DashboardService {
       }
 
       const queryString = params.toString();
-      const url = `/api/dashboard/charts${queryString ? `?${queryString}` : ''}`;
+      const url = `/dashboard/charts${queryString ? `?${queryString}` : ''}`;
 
       const response = await api.get(url);
 

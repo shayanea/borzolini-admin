@@ -4,6 +4,7 @@ import {
   QuickActions,
   RecentActivity,
   StatisticsCards,
+  TopPerformingClinics,
 } from '@/components/dashboard';
 
 import { useDashboard } from '@/hooks/use-dashboard';
@@ -87,7 +88,7 @@ const Dashboard = () => {
       </Row>
 
       {/* Top Performing Clinics */}
-      {/* <TopPerformingClinics stats={stats} /> */}
+      <TopPerformingClinics stats={stats} />
 
       {/* Show charts loading state if needed */}
       {chartsLoading && (
