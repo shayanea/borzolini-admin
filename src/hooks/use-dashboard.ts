@@ -39,7 +39,7 @@ export const useDashboard = () => {
       if (error?.response?.status === 401) {
         return false;
       }
-      return failureCount < 2;
+      return failureCount < 1;
     },
   });
 
@@ -67,10 +67,18 @@ export const useDashboard = () => {
 
   // Refresh mutation
   const refreshMutation = useMutation({
-    mutationFn: () => DashboardService.getDashboardStats(filters),
-    onSuccess: newStats => {
+    mutationFn: async () => {
+      // Refresh both stats and charts
+      const [stats, charts] = await Promise.all([
+        DashboardService.getDashboardStats(filters),
+        DashboardService.getDashboardCharts(filters),
+      ]);
+      return { stats, charts };
+    },
+    onSuccess: ({ stats, charts }) => {
       // Update the cache with new data
-      queryClient.setQueryData(DASHBOARD_KEYS.stats(filters), newStats);
+      queryClient.setQueryData(DASHBOARD_KEYS.stats(filters), stats);
+      queryClient.setQueryData(DASHBOARD_KEYS.charts(filters), charts);
       message.success('Dashboard data refreshed successfully');
     },
     onError: (error: any) => {
