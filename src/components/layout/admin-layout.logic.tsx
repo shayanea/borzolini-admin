@@ -5,18 +5,19 @@ import {
   FileTextOutlined,
   HeartOutlined,
   LogoutOutlined,
+  MedicineBoxOutlined,
   MonitorOutlined,
   SettingOutlined,
   TeamOutlined,
   UserOutlined,
 } from '@/ui';
 import { MenuProps, Tag } from 'antd';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { MessageOutlined } from '@ant-design/icons';
 import { ROUTES } from '@/constants';
 import { useAuth } from '@/hooks/use-auth';
+import { MessageOutlined } from '@ant-design/icons';
 
 export const useAdminLayoutLogic = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -71,6 +72,12 @@ export const useAdminLayoutLogic = () => {
       label: 'Pets',
       icon: <HeartOutlined />,
       onClick: () => navigate(ROUTES.PETS),
+    },
+    {
+      key: '/pet-cases',
+      label: 'Pet Cases',
+      icon: <MedicineBoxOutlined />,
+      onClick: () => navigate(ROUTES.PET_CASES),
     },
     {
       key: '/reports',

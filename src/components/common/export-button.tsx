@@ -107,7 +107,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
       key: 'excel',
       label: 'Export as Excel',
       icon: <FileExcelOutlined />,
-      onClick: () => handleExportClick('excel'),
+      onClick: () => handleExportClick('xlsx'),
     },
   ];
 

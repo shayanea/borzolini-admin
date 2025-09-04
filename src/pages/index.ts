@@ -4,6 +4,7 @@ export { default as Calendar } from './calendar';
 export { default as ClinicForm } from './clinic-form';
 export { default as Clinics } from './clinics';
 export { default as Dashboard } from './dashboard';
+export { default as PetCases } from './pet-cases';
 export { default as Pets } from './pets';
 export { default as Profile } from './profile';
 export { default as Reports } from './reports';

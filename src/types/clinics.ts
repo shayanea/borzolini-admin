@@ -121,8 +121,15 @@ export interface ClinicsQueryParams {
   page?: number;
   limit?: number;
   search?: string;
+  name?: string;
   city?: string;
+  state?: string;
+  is_verified?: boolean;
   isActive?: boolean;
+  services?: string;
+  specializations?: string;
+  rating_min?: number;
+  rating_max?: number;
   sortBy?: string;
   sortOrder?: 'ASC' | 'DESC';
 }

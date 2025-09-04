@@ -16,6 +16,7 @@ export {
   LockOutlined,
   LogoutOutlined,
   MailOutlined,
+  MedicineBoxOutlined,
   MenuOutlined,
   MonitorOutlined,
   PhoneOutlined,

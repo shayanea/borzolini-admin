@@ -5,6 +5,7 @@ import {
   ClinicForm,
   Clinics,
   Dashboard,
+  PetCases,
   Pets,
   Profile,
   Reports,
@@ -30,8 +31,8 @@ import {
 import { Route, Routes } from 'react-router-dom';
 
 import { User } from '@/types';
-import { useAdminLayoutLogic } from './admin-layout.logic';
 import { useMemo } from 'react';
+import { useAdminLayoutLogic } from './admin-layout.logic';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -126,6 +127,7 @@ const AdminLayout = () => {
         <Route path='clinics/edit/:id' element={<ClinicForm />} />
         <Route path='users' element={<Users />} />
         <Route path='veterinarians' element={<Users roleFilter={VETERINARIAN_ROLE_FILTER} />} />
+        <Route path='pet-cases' element={<PetCases />} />
         <Route path='pets' element={<Pets />} />
         <Route path='reports' element={<Reports />} />
         <Route path='reviews' element={<Reviews />} />

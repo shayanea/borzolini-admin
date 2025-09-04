@@ -1,6 +1,6 @@
+import { DeleteOutlined, EditOutlined, EyeOutlined, TeamOutlined } from '@ant-design/icons';
 import { Badge, Button, Space, Table, Tag, Typography } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
-import { DeleteOutlined, EditOutlined, EyeOutlined, TeamOutlined } from '@ant-design/icons';
 
 import type { Clinic } from '@/types';
 import type { TablePaginationConfig } from 'antd';
@@ -58,9 +58,12 @@ const ClinicTable = ({
           >
             {record.city}, {record.country}
           </Text>
-          {record.postalCode && (
-            <Text className='text-text-secondary text-sm' ellipsis={{ tooltip: record.postalCode }}>
-              {record.postalCode}
+          {record.postal_code && (
+            <Text
+              className='text-text-secondary text-sm'
+              ellipsis={{ tooltip: record.postal_code }}
+            >
+              {record.postal_code}
             </Text>
           )}
         </div>

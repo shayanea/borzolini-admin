@@ -22,7 +22,6 @@ import type { CreateClinicData, OperatingHours, UpdateClinicData } from '@/types
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
-const { Option } = Select;
 
 interface ClinicFormValues {
   name: string;
@@ -459,7 +458,7 @@ const ClinicForm = () => {
             {fields => (
               <div className='space-y-4'>
                 {fields.map(({ key, name, ...restField }) => {
-                  const dayInfo = daysOfWeek.find(day => day.key === name);
+                  const dayInfo = daysOfWeek.find(day => day.key === String(name));
                   return (
                     <div key={key} className='border rounded-lg p-4'>
                       <div className='flex items-center justify-between mb-4'>

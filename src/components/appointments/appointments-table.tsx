@@ -1,5 +1,4 @@
 import { APPOINTMENT_PRIORITY_COLORS, APPOINTMENT_STATUS_COLORS } from '@/constants/appointments';
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 import {
   CalendarOutlined,
   ClockCircleOutlined,
@@ -9,10 +8,11 @@ import {
   PhoneOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 
-import type { Appointment } from '@/types';
 import { TABLE_PAGE_SIZES } from '@/constants';
+import type { Appointment } from '@/types';
 
 export interface AppointmentsHeaderProps {
   onNewAppointment: (data: any) => void;
@@ -325,7 +325,14 @@ const AppointmentsTable = ({
         showQuickJumper: true,
         showTotal: handleShowTotal,
         pageSizeOptions: TABLE_PAGE_SIZES.map(String),
-        position: ['bottomCenter'],
+        position: ['bottomCenter'] as (
+          | 'topLeft'
+          | 'topCenter'
+          | 'topRight'
+          | 'bottomLeft'
+          | 'bottomCenter'
+          | 'bottomRight'
+        )[],
       }
     : false;
 

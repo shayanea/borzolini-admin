@@ -191,8 +191,8 @@ export class ClinicsService {
     if (params.state) queryParams.append('state', params.state);
     if (params.is_verified !== undefined)
       queryParams.append('is_verified', params.is_verified.toString());
-    if (params.is_active !== undefined)
-      queryParams.append('is_active', params.is_active.toString());
+    if (params.isActive !== undefined)
+      queryParams.append('is_active', params.isActive.toString());
     if (params.services) queryParams.append('services', params.services);
     if (params.specializations) queryParams.append('specializations', params.specializations);
     if (params.rating_min !== undefined)
@@ -223,8 +223,8 @@ export class ClinicsService {
     if (params.state) queryParams.append('state', params.state);
     if (params.is_verified !== undefined)
       queryParams.append('is_verified', params.is_verified.toString());
-    if (params.is_active !== undefined)
-      queryParams.append('is_active', params.is_active.toString());
+    if (params.isActive !== undefined)
+      queryParams.append('is_active', params.isActive.toString());
     if (params.services) queryParams.append('services', params.services);
     if (params.specializations) queryParams.append('specializations', params.specializations);
     if (params.rating_min !== undefined)
