@@ -1,26 +1,28 @@
 // Pet Cases Management Page
 import { Alert, Layout, Pagination } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import {
+  PetCaseStatsCard,
+  PetCaseViewModal,
   PetCasesFilters,
   PetCasesHeader,
   PetCasesTable,
-  PetCaseStatsCard,
-  PetCaseViewModal,
 } from '../components/pet-cases';
+import { CaseFilters, ClinicPetCase } from '../types/pet-cases';
+
+import { useSearchParams } from 'react-router-dom';
 import { usePetCases } from '../hooks/use-pet-cases';
-import { CaseFilters } from '../types/pet-cases';
 
 const { Content } = Layout;
 
 const PetCasesPage: React.FC = () => {
-  const { clinicId } = useParams<{ clinicId: string }>();
+  const [searchParams] = useSearchParams();
+  const clinicId = searchParams.get('clinicId');
   const [filters, setFilters] = useState<CaseFilters>({});
   const [page, setPage] = useState(1);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [viewModalVisible, setViewModalVisible] = useState(false);
-  const [selectedCase, setSelectedCase] = useState<any>(null);
+  const [selectedCase, setSelectedCase] = useState<ClinicPetCase | null>(null);
 
   const {
     cases,
@@ -31,7 +33,7 @@ const PetCasesPage: React.FC = () => {
     isLoading,
     error,
     refetch,
-  } = usePetCases(clinicId!, filters, page, 10);
+  } = usePetCases(clinicId || '', filters, page, 10);
 
   useEffect(() => {
     if (!clinicId) {

@@ -1,4 +1,3 @@
-// Pet Cases Service for Admin Dashboard
 import {
   AddTimelineEventRequest,
   CaseFilters,
@@ -9,6 +8,7 @@ import {
   TimelineEvent,
   UpdatePetCaseRequest,
 } from '../types/pet-cases';
+
 import { apiService } from './api';
 
 export class PetCasesService {
@@ -54,7 +54,9 @@ export class PetCasesService {
 
   // Get a specific pet case
   static async getCaseById(clinicId: string, caseId: string): Promise<ClinicPetCase> {
-    const response = await apiService.get<ClinicPetCase>(`${this.BASE_URL}/${clinicId}/cases/${caseId}`);
+    const response = await apiService.get<ClinicPetCase>(
+      `${this.BASE_URL}/${clinicId}/cases/${caseId}`
+    );
     return response;
   }
 
@@ -63,7 +65,10 @@ export class PetCasesService {
     clinicId: string,
     caseData: CreatePetCaseRequest
   ): Promise<ClinicPetCase> {
-    const response = await apiService.post<ClinicPetCase>(`${this.BASE_URL}/${clinicId}/cases`, caseData);
+    const response = await apiService.post<ClinicPetCase>(
+      `${this.BASE_URL}/${clinicId}/cases`,
+      caseData
+    );
     return response;
   }
 

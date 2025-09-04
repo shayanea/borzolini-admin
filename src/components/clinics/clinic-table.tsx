@@ -1,7 +1,15 @@
-import { DeleteOutlined, EditOutlined, EyeOutlined, TeamOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  MedicineBoxOutlined,
+  TeamOutlined,
+} from '@ant-design/icons';
 import { Badge, Button, Space, Table, Tag, Typography } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
+import { useNavigate } from 'react-router-dom';
 
+import { ROUTES } from '@/constants/routes';
 import type { Clinic } from '@/types';
 import type { TablePaginationConfig } from 'antd';
 
@@ -30,6 +38,11 @@ const ClinicTable = ({
   onView,
   onViewStaff,
 }: ClinicTableProps) => {
+  const navigate = useNavigate();
+
+  const handleViewPetCases = (clinic: Clinic) => {
+    navigate(`${ROUTES.PET_CASES}?clinicId=${clinic.id}`);
+  };
   const columns: ColumnsType<Clinic> = [
     {
       title: 'Name',
@@ -156,6 +169,14 @@ const ClinicTable = ({
             className='text-primary-navy hover:text-primary-dark'
             title='View Staff & Veterinarians'
             onClick={() => onViewStaff && onViewStaff(record)}
+          />
+          <Button
+            type='text'
+            icon={<MedicineBoxOutlined />}
+            size='small'
+            className='text-primary-navy hover:text-primary-dark'
+            title='View Pet Cases'
+            onClick={() => handleViewPetCases(record)}
           />
           <Button
             type='text'

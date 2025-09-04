@@ -5,7 +5,6 @@ import {
   FileTextOutlined,
   HeartOutlined,
   LogoutOutlined,
-  MedicineBoxOutlined,
   MonitorOutlined,
   SettingOutlined,
   TeamOutlined,
@@ -74,12 +73,6 @@ export const useAdminLayoutLogic = () => {
       onClick: () => navigate(ROUTES.PETS),
     },
     {
-      key: '/pet-cases',
-      label: 'Pet Cases',
-      icon: <MedicineBoxOutlined />,
-      onClick: () => navigate(ROUTES.PET_CASES),
-    },
-    {
       key: '/reports',
       label: (
         <div className='flex items-center justify-between w-full'>
@@ -135,9 +128,7 @@ export const useAdminLayoutLogic = () => {
   }, [location.pathname]);
 
   // Handle logout
-  const handleLogout = async () => {
-    await logout();
-  };
+  const handleLogout = () => logout();
 
   // User dropdown menu
   const userMenuItems = [
