@@ -14,6 +14,8 @@ export const ROUTES: Record<string, string> = {
   CLINICS: '/clinics',
   CLINIC_CREATE: '/clinics/create',
   CLINIC_EDIT: '/clinics/edit',
+  CLINIC_REGISTER: '/register-clinic',
+  CLINIC_REGISTER_SUCCESS: '/register-clinic/success',
   PETS: '/pets',
   PET_CASES: '/pet-cases',
   REVIEWS: '/reviews',

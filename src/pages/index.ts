@@ -2,6 +2,8 @@ export { default as ApiHealth } from './api-health';
 export { default as Appointments } from './appointments';
 export { default as Calendar } from './calendar';
 export { default as ClinicForm } from './clinic-form';
+export { default as ClinicRegister } from './clinic-register';
+export { default as ClinicRegisterSuccess } from './clinic-register-success';
 export { default as Clinics } from './clinics';
 export { default as Dashboard } from './dashboard';
 export { default as PetCases } from './pet-cases';
