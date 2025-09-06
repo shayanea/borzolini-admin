@@ -1,5 +1,5 @@
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@/ui';
-import React, { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { MenuProps } from 'antd';
@@ -23,11 +23,21 @@ export const useAdminLayoutLogic = () => {
   const roleMenuItems = getMenuItemsForRole(userRole);
 
   // Redirect non-admin users to appointments if they try to access admin-only routes
-  React.useEffect(() => {
+  useEffect(() => {
     if (user && userRole !== 'admin') {
       const currentPath = location.pathname;
       if (currentPath === '/' || currentPath === '/dashboard' || currentPath === '/settings') {
         navigate(ROUTES.APPOINTMENTS, { replace: true });
+      }
+    }
+  }, [user, userRole, location.pathname, navigate]);
+
+  // Redirect admin users to settings if they try to access dashboard or root
+  useEffect(() => {
+    if (user && userRole === 'admin') {
+      const currentPath = location.pathname;
+      if (currentPath === '/' || currentPath === '/dashboard') {
+        navigate(ROUTES.SETTINGS, { replace: true });
       }
     }
   }, [user, userRole, location.pathname, navigate]);
@@ -53,6 +63,7 @@ export const useAdminLayoutLogic = () => {
         '/api-health': ROUTES.API_HEALTH,
         '/role-demo': ROUTES.ROLE_DEMO,
         '/settings': ROUTES.SETTINGS,
+        '/profile': ROUTES.PROFILE,
       };
 
       const route = routeMap[item.key];
@@ -99,6 +110,7 @@ export const useAdminLayoutLogic = () => {
       label: 'Settings',
       icon: <SettingOutlined />,
       onClick: () => navigate(ROUTES.SETTINGS),
+      disabled: userRole !== 'admin',
     },
     {
       type: 'divider' as const,

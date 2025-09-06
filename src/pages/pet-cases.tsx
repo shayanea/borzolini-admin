@@ -14,6 +14,7 @@ import { Alert, Layout, Pagination } from 'antd';
 import { CaseFilters, ClinicPetCase } from '../types/pet-cases';
 import React, { useEffect, useState } from 'react';
 
+import { useCurrentUser } from '../hooks/use-auth';
 import { usePetCases } from '../hooks/use-pet-cases';
 import { useSearchParams } from 'react-router-dom';
 
@@ -21,13 +22,17 @@ const { Content } = Layout;
 
 const PetCasesPage: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const clinicId = searchParams.get('clinicId');
+  const { data: user, isLoading: userLoading } = useCurrentUser();
+  const urlClinicId = searchParams.get('clinicId');
   const [filters, setFilters] = useState<CaseFilters>({});
   const [page, setPage] = useState(1);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [viewModalVisible, setViewModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [selectedCase, setSelectedCase] = useState<ClinicPetCase | null>(null);
+
+  // Get clinic ID from URL params or user profile
+  const clinicId = urlClinicId || user?.clinicId || user?.clinic_id || user?.clinic?.id;
 
   // Default stats object to avoid repetition
   const defaultStats = {
@@ -70,10 +75,10 @@ const PetCasesPage: React.FC = () => {
   } = usePetCases(clinicId || '', filters, page, 10);
 
   useEffect(() => {
-    if (!clinicId) {
+    if (!userLoading && !clinicId) {
       console.error('No clinic ID provided');
     }
-  }, [clinicId]);
+  }, [clinicId, userLoading]);
 
   const handleFiltersChange = (newFilters: CaseFilters) => {
     setFilters(newFilters);
@@ -136,15 +141,40 @@ const PetCasesPage: React.FC = () => {
     console.log('View detailed statistics');
   };
 
+  // Show loading while fetching user data
+  if (userLoading) {
+    return (
+      <Layout className='min-h-screen'>
+        <Content className='p-6'>
+          <div className='flex items-center justify-center min-h-[400px]'>
+            <div className='text-center'>
+              <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary-navy mx-auto mb-4'></div>
+              <p className='text-gray-600'>Loading pet cases...</p>
+            </div>
+          </div>
+        </Content>
+      </Layout>
+    );
+  }
+
+  // Show error if no clinic ID is available
   if (!clinicId) {
     return (
       <Layout className='min-h-screen'>
         <Content className='p-6'>
           <Alert
-            message='Error'
-            description='No clinic ID provided. Please navigate to a specific clinic.'
+            message='Access Error'
+            description='Unable to determine your clinic. Please contact support or try accessing pet cases from a clinic-specific page.'
             type='error'
             showIcon
+            action={
+              <button
+                onClick={() => window.history.back()}
+                className='px-4 py-2 bg-primary-navy text-white rounded hover:bg-primary-navy/90'
+              >
+                Go Back
+              </button>
+            }
           />
         </Content>
       </Layout>

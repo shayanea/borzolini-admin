@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       fontFamily: {
@@ -15,25 +12,25 @@ export default {
         // Primary Colors from Design Spec
         primary: {
           dark: '#000000',
-          navy: '#14213d',
+          navy: '#023e8a',
           orange: '#fca311',
           light: '#e5e5e5',
           white: '#ffffff',
         },
         // Semantic Colors
         text: {
-          primary: '#14213d',
+          primary: '#023e8a',
           secondary: '#000000',
           light: '#6b7280',
         },
         // UI Component Colors
         background: '#ffffff',
-        foreground: '#14213d',
+        foreground: '#023e8a',
         'background-secondary': '#f9fafb',
         'background-accent': '#fff7ed',
         // Interactive Elements
         button: {
-          primary: '#14213d',
+          primary: '#023e8a',
           secondary: '#fca311',
           accent: '#000000',
         },
@@ -45,7 +42,7 @@ export default {
         },
         // AI/Tech Specific
         ai: {
-          primary: '#14213d',
+          primary: '#023e8a',
           accent: '#fca311',
           background: '#f0f4f8',
         },
@@ -116,4 +113,4 @@ export default {
     },
   },
   plugins: [],
-}
+};

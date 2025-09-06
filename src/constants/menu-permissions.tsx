@@ -7,6 +7,7 @@ import {
   HeartOutlined,
   MedicineBoxOutlined,
   SettingOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 
 import React from 'react';
@@ -28,13 +29,6 @@ export interface MenuItemConfig {
 // Role-based menu configurations
 export const MENU_ITEMS: Record<UserRole, MenuItemConfig[]> = {
   admin: [
-    {
-      key: '/dashboard',
-      label: 'Dashboard',
-      icon: React.createElement(DashboardOutlined),
-      onClick: () => {},
-      roles: ['admin'],
-    },
     {
       key: '/settings',
       label: 'Settings',
@@ -93,9 +87,9 @@ export const MENU_ITEMS: Record<UserRole, MenuItemConfig[]> = {
       roles: ['veterinarian'],
     },
     {
-      key: '/settings',
-      label: 'Settings',
-      icon: React.createElement(SettingOutlined),
+      key: '/profile',
+      label: 'Profile',
+      icon: React.createElement(UserOutlined),
       onClick: () => {},
       roles: ['veterinarian'],
     },
@@ -138,9 +132,9 @@ export const MENU_ITEMS: Record<UserRole, MenuItemConfig[]> = {
       roles: ['staff'],
     },
     {
-      key: '/settings',
-      label: 'Settings',
-      icon: React.createElement(SettingOutlined),
+      key: '/profile',
+      label: 'Profile',
+      icon: React.createElement(UserOutlined),
       onClick: () => {},
       roles: ['staff'],
     },
@@ -176,9 +170,9 @@ export const MENU_ITEMS: Record<UserRole, MenuItemConfig[]> = {
       roles: ['patient'],
     },
     {
-      key: '/settings',
-      label: 'Settings',
-      icon: React.createElement(SettingOutlined),
+      key: '/profile',
+      label: 'Profile',
+      icon: React.createElement(UserOutlined),
       onClick: () => {},
       roles: ['patient'],
     },

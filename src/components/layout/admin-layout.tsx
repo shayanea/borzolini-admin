@@ -4,7 +4,6 @@ import {
   Calendar,
   ClinicForm,
   Clinics,
-  Dashboard,
   PetCases,
   Pets,
   Profile,
@@ -72,11 +71,7 @@ const renderHeader = (
           {/* User Menu */}
           <Dropdown menu={{ items: userMenuItems }} placement='bottomRight' trigger={['click']}>
             <div className='flex items-center space-x-3 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors flex-shrink-0'>
-              <Avatar
-                size={40}
-                icon={<UserOutlined />}
-                className='bg-gradient-to-r from-cyan-500 to-blue-500'
-              />
+              <Avatar size={40} icon={<UserOutlined />} className='bg-primary-navy' />
               {!collapsed && (
                 <div className='text-left min-w-0'>
                   <div className='flex items-center space-x-2'>
@@ -103,14 +98,6 @@ const AdminLayout = () => {
   const routes = useMemo(
     () => (
       <Routes>
-        <Route
-          path='dashboard'
-          element={
-            <RoleProtectedRoute requiredRole='admin'>
-              <Dashboard />
-            </RoleProtectedRoute>
-          }
-        />
         <Route
           path='calendar'
           element={
@@ -235,7 +222,7 @@ const AdminLayout = () => {
           path=''
           element={
             <RoleProtectedRoute requiredRole='admin'>
-              <Dashboard />
+              <Settings />
             </RoleProtectedRoute>
           }
         />
@@ -253,7 +240,7 @@ const AdminLayout = () => {
         className='admin-sidebar fixed left-0 top-0 h-full z-50 m-4 rounded-xl shadow-lg'
         width={220}
         style={{
-          backgroundImage: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+          backgroundColor: '#023e8a',
           height: 'calc(100vh - 2rem)',
           marginTop: '1rem',
           marginBottom: '1rem',

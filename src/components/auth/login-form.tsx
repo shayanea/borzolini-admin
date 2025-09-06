@@ -33,7 +33,7 @@ export const LoginForm = () => {
       <Card className='w-full shadow-admin-lg p-8 bg-white/95 backdrop-blur-sm'>
         <div className='text-center mb-8'>
           <div className='mb-4'>
-            <div className='w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto shadow-lg'>
+            <div className='w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center mx-auto shadow-lg'>
               <UserOutlined className='text-2xl text-white' />
             </div>
           </div>
@@ -101,7 +101,7 @@ export const LoginForm = () => {
               type='primary'
               htmlType='submit'
               loading={loginMutation.isPending}
-              className='w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 shadow-lg'
+              className='w-full h-12 bg-[#023e8a] hover:bg-[#023e8a]/90 border-0 shadow-lg'
             >
               {loginMutation.isPending ? 'Signing In...' : 'Sign In'}
             </Button>

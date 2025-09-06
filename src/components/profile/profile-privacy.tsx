@@ -168,7 +168,7 @@ export const ProfilePrivacy: React.FC<ProfilePrivacyProps> = ({ user, onSuccess,
   return (
     <div className='space-y-6'>
       {/* Privacy Score */}
-      <Card className='shadow-sm bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'>
+      <Card className='shadow-sm bg-blue-50 border-blue-200'>
         <div className='text-center'>
           <SafetyOutlined className='text-3xl text-blue-600 mb-4' />
           <Title level={3} className='!mb-2 text-blue-900'>

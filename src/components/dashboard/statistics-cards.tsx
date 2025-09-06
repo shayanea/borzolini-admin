@@ -35,7 +35,7 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
                 title={<span className='text-sm font-medium text-text-primary'>Total Users</span>}
                 value={stats.totalUsers}
                 valueStyle={{
-                  color: '#14213d',
+                  color: '#023e8a',
                   fontSize: '2rem',
                   fontWeight: '600',
                   lineHeight: '1.2',

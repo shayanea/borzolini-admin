@@ -83,6 +83,11 @@ const RoleProtectedRoute = ({
       return <Navigate to={ROUTES.APPOINTMENTS} replace />;
     }
 
+    // For admin users trying to access dashboard, redirect to settings
+    if (userRole === 'admin' && currentPath === '/dashboard') {
+      return <Navigate to={ROUTES.SETTINGS} replace />;
+    }
+
     return (
       <AuthBackground variant='gradient'>
         <Result

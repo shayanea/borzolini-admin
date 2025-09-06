@@ -19,11 +19,11 @@ const AuthBackground: React.FC<AuthBackgroundProps> = ({
       case 'minimal':
         return `${baseClasses} bg-gray-50`;
       case 'gradient':
-        return `${baseClasses} bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800`;
+        return `${baseClasses} bg-[#023e8a]`;
       case 'pattern':
-        return `${baseClasses} bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden`;
+        return `${baseClasses} bg-[#023e8a] relative overflow-hidden`;
       default:
-        return `${baseClasses} bg-gradient-to-br from-primary-navy to-primary-dark`;
+        return `${baseClasses} bg-[#023e8a]`;
     }
   };
 
