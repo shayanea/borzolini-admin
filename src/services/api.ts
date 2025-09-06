@@ -1,14 +1,14 @@
-import { appointmentsCache, calendarCache, usersCache } from './cache.service';
 import axios, {
   AxiosInstance,
   AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
+import { appointmentsCache, calendarCache, usersCache } from './cache.service';
 
-import { emitAuthUnauthorized } from './event-emitter.service';
 import { environment } from '@/config/environment';
 import { message } from 'antd';
+import { emitAuthUnauthorized } from './event-emitter.service';
 
 // Global auth failure handler
 let globalAuthFailureHandler: (() => void) | null = null;

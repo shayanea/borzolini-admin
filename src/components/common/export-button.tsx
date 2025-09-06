@@ -1,9 +1,9 @@
-import { DownloadOutlined, FileExcelOutlined, FileTextOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Button, Dropdown, message, Modal, Space, Typography } from 'antd';
-import { useState } from 'react';
-
 import { generateExportFilename, handleExport } from '@/utils/export.utils';
+import { DownloadOutlined, FileExcelOutlined, FileTextOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Modal, Space, Typography, message } from 'antd';
+
+import type { MenuProps } from 'antd';
+import { useState } from 'react';
 
 const { Text } = Typography;
 
@@ -15,7 +15,7 @@ export interface ExportButtonProps {
   /** The export function for Excel format */
   exportExcel: () => Promise<Blob>;
   /** Current filters applied to the data */
-  filters?: Record<string, any>;
+  filters?: Record<string, unknown>;
   /** Whether the export button is disabled */
   disabled?: boolean;
   /** Custom loading state */
@@ -151,7 +151,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
               <br />
               <Text type='secondary'>
                 {Object.entries(filters)
-                  .filter(([_, value]) => value !== undefined && value !== null && value !== '')
+                  .filter(([, value]) => value !== undefined && value !== null && value !== '')
                   .map(([key, value]) => `${key}: ${value}`)
                   .join(', ')}
               </Text>

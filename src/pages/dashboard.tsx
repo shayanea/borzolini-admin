@@ -1,4 +1,3 @@
-import { Alert, Button, Col, Row, Spin } from 'antd';
 import {
   DashboardHeader,
   QuickActions,
@@ -6,6 +5,7 @@ import {
   StatisticsCards,
   TopPerformingClinics,
 } from '@/components/dashboard';
+import { Alert, Button, Col, Row, Spin } from 'antd';
 
 import { useDashboard } from '@/hooks/use-dashboard';
 
@@ -21,6 +21,8 @@ const Dashboard = () => {
     handleRefresh,
     isRefreshing,
   } = useDashboard();
+
+  console.log('stats', stats);
 
   if (loading && !stats) {
     return (

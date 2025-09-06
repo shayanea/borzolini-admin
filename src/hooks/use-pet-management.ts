@@ -1,11 +1,11 @@
 import type { Pet, PetFormData, UsePetManagementReturn } from '@/types';
-import React, { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { useCallback, useState } from 'react';
 
 import { CACHE_PRESETS } from '@/constants';
+import { useAuth } from '@/hooks/use-auth';
 import { PetsService } from '@/services/pets.service';
 import { message } from 'antd';
-import { useAuth } from '@/hooks/use-auth';
 
 // Types for query parameters
 interface PetsFilters {

@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { DEFAULT_SETTINGS } from '@/constants/settings';
-import type { SettingsFormValues } from '@/types/settings';
 import { SettingsService } from '@/services/settings.service';
+import type { SettingsFormValues } from '@/types/settings';
 import { message } from 'antd';
 import { useCallback } from 'react';
 
