@@ -1,13 +1,13 @@
 // Role-based route protection component
 import { Button, Result } from 'antd';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import React, { useCallback } from 'react';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { AuthBackground } from '@/components/common';
 import { ROUTES } from '@/constants';
-import { UserRole } from '@/types';
 import { getAccessibleRoutes } from '@/constants/menu-permissions';
 import { useCurrentUser } from '@/hooks/use-auth';
+import { UserRole } from '@/types';
 
 interface RoleProtectedRouteProps {
   children: React.ReactNode;
@@ -81,11 +81,6 @@ const RoleProtectedRoute = ({
     // For non-admin users trying to access admin routes, redirect to appointments
     if (userRole !== 'admin' && (currentPath === '/dashboard' || currentPath === '/settings')) {
       return <Navigate to={ROUTES.APPOINTMENTS} replace />;
-    }
-
-    // For admin users trying to access dashboard, redirect to settings
-    if (userRole === 'admin' && currentPath === '/dashboard') {
-      return <Navigate to={ROUTES.SETTINGS} replace />;
     }
 
     return (
