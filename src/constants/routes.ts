@@ -19,4 +19,5 @@ export const ROUTES: Record<string, string> = {
   PETS: '/pets',
   PET_CASES: '/pet-cases',
   REVIEWS: '/reviews',
+  ROLE_DEMO: '/role-demo',
 };

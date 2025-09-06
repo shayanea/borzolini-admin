@@ -10,6 +10,7 @@ import {
   Profile,
   Reports,
   Reviews,
+  RoleDemo,
   Settings,
   Users,
 } from '@/pages';
@@ -28,6 +29,8 @@ import {
 } from '@/ui';
 import { Route, Routes } from 'react-router-dom';
 
+import RoleIndicator from './role-indicator';
+import RoleProtectedRoute from '../auth/role-protected-route';
 import { User } from '@/types';
 import { useAdminLayoutLogic } from './admin-layout.logic';
 import { useMemo } from 'react';
@@ -76,8 +79,11 @@ const renderHeader = (
               />
               {!collapsed && (
                 <div className='text-left min-w-0'>
-                  <div className='font-medium text-text-primary truncate'>
-                    {user?.firstName} {user?.lastName}
+                  <div className='flex items-center space-x-2'>
+                    <div className='font-medium text-text-primary truncate'>
+                      {user?.firstName} {user?.lastName}
+                    </div>
+                    {user?.role && <RoleIndicator role={user.role as any} />}
                   </div>
                 </div>
               )}
@@ -97,22 +103,142 @@ const AdminLayout = () => {
   const routes = useMemo(
     () => (
       <Routes>
-        <Route path='dashboard' element={<Dashboard />} />
-        <Route path='calendar' element={<Calendar />} />
-        <Route path='appointments' element={<Appointments />} />
-        <Route path='clinics' element={<Clinics />} />
-        <Route path='clinics/create' element={<ClinicForm />} />
-        <Route path='clinics/edit/:id' element={<ClinicForm />} />
-        <Route path='users' element={<Users />} />
-        <Route path='veterinarians' element={<Users roleFilter={VETERINARIAN_ROLE_FILTER} />} />
-        <Route path='pet-cases' element={<PetCases />} />
-        <Route path='pets' element={<Pets />} />
-        <Route path='reports' element={<Reports />} />
-        <Route path='reviews' element={<Reviews />} />
-        <Route path='settings' element={<Settings />} />
-        <Route path='profile' element={<Profile />} />
-        <Route path='api-health' element={<ApiHealth />} />
-        <Route path='' element={<Dashboard />} />
+        <Route
+          path='dashboard'
+          element={
+            <RoleProtectedRoute>
+              <Dashboard />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='calendar'
+          element={
+            <RoleProtectedRoute>
+              <Calendar />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='appointments'
+          element={
+            <RoleProtectedRoute>
+              <Appointments />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='clinics'
+          element={
+            <RoleProtectedRoute requiredRole='admin'>
+              <Clinics />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='clinics/create'
+          element={
+            <RoleProtectedRoute requiredRole='admin'>
+              <ClinicForm />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='clinics/edit/:id'
+          element={
+            <RoleProtectedRoute requiredRole='admin'>
+              <ClinicForm />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='users'
+          element={
+            <RoleProtectedRoute requiredRole='admin'>
+              <Users />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='veterinarians'
+          element={
+            <RoleProtectedRoute requiredRole='admin'>
+              <Users roleFilter={VETERINARIAN_ROLE_FILTER} />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='pet-cases'
+          element={
+            <RoleProtectedRoute>
+              <PetCases />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='pets'
+          element={
+            <RoleProtectedRoute>
+              <Pets />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='reports'
+          element={
+            <RoleProtectedRoute>
+              <Reports />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='reviews'
+          element={
+            <RoleProtectedRoute>
+              <Reviews />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='settings'
+          element={
+            <RoleProtectedRoute>
+              <Settings />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='profile'
+          element={
+            <RoleProtectedRoute>
+              <Profile />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='api-health'
+          element={
+            <RoleProtectedRoute requiredRole='admin'>
+              <ApiHealth />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='role-demo'
+          element={
+            <RoleProtectedRoute requiredRole='admin'>
+              <RoleDemo />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path=''
+          element={
+            <RoleProtectedRoute>
+              <Dashboard />
+            </RoleProtectedRoute>
+          }
+        />
       </Routes>
     ),
     []

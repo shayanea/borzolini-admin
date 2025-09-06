@@ -11,5 +11,6 @@ export { default as Pets } from './pets';
 export { default as Profile } from './profile';
 export { default as Reports } from './reports';
 export { default as Reviews } from './reviews';
+export { default as RoleDemo } from './role-demo';
 export { default as Settings } from './settings';
 export { default as Users } from './users';

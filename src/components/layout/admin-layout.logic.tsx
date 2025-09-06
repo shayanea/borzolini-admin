@@ -1,22 +1,12 @@
-import {
-  BankOutlined,
-  CalendarOutlined,
-  DashboardOutlined,
-  FileTextOutlined,
-  HeartOutlined,
-  LogoutOutlined,
-  MonitorOutlined,
-  SettingOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from '@/ui';
-import { MenuProps, Tag } from 'antd';
-import { useMemo, useState } from 'react';
+import { LogoutOutlined, SettingOutlined, UserOutlined } from '@/ui';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useMemo, useState } from 'react';
 
+import { MenuProps } from 'antd';
 import { ROUTES } from '@/constants';
+import { UserRole } from '@/types';
+import { getMenuItemsForRole } from '@/constants/menu-permissions';
 import { useAuth } from '@/hooks/use-auth';
-import { MessageOutlined } from '@ant-design/icons';
 
 export const useAdminLayoutLogic = () => {
   const [collapsed, setCollapsed] = useState(true);
@@ -28,85 +18,41 @@ export const useAdminLayoutLogic = () => {
     setCollapsed(prev => !prev);
   };
 
-  // Menu items configuration (base)
-  const baseMenuItems: MenuProps['items'] = [
-    {
-      key: '/dashboard',
-      label: 'Dashboard',
-      icon: <DashboardOutlined />,
-      onClick: () => navigate(ROUTES.DASHBOARD),
+  // Get role-based menu items
+  const userRole = (user?.role as UserRole) || 'admin';
+  const roleMenuItems = getMenuItemsForRole(userRole);
+
+  // Convert role menu items to Ant Design menu format
+  const baseMenuItems: MenuProps['items'] = roleMenuItems.map(item => ({
+    key: item.key,
+    label: item.label,
+    icon: item.icon,
+    onClick: () => {
+      // Map menu keys to routes
+      const routeMap: Record<string, string> = {
+        '/dashboard': ROUTES.DASHBOARD,
+        '/calendar': ROUTES.CALENDAR,
+        '/appointments': ROUTES.APPOINTMENTS,
+        '/clinics': ROUTES.CLINICS,
+        '/users': ROUTES.USERS,
+        '/veterinarians': ROUTES.VETERINARIANS,
+        '/pets': ROUTES.PETS,
+        '/pet-cases': ROUTES.PET_CASES,
+        '/reports': ROUTES.REPORTS,
+        '/reviews': ROUTES.REVIEWS,
+        '/api-health': ROUTES.API_HEALTH,
+        '/role-demo': ROUTES.ROLE_DEMO,
+        '/settings': ROUTES.SETTINGS,
+      };
+
+      const route = routeMap[item.key];
+      if (route) {
+        navigate(route);
+      }
     },
-    {
-      key: '/calendar',
-      label: 'Calendar',
-      icon: <CalendarOutlined />,
-      onClick: () => navigate(ROUTES.CALENDAR),
-    },
-    {
-      key: '/appointments',
-      label: 'Appointments',
-      icon: <FileTextOutlined />,
-      onClick: () => navigate(ROUTES.APPOINTMENTS),
-    },
-    {
-      key: '/clinics',
-      label: 'Clinics',
-      icon: <BankOutlined />,
-      onClick: () => navigate(ROUTES.CLINICS),
-    },
-    {
-      key: '/users',
-      label: 'Users',
-      icon: <UserOutlined />,
-      onClick: () => navigate(ROUTES.USERS),
-    },
-    {
-      key: '/veterinarians',
-      label: 'Veterinarians',
-      icon: <TeamOutlined />,
-      onClick: () => navigate(ROUTES.VETERINARIANS),
-    },
-    {
-      key: '/pets',
-      label: 'Pets',
-      icon: <HeartOutlined />,
-      onClick: () => navigate(ROUTES.PETS),
-    },
-    {
-      key: '/reports',
-      label: (
-        <div className='flex items-center justify-between w-full'>
-          <span>Reports</span>
-          <Tag color='green'>Soon</Tag>
-        </div>
-      ),
-      icon: <FileTextOutlined />,
-      onClick: () => navigate(ROUTES.REPORTS),
-    },
-    {
-      key: '/reviews',
-      label: (
-        <div className='flex items-center justify-between w-full'>
-          <span>Reviews</span>
-          <Tag color='green'>Soon</Tag>
-        </div>
-      ),
-      icon: <MessageOutlined />,
-      onClick: () => navigate(ROUTES.REVIEWS),
-    },
-    {
-      key: '/api-health',
-      label: 'API Health',
-      icon: <MonitorOutlined />,
-      onClick: () => navigate(ROUTES.API_HEALTH),
-    },
-    {
-      key: '/settings',
-      label: 'Settings',
-      icon: <SettingOutlined />,
-      onClick: () => navigate(ROUTES.SETTINGS),
-    },
-  ];
+    className: item.className,
+    disabled: item.disabled,
+  }));
 
   // Get current selected menu item
   const getSelectedKey = (): string => {
