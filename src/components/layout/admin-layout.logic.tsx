@@ -19,7 +19,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { MessageOutlined } from '@ant-design/icons';
 
 export const useAdminLayoutLogic = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
