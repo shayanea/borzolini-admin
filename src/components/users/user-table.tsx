@@ -69,10 +69,22 @@ const UserTable = ({
       key: USER_TABLE_COLUMNS.VERIFICATION,
       render: (user: User) => {
         return (
-          <Badge
-            status={user.isActive ? 'success' : 'error'}
-            text={<span className='text-xs'>{user.isActive ? 'Active' : 'Inactive'}</span>}
-          />
+          <div className='space-y-1'>
+            <Badge
+              status={user.isEmailVerified ? 'success' : 'error'}
+              text={
+                <span className='text-xs'>
+                  {user.isEmailVerified ? 'Email Verified' : 'Email Unverified'}
+                </span>
+              }
+            />
+            <div>
+              <Badge
+                status={user.isActive ? 'success' : 'error'}
+                text={<span className='text-xs'>{user.isActive ? 'Active' : 'Inactive'}</span>}
+              />
+            </div>
+          </div>
         );
       },
     },

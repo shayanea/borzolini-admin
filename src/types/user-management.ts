@@ -56,4 +56,5 @@ export interface UserFormValues {
   city?: string;
   country?: string;
   isActive?: boolean;
+  isEmailVerified?: boolean;
 }

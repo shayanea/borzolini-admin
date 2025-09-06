@@ -1,6 +1,7 @@
 import { Alert, Button, Card, Form, Input, Typography } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, UserOutlined } from '@ant-design/icons';
 
+import { AuthBackground } from '@/components/common';
 import type { LoginCredentials } from '@/types';
 import { useCallback } from 'react';
 import { useLogin } from '@/hooks/use-auth';
@@ -28,18 +29,18 @@ export const LoginForm = () => {
   }, []);
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark p-4'>
-      <Card className='w-full max-w-md shadow-admin-lg p-8'>
+    <AuthBackground variant='pattern'>
+      <Card className='w-full shadow-admin-lg p-8 bg-white/95 backdrop-blur-sm'>
         <div className='text-center mb-8'>
           <div className='mb-4'>
-            <div className='w-16 h-16 bg-blue-900 rounded-full flex items-center justify-center mx-auto'>
+            <div className='w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto shadow-lg'>
               <UserOutlined className='text-2xl text-white' />
             </div>
           </div>
-          <Title level={2} className='!mb-2 text-primary-navy'>
+          <Title level={2} className='!mb-2 text-gray-800'>
             Welcome Back
           </Title>
-          <Text className='text-text-light'>Sign in to your Borzolini Admin account</Text>
+          <Text className='text-gray-600'>Sign in to your Borzolini Admin account</Text>
         </div>
 
         {loginMutation.error && (
@@ -71,9 +72,10 @@ export const LoginForm = () => {
             ]}
           >
             <Input
-              prefix={<UserOutlined className='text-text-light' />}
+              prefix={<UserOutlined className='text-gray-400' />}
               placeholder='Enter your email'
               autoComplete='email'
+              className='h-12'
             />
           </Form.Item>
 
@@ -86,10 +88,11 @@ export const LoginForm = () => {
             ]}
           >
             <Input.Password
-              prefix={<LockOutlined className='text-text-light' />}
+              prefix={<LockOutlined className='text-gray-400' />}
               placeholder='Enter your password'
               autoComplete='current-password'
               iconRender={handleIconRender}
+              className='h-12'
             />
           </Form.Item>
 
@@ -98,14 +101,14 @@ export const LoginForm = () => {
               type='primary'
               htmlType='submit'
               loading={loginMutation.isPending}
-              className='w-full h-12 bg-primary-navy hover:bg-primary-dark border-primary-navy hover:border-primary-dark'
+              className='w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 shadow-lg'
             >
               {loginMutation.isPending ? 'Signing In...' : 'Sign In'}
             </Button>
           </Form.Item>
         </Form>
       </Card>
-    </div>
+    </AuthBackground>
   );
 };
 

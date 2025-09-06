@@ -2,6 +2,7 @@ import { Button, Result, Spin } from 'antd';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import React, { useCallback } from 'react';
 
+import { AuthBackground } from '@/components/common';
 import { ROUTES } from '@/constants';
 import { useCurrentUser } from '@/hooks/use-auth';
 
@@ -27,12 +28,12 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   // Show loading while checking authentication
   if (isLoading) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark'>
+      <AuthBackground variant='gradient'>
         <div className='text-center'>
           <Spin size='large' className='mb-4' />
           <div className='text-white text-lg'>Validating authentication...</div>
         </div>
-      </div>
+      </AuthBackground>
     );
   }
 
@@ -44,7 +45,7 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   // Check role requirements if specified
   if (requiredRole && user.role !== requiredRole) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark p-4'>
+      <AuthBackground variant='gradient'>
         <Result
           status='403'
           title='Access Denied'
@@ -58,7 +59,7 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
             </Button>,
           ]}
         />
-      </div>
+      </AuthBackground>
     );
   }
 

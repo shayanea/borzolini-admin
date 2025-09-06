@@ -1,6 +1,6 @@
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@/ui';
+import React, { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useMemo, useState } from 'react';
 
 import { MenuProps } from 'antd';
 import { ROUTES } from '@/constants';
@@ -21,6 +21,16 @@ export const useAdminLayoutLogic = () => {
   // Get role-based menu items
   const userRole = (user?.role as UserRole) || 'admin';
   const roleMenuItems = getMenuItemsForRole(userRole);
+
+  // Redirect non-admin users to appointments if they try to access admin-only routes
+  React.useEffect(() => {
+    if (user && userRole !== 'admin') {
+      const currentPath = location.pathname;
+      if (currentPath === '/' || currentPath === '/dashboard' || currentPath === '/settings') {
+        navigate(ROUTES.APPOINTMENTS, { replace: true });
+      }
+    }
+  }, [user, userRole, location.pathname, navigate]);
 
   // Convert role menu items to Ant Design menu format
   const baseMenuItems: MenuProps['items'] = roleMenuItems.map(item => ({

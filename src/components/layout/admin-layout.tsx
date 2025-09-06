@@ -106,7 +106,7 @@ const AdminLayout = () => {
         <Route
           path='dashboard'
           element={
-            <RoleProtectedRoute>
+            <RoleProtectedRoute requiredRole='admin'>
               <Dashboard />
             </RoleProtectedRoute>
           }
@@ -202,7 +202,7 @@ const AdminLayout = () => {
         <Route
           path='settings'
           element={
-            <RoleProtectedRoute>
+            <RoleProtectedRoute requiredRole='admin'>
               <Settings />
             </RoleProtectedRoute>
           }
@@ -234,7 +234,7 @@ const AdminLayout = () => {
         <Route
           path=''
           element={
-            <RoleProtectedRoute>
+            <RoleProtectedRoute requiredRole='admin'>
               <Dashboard />
             </RoleProtectedRoute>
           }

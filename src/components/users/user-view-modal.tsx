@@ -1,3 +1,4 @@
+import { EnvironmentOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import {
   Avatar,
   Badge,
@@ -11,10 +12,9 @@ import {
   Tag,
   Typography,
 } from 'antd';
-import { EnvironmentOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 
-import { PetsService } from '@/services/pets.service';
 import { ROLE_COLORS } from '@/constants';
+import { PetsService } from '@/services/pets.service';
 import type { User } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 
@@ -155,8 +155,8 @@ const UserViewModal = ({
             </Descriptions.Item>
             <Descriptions.Item label='Email Verified'>
               <Badge
-                status={(user.isEmailVerified ?? user.verified) ? 'success' : 'error'}
-                text={(user.isEmailVerified ?? user.verified) ? 'Verified' : 'Not Verified'}
+                status={user.isEmailVerified ? 'success' : 'error'}
+                text={user.isEmailVerified ? 'Verified' : 'Not Verified'}
               />
             </Descriptions.Item>
             <Descriptions.Item label='Phone Verified'>

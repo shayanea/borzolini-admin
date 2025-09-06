@@ -1,17 +1,12 @@
 // Role-based menu permissions and configurations
 import {
-  BankOutlined,
   BarChartOutlined,
   CalendarOutlined,
   DashboardOutlined,
   FileTextOutlined,
   HeartOutlined,
   MedicineBoxOutlined,
-  MessageOutlined,
-  MonitorOutlined,
   SettingOutlined,
-  TeamOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
 
 import React from 'react';
@@ -37,93 +32,6 @@ export const MENU_ITEMS: Record<UserRole, MenuItemConfig[]> = {
       key: '/dashboard',
       label: 'Dashboard',
       icon: React.createElement(DashboardOutlined),
-      onClick: () => {},
-      roles: ['admin'],
-    },
-    {
-      key: '/calendar',
-      label: 'Calendar',
-      icon: React.createElement(CalendarOutlined),
-      onClick: () => {},
-      roles: ['admin'],
-    },
-    {
-      key: '/appointments',
-      label: 'Appointments',
-      icon: React.createElement(FileTextOutlined),
-      onClick: () => {},
-      roles: ['admin'],
-    },
-    {
-      key: '/clinics',
-      label: 'Clinics',
-      icon: React.createElement(BankOutlined),
-      onClick: () => {},
-      roles: ['admin'],
-    },
-    {
-      key: '/users',
-      label: 'Users',
-      icon: React.createElement(UserOutlined),
-      onClick: () => {},
-      roles: ['admin'],
-    },
-    {
-      key: '/veterinarians',
-      label: 'Veterinarians',
-      icon: React.createElement(TeamOutlined),
-      onClick: () => {},
-      roles: ['admin'],
-    },
-    {
-      key: '/pets',
-      label: 'Pets',
-      icon: React.createElement(HeartOutlined),
-      onClick: () => {},
-      roles: ['admin'],
-    },
-    {
-      key: '/pet-cases',
-      label: 'Pet Cases',
-      icon: React.createElement(MedicineBoxOutlined),
-      onClick: () => {},
-      roles: ['admin'],
-    },
-    {
-      key: '/reports',
-      label: React.createElement(
-        'div',
-        { className: 'flex items-center justify-between w-full' },
-        React.createElement('span', null, 'Reports'),
-        React.createElement(Tag, { color: 'green' }, 'Soon')
-      ),
-      icon: React.createElement(BarChartOutlined),
-      onClick: () => {},
-      roles: ['admin'],
-    },
-    {
-      key: '/reviews',
-      label: React.createElement(
-        'div',
-        { className: 'flex items-center justify-between w-full' },
-        React.createElement('span', null, 'Reviews'),
-        React.createElement(Tag, { color: 'green' }, 'Soon')
-      ),
-      icon: React.createElement(MessageOutlined),
-      onClick: () => {},
-      roles: ['admin'],
-    },
-    {
-      key: '/api-health',
-      label: 'API Health',
-      icon: React.createElement(MonitorOutlined),
-      onClick: () => {},
-      roles: ['admin'],
-    },
-    {
-      key: '/role-demo',
-      label: 'Role Demo',
-      icon: React.createElement(UserOutlined),
       onClick: () => {},
       roles: ['admin'],
     },

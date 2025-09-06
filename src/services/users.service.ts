@@ -23,6 +23,7 @@ export interface UpdateUserData {
   country?: string;
   role?: UserRole;
   isActive?: boolean;
+  isEmailVerified?: boolean;
 }
 
 export interface UsersQueryParams {

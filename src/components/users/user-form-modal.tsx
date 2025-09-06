@@ -1,8 +1,8 @@
 import { Button, Col, Form, Input, Modal, Row, Select, Space, Switch } from 'antd';
 import React, { useCallback } from 'react';
+import type { UserFormModalProps, UserFormValues } from '@/types/user-management';
 
 import { USER_ROLES } from '@/constants/user-management';
-import type { UserFormModalProps } from '@/types/user-management';
 
 const { Option } = Select;
 
@@ -28,6 +28,7 @@ const UserFormModal = ({
           city: editingUser.city,
           country: editingUser.country,
           isActive: editingUser.isActive,
+          isEmailVerified: editingUser.isEmailVerified,
         });
       } else {
         form.resetFields();
@@ -36,7 +37,7 @@ const UserFormModal = ({
   }, [editingUser, form, isVisible]);
 
   const handleSubmit = useCallback(
-    (values: any) => {
+    (values: UserFormValues) => {
       onSubmit(values);
     },
     [onSubmit]
@@ -142,6 +143,14 @@ const UserFormModal = ({
           <Col span={12}>
             <Form.Item name='isActive' label='Account Status' valuePropName='checked'>
               <Switch checkedChildren='Active' unCheckedChildren='Inactive' />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item name='isEmailVerified' label='Email Verification' valuePropName='checked'>
+              <Switch checkedChildren='Verified' unCheckedChildren='Unverified' />
             </Form.Item>
           </Col>
         </Row>

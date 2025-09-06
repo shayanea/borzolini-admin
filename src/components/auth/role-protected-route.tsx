@@ -3,6 +3,7 @@ import { Button, Result } from 'antd';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import React, { useCallback } from 'react';
 
+import { AuthBackground } from '@/components/common';
 import { ROUTES } from '@/constants';
 import { UserRole } from '@/types';
 import { getAccessibleRoutes } from '@/constants/menu-permissions';
@@ -17,7 +18,7 @@ interface RoleProtectedRouteProps {
 const RoleProtectedRoute = ({
   children,
   requiredRole,
-  fallbackRoute = ROUTES.DASHBOARD,
+  fallbackRoute = ROUTES.APPOINTMENTS,
 }: RoleProtectedRouteProps) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,11 +35,11 @@ const RoleProtectedRoute = ({
   // Show loading while checking authentication
   if (isLoading) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark'>
+      <AuthBackground variant='gradient'>
         <div className='text-center'>
           <div className='text-white text-lg'>Validating access...</div>
         </div>
-      </div>
+      </AuthBackground>
     );
   }
 
@@ -57,7 +58,7 @@ const RoleProtectedRoute = ({
   // Check specific role requirement if specified
   if (requiredRole && userRole !== requiredRole) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark p-4'>
+      <AuthBackground variant='gradient'>
         <Result
           status='403'
           title='Access Denied'
@@ -71,14 +72,19 @@ const RoleProtectedRoute = ({
             </Button>,
           ]}
         />
-      </div>
+      </AuthBackground>
     );
   }
 
   // Check if user has access to the current route based on their role
   if (!hasAccess) {
+    // For non-admin users trying to access admin routes, redirect to appointments
+    if (userRole !== 'admin' && (currentPath === '/dashboard' || currentPath === '/settings')) {
+      return <Navigate to={ROUTES.APPOINTMENTS} replace />;
+    }
+
     return (
-      <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark p-4'>
+      <AuthBackground variant='gradient'>
         <Result
           status='403'
           title='Access Denied'
@@ -92,7 +98,7 @@ const RoleProtectedRoute = ({
             </Button>,
           ]}
         />
-      </div>
+      </AuthBackground>
     );
   }
 
