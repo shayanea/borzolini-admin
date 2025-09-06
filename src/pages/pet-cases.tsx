@@ -1,17 +1,18 @@
 // Pet Cases Management Page
 import { Alert, Layout, Pagination } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { CaseFilters, ClinicPetCase } from '../types/pet-cases';
 import {
+  PetCaseFormModal,
   PetCaseStatsCard,
   PetCaseViewModal,
   PetCasesFilters,
   PetCasesHeader,
   PetCasesTable,
 } from '../components/pet-cases';
-import { CaseFilters, ClinicPetCase } from '../types/pet-cases';
+import React, { useEffect, useState } from 'react';
 
-import { useSearchParams } from 'react-router-dom';
 import { usePetCases } from '../hooks/use-pet-cases';
+import { useSearchParams } from 'react-router-dom';
 
 const { Content } = Layout;
 
@@ -22,6 +23,7 @@ const PetCasesPage: React.FC = () => {
   const [page, setPage] = useState(1);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [viewModalVisible, setViewModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const [selectedCase, setSelectedCase] = useState<ClinicPetCase | null>(null);
 
   const {
@@ -57,18 +59,29 @@ const PetCasesPage: React.FC = () => {
     setSelectedRowKeys([]);
   };
 
-  const handleViewCase = (caseData: any) => {
+  const handleViewCase = (caseData: ClinicPetCase) => {
     setSelectedCase(caseData);
     setViewModalVisible(true);
   };
 
-  const handleEditCase = (caseData: any) => {
-    // TODO: Implement edit modal
-    console.log('Edit case:', caseData);
+  const handleEditCase = (caseData: ClinicPetCase) => {
+    setSelectedCase(caseData);
+    setEditModalVisible(true);
   };
 
   const handleCloseViewModal = () => {
     setViewModalVisible(false);
+    setSelectedCase(null);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalVisible(false);
+    setSelectedCase(null);
+  };
+
+  const handleEditSuccess = () => {
+    refetch();
+    setEditModalVisible(false);
     setSelectedCase(null);
   };
 
@@ -209,7 +222,7 @@ const PetCasesPage: React.FC = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className='px-6 py-4 border-t border-gray-200'>
+              <div className='px-6 py-4 border-t border-gray-200 flex justify-center'>
                 <Pagination
                   current={currentPage}
                   total={total}
@@ -243,6 +256,15 @@ const PetCasesPage: React.FC = () => {
             onClose={handleCloseViewModal}
             onEdit={handleEditCase}
             clinicId={clinicId}
+          />
+
+          {/* Edit Case Modal */}
+          <PetCaseFormModal
+            visible={editModalVisible}
+            onClose={handleCloseEditModal}
+            onSuccess={handleEditSuccess}
+            clinicId={clinicId}
+            editCase={selectedCase}
           />
         </div>
       </Content>

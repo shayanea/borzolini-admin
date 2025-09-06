@@ -1,7 +1,5 @@
 import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  message as antMessage,
   Button,
   Card,
   Col,
@@ -12,13 +10,15 @@ import {
   Space,
   Switch,
   Typography,
+  message as antMessage,
 } from 'antd';
-import { useEffect } from 'react';
+import type { CreateClinicData, OperatingHours, UpdateClinicData } from '@/types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ROUTES } from '@/constants';
 import { ClinicsService } from '@/services/clinics.service';
-import type { CreateClinicData, OperatingHours, UpdateClinicData } from '@/types';
+import { ROUTES } from '@/constants';
+import { useEffect } from 'react';
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
@@ -232,7 +232,6 @@ const ClinicForm = () => {
       <Form
         form={form}
         layout='vertical'
-        className='max-w-4xl'
         initialValues={{
           is_active: true,
           country: 'United States',

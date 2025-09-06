@@ -1,3 +1,4 @@
+import { Badge, Button, Space, Typography } from 'antd';
 // Pet Cases Header Component
 import {
   BarChartOutlined,
@@ -5,9 +6,9 @@ import {
   PlusOutlined,
   ReloadOutlined,
 } from '@ant-design/icons';
-import { Badge, Button, Space, Typography } from 'antd';
-import React from 'react';
+
 import { CaseStats } from '../../types/pet-cases';
+import React from 'react';
 
 const { Title } = Typography;
 
@@ -33,28 +34,24 @@ const PetCasesHeader: React.FC<PetCasesHeaderProps> = ({
   onViewStats,
 }) => {
   return (
-    <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6'>
-      <div>
-        <Title level={3} className='mb-1'>
-          Pet Cases Management
-        </Title>
-        <div className='flex items-center gap-4 text-gray-600'>
-          <span>Total Cases: {totalCases}</span>
-          {stats && (
-            <>
-              <Badge color='red' count={stats.urgent} showZero>
-                <span>Urgent: {stats.urgent}</span>
-              </Badge>
-              <span>Resolved: {stats.resolved}</span>
-              <span>Avg. Resolution: {stats.averageResolutionTime} days</span>
-            </>
-          )}
-          {selectedCount > 0 && (
-            <Badge color='blue' count={selectedCount}>
-              <span>Selected: {selectedCount}</span>
-            </Badge>
-          )}
-        </div>
+    <div className='mb-6'>
+      <Title level={3} className='mb-4'>
+        Pet Cases Management
+      </Title>
+      <div className='flex items-center gap-4 text-gray-600 mb-4'>
+        <span>Total Cases: {totalCases}</span>
+        {stats && (
+          <>
+            <span>Urgent: {stats.urgent}</span>
+            <span>Resolved: {stats.resolved}</span>
+            <span>Avg. Resolution: {stats.averageResolutionTime} days</span>
+          </>
+        )}
+        {selectedCount > 0 && (
+          <Badge color='blue' count={selectedCount}>
+            <span>Selected: {selectedCount}</span>
+          </Badge>
+        )}
       </div>
 
       <Space wrap>

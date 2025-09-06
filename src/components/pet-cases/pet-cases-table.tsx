@@ -1,3 +1,4 @@
+import { Avatar, Button, Dropdown, Space, Table, Tag, Tooltip } from 'antd';
 // Pet Cases Table Component
 import {
   ClockCircleOutlined,
@@ -7,11 +8,11 @@ import {
   MoreOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Button, Dropdown, Space, Table, Tag, Tooltip } from 'antd';
-import dayjs from 'dayjs';
 import React, { useState } from 'react';
-import { PetCasesService } from '../../services/pet-cases.service';
+
 import { ClinicPetCase } from '../../types/pet-cases';
+import { PetCasesService } from '../../services/pet-cases.service';
+import dayjs from 'dayjs';
 
 interface PetCasesTableProps {
   cases: ClinicPetCase[];
@@ -71,7 +72,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
       title: 'Type',
       dataIndex: 'case_type',
       key: 'case_type',
-      width: 120,
+      width: 180,
       render: (caseType: string) => (
         <Tag color='blue'>{caseType.replace('_', ' ').toUpperCase()}</Tag>
       ),
@@ -80,7 +81,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      width: 140,
+      width: 180,
       render: (status: string) => (
         <Tag color={getStatusColor(status)}>{getStatusLabel(status)}</Tag>
       ),
@@ -97,7 +98,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
     {
       title: 'Vet',
       key: 'vet',
-      width: 120,
+      width: 200,
       render: (record: ClinicPetCase) => (
         <div className='flex items-center space-x-2'>
           <Avatar size='small' icon={<UserOutlined />} />
@@ -239,7 +240,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
 
   const rowSelection = {
     selectedRowKeys,
-    onChange: (selectedRowKeys: React.Key[], _selectedRows: ClinicPetCase[]) => {
+    onChange: (selectedRowKeys: React.Key[]) => {
       onSelectionChange(selectedRowKeys as string[]);
     },
   };

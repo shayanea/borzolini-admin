@@ -23,16 +23,14 @@ import {
   Menu,
   MenuOutlined,
   MenuProps,
-  PlusOutlined,
-  Space,
   Typography,
   UserOutlined,
 } from '@/ui';
 import { Route, Routes } from 'react-router-dom';
 
 import { User } from '@/types';
-import { useMemo } from 'react';
 import { useAdminLayoutLogic } from './admin-layout.logic';
+import { useMemo } from 'react';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -42,7 +40,6 @@ const VETERINARIAN_ROLE_FILTER = 'veterinarian' as const;
 
 const renderHeader = (
   handleToggleCollapsed: () => void,
-  navigateToNewAppointment: () => void,
   userMenuItems: MenuProps['items'],
   user: User | null,
   collapsed: boolean
@@ -60,20 +57,8 @@ const renderHeader = (
         </div>
 
         <div className='flex items-center space-x-4 flex-shrink-0 ml-auto'>
-          {/* Action Buttons */}
-          <Space>
-            <Button
-              type='primary'
-              icon={<PlusOutlined />}
-              className='bg-primary-navy border-primary-navy hover:bg-primary-dark hover:border-primary-dark whitespace-nowrap'
-              onClick={navigateToNewAppointment}
-            >
-              New Appointment
-            </Button>
-          </Space>
-
           {/* Notifications */}
-          <Badge count={3} size='small'>
+          <Badge count={0} size='small'>
             <Button
               type='text'
               icon={<BellOutlined />}
@@ -105,15 +90,8 @@ const renderHeader = (
 };
 
 const AdminLayout = () => {
-  const {
-    collapsed,
-    menuItems,
-    getSelectedKey,
-    handleToggleCollapsed,
-    userMenuItems,
-    user,
-    navigateToNewAppointment,
-  } = useAdminLayoutLogic();
+  const { collapsed, menuItems, getSelectedKey, handleToggleCollapsed, userMenuItems, user } =
+    useAdminLayoutLogic();
 
   // Memoize the routes to prevent unnecessary re-renders
   const routes = useMemo(
@@ -191,13 +169,7 @@ const AdminLayout = () => {
           minHeight: '100vh',
         }}
       >
-        {renderHeader(
-          handleToggleCollapsed,
-          navigateToNewAppointment,
-          userMenuItems,
-          user || null,
-          collapsed
-        )}
+        {renderHeader(handleToggleCollapsed, userMenuItems, user || null, collapsed)}
         <Content className='admin-content p-6 w-full'>
           <div className='max-w-7xl mr-auto w-full'>{routes}</div>
         </Content>
