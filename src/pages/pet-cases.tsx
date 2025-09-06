@@ -1,14 +1,17 @@
-// Pet Cases Management Page
-import { Alert, Layout, Pagination } from 'antd';
-import { CaseFilters, ClinicPetCase } from '../types/pet-cases';
 import {
+  AdvancedStatsOverview,
+  CaseTypeDistribution,
+  InteractiveCharts,
+  PerformanceMetrics,
   PetCaseFormModal,
-  PetCaseStatsCard,
   PetCaseViewModal,
   PetCasesFilters,
   PetCasesHeader,
   PetCasesTable,
 } from '../components/pet-cases';
+// Pet Cases Management Page
+import { Alert, Layout, Pagination } from 'antd';
+import { CaseFilters, ClinicPetCase } from '../types/pet-cases';
 import React, { useEffect, useState } from 'react';
 
 import { usePetCases } from '../hooks/use-pet-cases';
@@ -25,6 +28,35 @@ const PetCasesPage: React.FC = () => {
   const [viewModalVisible, setViewModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [selectedCase, setSelectedCase] = useState<ClinicPetCase | null>(null);
+
+  // Default stats object to avoid repetition
+  const defaultStats = {
+    total: 0,
+    byStatus: {
+      open: 0,
+      in_progress: 0,
+      pending_consultation: 0,
+      pending_visit: 0,
+      under_observation: 0,
+      resolved: 0,
+      closed: 0,
+      escalated: 0,
+    },
+    byPriority: { low: 0, normal: 0, high: 0, urgent: 0, emergency: 0 },
+    byType: {
+      consultation: 0,
+      follow_up: 0,
+      emergency: 0,
+      preventive: 0,
+      chronic_condition: 0,
+      post_surgery: 0,
+      behavioral: 0,
+      nutritional: 0,
+    },
+    urgent: 0,
+    resolved: 0,
+    averageResolutionTime: 0,
+  };
 
   const {
     cases,
@@ -122,74 +154,24 @@ const PetCasesPage: React.FC = () => {
   return (
     <Layout className='min-h-screen'>
       <Content className='p-6'>
-        <div className='max-w-7xl mx-auto'>
-          {/* Statistics Card */}
-          <PetCaseStatsCard
-            stats={
-              stats || {
-                total: 0,
-                byStatus: {
-                  open: 0,
-                  in_progress: 0,
-                  pending_consultation: 0,
-                  pending_visit: 0,
-                  under_observation: 0,
-                  resolved: 0,
-                  closed: 0,
-                  escalated: 0,
-                },
-                byPriority: { low: 0, normal: 0, high: 0, urgent: 0, emergency: 0 },
-                byType: {
-                  consultation: 0,
-                  follow_up: 0,
-                  emergency: 0,
-                  preventive: 0,
-                  chronic_condition: 0,
-                  post_surgery: 0,
-                  behavioral: 0,
-                  nutritional: 0,
-                },
-                urgent: 0,
-                resolved: 0,
-                averageResolutionTime: 0,
-              }
-            }
-            loading={isLoading}
-          />
+        <div className='max-w-7xl mx-auto space-y-8'>
+          {/* Advanced Statistics Overview */}
+          <AdvancedStatsOverview stats={stats || defaultStats} loading={isLoading} />
+
+          {/* Interactive Charts */}
+          <InteractiveCharts stats={stats || defaultStats} loading={isLoading} />
+
+          {/* Case Type Distribution */}
+          <CaseTypeDistribution stats={stats || defaultStats} loading={isLoading} />
+
+          {/* Performance Metrics */}
+          <PerformanceMetrics stats={stats || defaultStats} loading={isLoading} />
 
           {/* Page Header */}
           <PetCasesHeader
             totalCases={total}
             selectedCount={selectedRowKeys.length}
-            stats={
-              stats || {
-                total: 0,
-                byStatus: {
-                  open: 0,
-                  in_progress: 0,
-                  pending_consultation: 0,
-                  pending_visit: 0,
-                  under_observation: 0,
-                  resolved: 0,
-                  closed: 0,
-                  escalated: 0,
-                },
-                byPriority: { low: 0, normal: 0, high: 0, urgent: 0, emergency: 0 },
-                byType: {
-                  consultation: 0,
-                  follow_up: 0,
-                  emergency: 0,
-                  preventive: 0,
-                  chronic_condition: 0,
-                  post_surgery: 0,
-                  behavioral: 0,
-                  nutritional: 0,
-                },
-                urgent: 0,
-                resolved: 0,
-                averageResolutionTime: 0,
-              }
-            }
+            stats={stats || defaultStats}
             loading={isLoading}
             onCreateCase={handleCreateCase}
             onExport={handleExport}
@@ -241,7 +223,7 @@ const PetCasesPage: React.FC = () => {
             <div className='mt-4'>
               <Alert
                 message='Error Loading Cases'
-                description={error.message}
+                description={error?.message || 'An error occurred while loading cases'}
                 type='error'
                 showIcon
                 closable

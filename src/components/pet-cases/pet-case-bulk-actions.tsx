@@ -6,8 +6,9 @@ import {
   ExclamationCircleOutlined,
   MoreOutlined,
 } from '@ant-design/icons';
-import { Button, Dropdown, Space, message } from 'antd';
+import { Button, Dropdown, Space } from 'antd';
 import React from 'react';
+import { useMessage } from '../../hooks/use-message';
 
 interface PetCaseBulkActionsProps {
   selectedCaseIds: string[];
@@ -22,31 +23,32 @@ const PetCaseBulkActions: React.FC<PetCaseBulkActionsProps> = ({
   onClearSelection,
   loading = false,
 }) => {
+  const { success, error, warning, info } = useMessage();
   const handleBulkAction = (action: string) => {
     if (selectedCaseIds.length === 0) {
-      message.warning('Please select cases first');
+      warning('Please select cases first');
       return;
     }
 
     switch (action) {
       case 'mark_resolved':
         onBulkUpdate(selectedCaseIds, 'resolved');
-        message.success(`Marked ${selectedCaseIds.length} cases as resolved`);
+        success(`Marked ${selectedCaseIds.length} cases as resolved`);
         break;
       case 'mark_pending':
         onBulkUpdate(selectedCaseIds, 'pending_consultation');
-        message.success(`Marked ${selectedCaseIds.length} cases as pending`);
+        success(`Marked ${selectedCaseIds.length} cases as pending`);
         break;
       case 'mark_urgent':
         onBulkUpdate(selectedCaseIds, 'urgent');
-        message.success(`Marked ${selectedCaseIds.length} cases as urgent`);
+        success(`Marked ${selectedCaseIds.length} cases as urgent`);
         break;
       case 'delete':
         // TODO: Implement delete confirmation modal
-        message.info('Delete functionality coming soon');
+        info('Delete functionality coming soon');
         break;
       default:
-        message.error('Unknown action');
+        error('Unknown action');
     }
   };
 

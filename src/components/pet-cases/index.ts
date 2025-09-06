@@ -1,4 +1,8 @@
 // Pet Cases Components Exports
+export { default as AdvancedStatsOverview } from './advanced-stats-overview';
+export { default as CaseTypeDistribution } from './case-type-distribution';
+export { default as InteractiveCharts } from './interactive-charts';
+export { default as PerformanceMetrics } from './performance-metrics';
 export { default as PetCaseBulkActions } from './pet-case-bulk-actions';
 export { default as PetCaseFormModal } from './pet-case-form-modal';
 export { default as PetCaseStatsCard } from './pet-case-stats-card';

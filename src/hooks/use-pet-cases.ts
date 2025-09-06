@@ -1,7 +1,3 @@
-// Hook for Pet Cases Management
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { message } from 'antd';
-import { PetCasesService } from '../services/pet-cases.service';
 import {
   AddTimelineEventRequest,
   CaseFilters,
@@ -11,6 +7,11 @@ import {
   PetCasesResponse,
   UpdatePetCaseRequest,
 } from '../types/pet-cases';
+// Hook for Pet Cases Management
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { PetCasesService } from '../services/pet-cases.service';
+import { useMessage } from './use-message';
 
 export const usePetCases = (
   clinicId: string,
@@ -19,6 +20,7 @@ export const usePetCases = (
   limit: number = 10
 ) => {
   const queryClient = useQueryClient();
+  const { success, error: showError } = useMessage();
 
   // Query for fetching cases
   const {
@@ -47,10 +49,10 @@ export const usePetCases = (
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pet-cases', clinicId] });
       queryClient.invalidateQueries({ queryKey: ['pet-cases-stats', clinicId] });
-      message.success('Pet case created successfully');
+      success('Pet case created successfully');
     },
     onError: (error: any) => {
-      message.error(`Failed to create case: ${error.message}`);
+      showError(`Failed to create case: ${error.message}`);
     },
   });
 
@@ -61,10 +63,10 @@ export const usePetCases = (
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pet-cases', clinicId] });
       queryClient.invalidateQueries({ queryKey: ['pet-cases-stats', clinicId] });
-      message.success('Pet case updated successfully');
+      success('Pet case updated successfully');
     },
     onError: (error: any) => {
-      message.error(`Failed to update case: ${error.message}`);
+      showError(`Failed to update case: ${error.message}`);
     },
   });
 
@@ -74,10 +76,10 @@ export const usePetCases = (
       PetCasesService.addTimelineEvent(clinicId, caseId, eventData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pet-cases', clinicId] });
-      message.success('Timeline event added successfully');
+      success('Timeline event added successfully');
     },
     onError: (error: any) => {
-      message.error(`Failed to add timeline event: ${error.message}`);
+      showError(`Failed to add timeline event: ${error.message}`);
     },
   });
 
@@ -114,6 +116,7 @@ export const usePetCases = (
 
 export const usePetCase = (clinicId: string, caseId: string) => {
   const queryClient = useQueryClient();
+  const { success, error: showError } = useMessage();
 
   // Query for fetching a specific case
   const {
@@ -136,10 +139,10 @@ export const usePetCase = (clinicId: string, caseId: string) => {
       queryClient.invalidateQueries({ queryKey: ['pet-case', clinicId, caseId] });
       queryClient.invalidateQueries({ queryKey: ['pet-cases', clinicId] });
       queryClient.invalidateQueries({ queryKey: ['pet-cases-stats', clinicId] });
-      message.success('Pet case updated successfully');
+      success('Pet case updated successfully');
     },
     onError: (error: any) => {
-      message.error(`Failed to update case: ${error.message}`);
+      showError(`Failed to update case: ${error.message}`);
     },
   });
 
@@ -156,6 +159,7 @@ export const usePetCase = (clinicId: string, caseId: string) => {
 
 export const useCaseTimeline = (clinicId: string, caseId: string) => {
   const queryClient = useQueryClient();
+  const { success, error: showError } = useMessage();
 
   // Query for fetching case timeline
   const {
@@ -177,10 +181,10 @@ export const useCaseTimeline = (clinicId: string, caseId: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['case-timeline', clinicId, caseId] });
       queryClient.invalidateQueries({ queryKey: ['pet-case', clinicId, caseId] });
-      message.success('Timeline event added successfully');
+      success('Timeline event added successfully');
     },
     onError: (error: any) => {
-      message.error(`Failed to add timeline event: ${error.message}`);
+      showError(`Failed to add timeline event: ${error.message}`);
     },
   });
 

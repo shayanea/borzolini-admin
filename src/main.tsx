@@ -1,12 +1,12 @@
 import 'dayjs/locale/en';
 import './index.css';
 
+import { App as AntdApp, ConfigProvider } from 'antd';
 import { CACHE_PRESETS, theme } from './constants';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import App from './app.tsx';
 import { BrowserRouter } from 'react-router-dom';
-import { ConfigProvider } from 'antd';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -31,9 +31,11 @@ ReactDOM.createRoot(document.getElementById('root') ?? document.body).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <ConfigProvider theme={theme}>
-        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <App />
-        </BrowserRouter>
+        <AntdApp>
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <App />
+          </BrowserRouter>
+        </AntdApp>
       </ConfigProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

@@ -120,7 +120,7 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
       onCancel={onCancel}
       footer={null}
       width={900}
-      destroyOnClose
+      destroyOnHidden
     >
       <div className='space-y-6'>
         {/* Pet & Owner Information */}

@@ -1,14 +1,16 @@
-// Pet Case Form Modal Component
-import { HeartOutlined } from '@ant-design/icons';
-import { Button, Col, Divider, Form, Input, Modal, Row, Select, Space, message } from 'antd';
-import React, { useEffect } from 'react';
-import { usePetCases } from '../../hooks/use-pet-cases';
+import { Button, Col, Divider, Form, Input, Modal, Row, Select, Space } from 'antd';
 import {
   CASE_PRIORITY_LABELS,
   CASE_TYPE_LABELS,
   CreatePetCaseRequest,
   UpdatePetCaseRequest,
 } from '../../types/pet-cases';
+import React, { useEffect } from 'react';
+
+// Pet Case Form Modal Component
+import { HeartOutlined } from '@ant-design/icons';
+import { useMessage } from '../../hooks/use-message';
+import { usePetCases } from '../../hooks/use-pet-cases';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -30,6 +32,7 @@ const PetCaseFormModal: React.FC<PetCaseFormModalProps> = ({
 }) => {
   const [form] = Form.useForm();
   const { updateCase, isCreating, isUpdating } = usePetCases(clinicId);
+  const { success, error: showError, warning } = useMessage();
 
   const isEdit = !!editCase;
 
@@ -70,17 +73,17 @@ const PetCaseFormModal: React.FC<PetCaseFormModalProps> = ({
           caseId: editCase.id,
           updateData: caseData as UpdatePetCaseRequest,
         });
-        message.success('Case updated successfully');
+        success('Case updated successfully');
       } else {
         // For create, we need pet_id - this would come from a pet selection
-        message.warning('Pet selection required for new cases');
+        warning('Pet selection required for new cases');
         return;
       }
 
       onSuccess();
       onClose();
     } catch (error: any) {
-      message.error(`Failed to ${isEdit ? 'update' : 'create'} case: ${error.message}`);
+      showError(`Failed to ${isEdit ? 'update' : 'create'} case: ${error.message}`);
     }
   };
 
@@ -101,7 +104,7 @@ const PetCaseFormModal: React.FC<PetCaseFormModalProps> = ({
       onCancel={handleClose}
       width={800}
       footer={null}
-      destroyOnClose
+      destroyOnHidden
     >
       <Form
         form={form}
