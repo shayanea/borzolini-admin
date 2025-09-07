@@ -1,7 +1,6 @@
 // Role-based menu permissions and configurations
 import {
   BarChartOutlined,
-  CalendarOutlined,
   DashboardOutlined,
   ExperimentOutlined,
   FileTextOutlined,
@@ -36,13 +35,6 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     icon: React.createElement(DashboardOutlined),
     onClick: () => {},
     roles: ['admin', 'veterinarian', 'staff', 'patient'],
-  },
-  {
-    key: '/calendar',
-    label: 'Calendar',
-    icon: React.createElement(CalendarOutlined),
-    onClick: () => {},
-    roles: ['admin', 'veterinarian', 'staff'],
   },
   {
     key: '/appointments',
@@ -81,21 +73,42 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
   },
   {
     key: '/reports',
-    label: 'Reports',
+    label: (
+      <div className='relative'>
+        <span>Reports</span>
+        <span className='absolute top-2 -right-0 text-xs bg-orange-100 text-orange-600 p-1 rounded-md'>
+          Soon
+        </span>
+      </div>
+    ),
     icon: React.createElement(BarChartOutlined),
     onClick: () => {},
     roles: ['admin', 'veterinarian', 'staff'],
   },
   {
     key: '/reviews',
-    label: 'Reviews',
+    label: (
+      <div className='relative'>
+        <span>Reviews</span>
+        <span className='absolute top-2 -right-0 text-xs bg-orange-100 text-orange-600 p-1 rounded-md'>
+          Soon
+        </span>
+      </div>
+    ),
     icon: React.createElement(StarOutlined),
     onClick: () => {},
     roles: ['admin', 'veterinarian', 'staff', 'patient'],
   },
   {
     key: '/api-health',
-    label: 'API Health',
+    label: (
+      <div className='relative'>
+        <span>API Health</span>
+        <span className='absolute top-2 -right-0 text-xs bg-orange-100 text-orange-600 p-1 rounded-md'>
+          Soon
+        </span>
+      </div>
+    ),
     icon: React.createElement(MonitorOutlined),
     onClick: () => {},
     roles: ['admin'],

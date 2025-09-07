@@ -29,10 +29,10 @@ import {
 } from '@/ui';
 import { Route, Routes } from 'react-router-dom';
 
-import { User } from '@/types';
-import { useMemo } from 'react';
 import RoleProtectedRoute from '../auth/role-protected-route';
+import { User } from '@/types';
 import { useAdminLayoutLogic } from './admin-layout.logic';
+import { useMemo } from 'react';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -254,7 +254,9 @@ const AdminLayout = () => {
         }}
       >
         <div className='absolute inset-0 bg-pattern-dots opacity-10' />
-        <div className='p-6 overflow-hidden'>
+        <div
+          className={`py-6 px-4 overflow-hidden ${collapsed ? 'flex items-center justify-center' : ''}`}
+        >
           <div className='flex items-center space-x-3'>
             <div className='w-10 h-10 min-w-10 min-h-10 rounded-lg flex items-center justify-center bg-white'>
               <span className='bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl'>
