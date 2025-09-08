@@ -1,6 +1,7 @@
 import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Switch } from 'antd';
 import type { PetFormData, PetFormModalProps } from '@/types';
 import { useCallback, useEffect, useState } from 'react';
+import { useDistinctAllergies, useDistinctMedications } from '@/hooks/use-pet-lookups';
 
 import dayjs from 'dayjs';
 
@@ -86,6 +87,8 @@ const PetFormModal = ({
   const [form] = Form.useForm();
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedSpecies, setSelectedSpecies] = useState<string>('');
+  const { data: allergyOptions = [] } = useDistinctAllergies();
+  const { data: medicationOptions = [] } = useDistinctMedications();
 
   // Common pet species - using static list
   const petSpecies = [
@@ -101,7 +104,7 @@ const PetFormModal = ({
   ];
 
   const genders = ['male', 'female'];
-  const sizes = ['small', 'medium', 'large'];
+  const sizes = ['tiny', 'small', 'medium', 'large', 'giant'];
 
   useEffect(() => {
     if (isVisible) {
@@ -143,6 +146,8 @@ const PetFormModal = ({
       setBreeds([]);
     }
   }, [selectedSpecies]);
+
+  // Cached via React Query; no extra effect required
 
   const handleSubmit = useCallback(
     (values: Record<string, any>) => {
@@ -368,12 +373,20 @@ const PetFormModal = ({
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item name='allergies' label='Allergies'>
-                <Select mode='tags' placeholder='Enter allergies' />
+                <Select
+                  mode='tags'
+                  placeholder='Enter allergies'
+                  options={allergyOptions.map(v => ({ value: v, label: v }))}
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item name='medications' label='Medications'>
-                <Select mode='tags' placeholder='Enter medications' />
+                <Select
+                  mode='tags'
+                  placeholder='Enter medications'
+                  options={medicationOptions.map(v => ({ value: v, label: v }))}
+                />
               </Form.Item>
             </Col>
           </Row>

@@ -40,6 +40,10 @@ export const environment = {
       ttl: parseInt(import.meta.env.VITE_CACHE_REVIEWS_TTL || '300000'), // 5 minutes
       maxSize: parseInt(import.meta.env.VITE_CACHE_REVIEWS_MAX_SIZE || '100'),
     },
+    lookups: {
+      ttl: parseInt(import.meta.env.VITE_CACHE_LOOKUPS_TTL || '3600000'), // 60 minutes
+      maxSize: parseInt(import.meta.env.VITE_CACHE_LOOKUPS_MAX_SIZE || '50'),
+    },
   },
 } as const;
 

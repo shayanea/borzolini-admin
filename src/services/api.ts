@@ -1,14 +1,14 @@
+import { appointmentsCache, calendarCache, lookupsCache, usersCache } from './cache.service';
 import axios, {
   AxiosInstance,
   AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
-import { appointmentsCache, calendarCache, usersCache } from './cache.service';
 
+import { emitAuthUnauthorized } from './event-emitter.service';
 import { environment } from '@/config/environment';
 import { message } from 'antd';
-import { emitAuthUnauthorized } from './event-emitter.service';
 
 // Global auth failure handler
 let globalAuthFailureHandler: (() => void) | null = null;
@@ -300,7 +300,10 @@ export const apiService = {
     // Check cache first
     if (environment.features.enableCaching) {
       const cachedData =
-        appointmentsCache.get(cacheKey) || usersCache.get(cacheKey) || calendarCache.get(cacheKey);
+        appointmentsCache.get(cacheKey) ||
+        usersCache.get(cacheKey) ||
+        calendarCache.get(cacheKey) ||
+        lookupsCache.get(cacheKey);
       if (cachedData) {
         return cachedData as T;
       }
@@ -317,6 +320,8 @@ export const apiService = {
           usersCache.set(cacheKey, response.data);
         } else if (url.includes('calendar') || url.includes('veterinarians')) {
           calendarCache.set(cacheKey, response.data);
+        } else if (url.includes('/distinct/')) {
+          lookupsCache.set(cacheKey, response.data);
         }
       }
 
@@ -327,7 +332,8 @@ export const apiService = {
         const cachedData =
           appointmentsCache.get(cacheKey) ||
           usersCache.get(cacheKey) ||
-          calendarCache.get(cacheKey);
+          calendarCache.get(cacheKey) ||
+          lookupsCache.get(cacheKey);
         if (cachedData) {
           message.warning('Using cached data due to network error.');
           return cachedData as T;

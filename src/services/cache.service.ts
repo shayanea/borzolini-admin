@@ -103,10 +103,16 @@ export const reviewsCache = new CacheService({
   maxSize: environment.cache.reviews?.maxSize || 100, // 100 items default
 });
 
+export const lookupsCache = new CacheService({
+  ttl: environment.cache.lookups?.ttl || 3600000, // 60 minutes default for stable lookups
+  maxSize: environment.cache.lookups?.maxSize || 50,
+});
+
 // Start cleanup intervals
 appointmentsCache.startCleanupInterval();
 usersCache.startCleanupInterval();
 calendarCache.startCleanupInterval();
 reviewsCache.startCleanupInterval();
+lookupsCache.startCleanupInterval();
 
 export default CacheService;

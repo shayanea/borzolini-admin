@@ -126,7 +126,7 @@ export class PetsService {
 
   // Get pets by owner
   static async getPetsByOwner(ownerId: string): Promise<Pet[]> {
-    return apiService.get<Pet[]>(`/pets/owner/${ownerId}`);
+    return apiService.get<Pet[]>(`/pets/user/${ownerId}`);
   }
 
   // Get pets by user ID (admin endpoint)
@@ -136,7 +136,17 @@ export class PetsService {
 
   // Get pets by type
   static async getPetsByType(type: string): Promise<Pet[]> {
-    return apiService.get<Pet[]>(`/pets/type/${type}`);
+    // API uses species endpoint instead of type
+    return apiService.get<Pet[]>(`/pets/species/${type}`);
+  }
+
+  // Distinct lists for tag suggestions
+  static async getDistinctAllergies(): Promise<string[]> {
+    return apiService.get<string[]>(`/pets/distinct/allergies`);
+  }
+
+  static async getDistinctMedications(): Promise<string[]> {
+    return apiService.get<string[]>(`/pets/distinct/medications`);
   }
 
   // Create new pet

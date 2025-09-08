@@ -33,7 +33,7 @@ const breeds = [
 ];
 
 const genders = ['male', 'female'];
-const sizes = ['small', 'medium', 'large'];
+const sizes = ['tiny', 'small', 'medium', 'large', 'giant'];
 
 const PetFilters = ({
   searchText,
