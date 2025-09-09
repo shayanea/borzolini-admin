@@ -19,6 +19,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ClinicsService } from '@/services/clinics.service';
 import { ROUTES } from '@/constants';
 import { useEffect } from 'react';
+import { useOperatingHours } from '@/hooks/use-operating-hours';
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
@@ -49,6 +50,7 @@ const ClinicForm = () => {
   const { id } = useParams<{ id: string }>();
   const [form] = Form.useForm<ClinicFormValues>();
   const queryClient = useQueryClient();
+  const { daysOfWeek, getDefaultOperatingHours, convertApiToForm, validateOperatingHours } = useOperatingHours();
 
   const isEditing = !!id;
   const title = isEditing ? 'Edit Clinic' : 'Create New Clinic';
@@ -93,6 +95,11 @@ const ClinicForm = () => {
   // Set form values when clinic data is loaded
   useEffect(() => {
     if (clinic && isEditing) {
+      // Convert API operating hours to form format
+      const formOperatingHours = clinic.operatingHours && clinic.operatingHours.length > 0
+        ? convertApiToForm(clinic.operatingHours)
+        : getDefaultOperatingHours();
+
       form.setFieldsValue({
         name: clinic.name,
         description: clinic.description || '',
@@ -110,7 +117,7 @@ const ClinicForm = () => {
         emergency_phone: clinic.emergency_phone || '',
         services: clinic.services || [],
         specializations: clinic.specializations || [],
-        operating_hours: clinic.operating_hours || getDefaultOperatingHours(),
+        operating_hours: formOperatingHours,
         is_active: clinic.is_active,
       });
     } else if (!isEditing) {
@@ -122,21 +129,18 @@ const ClinicForm = () => {
         operating_hours: getDefaultOperatingHours(),
       });
     }
-  }, [clinic, isEditing, form]);
+  }, [clinic, isEditing, form, getDefaultOperatingHours, convertApiToForm]);
 
-  const getDefaultOperatingHours = (): Record<string, OperatingHours> => ({
-    monday: { open: '09:00', close: '17:00', closed: false },
-    tuesday: { open: '09:00', close: '17:00', closed: false },
-    wednesday: { open: '09:00', close: '17:00', closed: false },
-    thursday: { open: '09:00', close: '17:00', closed: false },
-    friday: { open: '09:00', close: '17:00', closed: false },
-    saturday: { open: '10:00', close: '15:00', closed: false },
-    sunday: { open: '00:00', close: '00:00', closed: true },
-  });
 
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
+
+      // Validate operating hours
+      if (!validateOperatingHours(values.operating_hours)) {
+        antMessage.error('Please check operating hours - ensure all times are valid and close time is after open time');
+        return;
+      }
 
       if (isEditing) {
         await updateMutation.mutateAsync({ id: id!, data: values });
@@ -182,15 +186,8 @@ const ClinicForm = () => {
     'Dentistry',
   ];
 
-  const daysOfWeek = [
-    { key: 'monday', label: 'Monday' },
-    { key: 'tuesday', label: 'Tuesday' },
-    { key: 'wednesday', label: 'Wednesday' },
-    { key: 'thursday', label: 'Thursday' },
-    { key: 'friday', label: 'Friday' },
-    { key: 'saturday', label: 'Saturday' },
-    { key: 'sunday', label: 'Sunday' },
-  ];
+  // Use daysOfWeek from the hook
+  const daysOfWeekArray = daysOfWeek.map(day => ({ key: day.key, label: day.label }));
 
   if (loadingClinic) {
     return <div>Loading...</div>;
@@ -457,7 +454,7 @@ const ClinicForm = () => {
             {fields => (
               <div className='space-y-4'>
                 {fields.map(({ key, name, ...restField }) => {
-                  const dayInfo = daysOfWeek.find(day => day.key === String(name));
+                  const dayInfo = daysOfWeekArray.find(day => day.key === String(name));
                   return (
                     <div key={key} className='border rounded-lg p-4'>
                       <div className='flex items-center justify-between mb-4'>
