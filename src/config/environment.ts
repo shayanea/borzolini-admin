@@ -1,7 +1,7 @@
 export const environment = {
   // API Configuration
   api: {
-    baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1',
+    baseUrl: import.meta.env.VITE_API_URL || '/api/v1',
     timeout: parseInt(import.meta.env.VITE_API_TIMEOUT || '30000'),
     retryAttempts: parseInt(import.meta.env.VITE_API_RETRY_ATTEMPTS || '2'),
     retryDelay: parseInt(import.meta.env.VITE_API_RETRY_DELAY || '5000'),

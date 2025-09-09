@@ -53,7 +53,10 @@ const RoleProtectedRoute = ({
   const currentPath = location.pathname;
 
   // Check if user has access to current route
-  const hasAccess = accessibleRoutes.includes(currentPath);
+  // Handle dynamic routes by checking if current path starts with any accessible route pattern
+  const hasAccess = accessibleRoutes.some(route =>
+    route.endsWith('/') ? currentPath.startsWith(route) : currentPath === route
+  );
 
   // Check specific role requirement if specified
   if (requiredRole && userRole !== requiredRole) {

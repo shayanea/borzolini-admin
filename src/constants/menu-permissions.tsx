@@ -24,6 +24,7 @@ export interface MenuItemConfig {
   roles: UserRole[];
   className?: string;
   disabled?: boolean;
+  hidden?: boolean;
   badge?: React.ReactNode;
 }
 
@@ -70,6 +71,14 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     icon: React.createElement(HeartOutlined),
     onClick: () => {},
     roles: ['admin', 'veterinarian', 'staff', 'patient'],
+  },
+  {
+    key: '/pet-cases',
+    label: 'Pet Cases',
+    icon: React.createElement(FileTextOutlined),
+    onClick: () => {},
+    roles: ['admin', 'veterinarian', 'staff'],
+    hidden: true,
   },
   {
     key: '/reports',
@@ -127,6 +136,13 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     onClick: () => {},
     roles: ['admin'],
   },
+  {
+    key: '/profile',
+    label: 'Profile',
+    icon: React.createElement(UserOutlined),
+    onClick: () => {},
+    roles: ['admin', 'veterinarian', 'staff', 'patient'],
+  },
 ];
 
 // Role-based menu configurations
@@ -151,5 +167,21 @@ export const hasMenuAccess = (userRole: UserRole, menuKey: string): boolean => {
 // Helper function to get all accessible routes for a role
 export const getAccessibleRoutes = (role: UserRole): string[] => {
   const roleMenuItems = getMenuItemsForRole(role);
-  return roleMenuItems.map(item => item.key);
+  const baseRoutes = roleMenuItems.map(item => item.key);
+
+  // Add sub-routes for routes that have them
+  const subRoutes: string[] = [];
+
+  baseRoutes.forEach(route => {
+    switch (route) {
+      case '/clinics':
+        subRoutes.push('/clinics/create', '/clinics/edit/');
+        break;
+      // Add other routes with sub-routes as needed
+      default:
+        break;
+    }
+  });
+
+  return [...baseRoutes, ...subRoutes];
 };
