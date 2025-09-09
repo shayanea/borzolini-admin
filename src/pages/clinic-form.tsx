@@ -50,7 +50,8 @@ const ClinicForm = () => {
   const { id } = useParams<{ id: string }>();
   const [form] = Form.useForm<ClinicFormValues>();
   const queryClient = useQueryClient();
-  const { daysOfWeek, getDefaultOperatingHours, convertApiToForm, validateOperatingHours } = useOperatingHours();
+  const { daysOfWeek, getDefaultOperatingHours, convertApiToForm, validateOperatingHours } =
+    useOperatingHours();
 
   const isEditing = !!id;
   const title = isEditing ? 'Edit Clinic' : 'Create New Clinic';
@@ -96,9 +97,10 @@ const ClinicForm = () => {
   useEffect(() => {
     if (clinic && isEditing) {
       // Convert API operating hours to form format
-      const formOperatingHours = clinic.operatingHours && clinic.operatingHours.length > 0
-        ? convertApiToForm(clinic.operatingHours)
-        : getDefaultOperatingHours();
+      const formOperatingHours =
+        clinic.operatingHours && clinic.operatingHours.length > 0
+          ? convertApiToForm(clinic.operatingHours)
+          : getDefaultOperatingHours();
 
       form.setFieldsValue({
         name: clinic.name,
@@ -131,14 +133,15 @@ const ClinicForm = () => {
     }
   }, [clinic, isEditing, form, getDefaultOperatingHours, convertApiToForm]);
 
-
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
 
       // Validate operating hours
       if (!validateOperatingHours(values.operating_hours)) {
-        antMessage.error('Please check operating hours - ensure all times are valid and close time is after open time');
+        antMessage.error(
+          'Please check operating hours - ensure all times are valid and close time is after open time'
+        );
         return;
       }
 
@@ -450,70 +453,60 @@ const ClinicForm = () => {
 
         {/* Operating Hours */}
         <Card title='Operating Hours' className='mb-6'>
-          <Form.List name='operating_hours'>
-            {fields => (
-              <div className='space-y-4'>
-                {fields.map(({ key, name, ...restField }) => {
-                  const dayInfo = daysOfWeekArray.find(day => day.key === String(name));
-                  return (
-                    <div key={key} className='border rounded-lg p-4'>
-                      <div className='flex items-center justify-between mb-4'>
-                        <Title level={5} className='!mb-0'>
-                          {dayInfo?.label}
-                        </Title>
-                        <Form.Item
-                          {...restField}
-                          name={[name, 'closed']}
-                          valuePropName='checked'
-                          className='!mb-0'
-                        >
-                          <Switch checkedChildren='Closed' unCheckedChildren='Open' />
-                        </Form.Item>
-                      </div>
-                      <Form.Item
-                        noStyle
-                        shouldUpdate={(prevValues, currentValues) =>
-                          prevValues.operating_hours?.[name]?.closed !==
-                          currentValues.operating_hours?.[name]?.closed
-                        }
-                      >
-                        {({ getFieldValue }) => {
-                          const isClosed = getFieldValue(['operating_hours', name, 'closed']);
-                          if (isClosed) {
-                            return null;
-                          }
-                          return (
-                            <Row gutter={16}>
-                              <Col span={12}>
-                                <Form.Item
-                                  {...restField}
-                                  name={[name, 'open']}
-                                  label='Opening Time'
-                                  rules={[{ required: true, message: 'Please enter opening time' }]}
-                                >
-                                  <Input type='time' />
-                                </Form.Item>
-                              </Col>
-                              <Col span={12}>
-                                <Form.Item
-                                  {...restField}
-                                  name={[name, 'close']}
-                                  label='Closing Time'
-                                  rules={[{ required: true, message: 'Please enter closing time' }]}
-                                >
-                                  <Input type='time' />
-                                </Form.Item>
-                              </Col>
-                            </Row>
-                          );
-                        }}
-                      </Form.Item>
-                    </div>
-                  );
-                })}
+          <div className='space-y-4'>
+            {daysOfWeekArray.map((day) => (
+              <div key={day.key} className='border rounded-lg p-4'>
+                <div className='flex items-center justify-between mb-4'>
+                  <Title level={5} className='!mb-0'>
+                    {day.label}
+                  </Title>
+                  <Form.Item
+                    name={['operating_hours', day.key, 'closed']}
+                    valuePropName='checked'
+                    className='!mb-0'
+                  >
+                    <Switch checkedChildren='Closed' unCheckedChildren='Open' />
+                  </Form.Item>
+                </div>
+                <Form.Item
+                  noStyle
+                  shouldUpdate={(prevValues, currentValues) =>
+                    prevValues.operating_hours?.[day.key]?.closed !==
+                    currentValues.operating_hours?.[day.key]?.closed
+                  }
+                >
+                  {({ getFieldValue }) => {
+                    const isClosed = getFieldValue(['operating_hours', day.key, 'closed']);
+                    if (isClosed) {
+                      return null;
+                    }
+                    return (
+                      <Row gutter={16}>
+                        <Col span={12}>
+                          <Form.Item
+                            name={['operating_hours', day.key, 'open']}
+                            label='Opening Time'
+                            rules={[{ required: true, message: 'Please enter opening time' }]}
+                          >
+                            <Input type='time' />
+                          </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                          <Form.Item
+                            name={['operating_hours', day.key, 'close']}
+                            label='Closing Time'
+                            rules={[{ required: true, message: 'Please enter closing time' }]}
+                          >
+                            <Input type='time' />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    );
+                  }}
+                </Form.Item>
               </div>
-            )}
-          </Form.List>
+            ))}
+          </div>
         </Card>
 
         {/* Status */}
