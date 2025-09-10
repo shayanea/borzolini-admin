@@ -41,6 +41,13 @@ interface ClinicRegistrationValues {
   services: string[];
   specializations: string[];
   operating_hours: Record<string, OperatingHours>;
+  // Social Media Fields
+  facebook_url?: string;
+  twitter_url?: string;
+  instagram_url?: string;
+  linkedin_url?: string;
+  youtube_url?: string;
+  tiktok_url?: string;
 }
 
 const ClinicRegister = () => {
@@ -150,6 +157,10 @@ const ClinicRegister = () => {
     {
       title: 'Services',
       description: 'Services and specializations',
+    },
+    {
+      title: 'Social Media',
+      description: 'Social media profiles (optional)',
     },
     {
       title: 'Operating Hours',
@@ -355,6 +366,116 @@ const ClinicRegister = () => {
 
       case 3:
         return (
+          <Card title='Social Media Profiles' className='mb-6'>
+            <div className='mb-4'>
+              <Text type='secondary'>
+                Add your social media profiles to help clients connect with your clinic online. All
+                fields are optional.
+              </Text>
+            </div>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name='facebook_url'
+                  label='Facebook URL'
+                  rules={[
+                    { type: 'url', message: 'Please enter a valid URL' },
+                    {
+                      pattern: /^https?:\/\/(www\.)?facebook\.com\/.+/,
+                      message: 'Please enter a valid Facebook URL',
+                    },
+                  ]}
+                >
+                  <Input placeholder='https://facebook.com/yourclinic' />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name='twitter_url'
+                  label='Twitter URL'
+                  rules={[
+                    { type: 'url', message: 'Please enter a valid URL' },
+                    {
+                      pattern: /^https?:\/\/(www\.)?twitter\.com\/.+/,
+                      message: 'Please enter a valid Twitter URL',
+                    },
+                  ]}
+                >
+                  <Input placeholder='https://twitter.com/yourclinic' />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name='instagram_url'
+                  label='Instagram URL'
+                  rules={[
+                    { type: 'url', message: 'Please enter a valid URL' },
+                    {
+                      pattern: /^https?:\/\/(www\.)?instagram\.com\/.+/,
+                      message: 'Please enter a valid Instagram URL',
+                    },
+                  ]}
+                >
+                  <Input placeholder='https://instagram.com/yourclinic' />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name='linkedin_url'
+                  label='LinkedIn URL'
+                  rules={[
+                    { type: 'url', message: 'Please enter a valid URL' },
+                    {
+                      pattern: /^https?:\/\/(www\.)?linkedin\.com\/.+/,
+                      message: 'Please enter a valid LinkedIn URL',
+                    },
+                  ]}
+                >
+                  <Input placeholder='https://linkedin.com/company/yourclinic' />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name='youtube_url'
+                  label='YouTube URL'
+                  rules={[
+                    { type: 'url', message: 'Please enter a valid URL' },
+                    {
+                      pattern: /^https?:\/\/(www\.)?youtube\.com\/.+/,
+                      message: 'Please enter a valid YouTube URL',
+                    },
+                  ]}
+                >
+                  <Input placeholder='https://youtube.com/c/yourclinic' />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name='tiktok_url'
+                  label='TikTok URL'
+                  rules={[
+                    { type: 'url', message: 'Please enter a valid URL' },
+                    {
+                      pattern: /^https?:\/\/(www\.)?tiktok\.com\/.+/,
+                      message: 'Please enter a valid TikTok URL',
+                    },
+                  ]}
+                >
+                  <Input placeholder='https://tiktok.com/@yourclinic' />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Card>
+        );
+
+      case 4:
+        return (
           <Card title='Operating Hours' className='mb-6'>
             <Form.List name='operating_hours'>
               {fields => (
@@ -427,7 +548,7 @@ const ClinicRegister = () => {
           </Card>
         );
 
-      case 4:
+      case 5:
         return (
           <Card title='Review Your Information' className='mb-6'>
             <Alert
@@ -459,6 +580,37 @@ const ClinicRegister = () => {
               <div>
                 <Text strong>Specializations:</Text>{' '}
                 {form.getFieldValue('specializations')?.join(', ') || 'None selected'}
+              </div>
+              <div>
+                <Text strong>Social Media:</Text>
+                <div className='ml-4 space-y-1'>
+                  {form.getFieldValue('facebook_url') && (
+                    <div>Facebook: {form.getFieldValue('facebook_url')}</div>
+                  )}
+                  {form.getFieldValue('twitter_url') && (
+                    <div>Twitter: {form.getFieldValue('twitter_url')}</div>
+                  )}
+                  {form.getFieldValue('instagram_url') && (
+                    <div>Instagram: {form.getFieldValue('instagram_url')}</div>
+                  )}
+                  {form.getFieldValue('linkedin_url') && (
+                    <div>LinkedIn: {form.getFieldValue('linkedin_url')}</div>
+                  )}
+                  {form.getFieldValue('youtube_url') && (
+                    <div>YouTube: {form.getFieldValue('youtube_url')}</div>
+                  )}
+                  {form.getFieldValue('tiktok_url') && (
+                    <div>TikTok: {form.getFieldValue('tiktok_url')}</div>
+                  )}
+                  {!form.getFieldValue('facebook_url') &&
+                    !form.getFieldValue('twitter_url') &&
+                    !form.getFieldValue('instagram_url') &&
+                    !form.getFieldValue('linkedin_url') &&
+                    !form.getFieldValue('youtube_url') &&
+                    !form.getFieldValue('tiktok_url') && (
+                      <div className='text-gray-500'>No social media profiles added</div>
+                    )}
+                </div>
               </div>
             </div>
           </Card>

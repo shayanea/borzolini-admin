@@ -1,4 +1,5 @@
 import { APPOINTMENT_PRIORITY_COLORS, APPOINTMENT_STATUS_COLORS } from '@/constants/appointments';
+import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 import {
   CalendarOutlined,
   ClockCircleOutlined,
@@ -6,13 +7,13 @@ import {
   EnvironmentOutlined,
   EyeOutlined,
   PhoneOutlined,
+  StarOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 
-import { TABLE_PAGE_SIZES } from '@/constants';
 import type { Appointment } from '@/types';
+import { TABLE_PAGE_SIZES } from '@/constants';
 
 export interface AppointmentsHeaderProps {
   onNewAppointment: (data: any) => void;
@@ -168,27 +169,41 @@ const AppointmentsTable = ({
       width: 120,
       align: 'center',
       render: (appointment: Appointment) => (
-        <Badge
-          status={
-            appointment.status === 'confirmed'
-              ? 'success'
-              : appointment.status === 'pending'
-                ? 'processing'
-                : appointment.status === 'cancelled'
-                  ? 'error'
-                  : 'default'
-          }
-          text={
-            <Tag color={APPOINTMENT_STATUS_COLORS[appointment.status] || 'default'}>
-              {appointment.status
-                ? appointment.status
-                    .split('_')
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ')
-                : 'Unknown'}
-            </Tag>
-          }
-        />
+        <div className='space-y-1'>
+          <Badge
+            status={
+              appointment.status === 'confirmed'
+                ? 'success'
+                : appointment.status === 'pending'
+                  ? 'processing'
+                  : appointment.status === 'cancelled'
+                    ? 'error'
+                    : 'default'
+            }
+            text={
+              <Tag color={APPOINTMENT_STATUS_COLORS[appointment.status] || 'default'}>
+                {appointment.status
+                  ? appointment.status
+                      .split('_')
+                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                      .join(' ')
+                  : 'Unknown'}
+              </Tag>
+            }
+          />
+          {appointment.status === 'completed' && (
+            <div className='flex items-center justify-center space-x-1'>
+              {appointment.is_home_visit && (
+                <Tag color='blue' size='small'>
+                  Home Visit
+                </Tag>
+              )}
+              <Tooltip title='Review status will be shown here'>
+                <StarOutlined className='text-yellow-500 text-xs' />
+              </Tooltip>
+            </div>
+          )}
+        </div>
       ),
     },
     {

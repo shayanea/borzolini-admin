@@ -24,6 +24,13 @@ export interface Clinic {
   rating: number;
   totalReviews: number;
   is_active: boolean;
+  // Social Media Fields
+  facebook_url?: string;
+  twitter_url?: string;
+  instagram_url?: string;
+  linkedin_url?: string;
+  youtube_url?: string;
+  tiktok_url?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -94,6 +101,13 @@ export interface CreateClinicData {
   services?: string[];
   specializations?: string[];
   operating_hours?: Record<string, OperatingHours>;
+  // Social Media Fields
+  facebook_url?: string;
+  twitter_url?: string;
+  instagram_url?: string;
+  linkedin_url?: string;
+  youtube_url?: string;
+  tiktok_url?: string;
 }
 
 export interface UpdateClinicData {
@@ -115,6 +129,13 @@ export interface UpdateClinicData {
   specializations?: string[];
   operating_hours?: Record<string, OperatingHours>;
   is_active?: boolean;
+  // Social Media Fields
+  facebook_url?: string;
+  twitter_url?: string;
+  instagram_url?: string;
+  linkedin_url?: string;
+  youtube_url?: string;
+  tiktok_url?: string;
 }
 
 export interface ClinicsQueryParams {

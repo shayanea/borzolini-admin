@@ -2,6 +2,7 @@ import { Button, Card, Descriptions, Modal, Select, Tag, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 import type { Appointment } from '@/types';
+import { AppointmentReviewsSection } from './appointment-reviews-section';
 import { SaveOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
@@ -387,6 +388,19 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
             </div>
           </div>
         </Card>
+
+        {/* Reviews Section - Only show for completed appointments */}
+        {appointment.status === 'completed' && (
+          <AppointmentReviewsSection
+            appointmentId={appointment.id}
+            appointmentType={appointment.appointment_type}
+            isHomeVisit={appointment.is_home_visit}
+            onViewReview={reviewId => {
+              // You could implement a review details modal here
+              console.log('View review:', reviewId);
+            }}
+          />
+        )}
 
         {/* Action Buttons */}
         <div className='flex justify-end space-x-2 pt-4 border-t'>

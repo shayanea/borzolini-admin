@@ -2,8 +2,14 @@ import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
+  FacebookOutlined,
+  InstagramOutlined,
+  LinkedinOutlined,
   MedicineBoxOutlined,
   TeamOutlined,
+  TikTokOutlined,
+  TwitterOutlined,
+  YoutubeOutlined,
 } from '@ant-design/icons';
 import { Badge, Button, Space, Table, Tag, Typography } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
@@ -86,7 +92,7 @@ const ClinicTable = ({
       title: 'Contact',
       key: 'contact',
       render: (_, record: Clinic) => (
-        <div className='flex flex-col'>
+        <div className='flex flex-col space-y-1'>
           <Text className='text-text-primary' ellipsis={{ tooltip: record.phone }}>
             {record.phone}
           </Text>
@@ -98,6 +104,39 @@ const ClinicTable = ({
               <Text ellipsis={{ tooltip: record.website }}>{record.website}</Text>
             </Link>
           )}
+          {/* Social Media Links */}
+          <div className='flex flex-wrap gap-1 mt-2'>
+            {record.facebook_url && (
+              <Link href={record.facebook_url} target='_blank' title='Facebook'>
+                <FacebookOutlined className='text-blue-600 hover:text-blue-800' />
+              </Link>
+            )}
+            {record.twitter_url && (
+              <Link href={record.twitter_url} target='_blank' title='Twitter'>
+                <TwitterOutlined className='text-blue-400 hover:text-blue-600' />
+              </Link>
+            )}
+            {record.instagram_url && (
+              <Link href={record.instagram_url} target='_blank' title='Instagram'>
+                <InstagramOutlined className='text-pink-600 hover:text-pink-800' />
+              </Link>
+            )}
+            {record.linkedin_url && (
+              <Link href={record.linkedin_url} target='_blank' title='LinkedIn'>
+                <LinkedinOutlined className='text-blue-700 hover:text-blue-900' />
+              </Link>
+            )}
+            {record.youtube_url && (
+              <Link href={record.youtube_url} target='_blank' title='YouTube'>
+                <YoutubeOutlined className='text-red-600 hover:text-red-800' />
+              </Link>
+            )}
+            {record.tiktok_url && (
+              <Link href={record.tiktok_url} target='_blank' title='TikTok'>
+                <TikTokOutlined className='text-black hover:text-gray-800' />
+              </Link>
+            )}
+          </div>
         </div>
       ),
     },

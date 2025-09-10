@@ -1,4 +1,6 @@
+import type { CreateClinicData, OperatingHours, UpdateClinicData } from '@/types';
 import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -12,14 +14,12 @@ import {
   Typography,
   message as antMessage,
 } from 'antd';
-import type { CreateClinicData, OperatingHours, UpdateClinicData } from '@/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ClinicsService } from '@/services/clinics.service';
 import { ROUTES } from '@/constants';
-import { useEffect } from 'react';
 import { useOperatingHours } from '@/hooks/use-operating-hours';
+import { ClinicsService } from '@/services/clinics.service';
+import { useEffect } from 'react';
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
@@ -43,6 +43,13 @@ interface ClinicFormValues {
   specializations: string[];
   operating_hours: Record<string, OperatingHours>;
   is_active: boolean;
+  // Social Media Fields
+  facebook_url?: string;
+  twitter_url?: string;
+  instagram_url?: string;
+  linkedin_url?: string;
+  youtube_url?: string;
+  tiktok_url?: string;
 }
 
 const ClinicForm = () => {
@@ -121,6 +128,13 @@ const ClinicForm = () => {
         specializations: clinic.specializations || [],
         operating_hours: formOperatingHours,
         is_active: clinic.is_active,
+        // Social Media Fields
+        facebook_url: clinic.facebook_url || '',
+        twitter_url: clinic.twitter_url || '',
+        instagram_url: clinic.instagram_url || '',
+        linkedin_url: clinic.linkedin_url || '',
+        youtube_url: clinic.youtube_url || '',
+        tiktok_url: clinic.tiktok_url || '',
       });
     } else if (!isEditing) {
       form.setFieldsValue({
@@ -422,6 +436,108 @@ const ClinicForm = () => {
                 rules={[{ type: 'url', message: 'Please enter a valid URL' }]}
               >
                 <Input placeholder='Enter banner URL (optional)' />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Card>
+
+        {/* Social Media */}
+        <Card title='Social Media' className='mb-6'>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name='facebook_url'
+                label='Facebook URL'
+                rules={[
+                  { type: 'url', message: 'Please enter a valid URL' },
+                  {
+                    pattern: /^https?:\/\/(www\.)?facebook\.com\/.+/,
+                    message: 'Please enter a valid Facebook URL',
+                  },
+                ]}
+              >
+                <Input placeholder='https://facebook.com/yourclinic' />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name='twitter_url'
+                label='Twitter URL'
+                rules={[
+                  { type: 'url', message: 'Please enter a valid URL' },
+                  {
+                    pattern: /^https?:\/\/(www\.)?twitter\.com\/.+/,
+                    message: 'Please enter a valid Twitter URL',
+                  },
+                ]}
+              >
+                <Input placeholder='https://twitter.com/yourclinic' />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name='instagram_url'
+                label='Instagram URL'
+                rules={[
+                  { type: 'url', message: 'Please enter a valid URL' },
+                  {
+                    pattern: /^https?:\/\/(www\.)?instagram\.com\/.+/,
+                    message: 'Please enter a valid Instagram URL',
+                  },
+                ]}
+              >
+                <Input placeholder='https://instagram.com/yourclinic' />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name='linkedin_url'
+                label='LinkedIn URL'
+                rules={[
+                  { type: 'url', message: 'Please enter a valid URL' },
+                  {
+                    pattern: /^https?:\/\/(www\.)?linkedin\.com\/.+/,
+                    message: 'Please enter a valid LinkedIn URL',
+                  },
+                ]}
+              >
+                <Input placeholder='https://linkedin.com/company/yourclinic' />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name='youtube_url'
+                label='YouTube URL'
+                rules={[
+                  { type: 'url', message: 'Please enter a valid URL' },
+                  {
+                    pattern: /^https?:\/\/(www\.)?youtube\.com\/.+/,
+                    message: 'Please enter a valid YouTube URL',
+                  },
+                ]}
+              >
+                <Input placeholder='https://youtube.com/c/yourclinic' />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name='tiktok_url'
+                label='TikTok URL'
+                rules={[
+                  { type: 'url', message: 'Please enter a valid URL' },
+                  {
+                    pattern: /^https?:\/\/(www\.)?tiktok\.com\/.+/,
+                    message: 'Please enter a valid TikTok URL',
+                  },
+                ]}
+              >
+                <Input placeholder='https://tiktok.com/@yourclinic' />
               </Form.Item>
             </Col>
           </Row>
