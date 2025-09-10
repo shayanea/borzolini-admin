@@ -454,7 +454,7 @@ const ClinicForm = () => {
         {/* Operating Hours */}
         <Card title='Operating Hours' className='mb-6'>
           <div className='space-y-4'>
-            {daysOfWeekArray.map((day) => (
+            {daysOfWeekArray.map(day => (
               <div key={day.key} className='border rounded-lg p-4'>
                 <div className='flex items-center justify-between mb-4'>
                   <Title level={5} className='!mb-0'>
