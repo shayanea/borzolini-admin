@@ -5,6 +5,7 @@ export { default as ClinicForm } from './clinic-form';
 export { default as ClinicRegister } from './clinic-register';
 export { default as ClinicRegisterSuccess } from './clinic-register-success';
 export { default as Clinics } from './clinics';
+export { default as Contacts } from './contacts';
 export { default as Dashboard } from './dashboard';
 export { default as PetCases } from './pet-cases';
 export { default as Pets } from './pets';

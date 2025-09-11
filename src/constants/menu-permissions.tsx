@@ -6,6 +6,7 @@ import {
   FileTextOutlined,
   HeartOutlined,
   MedicineBoxOutlined,
+  MessageOutlined,
   MonitorOutlined,
   SettingOutlined,
   StarOutlined,
@@ -107,6 +108,13 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     icon: React.createElement(StarOutlined),
     onClick: () => {},
     roles: ['admin', 'veterinarian', 'staff', 'patient'],
+  },
+  {
+    key: '/contacts',
+    label: 'Contact Messages',
+    icon: React.createElement(MessageOutlined),
+    onClick: () => {},
+    roles: ['admin'],
   },
   {
     key: '/api-health',

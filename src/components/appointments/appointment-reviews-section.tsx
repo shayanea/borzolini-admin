@@ -16,7 +16,7 @@ export interface AppointmentReviewsSectionProps {
 
 export const AppointmentReviewsSection: React.FC<AppointmentReviewsSectionProps> = ({
   appointmentId,
-  appointmentType,
+  // appointmentType,
   isHomeVisit,
   onViewReview,
 }) => {
@@ -124,9 +124,7 @@ export const AppointmentReviewsSection: React.FC<AppointmentReviewsSectionProps>
                 <div className='flex items-center space-x-2'>
                   <Rate disabled value={review.rating} className='text-sm' />
                   <Text strong>{review.rating}/5</Text>
-                  <Tag color={getReviewTypeColor(review)} size='small'>
-                    {getReviewTypeText(review)}
-                  </Tag>
+                  <Tag color={getReviewTypeColor(review)}>{getReviewTypeText(review)}</Tag>
                 </div>
                 <div className='flex items-center space-x-1'>
                   {review.helpfulVotes > 0 && (

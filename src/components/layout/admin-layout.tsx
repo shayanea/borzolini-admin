@@ -4,6 +4,7 @@ import {
   Calendar,
   ClinicForm,
   Clinics,
+  Contacts,
   Dashboard,
   PetCases,
   Pets,
@@ -206,6 +207,14 @@ const AdminLayout = () => {
           element={
             <RoleProtectedRoute>
               <Profile />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path='contacts'
+          element={
+            <RoleProtectedRoute requiredRole='admin'>
+              <Contacts />
             </RoleProtectedRoute>
           }
         />

@@ -377,3 +377,6 @@ export * from './reviews';
 
 // Pet Cases Types
 export * from './pet-cases';
+
+// Contact Types
+export * from './contact';

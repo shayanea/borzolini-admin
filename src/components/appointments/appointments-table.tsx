@@ -193,11 +193,7 @@ const AppointmentsTable = ({
           />
           {appointment.status === 'completed' && (
             <div className='flex items-center justify-center space-x-1'>
-              {appointment.is_home_visit && (
-                <Tag color='blue' size='small'>
-                  Home Visit
-                </Tag>
-              )}
+              {appointment.is_home_visit && <Tag color='blue'>Home Visit</Tag>}
               <Tooltip title='Review status will be shown here'>
                 <StarOutlined className='text-yellow-500 text-xs' />
               </Tooltip>
