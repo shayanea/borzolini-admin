@@ -1,13 +1,7 @@
+import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
+import { DeleteOutlined, EditOutlined, EyeOutlined, PhoneOutlined } from '@ant-design/icons';
 import { ROLE_COLORS, TABLE_PAGE_SIZES, USER_TABLE_COLUMNS } from '@/constants';
 import type { User, UserTableProps } from '@/types';
-import {
-  DeleteOutlined,
-  EditOutlined,
-  EyeOutlined,
-  PhoneOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 
 const UserTable = ({
   users,
@@ -37,8 +31,8 @@ const UserTable = ({
         <div className='flex items-center space-x-3'>
           <Avatar
             size={25}
-            icon={<UserOutlined />}
-            className='bg-gradient-to-r from-cyan-500 to-blue-500'
+            className='bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center'
+            src='/borzolini-logo.svg'
           />
           <div>
             <div className='font-medium'>

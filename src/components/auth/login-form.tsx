@@ -29,18 +29,22 @@ export const LoginForm = () => {
   }, []);
 
   return (
-    <AuthBackground variant='pattern'>
-      <Card className='w-full shadow-admin-lg p-8 bg-white/95 backdrop-blur-sm'>
+    <AuthBackground variant='modern'>
+      <Card className='w-full shadow-2xl p-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl'>
         <div className='text-center mb-8'>
           <div className='mb-4'>
-            <div className='w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center mx-auto shadow-lg'>
-              <UserOutlined className='text-2xl text-white' />
+            <div className='flex items-center justify-center mx-auto'>
+              <img
+                src='/borzolini-logo.svg'
+                alt='Borzolini Logo'
+                className='w-16 h-16 object-contain'
+              />
             </div>
           </div>
-          <Title level={2} className='!mb-2 text-gray-800'>
+          <Title level={2} className='!mb-2 !text-white'>
             Welcome Back
           </Title>
-          <Text className='text-gray-600'>Sign in to your Borzolini Admin account</Text>
+          <Text className='text-white/80'>Sign in to your Borzolini Admin account</Text>
         </div>
 
         {loginMutation.error && (
@@ -65,34 +69,34 @@ export const LoginForm = () => {
         >
           <Form.Item
             name='email'
-            label='Email Address'
+            label={<span className='text-white'>Email Address</span>}
             rules={[
               { required: true, message: 'Please enter your email address' },
               { type: 'email', message: 'Please enter a valid email address' },
             ]}
           >
             <Input
-              prefix={<UserOutlined className='text-gray-400' />}
+              prefix={<UserOutlined className='text-white/60' />}
               placeholder='Enter your email'
               autoComplete='email'
-              className='h-12'
+              className='h-12 bg-white/10 border-white/20 text-white placeholder-white/60'
             />
           </Form.Item>
 
           <Form.Item
             name='password'
-            label='Password'
+            label={<span className='text-white'>Password</span>}
             rules={[
               { required: true, message: 'Please enter your password' },
               { min: 8, message: 'Password must be at least 8 characters' },
             ]}
           >
             <Input.Password
-              prefix={<LockOutlined className='text-gray-400' />}
+              prefix={<LockOutlined className='text-white/60' />}
               placeholder='Enter your password'
               autoComplete='current-password'
               iconRender={handleIconRender}
-              className='h-12'
+              className='h-12 bg-white/10 border-white/20 text-white placeholder-white/60'
             />
           </Form.Item>
 
@@ -101,7 +105,7 @@ export const LoginForm = () => {
               type='primary'
               htmlType='submit'
               loading={loginMutation.isPending}
-              className='w-full h-12 bg-[#023e8a] hover:bg-[#023e8a]/90 border-0 shadow-lg'
+              className='w-full h-12 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 border-0 shadow-lg text-white font-medium'
             >
               {loginMutation.isPending ? 'Signing In...' : 'Sign In'}
             </Button>

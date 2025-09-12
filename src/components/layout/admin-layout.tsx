@@ -26,7 +26,6 @@ import {
   MenuOutlined,
   MenuProps,
   Typography,
-  UserOutlined,
 } from '@/ui';
 import { Route, Routes } from 'react-router-dom';
 
@@ -72,7 +71,11 @@ const renderHeader = (
           {/* User Menu */}
           <Dropdown menu={{ items: userMenuItems }} placement='bottomRight' trigger={['click']}>
             <div className='flex items-center space-x-3 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors flex-shrink-0'>
-              <Avatar size={40} icon={<UserOutlined />} className='bg-primary-navy' />
+              <Avatar
+                size={40}
+                className='bg-primary-navy flex items-center justify-center'
+                src='/borzolini-logo.svg'
+              />
               {!collapsed && (
                 <div className='text-left min-w-0'>
                   <div className='flex items-center space-x-2'>
