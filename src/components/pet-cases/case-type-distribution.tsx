@@ -12,8 +12,8 @@ import {
 } from '@ant-design/icons';
 import { Card, Col, Row, Tooltip } from 'antd';
 
-import { CaseStats } from '../../types/pet-cases';
 import React from 'react';
+import { CaseStats } from '../../types/pet-cases';
 
 interface CaseTypeDistributionProps {
   stats: CaseStats;
@@ -54,7 +54,7 @@ const CaseTypeDistribution: React.FC<CaseTypeDistributionProps> = ({ stats, load
     nutritional: 'Diet and nutrition counseling',
   };
 
-  const typeEntries = Object.entries(stats.byType).filter(([_, count]) => count > 0);
+  const typeEntries = Object.entries(stats.byType).filter(([, count]) => count > 0);
 
   const getTypeLabel = (type: string) => {
     return type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -173,7 +173,7 @@ const CaseTypeDistribution: React.FC<CaseTypeDistributionProps> = ({ stats, load
             <Col xs={24} sm={8}>
               <div className='text-center'>
                 <div className='text-2xl font-bold text-gray-900'>
-                  {Math.max(...typeEntries.map(([_, count]) => count))}
+                  {Math.max(...typeEntries.map(([, count]) => count))}
                 </div>
                 <div className='text-sm text-gray-500'>Most Common</div>
               </div>
@@ -183,7 +183,7 @@ const CaseTypeDistribution: React.FC<CaseTypeDistributionProps> = ({ stats, load
                 <div className='text-2xl font-bold text-gray-900'>
                   {typeEntries.length > 0
                     ? (
-                        typeEntries.reduce((sum, [_, count]) => sum + count, 0) / typeEntries.length
+                        typeEntries.reduce((sum, [, count]) => sum + count, 0) / typeEntries.length
                       ).toFixed(1)
                     : '0'}
                 </div>

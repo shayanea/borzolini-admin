@@ -65,7 +65,7 @@ const api: AxiosInstance = axios.create({
 });
 
 // Retry logic
-const retryRequest = async (error: any, retryCount: number = 0): Promise<any> => {
+const retryRequest = async (error: any, retryCount: number = 0): Promise<AxiosResponse> => {
   if (retryCount >= RETRY_ATTEMPTS) {
     throw error;
   }
@@ -92,7 +92,9 @@ api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // Cookie-based auth: do not attach Authorization header
     // Add request timestamp for performance/caching diagnostics
-    (config as any).metadata = { startTime: Date.now() };
+    (config as InternalAxiosRequestConfig & { metadata: { startTime: number } }).metadata = {
+      startTime: Date.now(),
+    };
 
     return config;
   },
@@ -110,8 +112,14 @@ const MAX_REFRESH_FAILURES = 3;
 api.interceptors.response.use(
   (response: AxiosResponse) => {
     // Log response time for performance monitoring
-    if ((response.config as any).metadata?.startTime) {
-      const responseTime = Date.now() - (response.config as any).metadata.startTime;
+    if (
+      (response.config as InternalAxiosRequestConfig & { metadata: { startTime: number } }).metadata
+        ?.startTime
+    ) {
+      const responseTime =
+        Date.now() -
+        (response.config as InternalAxiosRequestConfig & { metadata: { startTime: number } })
+          .metadata.startTime;
       if (environment.app.debug) {
         console.log(`API Response Time: ${responseTime}ms for ${response.config.url}`);
       }

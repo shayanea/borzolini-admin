@@ -1,5 +1,6 @@
-import { Button, Card, Col, DatePicker, Input, Row, Select, Space } from 'antd';
 import { ExportOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Card, Col, DatePicker, Input, Row, Select, Space } from 'antd';
+import dayjs from 'dayjs';
 
 import type { ContactFilters as ContactFiltersType } from '@/types';
 
@@ -33,7 +34,7 @@ export const ContactFilters = ({
     });
   };
 
-  const handleDateRangeChange = (dates: any) => {
+  const handleDateRangeChange = (dates: [dayjs.Dayjs | null, dayjs.Dayjs | null] | null) => {
     onFiltersChange({
       ...filters,
       dateFrom: dates?.[0]?.format('YYYY-MM-DD'),

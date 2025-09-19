@@ -5,10 +5,10 @@ import {
 } from '@/services/appointments.service';
 import { calendarService } from '@/services/calendar.service';
 import type { CalendarAppointment, CalendarFilters } from '@/types/calendar';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
 import dayjs from 'dayjs';
-import { useCallback, useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useMemo, useState } from 'react';
 
 export const useCalendar = () => {
   const [currentDate, setCurrentDate] = useState(dayjs());
@@ -41,10 +41,7 @@ export const useCalendar = () => {
   const queryClient = useQueryClient();
 
   // Query for veterinarians
-  const {
-    data: veterinarians = [],
-    isLoading: vetsLoading,
-  } = useQuery({
+  const { data: veterinarians = [], isLoading: vetsLoading } = useQuery({
     queryKey: ['veterinarians'],
     queryFn: async () => {
       const vets = await calendarService.getVeterinarians();
@@ -89,10 +86,7 @@ export const useCalendar = () => {
   });
 
   // Query for appointment details
-  const {
-    data: appointmentDetails,
-    isLoading: fetchingAppointment,
-  } = useQuery({
+  const { data: appointmentDetails, isLoading: fetchingAppointment } = useQuery({
     queryKey: ['appointment-details', selectedAppointment?.id],
     queryFn: async () => {
       if (!selectedAppointment?.id) return null;
@@ -114,15 +108,20 @@ export const useCalendar = () => {
       // Close the modal
       setIsAppointmentModalVisible(false);
     },
-    onError: (error) => {
+    onError: error => {
       console.error('Failed to create appointment:', error);
       message.error('Failed to create appointment. Please try again.');
     },
   });
 
   const updateAppointmentMutation = useMutation({
-    mutationFn: ({ appointmentId, updates }: { appointmentId: string; updates: UpdateAppointmentData }) =>
-      AppointmentsService.update(appointmentId, updates),
+    mutationFn: ({
+      appointmentId,
+      updates,
+    }: {
+      appointmentId: string;
+      updates: UpdateAppointmentData;
+    }) => AppointmentsService.update(appointmentId, updates),
     onSuccess: () => {
       message.success('Appointment updated successfully!');
       // Invalidate and refetch data
@@ -130,7 +129,7 @@ export const useCalendar = () => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
       queryClient.invalidateQueries({ queryKey: ['appointment-details'] });
     },
-    onError: (error) => {
+    onError: error => {
       console.error('Failed to update appointment:', error);
       message.error('Failed to update appointment. Please try again.');
     },
@@ -147,7 +146,7 @@ export const useCalendar = () => {
       setIsDetailsModalVisible(false);
       setSelectedAppointment(null);
     },
-    onError: (error) => {
+    onError: error => {
       console.error('Failed to delete appointment:', error);
       message.error('Failed to delete appointment. Please try again.');
     },
@@ -164,8 +163,15 @@ export const useCalendar = () => {
   })();
 
   // Extract data from queries
-  const appointments = calendarData?.appointments || [];
-  const error = queryError ? (queryError instanceof Error ? queryError.message : 'Failed to load calendar data') : null;
+  const appointments = useMemo(
+    () => calendarData?.appointments || [],
+    [calendarData?.appointments]
+  );
+  const error = queryError
+    ? queryError instanceof Error
+      ? queryError.message
+      : 'Failed to load calendar data'
+    : null;
 
   const goToPreviousDay = useCallback(() => {
     setCurrentDate(currentDate.subtract(1, 'day'));

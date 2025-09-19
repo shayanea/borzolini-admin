@@ -1,10 +1,10 @@
-import { Button, Card, Col, Divider, Form, Input, Row } from 'antd';
 import { EditOutlined, EnvironmentOutlined, PhoneOutlined, SaveOutlined, UserOutlined } from '@/ui';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Button, Card, Col, Divider, Form, Input, Row } from 'antd';
 
-import { User } from '@/types';
 import { UsersService } from '@/services/users.service';
 import { useAuthActions } from '@/stores/auth.store';
+import { User } from '@/types';
 import { useState } from 'react';
 
 interface ProfileInformationProps {
@@ -182,7 +182,7 @@ export const ProfileInformation: React.FC<ProfileInformationProps> = ({
                 label='Phone Number'
                 rules={[
                   {
-                    pattern: /^[+]?[\d\s\-\(\)\.]{7,20}$/,
+                    pattern: /^[+]?[\d\s\-().]{7,20}$/,
                     message: 'Please enter a valid phone number',
                   },
                 ]}

@@ -1,9 +1,9 @@
-import { Button, Card, Empty, Rate, Tag, Typography } from 'antd';
 import { EyeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
+import { Button, Card, Empty, Rate, Tag, Typography } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
 
-import type { Review } from '@/types';
 import { ReviewsService } from '@/services/reviews.service';
+import type { Review } from '@/types';
 
 const { Text, Paragraph } = Typography;
 
@@ -28,9 +28,9 @@ export const AppointmentReviewsSection: React.FC<AppointmentReviewsSectionProps>
     if (appointmentId) {
       fetchReviews();
     }
-  }, [appointmentId]);
+  }, [appointmentId, fetchReviews]);
 
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -42,7 +42,7 @@ export const AppointmentReviewsSection: React.FC<AppointmentReviewsSectionProps>
     } finally {
       setLoading(false);
     }
-  };
+  }, [appointmentId]);
 
   const getReviewTypeColor = (review: Review) => {
     if (review.flagged) return 'red';

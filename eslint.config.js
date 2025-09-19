@@ -32,6 +32,8 @@ export default [
         window: 'readonly',
         document: 'readonly',
         navigator: 'readonly',
+        HTMLImageElement: 'readonly',
+        HTMLInputElement: 'readonly',
         localStorage: 'readonly',
         sessionStorage: 'readonly',
         FormData: 'readonly',

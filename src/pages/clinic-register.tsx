@@ -197,7 +197,7 @@ const ClinicRegister = () => {
                   rules={[
                     { required: true, message: 'Please enter phone number' },
                     {
-                      pattern: /^[+]?[\d\s\-\(\)\.]{7,20}$/,
+                      pattern: /^[+]?[\d\s\-().]{7,20}$/,
                       message: 'Please enter a valid phone number',
                     },
                   ]}
@@ -326,7 +326,7 @@ const ClinicRegister = () => {
                   label='Emergency Phone'
                   rules={[
                     {
-                      pattern: /^[+]?[\d\s\-\(\)\.]{7,20}$/,
+                      pattern: /^[+]?[\d\s\-().]{7,20}$/,
                       message: 'Please enter a valid phone number',
                     },
                   ]}

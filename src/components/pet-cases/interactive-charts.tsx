@@ -11,8 +11,8 @@ import {
   StopOutlined,
 } from '@ant-design/icons';
 
-import { CaseStats } from '../../types/pet-cases';
 import React from 'react';
+import { CaseStats } from '../../types/pet-cases';
 
 interface InteractiveChartsProps {
   stats: CaseStats;
@@ -64,8 +64,8 @@ const InteractiveCharts: React.FC<InteractiveChartsProps> = ({ stats, loading = 
     return colorMap[priority] || '#d9d9d9';
   };
 
-  const statusEntries = Object.entries(stats.byStatus).filter(([_, count]) => count > 0);
-  const priorityEntries = Object.entries(stats.byPriority).filter(([_, count]) => count > 0);
+  const statusEntries = Object.entries(stats.byStatus).filter(([, count]) => count > 0);
+  const priorityEntries = Object.entries(stats.byPriority).filter(([, count]) => count > 0);
 
   return (
     <Row gutter={[24, 24]}>

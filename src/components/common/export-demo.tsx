@@ -11,7 +11,7 @@ export const ExportDemo: React.FC = () => {
   // Example export functions - these would typically come from your service layer
   const handleExportCSV = async (): Promise<Blob> => {
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => window.setTimeout(resolve, 1000));
 
     // Create a sample CSV blob
     const csvContent =
@@ -21,7 +21,7 @@ export const ExportDemo: React.FC = () => {
 
   const handleExportExcel = async (): Promise<Blob> => {
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => window.setTimeout(resolve, 1500));
 
     // Create a sample Excel blob (simplified)
     const excelContent =
