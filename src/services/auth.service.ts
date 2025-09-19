@@ -9,13 +9,17 @@ import type {
   User,
 } from '@/types';
 
+import { defaultApi } from './default-api';
 import { TokenService } from './token.service';
-import { simpleApi } from './simple-api';
 
 export class AuthService {
   // Login
   static async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await simpleApi.post<AuthResponse>('/auth/login', credentials, 'Login failed');
+    const response = await defaultApi.post<AuthResponse>(
+      '/auth/login',
+      credentials,
+      'Login failed'
+    );
 
     // Store tokens in localStorage if they exist (development mode)
     if (response.accessToken && response.refreshToken) {
@@ -33,13 +37,13 @@ export class AuthService {
 
   // Register
   static async register(data: RegisterData): Promise<AuthResponse> {
-    return simpleApi.post<AuthResponse>('/auth/register', data, 'Registration failed');
+    return defaultApi.post<AuthResponse>('/auth/register', data, 'Registration failed');
   }
 
   // Logout
   static async logout(): Promise<{ message: string }> {
     try {
-      const response = await simpleApi.post<{ message: string }>(
+      const response = await defaultApi.post<{ message: string }>(
         '/auth/logout',
         undefined,
         'Logout failed'
@@ -56,22 +60,22 @@ export class AuthService {
 
   // Get current user profile
   static async getProfile(): Promise<User> {
-    return simpleApi.get<User>('/auth/profile', 'Failed to get profile');
+    return defaultApi.get<User>('/auth/profile', 'Failed to get profile');
   }
 
   // Get current user info
   static async getCurrentUser(): Promise<User> {
-    return simpleApi.get<User>('/auth/me', 'Failed to get user info');
+    return defaultApi.get<User>('/auth/me', 'Failed to get user info');
   }
 
   // Get authentication status
   static async getAuthStatus(): Promise<AuthStatus> {
-    return simpleApi.get<AuthStatus>('/auth/status', 'Failed to get auth status');
+    return defaultApi.get<AuthStatus>('/auth/status', 'Failed to get auth status');
   }
 
   // Change password
   static async changePassword(data: ChangePasswordData): Promise<{ message: string }> {
-    return simpleApi.post<{ message: string }>(
+    return defaultApi.post<{ message: string }>(
       '/auth/change-password',
       data,
       'Failed to change password'
@@ -80,7 +84,7 @@ export class AuthService {
 
   // Forgot password
   static async forgotPassword(data: ForgotPasswordData): Promise<{ message: string }> {
-    return simpleApi.post<{ message: string }>(
+    return defaultApi.post<{ message: string }>(
       '/auth/forgot-password',
       data,
       'Failed to send reset email'
@@ -89,7 +93,7 @@ export class AuthService {
 
   // Reset password
   static async resetPassword(data: ResetPasswordData): Promise<{ message: string }> {
-    return simpleApi.post<{ message: string }>(
+    return defaultApi.post<{ message: string }>(
       '/auth/reset-password',
       data,
       'Failed to reset password'
@@ -98,7 +102,7 @@ export class AuthService {
 
   // Verify email
   static async verifyEmail(token: string): Promise<{ message: string }> {
-    return simpleApi.post<{ message: string }>(
+    return defaultApi.post<{ message: string }>(
       `/auth/verify-email/${token}`,
       undefined,
       'Failed to verify email'
@@ -107,7 +111,7 @@ export class AuthService {
 
   // Resend verification email
   static async resendVerification(email: string): Promise<{ message: string }> {
-    return simpleApi.post<{ message: string }>(
+    return defaultApi.post<{ message: string }>(
       '/auth/resend-verification',
       { email },
       'Failed to resend verification'
@@ -116,7 +120,7 @@ export class AuthService {
 
   // Request phone verification
   static async requestPhoneVerification(phone: string): Promise<{ message: string }> {
-    return simpleApi.post<{ message: string }>(
+    return defaultApi.post<{ message: string }>(
       '/auth/request-phone-verification',
       { phone },
       'Failed to send phone verification'
@@ -125,7 +129,7 @@ export class AuthService {
 
   // Verify phone
   static async verifyPhone(phone: string, otp: string): Promise<{ message: string }> {
-    return simpleApi.post<{ message: string }>(
+    return defaultApi.post<{ message: string }>(
       '/auth/verify-phone',
       { phone, otp },
       'Failed to verify phone'

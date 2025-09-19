@@ -6,6 +6,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 
+import { TokenService } from './token.service';
 import { emitAuthUnauthorized } from './event-emitter.service';
 import { environment } from '@/config/environment';
 import { message } from 'antd';
@@ -90,11 +91,35 @@ const retryRequest = async (error: any, retryCount: number = 0): Promise<AxiosRe
 // Request interceptor
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Cookie-based auth: do not attach Authorization header
     // Add request timestamp for performance/caching diagnostics
     (config as InternalAxiosRequestConfig & { metadata: { startTime: number } }).metadata = {
       startTime: Date.now(),
     };
+
+    // Hybrid authentication approach
+    const isAuthRoute = config.url?.startsWith('/auth/');
+    const isDevelopment = environment.app.environment === 'development';
+
+    if (!isAuthRoute && isDevelopment) {
+      // Development mode: Add token-based authentication for non-auth routes
+      const authHeader = TokenService.getAuthorizationHeader();
+      if (authHeader) {
+        config.headers = config.headers || {};
+        config.headers['Authorization'] = authHeader;
+        console.log(
+          '🔑 [DEV] Adding Authorization header for',
+          config.url,
+          ':',
+          authHeader.substring(0, 20) + '...'
+        );
+      } else {
+        console.log('⚠️ [DEV] No Authorization header available for', config.url);
+      }
+    } else if (isAuthRoute) {
+      console.log('🍪 Using cookie authentication for auth route:', config.url);
+    } else {
+      console.log('🍪 [PROD] Using cookie authentication for', config.url);
+    }
 
     return config;
   },

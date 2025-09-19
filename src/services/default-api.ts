@@ -1,5 +1,5 @@
-import { TokenService } from './token.service';
 import { environment } from '@/config/environment';
+import { TokenService } from './token.service';
 
 // Types for API responses
 export interface ApiError {
@@ -11,30 +11,40 @@ export interface ApiError {
 const getRequestHeaders = (endpoint: string): Record<string, string> => {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
 
-  // Only add Authorization header for non-auth routes
+  // Always use cookie authentication for auth routes
   const isAuthRoute = endpoint.startsWith('/auth/');
-  if (!isAuthRoute) {
+  if (isAuthRoute) {
+    console.log('🍪 Using cookie authentication for auth route:', endpoint);
+    return headers;
+  }
+
+  // For non-auth routes, use hybrid approach based on environment
+  const isDevelopment = environment.app.environment === 'development';
+
+  if (isDevelopment) {
+    // Development mode: Use token-based authentication
     const authHeader = TokenService.getAuthorizationHeader();
     if (authHeader) {
       headers['Authorization'] = authHeader;
       console.log(
-        '🔑 Adding Authorization header for',
+        '🔑 [DEV] Adding Authorization header for',
         endpoint,
         ':',
         authHeader.substring(0, 20) + '...'
       );
     } else {
-      console.log('⚠️ No Authorization header available for', endpoint);
+      console.log('⚠️ [DEV] No Authorization header available for', endpoint);
     }
   } else {
-    console.log('🍪 Using cookie authentication for auth route:', endpoint);
+    // Production mode: Use cookie-based authentication only
+    console.log('🍪 [PROD] Using cookie authentication for', endpoint);
   }
 
   return headers;
 };
 
-// Simple HTTP client following PWA pattern
-export const simpleApi = {
+// Default HTTP client following PWA pattern
+export const defaultApi = {
   post: async <T>(endpoint: string, data?: unknown, errorMessage?: string): Promise<T> => {
     const response = await fetch(`${environment.api.baseUrl}${endpoint}`, {
       method: 'POST',

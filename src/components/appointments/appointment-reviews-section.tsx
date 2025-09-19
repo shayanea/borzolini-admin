@@ -24,12 +24,6 @@ export const AppointmentReviewsSection: React.FC<AppointmentReviewsSectionProps>
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (appointmentId) {
-      fetchReviews();
-    }
-  }, [appointmentId, fetchReviews]);
-
   const fetchReviews = useCallback(async () => {
     try {
       setLoading(true);
@@ -43,6 +37,12 @@ export const AppointmentReviewsSection: React.FC<AppointmentReviewsSectionProps>
       setLoading(false);
     }
   }, [appointmentId]);
+
+  useEffect(() => {
+    if (appointmentId) {
+      fetchReviews();
+    }
+  }, [appointmentId, fetchReviews]);
 
   const getReviewTypeColor = (review: Review) => {
     if (review.flagged) return 'red';

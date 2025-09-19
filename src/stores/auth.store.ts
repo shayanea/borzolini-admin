@@ -1,8 +1,8 @@
 import type { LoadingState, User } from '@/types';
 
 import { AuthService } from '@/services/auth.service';
-import { create } from 'zustand';
 import { emitAuthRedirect } from '@/services/event-emitter.service';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface AuthState {
@@ -104,7 +104,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       initializeFromTokens: async () => {
-        const { setLoading, setError, setUser, setAuthenticated } = get();
+        const { setLoading } = get();
 
         try {
           setLoading('loading');
