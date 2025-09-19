@@ -1,7 +1,8 @@
 import type { LoadingState, User } from '@/types';
 
-import { emitAuthRedirect } from '@/services/event-emitter.service';
+import { AuthService } from '@/services/auth.service';
 import { create } from 'zustand';
+import { emitAuthRedirect } from '@/services/event-emitter.service';
 import { persist } from 'zustand/middleware';
 
 interface AuthState {
@@ -21,6 +22,10 @@ interface AuthState {
   updateUser: (updates: Partial<User>) => void;
   clearError: () => void;
   handleAuthFailure: () => void;
+
+  // Token-based authentication
+  checkTokenAuth: () => boolean;
+  initializeFromTokens: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -49,13 +54,17 @@ export const useAuthStore = create<AuthState>()(
           error: null,
         }),
 
-      logout: () =>
+      logout: () => {
+        // Clear tokens from localStorage
+        AuthService.clearStoredTokens();
+
         set({
           user: null,
           isAuthenticated: false,
           loading: 'idle',
           error: null,
-        }),
+        });
+      },
 
       updateUser: updates => {
         const currentUser = get().user;
@@ -88,6 +97,47 @@ export const useAuthStore = create<AuthState>()(
         // Emit redirect event using event emitter service
         emitAuthRedirect('/login');
       },
+
+      // Token-based authentication
+      checkTokenAuth: () => {
+        return AuthService.isAuthenticated();
+      },
+
+      initializeFromTokens: async () => {
+        const { setLoading, setError, setUser, setAuthenticated } = get();
+
+        try {
+          setLoading('loading');
+
+          // Check if we have valid tokens
+          if (!AuthService.isAuthenticated()) {
+            setLoading('idle');
+            return;
+          }
+
+          // Try to get user info using the stored tokens
+          const user = await AuthService.getCurrentUser();
+
+          set({
+            user,
+            isAuthenticated: true,
+            loading: 'success',
+            error: null,
+          });
+        } catch (error) {
+          console.error('Failed to initialize from tokens:', error);
+
+          // Clear invalid tokens
+          AuthService.clearStoredTokens();
+
+          set({
+            user: null,
+            isAuthenticated: false,
+            loading: 'idle',
+            error: 'Session expired. Please login again.',
+          });
+        }
+      },
     }),
     {
       name: 'auth-storage',
@@ -117,4 +167,6 @@ export const useAuthActions = () =>
     updateUser: state.updateUser,
     clearError: state.clearError,
     handleAuthFailure: state.handleAuthFailure,
+    checkTokenAuth: state.checkTokenAuth,
+    initializeFromTokens: state.initializeFromTokens,
   }));

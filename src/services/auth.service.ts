@@ -9,12 +9,20 @@ import type {
   User,
 } from '@/types';
 
+import { TokenService } from './token.service';
 import { simpleApi } from './simple-api';
 
 export class AuthService {
   // Login
   static async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    return simpleApi.post<AuthResponse>('/auth/login', credentials, 'Login failed');
+    const response = await simpleApi.post<AuthResponse>('/auth/login', credentials, 'Login failed');
+
+    // Store tokens in localStorage if they exist (development mode)
+    if (response.accessToken && response.refreshToken) {
+      TokenService.setTokens(response.accessToken, response.refreshToken);
+    }
+
+    return response;
   }
 
   // Register
@@ -24,7 +32,20 @@ export class AuthService {
 
   // Logout
   static async logout(): Promise<{ message: string }> {
-    return simpleApi.post<{ message: string }>('/auth/logout', undefined, 'Logout failed');
+    try {
+      const response = await simpleApi.post<{ message: string }>(
+        '/auth/logout',
+        undefined,
+        'Logout failed'
+      );
+      // Clear tokens from localStorage
+      TokenService.clearTokens();
+      return response;
+    } catch (error) {
+      // Clear tokens even if logout request fails
+      TokenService.clearTokens();
+      throw error;
+    }
   }
 
   // Get current user profile
@@ -103,6 +124,21 @@ export class AuthService {
       { phone, otp },
       'Failed to verify phone'
     );
+  }
+
+  // Check if user has valid tokens
+  static isAuthenticated(): boolean {
+    return TokenService.hasTokens() && TokenService.isAccessTokenValid();
+  }
+
+  // Get stored tokens
+  static getStoredTokens() {
+    return TokenService.getTokenData();
+  }
+
+  // Clear stored tokens
+  static clearStoredTokens(): void {
+    TokenService.clearTokens();
   }
 }
 

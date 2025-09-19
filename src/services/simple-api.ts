@@ -1,3 +1,4 @@
+import { TokenService } from './token.service';
 import { environment } from '@/config/environment';
 
 // Types for API responses
@@ -6,14 +7,30 @@ export interface ApiError {
   code?: string;
 }
 
+// Helper function to get headers for requests
+const getRequestHeaders = (endpoint: string): Record<string, string> => {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+
+  // Only add Authorization header for non-auth routes
+  const isAuthRoute = endpoint.startsWith('/auth/');
+  if (!isAuthRoute) {
+    const authHeader = TokenService.getAuthorizationHeader();
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
+    }
+  }
+
+  return headers;
+};
+
 // Simple HTTP client following PWA pattern
 export const simpleApi = {
   post: async <T>(endpoint: string, data?: unknown, errorMessage?: string): Promise<T> => {
     const response = await fetch(`${environment.api.baseUrl}${endpoint}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getRequestHeaders(endpoint),
       body: data ? JSON.stringify(data) : undefined,
-      credentials: 'include', // Important for cookies
+      credentials: 'include', // Keep for auth routes
     });
 
     if (!response.ok) {
@@ -32,7 +49,8 @@ export const simpleApi = {
 
   get: async <T>(endpoint: string, errorMessage?: string): Promise<T> => {
     const response = await fetch(`${environment.api.baseUrl}${endpoint}`, {
-      credentials: 'include', // Important for cookies
+      headers: getRequestHeaders(endpoint),
+      credentials: 'include', // Keep for auth routes
     });
 
     if (!response.ok) {
@@ -52,9 +70,9 @@ export const simpleApi = {
   put: async <T>(endpoint: string, data?: unknown, errorMessage?: string): Promise<T> => {
     const response = await fetch(`${environment.api.baseUrl}${endpoint}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getRequestHeaders(endpoint),
       body: data ? JSON.stringify(data) : undefined,
-      credentials: 'include', // Important for cookies
+      credentials: 'include', // Keep for auth routes
     });
 
     if (!response.ok) {
@@ -74,9 +92,9 @@ export const simpleApi = {
   patch: async <T>(endpoint: string, data?: unknown, errorMessage?: string): Promise<T> => {
     const response = await fetch(`${environment.api.baseUrl}${endpoint}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getRequestHeaders(endpoint),
       body: data ? JSON.stringify(data) : undefined,
-      credentials: 'include', // Important for cookies
+      credentials: 'include', // Keep for auth routes
     });
 
     if (!response.ok) {
@@ -96,7 +114,8 @@ export const simpleApi = {
   delete: async <T>(endpoint: string, errorMessage?: string): Promise<T> => {
     const response = await fetch(`${environment.api.baseUrl}${endpoint}`, {
       method: 'DELETE',
-      credentials: 'include', // Important for cookies
+      headers: getRequestHeaders(endpoint),
+      credentials: 'include', // Keep for auth routes
     });
 
     if (!response.ok) {

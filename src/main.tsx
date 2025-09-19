@@ -6,6 +6,7 @@ import { CACHE_PRESETS, theme } from './constants';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import App from './app.tsx';
+import { AuthProvider } from './components/auth/auth-provider';
 import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -33,7 +34,9 @@ ReactDOM.createRoot(document.getElementById('root') ?? document.body).render(
       <ConfigProvider theme={theme}>
         <AntdApp>
           <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-            <App />
+            <AuthProvider>
+              <App />
+            </AuthProvider>
           </BrowserRouter>
         </AntdApp>
       </ConfigProvider>
