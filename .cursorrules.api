@@ -2,10 +2,10 @@
 
 ## PRIMARY RULE: Always Check Local API Docs First
 **BEFORE implementing any API-related functionality, ALWAYS check:**
-`http://localhost:3001/api/docs`
+`http://192.168.70.174:3001/api/docs`
 
 ## API Documentation Priority
-1. **FIRST**: Check `http://localhost:3001/api/docs` for endpoint details
+1. **FIRST**: Check `http://192.168.70.174:3001/api/docs` for endpoint details
 2. **SECOND**: Check existing service files for patterns
 3. **THIRD**: Check existing type definitions
 4. **LAST**: Make educated guesses (only if absolutely necessary)
@@ -36,7 +36,7 @@
 - Clear cache when data is modified
 
 ## Example Workflow for New API Features
-1. **Check** `http://localhost:3001/api/docs` for endpoint details
+1. **Check** `http://192.168.70.174:3001/api/docs` for endpoint details
 2. **Create** proper TypeScript interfaces
 3. **Implement** service method using existing patterns
 4. **Add** proper error handling and loading states

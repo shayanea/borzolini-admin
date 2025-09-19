@@ -36,6 +36,7 @@ VITE_CACHE_USERS_MAX_SIZE=50
 The system expects the following API endpoints to be available:
 
 ### Appointments
+
 - `GET /appointments` - Get all appointments with filters and pagination
 - `GET /appointments/:id` - Get appointment by ID
 - `POST /appointments` - Create new appointment
@@ -55,35 +56,41 @@ The system expects the following API endpoints to be available:
 - `GET /appointments/export` - Export appointments
 
 ### Health Check
+
 - `GET /health` - API health check endpoint
 
 ## Features Implemented
 
 ### 1. Real API Integration
+
 - ✅ All appointment operations use real API endpoints
 - ✅ Proper error handling and validation
 - ✅ Request/response interceptors
 - ✅ Authentication token management
 
 ### 2. Enhanced Error Handling
+
 - ✅ Comprehensive error boundaries
 - ✅ User-friendly error messages
 - ✅ Retry logic for failed requests
 - ✅ Offline support with cached data
 
 ### 3. Performance Optimizations
+
 - ✅ Intelligent caching system
 - ✅ Request deduplication
 - ✅ Response time monitoring
 - ✅ Optimistic updates
 
 ### 4. Data Validation
+
 - ✅ Input validation before API calls
 - ✅ Response data validation
 - ✅ Type safety with TypeScript
 - ✅ Proper error messages for validation failures
 
 ### 5. User Experience
+
 - ✅ Loading states and spinners
 - ✅ Success/error notifications
 - ✅ Offline mode indicators
@@ -104,6 +111,7 @@ Your backend API should:
    - 500: Internal Server Error
 
 2. **Follow consistent response format**
+
    ```json
    {
      "appointments": [...],
@@ -142,6 +150,7 @@ Your backend API should:
 ### Debug Mode
 
 Enable debug mode by setting `VITE_DEBUG=true` to see:
+
 - API response times
 - Cache hit/miss information
 - Detailed error logs
@@ -149,6 +158,7 @@ Enable debug mode by setting `VITE_DEBUG=true` to see:
 ## Performance Monitoring
 
 The system automatically monitors:
+
 - API response times
 - Cache hit rates
 - Error frequencies
@@ -157,6 +167,7 @@ The system automatically monitors:
 ## Offline Support
 
 When offline mode is enabled:
+
 - Cached data is displayed when available
 - User is notified of network status
 - Failed requests fall back to cached data

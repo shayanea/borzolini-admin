@@ -1,10 +1,10 @@
-import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, Button, Card, Form, Input, Typography } from 'antd';
+import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, UserOutlined } from '@ant-design/icons';
 
 import { AuthBackground } from '@/components/common';
-import { useLogin } from '@/hooks/use-auth';
 import type { LoginCredentials } from '@/types';
 import { useCallback } from 'react';
+import { useLogin } from '@/hooks/use-auth';
 
 const { Title, Text } = Typography;
 
@@ -29,7 +29,7 @@ export const LoginForm = () => {
   }, []);
 
   return (
-    <AuthBackground variant='modern'>
+    <AuthBackground variant='geometric'>
       <Card className='w-full shadow-2xl p-8 bg-white border border-gray-200 rounded-2xl'>
         <div className='text-center mb-8'>
           <div className='mb-4'>
@@ -105,7 +105,7 @@ export const LoginForm = () => {
               type='primary'
               htmlType='submit'
               loading={loginMutation.isPending}
-              className='w-full h-12 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 border-0 shadow-lg text-white font-medium'
+              className='w-full h-12 bg-primary-500 hover:bg-primary-600 border-0 shadow-lg text-white font-medium'
             >
               {loginMutation.isPending ? 'Signing In...' : 'Sign In'}
             </Button>

@@ -30,7 +30,7 @@ A professional clinic management admin panel built with React, TypeScript, Ant D
 
 ## 📋 Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - pnpm (recommended) or npm
 - Modern web browser
 
@@ -48,7 +48,7 @@ pnpm install
 Create a `.env` file in the admin directory:
 
 ```env
-VITE_API_URL=http://localhost:3001
+VITE_API_URL=http://192.168.70.174:3001
 ```
 
 ### 3. Start Development Server
@@ -164,16 +164,19 @@ The admin panel integrates with the Borzolini backend API:
 ## 🎯 Key Components
 
 ### Authentication Components
+
 - `LoginForm` - User login interface
 - `ProtectedRoute` - Route protection wrapper
 - `useAuth` - Authentication hook
 
 ### Layout Components
+
 - `AdminLayout` - Main application layout
 - `Sidebar` - Navigation sidebar
 - `Header` - Top navigation bar
 
 ### Page Components
+
 - `Dashboard` - Main dashboard with statistics
 - `Calendar` - Appointment scheduling interface
 - `Users` - User management
