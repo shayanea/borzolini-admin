@@ -10,6 +10,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { AuthService } from '@/services/auth.service';
 import { ROUTES } from '@/constants';
+import { useAuthActions } from '@/stores/auth.store';
 import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,16 +36,36 @@ const authApi = {
     AuthService.resendVerification(email),
 };
 
-// Custom hooks following PWA pattern
-export function useLogin() {
+// Helper functions for auth state management
+const clearAuthState = (queryClient: any, clearAuth: () => void) => {
+  queryClient.setQueryData(['current-user'], null);
+  queryClient.clear();
+  clearAuth();
+};
+
+const updateAuthState = (queryClient: any, setUser: (user: User) => void, user: User) => {
+  queryClient.setQueryData(['current-user'], user);
+  queryClient.invalidateQueries({ queryKey: ['current-user'] });
+  setUser(user);
+};
+
+// Custom hook for common auth dependencies
+const useAuthDependencies = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { login: setUser, logout: clearAuth } = useAuthActions();
+
+  return { queryClient, navigate, setUser, clearAuth };
+};
+
+// Custom hooks following PWA pattern
+export function useLogin() {
+  const { queryClient, navigate, setUser } = useAuthDependencies();
 
   return useMutation({
     mutationFn: authApi.login,
     onSuccess: data => {
-      queryClient.setQueryData(['current-user'], data.user);
-      queryClient.invalidateQueries({ queryKey: ['current-user'] });
+      updateAuthState(queryClient, setUser, data.user);
       message.success('Login successful!');
       navigate(ROUTES.DASHBOARD);
     },
@@ -57,14 +78,12 @@ export function useLogin() {
 }
 
 export function useRegister() {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const { queryClient, navigate, setUser } = useAuthDependencies();
 
   return useMutation({
     mutationFn: authApi.register,
     onSuccess: data => {
-      queryClient.setQueryData(['current-user'], data.user);
-      queryClient.invalidateQueries({ queryKey: ['current-user'] });
+      updateAuthState(queryClient, setUser, data.user);
       message.success('Registration successful! Please check your email to verify your account.');
       navigate(ROUTES.LOGIN);
     },
@@ -86,21 +105,18 @@ export function useCurrentUser() {
 }
 
 export function useLogout() {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const { queryClient, navigate, clearAuth } = useAuthDependencies();
 
   return useMutation({
     mutationFn: authApi.logout,
     onSuccess: () => {
-      queryClient.setQueryData(['current-user'], null);
-      queryClient.clear();
+      clearAuthState(queryClient, clearAuth);
       message.success('Logged out successfully');
       navigate(ROUTES.LOGIN);
     },
     onError: () => {
       // Even if logout fails, clear local state
-      queryClient.setQueryData(['current-user'], null);
-      queryClient.clear();
+      clearAuthState(queryClient, clearAuth);
       navigate(ROUTES.LOGIN);
     },
   });

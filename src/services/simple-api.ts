@@ -17,7 +17,17 @@ const getRequestHeaders = (endpoint: string): Record<string, string> => {
     const authHeader = TokenService.getAuthorizationHeader();
     if (authHeader) {
       headers['Authorization'] = authHeader;
+      console.log(
+        '🔑 Adding Authorization header for',
+        endpoint,
+        ':',
+        authHeader.substring(0, 20) + '...'
+      );
+    } else {
+      console.log('⚠️ No Authorization header available for', endpoint);
     }
+  } else {
+    console.log('🍪 Using cookie authentication for auth route:', endpoint);
   }
 
   return headers;

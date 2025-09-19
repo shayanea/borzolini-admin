@@ -1,5 +1,6 @@
 import 'dayjs/locale/en';
 import './index.css';
+import './utils/debug-token';
 
 import { App as AntdApp, ConfigProvider } from 'antd';
 import { CACHE_PRESETS, theme } from './constants';
