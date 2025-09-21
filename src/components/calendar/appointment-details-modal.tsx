@@ -1,4 +1,5 @@
 import type { AppointmentPriority, AppointmentStatus, AppointmentType } from '@/types';
+import { DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import {
   Button,
   DatePicker,
@@ -15,13 +16,12 @@ import {
   TimePicker,
   message,
 } from 'antd';
-import { DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 
-import type { AppointmentDetailsModalProps } from '@/types/calendar-modals';
+import { useCalendarFormData } from '@/hooks/calendar/use-calendar-form-data';
 import type { UpdateAppointmentData } from '@/services/appointments.service';
+import type { AppointmentDetailsModalProps } from '@/types/calendar-modals';
 import dayjs from 'dayjs';
-import { useCalendarFormData } from '@/hooks/use-calendar-form-data';
 
 const { TextArea } = Input;
 const { Option } = Select;

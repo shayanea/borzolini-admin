@@ -8,7 +8,7 @@ import {
   VeterinarianSelection,
 } from '@/components/calendar';
 
-import { useCalendar } from '@/hooks/use-calendar';
+import { useCalendar } from '@/hooks/calendar';
 
 const CalendarPage = () => {
   const {

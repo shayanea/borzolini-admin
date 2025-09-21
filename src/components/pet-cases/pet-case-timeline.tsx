@@ -12,7 +12,7 @@ import { Button, Card, Form, Input, Modal, Select, Space, Timeline, message } fr
 import React, { useState } from 'react';
 
 import dayjs from 'dayjs';
-import { useCaseTimeline } from '../../hooks/use-pet-cases';
+import { useCaseTimeline } from '../../hooks/pet-cases/use-pet-cases';
 import { TimelineEventType } from '../../types/pet-cases';
 
 const { Option } = Select;

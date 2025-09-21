@@ -10,26 +10,22 @@ import {
   PetCasesTable,
 } from '../components/pet-cases';
 // Pet Cases Management Page
-import { Alert, Layout, Pagination } from 'antd';
-import { CaseFilters, ClinicPetCase } from '../types/pet-cases';
-import React, { useEffect, useState } from 'react';
+import { Alert, Pagination } from 'antd';
+import React, { useEffect } from 'react';
+import { ErrorState, LoadingState, PageLayout } from '../components/common';
 
-import { useCurrentUser } from '../hooks/use-auth';
-import { usePetCases } from '../hooks/use-pet-cases';
 import { useSearchParams } from 'react-router-dom';
-
-const { Content } = Layout;
+import { usePetCases, usePetCasesModals, usePetCasesState } from '../hooks/pet-cases';
+import { useCurrentUser } from '../hooks/use-auth';
 
 const PetCasesPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { data: user, isLoading: userLoading } = useCurrentUser();
   const urlClinicId = searchParams.get('clinicId');
-  const [filters, setFilters] = useState<CaseFilters>({});
-  const [page, setPage] = useState(1);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
-  const [viewModalVisible, setViewModalVisible] = useState(false);
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const [selectedCase, setSelectedCase] = useState<ClinicPetCase | null>(null);
+
+  // Use custom hooks for state management
+  const state = usePetCasesState();
+  const modals = usePetCasesModals();
 
   // Get clinic ID from URL params or user profile
   const clinicId = urlClinicId || user?.clinicId || user?.clinic_id || user?.clinic?.id;
@@ -72,7 +68,7 @@ const PetCasesPage: React.FC = () => {
     isLoading,
     error,
     refetch,
-  } = usePetCases(clinicId || '', filters, page, 10);
+  } = usePetCases(clinicId || '', state.filters, state.page, 10);
 
   useEffect(() => {
     if (!userLoading && !clinicId) {
@@ -80,207 +76,120 @@ const PetCasesPage: React.FC = () => {
     }
   }, [clinicId, userLoading]);
 
-  const handleFiltersChange = (newFilters: CaseFilters) => {
-    setFilters(newFilters);
-    setPage(1); // Reset to first page when filters change
-    setSelectedRowKeys([]); // Clear selection
-  };
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-    setSelectedRowKeys([]); // Clear selection when changing pages
-  };
-
   const handleRefresh = () => {
     refetch();
-    setSelectedRowKeys([]);
-  };
-
-  const handleViewCase = (caseData: ClinicPetCase) => {
-    setSelectedCase(caseData);
-    setViewModalVisible(true);
-  };
-
-  const handleEditCase = (caseData: ClinicPetCase) => {
-    setSelectedCase(caseData);
-    setEditModalVisible(true);
-  };
-
-  const handleCloseViewModal = () => {
-    setViewModalVisible(false);
-    setSelectedCase(null);
-  };
-
-  const handleCloseEditModal = () => {
-    setEditModalVisible(false);
-    setSelectedCase(null);
-  };
-
-  const handleEditSuccess = () => {
-    refetch();
-    setEditModalVisible(false);
-    setSelectedCase(null);
-  };
-
-  const handleSelectionChange = (keys: string[]) => {
-    setSelectedRowKeys(keys);
-  };
-
-  const handleCreateCase = () => {
-    // TODO: Implement create case modal
-    console.log('Create new case');
-  };
-
-  const handleExport = () => {
-    // TODO: Implement export functionality
-    console.log('Export cases');
-  };
-
-  const handleViewStats = () => {
-    // TODO: Implement stats modal or redirect to stats page
-    console.log('View detailed statistics');
+    state.handleRefresh();
   };
 
   // Show loading while fetching user data
   if (userLoading) {
-    return (
-      <Layout className='min-h-screen'>
-        <Content className='p-6'>
-          <div className='flex items-center justify-center min-h-[400px]'>
-            <div className='text-center'>
-              <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary-navy mx-auto mb-4'></div>
-              <p className='text-gray-600'>Loading pet cases...</p>
-            </div>
-          </div>
-        </Content>
-      </Layout>
-    );
+    return <LoadingState message='Loading pet cases...' fullScreen />;
   }
 
   // Show error if no clinic ID is available
   if (!clinicId) {
     return (
-      <Layout className='min-h-screen'>
-        <Content className='p-6'>
-          <Alert
-            message='Access Error'
-            description='Unable to determine your clinic. Please contact support or try accessing pet cases from a clinic-specific page.'
-            type='error'
-            showIcon
-            action={
-              <button
-                onClick={() => window.history.back()}
-                className='px-4 py-2 bg-primary-navy text-white rounded hover:bg-primary-navy/90'
-              >
-                Go Back
-              </button>
-            }
-          />
-        </Content>
-      </Layout>
+      <ErrorState
+        title='Access Error'
+        message='Unable to determine your clinic. Please contact support or try accessing pet cases from a clinic-specific page.'
+        onRetry={() => window.history.back()}
+        retryText='Go Back'
+      />
     );
   }
 
   return (
-    <Layout className='min-h-screen'>
-      <Content className='p-6'>
-        <div className='max-w-7xl mx-auto space-y-8'>
-          {/* Advanced Statistics Overview */}
-          <AdvancedStatsOverview stats={stats || defaultStats} loading={isLoading} />
+    <PageLayout>
+      {/* Advanced Statistics Overview */}
+      <AdvancedStatsOverview stats={stats || defaultStats} loading={isLoading} />
 
-          {/* Interactive Charts */}
-          <InteractiveCharts stats={stats || defaultStats} loading={isLoading} />
+      {/* Interactive Charts */}
+      <InteractiveCharts stats={stats || defaultStats} loading={isLoading} />
 
-          {/* Case Type Distribution */}
-          <CaseTypeDistribution stats={stats || defaultStats} loading={isLoading} />
+      {/* Case Type Distribution */}
+      <CaseTypeDistribution stats={stats || defaultStats} loading={isLoading} />
 
-          {/* Performance Metrics */}
-          <PerformanceMetrics stats={stats || defaultStats} loading={isLoading} />
+      {/* Performance Metrics */}
+      <PerformanceMetrics stats={stats || defaultStats} loading={isLoading} />
 
-          {/* Page Header */}
-          <PetCasesHeader
-            totalCases={total}
-            selectedCount={selectedRowKeys.length}
-            stats={stats || defaultStats}
-            loading={isLoading}
-            onCreateCase={handleCreateCase}
-            onExport={handleExport}
-            onRefresh={handleRefresh}
-            onViewStats={handleViewStats}
-          />
+      {/* Page Header */}
+      <PetCasesHeader
+        totalCases={total}
+        selectedCount={state.selectedRowKeys.length}
+        stats={stats || defaultStats}
+        loading={isLoading}
+        onCreateCase={state.handleCreateCase}
+        onExport={state.handleExport}
+        onRefresh={handleRefresh}
+        onViewStats={state.handleViewStats}
+      />
 
-          {/* Filters */}
-          <PetCasesFilters
-            filters={filters}
-            onFiltersChange={handleFiltersChange}
-            onReset={() => {
-              setFilters({});
-              setPage(1);
-              setSelectedRowKeys([]);
-            }}
-            loading={isLoading}
-          />
+      {/* Filters */}
+      <PetCasesFilters
+        filters={state.filters}
+        onFiltersChange={state.handleFiltersChange}
+        onReset={state.handleResetFilters}
+        loading={isLoading}
+      />
 
-          {/* Cases Table */}
-          <div className='bg-white rounded-lg border border-gray-200'>
-            <PetCasesTable
-              cases={cases}
-              loading={isLoading}
-              onViewCase={handleViewCase}
-              onEditCase={handleEditCase}
-              selectedRowKeys={selectedRowKeys}
-              onSelectionChange={handleSelectionChange}
+      {/* Cases Table */}
+      <div className='bg-white rounded-lg border border-gray-200'>
+        <PetCasesTable
+          cases={cases}
+          loading={isLoading}
+          onViewCase={modals.handleViewCase}
+          onEditCase={modals.handleEditCase}
+          selectedRowKeys={state.selectedRowKeys}
+          onSelectionChange={state.handleSelectionChange}
+        />
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className='px-6 py-4 border-t border-gray-200 flex justify-center'>
+            <Pagination
+              current={currentPage}
+              total={total}
+              pageSize={10}
+              onChange={state.handlePageChange}
+              showSizeChanger={false}
+              showQuickJumper
+              showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} cases`}
             />
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className='px-6 py-4 border-t border-gray-200 flex justify-center'>
-                <Pagination
-                  current={currentPage}
-                  total={total}
-                  pageSize={10}
-                  onChange={handlePageChange}
-                  showSizeChanger={false}
-                  showQuickJumper
-                  showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} cases`}
-                />
-              </div>
-            )}
           </div>
+        )}
+      </div>
 
-          {/* Error Display */}
-          {error && (
-            <div className='mt-4'>
-              <Alert
-                message='Error Loading Cases'
-                description={error?.message || 'An error occurred while loading cases'}
-                type='error'
-                showIcon
-                closable
-              />
-            </div>
-          )}
-
-          {/* View Case Modal */}
-          <PetCaseViewModal
-            caseData={selectedCase}
-            visible={viewModalVisible}
-            onClose={handleCloseViewModal}
-            onEdit={handleEditCase}
-            clinicId={clinicId}
-          />
-
-          {/* Edit Case Modal */}
-          <PetCaseFormModal
-            visible={editModalVisible}
-            onClose={handleCloseEditModal}
-            onSuccess={handleEditSuccess}
-            clinicId={clinicId}
-            editCase={selectedCase}
+      {/* Error Display */}
+      {error && (
+        <div className='mt-4'>
+          <Alert
+            message='Error Loading Cases'
+            description={error?.message || 'An error occurred while loading cases'}
+            type='error'
+            showIcon
+            closable
           />
         </div>
-      </Content>
-    </Layout>
+      )}
+
+      {/* View Case Modal */}
+      <PetCaseViewModal
+        caseData={modals.selectedCase}
+        visible={modals.viewModalVisible}
+        onClose={modals.handleCloseViewModal}
+        onEdit={modals.handleEditCase}
+        clinicId={clinicId}
+      />
+
+      {/* Edit Case Modal */}
+      <PetCaseFormModal
+        visible={modals.editModalVisible}
+        onClose={modals.handleCloseEditModal}
+        onSuccess={modals.handleEditSuccess}
+        clinicId={clinicId}
+        editCase={modals.selectedCase}
+      />
+    </PageLayout>
   );
 };
 

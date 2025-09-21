@@ -6,12 +6,12 @@ import {
   CreatePetCaseRequest,
   PetCasesResponse,
   UpdatePetCaseRequest,
-} from '../types/pet-cases';
+} from '../../types/pet-cases';
 // Hook for Pet Cases Management
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { PetCasesService } from '../services/pet-cases.service';
-import { useMessage } from './use-message';
+import { PetCasesService } from '../../services/pet-cases.service';
+import { useMessage } from '../use-message';
 
 export const usePetCases = (
   clinicId: string,

@@ -1,3 +1,4 @@
+import { ErrorState, LoadingState } from '@/components/common';
 import {
   DashboardHeader,
   QuickActions,
@@ -5,7 +6,7 @@ import {
   StatisticsCards,
   TopPerformingClinics,
 } from '@/components/dashboard';
-import { Alert, Button, Col, Row, Spin } from 'antd';
+import { Alert, Col, Row, Spin } from 'antd';
 
 import { useDashboard } from '@/hooks/use-dashboard';
 
@@ -25,44 +26,27 @@ const Dashboard = () => {
   console.log('stats', stats);
 
   if (loading && !stats) {
-    return (
-      <div className='min-h-screen flex items-center justify-center'>
-        <div className='text-center'>
-          <Spin size='large' className='mb-4' />
-          <div className='text-lg'>Loading dashboard...</div>
-        </div>
-      </div>
-    );
+    return <LoadingState message='Loading dashboard...' fullScreen />;
   }
 
   if (error) {
     return (
-      <div className='space-y-6'>
-        <Alert
-          message='Error Loading Dashboard'
-          description={error}
-          type='error'
-          showIcon
-          action={
-            <Button size='small' danger onClick={handleRefresh} loading={isRefreshing}>
-              Retry
-            </Button>
-          }
-        />
-      </div>
+      <ErrorState
+        title='Error Loading Dashboard'
+        message={error}
+        onRetry={handleRefresh}
+        retryText='Retry'
+      />
     );
   }
 
   if (!stats) {
     return (
-      <div className='space-y-6'>
-        <Alert
-          message='No Data Available'
-          description='Unable to load dashboard statistics.'
-          type='warning'
-          showIcon
-        />
-      </div>
+      <ErrorState
+        title='No Data Available'
+        message='Unable to load dashboard statistics.'
+        type='warning'
+      />
     );
   }
 

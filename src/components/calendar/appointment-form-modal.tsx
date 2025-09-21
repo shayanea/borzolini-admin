@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 
-import { useCalendarFormData } from '@/hooks/use-calendar-form-data';
+import { useCalendarFormData } from '@/hooks/calendar/use-calendar-form-data';
 import type { CreateAppointmentData } from '@/services/appointments.service';
 import type { AppointmentFormModalProps } from '@/types/calendar-modals';
 import { SaveOutlined } from '@ant-design/icons';
