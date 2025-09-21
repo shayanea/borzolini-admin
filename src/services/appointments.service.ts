@@ -1,7 +1,6 @@
 import type { Appointment, AppointmentPriority, AppointmentStatus, AppointmentType } from '@/types';
 
-import { apiService } from './api';
-import { appointmentsCache } from './cache.service';
+import { BaseQueryParams, BaseService } from './base.service';
 
 export interface CreateAppointmentData {
   appointment_type: AppointmentType;
@@ -47,9 +46,7 @@ export interface UpdateAppointmentData {
   service_id?: string;
 }
 
-export interface AppointmentsFilters {
-  page?: number;
-  limit?: number;
+export interface AppointmentsFilters extends BaseQueryParams {
   status?: AppointmentStatus;
   type?: AppointmentType;
   priority?: AppointmentPriority;
@@ -61,7 +58,6 @@ export interface AppointmentsFilters {
   date_to?: string;
   is_telemedicine?: boolean;
   is_home_visit?: boolean;
-  search?: string;
   dateRange?: [string, string]; // For UI compatibility
   cost_min?: number;
   cost_max?: number;
@@ -116,320 +112,155 @@ export interface AppointmentStats {
   thisMonth: number;
 }
 
-export class AppointmentsService {
+export class AppointmentsService extends BaseService<
+  Appointment,
+  CreateAppointmentData,
+  UpdateAppointmentData
+> {
+  constructor() {
+    super('/appointments', 'appointments');
+  }
+
+  protected getEntityName(): string {
+    return 'appointment';
+  }
+
   /**
    * Get all appointments with optional filtering and pagination
    */
   static async getAll(filters: AppointmentsFilters = {}): Promise<AppointmentsResponse> {
-    try {
-      // Use the utility function for consistent query parameter handling
-      const params = apiService.buildQueryParams(filters);
-      const queryString = params.toString();
-      const url = queryString ? `/appointments?${queryString}` : '/appointments';
-
-      const response = await apiService.get<AppointmentsResponse>(url);
-
-      // Validate response data
-      if (!response.appointments || !Array.isArray(response.appointments)) {
-        throw new Error('Invalid response format: appointments array is missing');
-      }
-
-      return response;
-    } catch (error: any) {
-      console.error('Failed to fetch appointments:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
-    }
+    const service = new AppointmentsService();
+    const response = await service.getAll(filters);
+    return {
+      appointments: response.data,
+      total: response.total,
+      page: response.page,
+      limit: response.limit,
+    };
   }
 
   /**
    * Get current user appointments
    */
   static async getMyAppointments(): Promise<Appointment[]> {
-    try {
-      const response = await apiService.get<Appointment[]>('/appointments/my-appointments');
-
-      if (!Array.isArray(response)) {
-        throw new Error('Invalid response format: expected array of appointments');
-      }
-
-      return response;
-    } catch (error: any) {
-      console.error('Failed to fetch my appointments:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
-    }
+    const service = new AppointmentsService();
+    return service.getRequest<Appointment[]>('/appointments/my-appointments');
   }
 
   /**
    * Get appointments by pet
    */
   static async getByPet(petId: string): Promise<Appointment[]> {
-    try {
-      if (!petId) {
-        throw new Error('Pet ID is required');
-      }
-
-      const response = await apiService.get<Appointment[]>(`/appointments/pet/${petId}`);
-
-      if (!Array.isArray(response)) {
-        throw new Error('Invalid response format: expected array of appointments');
-      }
-
-      return response;
-    } catch (error: any) {
-      console.error('Failed to fetch pet appointments:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
-    }
+    const service = new AppointmentsService();
+    service.validateArrayResponse([petId], 'petId'); // Simple validation
+    return service.getRequest<Appointment[]>(`/appointments/pet/${petId}`);
   }
 
   /**
    * Get appointments by clinic
    */
   static async getByClinic(clinicId: string, date?: string): Promise<Appointment[]> {
-    try {
-      if (!clinicId) {
-        throw new Error('Clinic ID is required');
-      }
-
-      const params = date ? `&date=${date}` : '';
-      const response = await apiService.get<Appointment[]>(
-        `/appointments/clinic/${clinicId}?limit=5${params}`
-      );
-
-      if (!Array.isArray(response)) {
-        throw new Error('Invalid response format: expected array of appointments');
-      }
-
-      return response;
-    } catch (error: any) {
-      console.error('Failed to fetch clinic appointments:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
-    }
+    const service = new AppointmentsService();
+    const params = date ? { date, limit: 5 } : { limit: 5 };
+    return service.getRequest<Appointment[]>(`/appointments/clinic/${clinicId}`, params);
   }
 
   /**
    * Get appointments by staff member
    */
   static async getByStaff(staffId: string, date?: string): Promise<Appointment[]> {
-    try {
-      if (!staffId) {
-        throw new Error('Staff ID is required');
-      }
-
-      const params = date ? `?date=${date}` : '';
-      const response = await apiService.get<Appointment[]>(
-        `/appointments/staff/${staffId}${params}`
-      );
-
-      if (!Array.isArray(response)) {
-        throw new Error('Invalid response format: expected array of appointments');
-      }
-
-      return response;
-    } catch (error: any) {
-      console.error('Failed to fetch staff appointments:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
-    }
+    const service = new AppointmentsService();
+    const params = date ? { date } : undefined;
+    return service.getRequest<Appointment[]>(`/appointments/staff/${staffId}`, params);
   }
 
   /**
    * Get appointment by ID
    */
   static async getById(id: string): Promise<Appointment> {
-    try {
-      if (!id) {
-        throw new Error('Appointment ID is required');
-      }
-
-      const response = await apiService.get<Appointment>(`/appointments/${id}`);
-
-      if (!response.id) {
-        throw new Error('Invalid response format: appointment ID is missing');
-      }
-
-      return response;
-    } catch (error: any) {
-      console.error('Failed to fetch appointment:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
-    }
+    const service = new AppointmentsService();
+    return service.getById(id);
   }
 
   /**
    * Create new appointment
    */
   static async create(data: CreateAppointmentData): Promise<Appointment> {
-    try {
-      const isValid = data.pet_id && data.clinic_id && data.scheduled_date;
-      if (!isValid) {
-        throw new Error('Pet ID, Clinic ID, and scheduled date are required');
-      } else {
-        // Validate date format
-        if (isNaN(Date.parse(data.scheduled_date))) {
-          throw new Error('Invalid date format');
-        }
-
-        const response = await apiService.post<Appointment>('/appointments', data);
-
-        // Clear cache to ensure fresh data
-        appointmentsCache.clear();
-
-        return response;
-      }
-    } catch (error: any) {
-      console.error('Failed to create appointment:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
+    // Custom validation for appointment creation
+    if (!data.pet_id || !data.clinic_id || !data.scheduled_date) {
+      throw new Error('Pet ID, Clinic ID, and scheduled date are required');
     }
+    if (isNaN(Date.parse(data.scheduled_date))) {
+      throw new Error('Invalid date format');
+    }
+
+    const service = new AppointmentsService();
+    return service.create(data);
   }
 
   /**
    * Update an existing appointment
    */
   static async update(id: string, data: UpdateAppointmentData): Promise<Appointment> {
-    try {
-      if (!id) {
-        throw new Error('Appointment ID is required');
-      }
-
-      const response = await apiService.patch<Appointment>(`/appointments/${id}`, data);
-
-      if (!response.id) {
-        throw new Error('Invalid response format: appointment ID is missing');
-      }
-
-      // Clear cache to reflect changes
-      apiService.clearCache('appointments');
-
-      return response;
-    } catch (error: any) {
-      console.error('Failed to update appointment:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
-    }
+    const service = new AppointmentsService();
+    return service.update(id, data);
   }
 
   /**
    * Update appointment status
    */
   static async updateStatus(id: string, status: AppointmentStatus): Promise<Appointment> {
-    try {
-      if (!id) {
-        throw new Error('Appointment ID is required');
-      }
-
-      if (!status) {
-        throw new Error('Status is required');
-      }
-
-      const response = await apiService.patch<Appointment>(
-        `/appointments/${id}/status?status=${status}`
-      );
-
-      // Clear cache to ensure fresh data
-      appointmentsCache.clear();
-
-      return response;
-    } catch (error: any) {
-      console.error('Failed to update appointment status:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
+    if (!status) {
+      throw new Error('Status is required');
     }
+
+    const service = new AppointmentsService();
+    return service.patchRequest<Appointment>(`/appointments/${id}/status`, undefined, {
+      params: { status },
+    });
   }
 
   /**
    * Reschedule appointment
    */
   static async reschedule(id: string, newDate: string): Promise<Appointment> {
-    try {
-      if (!id) {
-        throw new Error('Appointment ID is required');
-      }
-
-      if (!newDate || isNaN(Date.parse(newDate))) {
-        throw new Error('Valid new date is required');
-      }
-
-      const response = await apiService.patch<Appointment>(
-        `/appointments/${id}/reschedule?new_date=${newDate}`
-      );
-
-      // Clear cache to ensure fresh data
-      appointmentsCache.clear();
-
-      return response;
-    } catch (error: any) {
-      console.error('Failed to reschedule appointment:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
+    if (!newDate || isNaN(Date.parse(newDate))) {
+      throw new Error('Valid new date is required');
     }
+
+    const service = new AppointmentsService();
+    return service.patchRequest<Appointment>(`/appointments/${id}/reschedule`, undefined, {
+      params: { new_date: newDate },
+    });
   }
 
   /**
    * Cancel appointment
    */
   static async cancel(id: string): Promise<void> {
-    try {
-      if (!id) {
-        throw new Error('Appointment ID is required');
-      }
-
-      await apiService.delete(`/appointments/${id}`);
-
-      // Clear cache to ensure fresh data
-      appointmentsCache.clear();
-    } catch (error: any) {
-      console.error('Failed to cancel appointment:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
-    }
+    const service = new AppointmentsService();
+    await service.deleteRequest(`/appointments/${id}`);
   }
 
   /**
    * Get today's appointments
    */
   static async getToday(clinicId?: string): Promise<Appointment[]> {
-    try {
-      const params = clinicId ? `?clinic_id=${clinicId}` : '';
-      const response = await apiService.get<Appointment[]>(`/appointments/today${params}`);
-
-      if (!Array.isArray(response)) {
-        throw new Error('Invalid response format: expected array of appointments');
-      }
-
-      return response;
-    } catch (error: any) {
-      console.error("Failed to fetch today's appointments:", error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
-    }
+    const service = new AppointmentsService();
+    const params = clinicId ? { clinic_id: clinicId } : undefined;
+    return service.getRequest<Appointment[]>('/appointments/today', params);
   }
 
   /**
    * Get upcoming appointments
    */
   static async getUpcoming(days: number = 7): Promise<Appointment[]> {
-    try {
-      if (days < 1 || days > 365) {
-        throw new Error('Days must be between 1 and 365');
-      }
-
-      const response = await apiService.get<Appointment[]>(`/appointments/upcoming?days=${days}`);
-
-      if (!Array.isArray(response)) {
-        throw new Error('Invalid response format: expected array of appointments');
-      }
-
-      return response;
-    } catch (error: any) {
-      console.error('Failed to fetch upcoming appointments:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
+    if (days < 1 || days > 365) {
+      throw new Error('Days must be between 1 and 365');
     }
+
+    const service = new AppointmentsService();
+    return service.getRequest<Appointment[]>(`/appointments/upcoming`, { days });
   }
 
   /**
@@ -440,53 +271,30 @@ export class AppointmentsService {
     date: string,
     duration: number = 30
   ): Promise<string[]> {
-    try {
-      if (!clinicId) {
-        throw new Error('Clinic ID is required');
-      }
-
-      if (!date || isNaN(Date.parse(date))) {
-        throw new Error('Valid date is required');
-      }
-
-      if (duration < 15 || duration > 480) {
-        throw new Error('Duration must be between 15 and 480 minutes');
-      }
-
-      const response = await apiService.get<string[]>(
-        `/appointments/available-slots/${clinicId}?date=${date}&duration=${duration}`
-      );
-
-      if (!Array.isArray(response)) {
-        throw new Error('Invalid response format: expected array of time slots');
-      }
-
-      return response;
-    } catch (error: any) {
-      console.error('Failed to fetch available slots:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
+    if (!date || isNaN(Date.parse(date))) {
+      throw new Error('Valid date is required');
     }
+    if (duration < 15 || duration > 480) {
+      throw new Error('Duration must be between 15 and 480 minutes');
+    }
+
+    const service = new AppointmentsService();
+    return service.getRequest<string[]>(`/appointments/available-slots/${clinicId}`, {
+      date,
+      duration,
+    });
   }
 
   /**
    * Get appointment statistics
    */
   static async getStats(): Promise<AppointmentStats> {
-    try {
-      const response = await apiService.get<AppointmentStats>('/appointments/stats');
-
-      // Validate response structure
-      if (typeof response.total !== 'number') {
-        throw new Error('Invalid response format: stats data is missing');
-      }
-
-      return response;
-    } catch (error: any) {
-      console.error('Failed to fetch appointment stats:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
+    const service = new AppointmentsService();
+    const response = await service.getRequest<AppointmentStats>('/appointments/stats');
+    if (typeof response.total !== 'number') {
+      throw new Error('Invalid response format: stats data is missing');
     }
+    return response;
   }
 
   /**
@@ -495,88 +303,25 @@ export class AppointmentsService {
   static async bulkUpdate(
     appointmentIds: string[],
     updates: Partial<UpdateAppointmentData>
-  ): Promise<Appointment[]> {
-    try {
-      if (!appointmentIds.length) {
-        throw new Error('At least one appointment ID is required');
-      }
-
-      const response = await apiService.patch<Appointment[]>('/appointments/bulk-update', {
-        appointment_ids: appointmentIds,
-        updates,
-      });
-
-      // Clear cache to ensure fresh data
-      appointmentsCache.clear();
-
-      return response;
-    } catch (error: any) {
-      console.error('Failed to bulk update appointments:', error);
-      // Let axios interceptor handle HTTP errors, only re-throw business logic errors
-      throw error;
-    }
+  ): Promise<any> {
+    const service = new AppointmentsService();
+    return service.bulkUpdate(appointmentIds, updates);
   }
 
   /**
    * Export appointments to CSV
    */
   static async exportToCSV(filters: AppointmentsFilters = {}): Promise<Blob> {
-    try {
-      const params = new URLSearchParams();
-
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
-          params.append(key, String(value));
-        }
-      });
-
-      const url = `/appointments/export/csv${params.toString() ? `?${params.toString()}` : ''}`;
-
-      const response = await fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Export failed');
-      }
-
-      return await response.blob();
-    } catch (error: any) {
-      console.error('Failed to export appointments to CSV:', error);
-      throw error;
-    }
+    const service = new AppointmentsService();
+    return service.exportToCSV(filters);
   }
 
   /**
    * Export appointments to Excel
    */
   static async exportToExcel(filters: AppointmentsFilters = {}): Promise<Blob> {
-    try {
-      const params = new URLSearchParams();
-
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
-          params.append(key, String(value));
-        }
-      });
-
-      const url = `/appointments/export/excel${params.toString() ? `?${params.toString()}` : ''}`;
-
-      const response = await fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Export failed');
-      }
-
-      return await response.blob();
-    } catch (error: any) {
-      console.error('Failed to export appointments to Excel:', error);
-      throw error;
-    }
+    const service = new AppointmentsService();
+    return service.exportToExcel(filters);
   }
 }
 

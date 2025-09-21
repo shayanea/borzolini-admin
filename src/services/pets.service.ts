@@ -1,4 +1,4 @@
-import { apiService } from './api';
+import { apiService } from './api/index';
 
 // Owner interface based on API response structure
 export interface PetOwner {

@@ -1,6 +1,6 @@
 import type { Settings, SettingsFormValues } from '@/types/settings';
 
-import { apiService } from './api';
+import { apiService } from './api/index';
 
 export interface SettingsQueryParams {
   includeDefaults?: boolean;

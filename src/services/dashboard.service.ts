@@ -1,6 +1,6 @@
 import type { DashboardFilters, DashboardStats } from '@/types';
 
-import api from './api';
+import { apiService } from './api/index';
 
 export class DashboardService {
   // Get comprehensive dashboard statistics from centralized endpoint
@@ -20,7 +20,7 @@ export class DashboardService {
       const queryString = params.toString();
       const url = `/dashboard/stats${queryString ? `?${queryString}` : ''}`;
 
-      const response = await api.get(url);
+      const response = await apiService.get(url);
 
       if (!response.data) {
         console.warn('DashboardService: No data received from dashboard endpoint');
@@ -129,7 +129,7 @@ export class DashboardService {
       const queryString = params.toString();
       const url = `/dashboard/charts${queryString ? `?${queryString}` : ''}`;
 
-      const response = await api.get(url);
+      const response = await apiService.get(url);
 
       if (!response.data) {
         console.warn('DashboardService: No charts data received from dashboard endpoint');

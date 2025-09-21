@@ -8,9 +8,17 @@ import type {
   CreateClinicData,
   UpdateClinicData,
 } from '@/types';
-import { apiService } from './api';
+import { BaseService } from './base.service';
 
-export class ClinicsService {
+export class ClinicsService extends BaseService<Clinic, CreateClinicData, UpdateClinicData> {
+  constructor() {
+    super('/clinics');
+  }
+
+  protected getEntityName(): string {
+    return 'clinic';
+  }
+
   // Get all clinics with pagination and filters
   static async getClinics(params: ClinicsQueryParams = {}): Promise<{
     clinics: Clinic[];
@@ -19,54 +27,51 @@ export class ClinicsService {
     limit: number;
     totalPages: number;
   }> {
-    const queryParams = new URLSearchParams();
-
-    if (params.page) queryParams.append('page', params.page.toString());
-    if (params.limit) queryParams.append('limit', params.limit.toString());
-    if (params.search) queryParams.append('search', params.search);
-    if (params.city) queryParams.append('city', params.city);
-    if (params.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
-    if (params.sortBy) queryParams.append('sortBy', params.sortBy);
-    if (params.sortOrder) queryParams.append('sortOrder', params.sortOrder);
-
-    const url = `/clinics${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-    return apiService.get<{
-      clinics: Clinic[];
-      total: number;
-      page: number;
-      limit: number;
-      totalPages: number;
-    }>(url);
+    const service = new ClinicsService();
+    const response = await service.getAll(params);
+    return {
+      clinics: response.data,
+      total: response.total,
+      page: response.page,
+      limit: response.limit,
+      totalPages: Math.ceil(response.total / response.limit),
+    };
   }
 
   // Get clinic by ID
   static async getClinicById(id: string): Promise<Clinic> {
-    return apiService.get<Clinic>(`/clinics/${id}`);
+    const service = new ClinicsService();
+    return service.getById(id);
   }
 
   // Create new clinic
   static async createClinic(data: CreateClinicData): Promise<Clinic> {
-    return apiService.post<Clinic>('/clinics', data);
+    const service = new ClinicsService();
+    return service.create(data);
   }
 
   // Update clinic
   static async updateClinic(id: string, data: UpdateClinicData): Promise<Clinic> {
-    return apiService.patch<Clinic>(`/clinics/${id}`, data);
+    const service = new ClinicsService();
+    return service.update(id, data);
   }
 
   // Delete clinic
   static async deleteClinic(id: string): Promise<{ message: string }> {
-    return apiService.delete<{ message: string }>(`/clinics/${id}`);
+    const service = new ClinicsService();
+    return service.delete(id);
   }
 
   // Search clinics
   static async searchClinics(query: string): Promise<Clinic[]> {
-    return apiService.get<Clinic[]>(`/clinics/search?q=${encodeURIComponent(query)}`);
+    const service = new ClinicsService();
+    return service.getRequest<Clinic[]>(`/clinics/search`, { q: query });
   }
 
   // Get clinics by city
   static async getClinicsByCity(city: string): Promise<Clinic[]> {
-    return apiService.get<Clinic[]>(`/clinics/city/${encodeURIComponent(city)}`);
+    const service = new ClinicsService();
+    return service.getRequest<Clinic[]>(`/clinics/city/${encodeURIComponent(city)}`);
   }
 
   // Get clinic staff
@@ -77,13 +82,8 @@ export class ClinicsService {
     limit: number;
     totalPages: number;
   }> {
-    return apiService.get<{
-      staff: ClinicStaff[];
-      total: number;
-      page: number;
-      limit: number;
-      totalPages: number;
-    }>(`/clinics/${clinicId}/staff`);
+    const service = new ClinicsService();
+    return service.getRequest(`/clinics/${clinicId}/staff`);
   }
 
   // Add staff member to clinic
@@ -95,17 +95,20 @@ export class ClinicsService {
       specialization?: string;
     }
   ): Promise<ClinicStaff> {
-    return apiService.post<ClinicStaff>(`/clinics/${clinicId}/staff`, data);
+    const service = new ClinicsService();
+    return service.postRequest<ClinicStaff>(`/clinics/${clinicId}/staff`, data);
   }
 
   // Remove staff member from clinic
   static async removeClinicStaff(clinicId: string, userId: string): Promise<{ message: string }> {
-    return apiService.delete<{ message: string }>(`/clinics/${clinicId}/staff/${userId}`);
+    const service = new ClinicsService();
+    return service.deleteRequest<{ message: string }>(`/clinics/${clinicId}/staff/${userId}`);
   }
 
   // Get clinic services
   static async getClinicServices(clinicId: string): Promise<ClinicService[]> {
-    return apiService.get<ClinicService[]>(`/clinics/${clinicId}/services`);
+    const service = new ClinicsService();
+    return service.getRequest<ClinicService[]>(`/clinics/${clinicId}/services`);
   }
 
   // Add service to clinic
@@ -118,7 +121,8 @@ export class ClinicsService {
       price: number;
     }
   ): Promise<ClinicService> {
-    return apiService.post<ClinicService>(`/clinics/${clinicId}/services`, data);
+    const service = new ClinicsService();
+    return service.postRequest<ClinicService>(`/clinics/${clinicId}/services`, data);
   }
 
   // Update clinic service
@@ -126,32 +130,40 @@ export class ClinicsService {
     serviceId: string,
     data: Partial<ClinicService>
   ): Promise<ClinicService> {
-    return apiService.patch<ClinicService>(`/clinics/services/${serviceId}`, data);
+    const service = new ClinicsService();
+    return service.patchRequest<ClinicService>(`/clinics/services/${serviceId}`, data);
   }
 
   // Delete clinic service
   static async deleteClinicService(serviceId: string): Promise<{ message: string }> {
-    return apiService.delete<{ message: string }>(`/clinics/services/${serviceId}`);
+    const service = new ClinicsService();
+    return service.deleteRequest<{ message: string }>(`/clinics/services/${serviceId}`);
   }
 
   // Get clinic reviews
   static async getClinicReviews(clinicId: string): Promise<ClinicReview[]> {
-    return apiService.get<ClinicReview[]>(`/clinics/${clinicId}/reviews`);
+    const service = new ClinicsService();
+    return service.getRequest<ClinicReview[]>(`/clinics/${clinicId}/reviews`);
   }
 
   // Get clinic photos
   static async getClinicPhotos(clinicId: string): Promise<ClinicPhoto[]> {
-    return apiService.get<ClinicPhoto[]>(`/clinics/${clinicId}/photos`);
+    const service = new ClinicsService();
+    return service.getRequest<ClinicPhoto[]>(`/clinics/${clinicId}/photos`);
   }
 
   // Upload clinic photo
   static async uploadClinicPhoto(clinicId: string, formData: FormData): Promise<ClinicPhoto> {
-    return apiService.upload<ClinicPhoto>(`/clinics/${clinicId}/photos`, formData);
+    const service = new ClinicsService();
+    return service.postRequest<ClinicPhoto>(`/clinics/${clinicId}/photos`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
   }
 
   // Delete clinic photo
   static async deleteClinicPhoto(photoId: string): Promise<{ message: string }> {
-    return apiService.delete<{ message: string }>(`/clinics/photos/${photoId}`);
+    const service = new ClinicsService();
+    return service.deleteRequest<{ message: string }>(`/clinics/photos/${photoId}`);
   }
 
   // Get clinic statistics
@@ -162,88 +174,34 @@ export class ClinicsService {
     averageRating: number;
     totalReviews: number;
   }> {
-    return apiService.get(`/clinics/${clinicId}/stats`);
+    const service = new ClinicsService();
+    return service.getRequest(`/clinics/${clinicId}/stats`);
   }
 
   // Bulk operations
   static async bulkUpdateClinics(
     clinicIds: string[],
     updates: Partial<UpdateClinicData>
-  ): Promise<{ message: string }> {
-    return apiService.patch<{ message: string }>('/clinics/bulk-update', {
-      clinicIds,
-      updates,
-    });
+  ): Promise<any> {
+    const service = new ClinicsService();
+    return service.bulkUpdate(clinicIds, updates);
   }
 
-  static async bulkDeleteClinics(clinicIds: string[]): Promise<{ message: string }> {
-    return apiService.delete<{ message: string }>('/clinics/bulk-delete', {
-      data: { clinicIds },
-    });
+  static async bulkDeleteClinics(clinicIds: string[]): Promise<any> {
+    const service = new ClinicsService();
+    return service.bulkDelete(clinicIds);
   }
 
   // Export clinics to CSV
   static async exportClinicsToCSV(params: ClinicsQueryParams = {}): Promise<Blob> {
-    const queryParams = new URLSearchParams();
-
-    if (params.name) queryParams.append('name', params.name);
-    if (params.city) queryParams.append('city', params.city);
-    if (params.state) queryParams.append('state', params.state);
-    if (params.is_verified !== undefined)
-      queryParams.append('is_verified', params.is_verified.toString());
-    if (params.isActive !== undefined)
-      queryParams.append('is_active', params.isActive.toString());
-    if (params.services) queryParams.append('services', params.services);
-    if (params.specializations) queryParams.append('specializations', params.specializations);
-    if (params.rating_min !== undefined)
-      queryParams.append('rating_min', params.rating_min.toString());
-    if (params.rating_max !== undefined)
-      queryParams.append('rating_max', params.rating_max.toString());
-
-    const url = `/clinics/export/csv${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-
-    const response = await fetch(url, {
-      method: 'GET',
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw new Error('Export failed');
-    }
-
-    return await response.blob();
+    const service = new ClinicsService();
+    return service.exportToCSV(params);
   }
 
   // Export clinics to Excel
   static async exportClinicsToExcel(params: ClinicsQueryParams = {}): Promise<Blob> {
-    const queryParams = new URLSearchParams();
-
-    if (params.name) queryParams.append('name', params.name);
-    if (params.city) queryParams.append('city', params.city);
-    if (params.state) queryParams.append('state', params.state);
-    if (params.is_verified !== undefined)
-      queryParams.append('is_verified', params.is_verified.toString());
-    if (params.isActive !== undefined)
-      queryParams.append('is_active', params.isActive.toString());
-    if (params.services) queryParams.append('services', params.services);
-    if (params.specializations) queryParams.append('specializations', params.specializations);
-    if (params.rating_min !== undefined)
-      queryParams.append('rating_min', params.rating_min.toString());
-    if (params.rating_max !== undefined)
-      queryParams.append('rating_max', params.rating_max.toString());
-
-    const url = `/clinics/export/excel${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-
-    const response = await fetch(url, {
-      method: 'GET',
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw new Error('Export failed');
-    }
-
-    return await response.blob();
+    const service = new ClinicsService();
+    return service.exportToExcel(params);
   }
 }
 

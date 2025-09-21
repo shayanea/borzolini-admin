@@ -9,8 +9,8 @@ import type {
   Veterinarian,
 } from '@/types/calendar';
 
-import { apiService } from './api';
 import type { CalendarClinic } from '@/types/calendar-modals';
+import { apiService } from './api/index';
 
 export interface CalendarServiceInterface {
   // Core calendar data
@@ -62,17 +62,17 @@ class CalendarService implements CalendarServiceInterface {
     try {
       // Start with the date parameter
       const baseParams = { date };
-      
+
       // Merge with filters if provided
       const allParams = filters ? { ...baseParams, ...filters } : baseParams;
-      
+
       // Use the utility function for consistent query parameter handling
       const params = apiService.buildQueryParams(allParams);
 
       const response = await apiService.get<CalendarResponse>(
         `${this.baseUrl}/data?${params.toString()}`
       );
-      
+
       return response;
     } catch (error) {
       console.error('Failed to fetch calendar data:', error);

@@ -12,8 +12,8 @@ import type {
   UpdateReviewResponseData,
 } from '@/types';
 
-import { apiService } from './api';
 import { environment } from '@/config/environment';
+import { apiService } from './api/index';
 import { reviewsCache } from './cache.service';
 
 // Export types for use in other files

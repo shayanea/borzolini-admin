@@ -1,4 +1,4 @@
-import { apiService } from './api';
+import { apiService } from './api/index';
 
 export interface VeterinaryService {
   id: string;

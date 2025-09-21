@@ -1,7 +1,7 @@
 import { EndpointStatus, HealthCheckResponse, HealthStatus } from '@/types/api-health';
 
-import { apiService } from './api';
 import { environment } from '@/config/environment';
+import { apiService } from './api/index';
 
 export class ApiHealthService {
   private static instance: ApiHealthService;

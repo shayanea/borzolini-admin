@@ -1,4 +1,4 @@
-import { apiService } from './api';
+import { apiService } from './api/index';
 
 export class PetsLookupsService {
   static async getDistinctAllergies(): Promise<string[]> {

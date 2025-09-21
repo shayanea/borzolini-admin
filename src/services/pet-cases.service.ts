@@ -9,7 +9,7 @@ import {
   UpdatePetCaseRequest,
 } from '../types/pet-cases';
 
-import { apiService } from './api';
+import { apiService } from './api/index';
 
 export class PetCasesService {
   private static readonly BASE_URL = '/clinics';

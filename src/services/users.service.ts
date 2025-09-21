@@ -1,6 +1,6 @@
 import type { PaginatedResponse, User, UserRole } from '@/types';
 
-import { apiService } from './api';
+import { BaseQueryParams, BaseService } from './base.service';
 
 export interface CreateUserData {
   email: string;
@@ -26,10 +26,7 @@ export interface UpdateUserData {
   isEmailVerified?: boolean;
 }
 
-export interface UsersQueryParams {
-  page?: number;
-  limit?: number;
-  search?: string;
+export interface UsersQueryParams extends BaseQueryParams {
   role?: UserRole;
   isActive?: boolean;
   dateRange?: [string, string];
@@ -44,23 +41,28 @@ export interface UsersQueryParams {
   lastLoginTo?: string;
 }
 
-export class UsersService {
+export class UsersService extends BaseService<User, CreateUserData, UpdateUserData> {
+  constructor() {
+    super('/users', 'users');
+  }
+
+  protected getEntityName(): string {
+    return 'user';
+  }
+
   // Get all users with pagination and filters
   static async getUsers(params: UsersQueryParams = {}): Promise<PaginatedResponse<User>> {
-    // Use the utility function for consistent query parameter handling
-    const queryParams = apiService.buildQueryParams(params);
-    const url = `/users${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const service = new UsersService();
+    const response = await service.getAll(params);
 
-    const response = await apiService.get<any>(url);
-
-    if (response && Array.isArray(response.users)) {
-      // Direct array format - wrap it in PaginatedResponse structure
+    // Handle the specific response format for users
+    if (response.data && Array.isArray(response.data)) {
       return {
-        data: response.users,
+        data: response.data,
         total: response.total,
-        page: params.page || 1,
-        limit: params.limit || 10,
-        totalPages: Math.ceil(response.total / (params.limit || 10)),
+        page: response.page,
+        limit: response.limit,
+        totalPages: Math.ceil(response.total / response.limit),
       };
     } else {
       // Fallback - empty response
@@ -77,27 +79,32 @@ export class UsersService {
 
   // Get user by ID
   static async getUserById(id: string): Promise<User> {
-    return apiService.get<User>(`/users/${id}`);
+    const service = new UsersService();
+    return service.getById(id);
   }
 
   // Create new user
   static async createUser(data: CreateUserData): Promise<User> {
-    return apiService.post<User>('/users', data);
+    const service = new UsersService();
+    return service.create(data);
   }
 
   // Update user
   static async updateUser(id: string, data: UpdateUserData): Promise<User> {
-    return apiService.put<User>(`/users/${id}`, data);
+    const service = new UsersService();
+    return service.update(id, data);
   }
 
   // Delete user
   static async deleteUser(id: string): Promise<{ message: string }> {
-    return apiService.delete<{ message: string }>(`/users/${id}`);
+    const service = new UsersService();
+    return service.delete(id);
   }
 
   // Search users by email
   static async searchUsersByEmail(email: string): Promise<User[]> {
-    return apiService.get<User[]>(`/users/search/email?email=${encodeURIComponent(email)}`);
+    const service = new UsersService();
+    return service.getRequest<User[]>(`/users/search/email`, { email });
   }
 
   // Get user profile completion
@@ -106,17 +113,20 @@ export class UsersService {
     missingFields: string[];
     suggestions: string[];
   }> {
-    return apiService.get(`/users/profile/completion/${id}`);
+    const service = new UsersService();
+    return service.getRequest(`/users/profile/completion/${id}`);
   }
 
   // Recalculate user profile completion
   static async recalculateProfileCompletion(id: string): Promise<{ message: string }> {
-    return apiService.post<{ message: string }>(`/users/profile/completion/recalculate/${id}`);
+    const service = new UsersService();
+    return service.postRequest<{ message: string }>(`/users/profile/completion/recalculate/${id}`);
   }
 
   // Get user activities
   static async getUserActivities(id: string, limit: number = 50): Promise<any[]> {
-    return apiService.get<any[]>(`/users/activities/${id}?limit=${limit}`);
+    const service = new UsersService();
+    return service.getRequest<any[]>(`/users/activities/${id}`, { limit });
   }
 
   // Get user activity summary
@@ -125,7 +135,8 @@ export class UsersService {
     lastActivity: string;
     activityTypes: Record<string, number>;
   }> {
-    return apiService.get(`/users/activities/summary/${id}`);
+    const service = new UsersService();
+    return service.getRequest(`/users/activities/summary/${id}`);
   }
 
   // Request phone verification for user
@@ -133,7 +144,8 @@ export class UsersService {
     userId: string,
     phone: string
   ): Promise<{ message: string }> {
-    return apiService.post<{ message: string }>(`/users/phone/verification/request`, {
+    const service = new UsersService();
+    return service.postRequest<{ message: string }>(`/users/phone/verification/request`, {
       userId,
       phone,
     });
@@ -145,7 +157,8 @@ export class UsersService {
     phone: string,
     otp: string
   ): Promise<{ message: string }> {
-    return apiService.post<{ message: string }>(`/users/phone/verification/verify`, {
+    const service = new UsersService();
+    return service.postRequest<{ message: string }>(`/users/phone/verification/verify`, {
       userId,
       phone,
       otp,
@@ -158,72 +171,31 @@ export class UsersService {
     phone: string;
     lastAttempt: string;
   }> {
-    return apiService.get(`/users/phone/verification/status/${userId}`);
+    const service = new UsersService();
+    return service.getRequest(`/users/phone/verification/status/${userId}`);
   }
 
   // Bulk operations
-  static async bulkUpdateUsers(
-    userIds: string[],
-    updates: Partial<UpdateUserData>
-  ): Promise<{ message: string }> {
-    return apiService.patch<{ message: string }>('/users/bulk-update', {
-      userIds,
-      updates,
-    });
+  static async bulkUpdateUsers(userIds: string[], updates: Partial<UpdateUserData>): Promise<any> {
+    const service = new UsersService();
+    return service.bulkUpdate(userIds, updates);
   }
 
-  static async bulkDeleteUsers(userIds: string[]): Promise<{ message: string }> {
-    return apiService.delete<{ message: string }>('/users/bulk-delete', {
-      data: { userIds },
-    });
+  static async bulkDeleteUsers(userIds: string[]): Promise<any> {
+    const service = new UsersService();
+    return service.bulkDelete(userIds);
   }
 
   // Export users to CSV
   static async exportUsersToCSV(params: UsersQueryParams = {}): Promise<Blob> {
-    const queryParams = new URLSearchParams();
-
-    if (params.page) queryParams.append('page', params.page.toString());
-    if (params.limit) queryParams.append('limit', params.limit.toString());
-    if (params.search) queryParams.append('search', params.search);
-    if (params.role) queryParams.append('role', params.role);
-    if (params.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
-
-    const url = `/users/export/csv${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-
-    const response = await fetch(url, {
-      method: 'GET',
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw new Error('Export failed');
-    }
-
-    return await response.blob();
+    const service = new UsersService();
+    return service.exportToCSV(params);
   }
 
   // Export users to Excel
   static async exportUsersToExcel(params: UsersQueryParams = {}): Promise<Blob> {
-    const queryParams = new URLSearchParams();
-
-    if (params.page) queryParams.append('page', params.page.toString());
-    if (params.limit) queryParams.append('limit', params.limit.toString());
-    if (params.search) queryParams.append('search', params.search);
-    if (params.role) queryParams.append('role', params.role);
-    if (params.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
-
-    const url = `/users/export/excel${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-
-    const response = await fetch(url, {
-      method: 'GET',
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw new Error('Export failed');
-    }
-
-    return await response.blob();
+    const service = new UsersService();
+    return service.exportToExcel(params);
   }
 }
 

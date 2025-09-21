@@ -5,7 +5,7 @@ import type {
   UpdateContactResponseData,
 } from '@/types';
 
-import { apiService } from './api';
+import { apiService } from './api/index';
 
 export class ContactService {
   private static readonly BASE_URL = '/api/v1/contact';

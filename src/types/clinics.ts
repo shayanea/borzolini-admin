@@ -138,10 +138,9 @@ export interface UpdateClinicData {
   tiktok_url?: string;
 }
 
-export interface ClinicsQueryParams {
-  page?: number;
-  limit?: number;
-  search?: string;
+import { BaseQueryParams } from '@/services/base.service';
+
+export interface ClinicsQueryParams extends BaseQueryParams {
   name?: string;
   city?: string;
   state?: string;
