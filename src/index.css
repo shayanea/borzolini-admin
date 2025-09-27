@@ -269,8 +269,9 @@
 
 /* Admin sidebar menu customizations */
 .admin-sidebar-menu .ant-menu-item-selected {
-  background-color: rgba(255, 255, 255, 0.12) !important;
+  background-color: rgba(255, 255, 255, 0.2) !important;
   border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
 }
 
 .admin-sidebar-menu .ant-menu-item-selected .ant-menu-title-content,
@@ -278,15 +279,18 @@
 .admin-sidebar-menu .ant-menu-item-selected .ant-menu-item-icon svg {
   color: #ffffff !important;
   fill: #ffffff !important;
-  font-weight: 600;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Optional: custom class applied to the selected item for extra control */
+/* Ensure consistent white color for all selected states */
 .admin-sidebar-menu .menu-item-selected-custom .ant-menu-title-content,
 .admin-sidebar-menu .menu-item-selected-custom .ant-menu-item-icon,
 .admin-sidebar-menu .menu-item-selected-custom .ant-menu-item-icon svg {
-  color: #111827 !important;
-  fill: #111827 !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Improve hover/active contrast on dark gradient sidebar */
