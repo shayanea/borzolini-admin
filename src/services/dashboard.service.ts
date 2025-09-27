@@ -22,13 +22,20 @@ export class DashboardService {
 
       const response = await apiService.get(url);
 
-      if (!response.data) {
+      // Handle different possible response formats
+      let dashboardData;
+      if (response.data) {
+        dashboardData = response.data;
+      } else if (response && typeof response === 'object') {
+        // Direct response format
+        dashboardData = response;
+      } else {
         console.warn('DashboardService: No data received from dashboard endpoint');
         return this.getEmptyDashboardStats();
       }
 
       // Transform the API response to match frontend interface
-      return this.transformApiResponse(response.data);
+      return this.transformApiResponse(dashboardData);
     } catch (error: any) {
       console.error('DashboardService: Error fetching dashboard stats:', error);
 
@@ -131,13 +138,20 @@ export class DashboardService {
 
       const response = await apiService.get(url);
 
-      if (!response.data) {
+      // Handle different possible response formats
+      let chartsData;
+      if (response.data) {
+        chartsData = response.data;
+      } else if (response && typeof response === 'object') {
+        // Direct response format
+        chartsData = response;
+      } else {
         console.warn('DashboardService: No charts data received from dashboard endpoint');
         return this.getEmptyDashboardCharts();
       }
 
       // Transform the API response to match frontend interface
-      return this.transformChartsApiResponse(response.data);
+      return this.transformChartsApiResponse(chartsData);
     } catch (error: any) {
       console.error('DashboardService: Error fetching dashboard charts:', error);
 
