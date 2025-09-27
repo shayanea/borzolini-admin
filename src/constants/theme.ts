@@ -1,35 +1,35 @@
 // Ant Design theme configuration
 export const theme = {
   token: {
-    colorPrimary: '#023e8a',
-    colorSuccess: '#059669',
-    colorWarning: '#fca311',
-    colorError: '#dc2626',
-    colorInfo: '#3b82f6',
-    borderRadius: 8,
+    colorPrimary: '#4f46e5',
+    colorSuccess: '#10b981',
+    colorWarning: '#f59e0b',
+    colorError: '#ef4444',
+    colorInfo: '#06b6d4',
+    borderRadius: 10,
     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   },
   components: {
     Layout: {
       headerBg: '#ffffff',
-      siderBg: '#1f2937',
-      triggerBg: '#374151',
+      siderBg: '#0b1220',
+      triggerBg: '#111827',
       triggerColor: '#ffffff',
     },
     Menu: {
-      darkItemBg: '#1f2937',
-      darkItemHoverBg: '#374151',
-      darkItemSelectedBg: '#3b82f6',
+      darkItemBg: '#0b1220',
+      darkItemHoverBg: '#111827',
+      darkItemSelectedBg: '#4f46e5',
       darkItemSelectedColor: '#ffffff',
     },
     Button: {
       primaryColor: '#ffffff',
-      primaryBg: '#023e8a',
-      borderRadius: 8,
+      primaryBg: '#4f46e5',
+      borderRadius: 10,
     },
     Card: {
-      borderRadius: 12,
-      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+      borderRadius: 14,
+      boxShadow: '0 10px 25px rgba(2, 6, 23, 0.06), 0 2px 6px rgba(2, 6, 23, 0.04)',
     },
   },
 };

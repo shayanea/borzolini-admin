@@ -12,46 +12,48 @@ export default {
       colors: {
         // Primary Colors from Design Spec
         primary: {
-          dark: '#000000',
-          navy: '#023e8a',
-          orange: '#fca311',
-          light: '#e5e5e5',
+          dark: '#0b1220',
+          navy: '#1e1b4b',
+          orange: '#f59e0b',
+          light: '#eef2ff',
           white: '#ffffff',
+          gradientFrom: '#4f46e5',
+          gradientTo: '#06b6d4',
         },
         // Semantic Colors
         text: {
-          primary: '#023e8a',
-          secondary: '#000000',
-          light: '#6b7280',
+          primary: '#0f172a',
+          secondary: '#334155',
+          light: '#94a3b8',
         },
         // UI Component Colors
         background: '#ffffff',
-        foreground: '#023e8a',
-        'background-secondary': '#f9fafb',
-        'background-accent': '#fff7ed',
+        foreground: '#111827',
+        'background-secondary': '#f8fafc',
+        'background-accent': '#eef2ff',
         // Interactive Elements
         button: {
-          primary: '#023e8a',
-          secondary: '#fca311',
-          accent: '#000000',
+          primary: '#4f46e5',
+          secondary: '#06b6d4',
+          accent: '#0ea5e9',
         },
         // Health Status Colors
         health: {
-          excellent: '#059669',
-          good: '#fca311',
-          warning: '#dc2626',
+          excellent: '#10b981',
+          good: '#f59e0b',
+          warning: '#ef4444',
         },
         // AI/Tech Specific
         ai: {
-          primary: '#023e8a',
-          accent: '#fca311',
-          background: '#f0f4f8',
+          primary: '#4f46e5',
+          accent: '#06b6d4',
+          background: '#f1f5f9',
         },
         // Admin Panel Specific Colors
         admin: {
-          sidebar: '#1f2937',
-          'sidebar-hover': '#374151',
-          'sidebar-active': '#3b82f6',
+          sidebar: '#0b1220',
+          'sidebar-hover': '#111827',
+          'sidebar-active': '#4f46e5',
           header: '#ffffff',
           'header-border': '#e5e7eb',
           card: '#ffffff',

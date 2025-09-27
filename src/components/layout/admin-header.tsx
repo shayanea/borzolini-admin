@@ -1,5 +1,6 @@
-import { User } from '@/types';
 import { Avatar, Badge, BellOutlined, Button, Dropdown, MenuOutlined, MenuProps } from '@/ui';
+
+import { User } from '@/types';
 
 interface AdminHeaderProps {
   handleToggleCollapsed: () => void;
@@ -15,8 +16,8 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
   collapsed,
 }) => {
   return (
-    <div className='admin-header px-6 overflow-hidden'>
-      <div className='w-full flex items-center justify-between min-w-0'>
+    <div className='admin-header px-6'>
+      <div className='flex items-center justify-between w-full max-w-full min-w-0'>
         <div className='flex items-center space-x-4 flex-shrink-0'>
           <Button
             type='text'
@@ -26,7 +27,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
           />
         </div>
 
-        <div className='flex items-center space-x-4 flex-shrink-0 ml-auto'>
+        <div className='flex items-center space-x-4 flex-shrink-0'>
           {/* Notifications */}
           <Badge count={0} size='small'>
             <Button
@@ -45,7 +46,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
                 src='/borzolini-logo.svg'
               />
               {!collapsed && (
-                <div className='text-left min-w-0'>
+                <div className='text-left min-w-0 max-w-[150px]'>
                   <div className='flex items-center space-x-2'>
                     <div className='font-medium text-text-primary truncate'>
                       {user?.firstName} {user?.lastName}

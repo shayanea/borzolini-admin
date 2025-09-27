@@ -14,14 +14,16 @@ const AdminLayout = () => {
     <Layout className='admin-layout'>
       <AdminSidebar collapsed={collapsed} menuItems={menuItems} getSelectedKey={getSelectedKey} />
       <Layout
-        className='ml-4 rounded-lg shadow-lg bg-white h-full w-full overflow-hidden'
+        className='ml-4 rounded-lg shadow-lg bg-transparent h-full overflow-hidden'
         style={{
           marginLeft: collapsed ? '7rem' : '16rem',
           transition: 'margin-left 0.2s ease-in-out',
           minHeight: '100vh',
+          width: collapsed ? 'calc(100vw - 7rem - 1rem)' : 'calc(100vw - 16rem - 1rem)',
+          maxWidth: collapsed ? 'calc(100vw - 7rem - 1rem)' : 'calc(100vw - 16rem - 1rem)',
         }}
       >
-        <Header>
+        <Header style={{ padding: 0 }}>
           <AdminHeader
             handleToggleCollapsed={handleToggleCollapsed}
             userMenuItems={userMenuItems}
@@ -29,8 +31,8 @@ const AdminLayout = () => {
             collapsed={collapsed}
           />
         </Header>
-        <Content className='admin-content p-6 w-full'>
-          <div className='max-w-7xl mr-auto w-full'>
+        <Content className='admin-content p-6 overflow-hidden'>
+          <div className='w-full max-w-full overflow-hidden'>
             <AdminRoutes />
           </div>
         </Content>
