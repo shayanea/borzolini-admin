@@ -9,8 +9,8 @@ import type {
   User,
 } from '@/types';
 
-import { defaultApi } from './default-api';
 import { TokenService } from './token.service';
+import { defaultApi } from './default-api';
 
 export class AuthService {
   // Login
@@ -23,10 +23,6 @@ export class AuthService {
 
     // Store tokens in localStorage if they exist (development mode)
     if (response.accessToken && response.refreshToken) {
-      console.log('🔐 Storing tokens after successful login:', {
-        accessToken: response.accessToken.substring(0, 20) + '...',
-        refreshToken: response.refreshToken.substring(0, 20) + '...',
-      });
       TokenService.setTokens(response.accessToken, response.refreshToken);
     } else {
       console.log('⚠️ No tokens received in login response');

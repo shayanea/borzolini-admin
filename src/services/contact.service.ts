@@ -1,82 +1,137 @@
+import { BaseQueryParams, BaseService, PaginatedResponse } from './base.service';
 import type {
+  Contact,
   ContactFilters,
+  ContactStats,
   CreateContactResponseData,
   UpdateContactData,
   UpdateContactResponseData,
 } from '@/types';
 
-import { apiService } from './api/index';
+export interface ContactQueryParams extends BaseQueryParams {
+  status?: string;
+  dateFrom?: string;
+  dateTo?: string;
+}
 
-export class ContactService {
-  private static readonly BASE_URL = '/api/v1/contact';
+export class ContactService extends BaseService<Contact, never, UpdateContactData> {
+  private static instance: ContactService;
 
-  // Get all contacts with filters and pagination
-  static async getAll(filters?: ContactFilters, page = 1, limit = 10) {
-    const params = new URLSearchParams();
-
-    if (filters?.status) params.append('status', filters.status);
-    if (filters?.search) params.append('search', filters.search);
-    if (filters?.dateFrom) params.append('dateFrom', filters.dateFrom);
-    if (filters?.dateTo) params.append('dateTo', filters.dateTo);
-    params.append('page', page.toString());
-    params.append('limit', limit.toString());
-
-    return apiService.get(`${this.BASE_URL}?${params.toString()}`);
+  constructor() {
+    super('/contact', 'lookups');
   }
 
-  // Get contact by ID
-  static async getById(id: string) {
-    return apiService.get(`${this.BASE_URL}/${id}`);
+  static getInstance(): ContactService {
+    if (!ContactService.instance) {
+      ContactService.instance = new ContactService();
+    }
+    return ContactService.instance;
   }
 
-  // Update contact
-  static async update(id: string, data: UpdateContactData) {
-    return apiService.patch(`${this.BASE_URL}/${id}`, data);
+  protected getEntityName(): string {
+    return 'contact';
   }
 
-  // Delete contact
-  static async delete(id: string) {
-    return apiService.delete(`${this.BASE_URL}/${id}`);
+  // Override getAll to handle ContactFilters
+  async getAll(
+    filters?: ContactFilters,
+    page = 1,
+    limit = 10
+  ): Promise<PaginatedResponse<Contact>> {
+    const params: ContactQueryParams = {
+      page,
+      limit,
+      search: filters?.search,
+      status: filters?.status,
+      dateFrom: filters?.dateFrom,
+      dateTo: filters?.dateTo,
+    };
+
+    return super.getAll(params);
   }
 
   // Get contact statistics
-  static async getStats() {
-    return apiService.get(`${this.BASE_URL}/stats`);
+  async getStats(): Promise<ContactStats> {
+    return this.getRequest<ContactStats>(`${this.baseUrl}/stats`);
   }
 
   // Get contact responses
-  static async getResponses(contactId: string) {
-    return apiService.get(`${this.BASE_URL}/${contactId}/responses`);
+  async getResponses(contactId: string) {
+    return this.getRequest(`${this.baseUrl}/${contactId}/responses`);
   }
 
   // Create contact response
-  static async createResponse(contactId: string, data: CreateContactResponseData) {
-    return apiService.post(`${this.BASE_URL}/${contactId}/responses`, data);
+  async createResponse(contactId: string, data: CreateContactResponseData) {
+    return this.postRequest(`${this.baseUrl}/${contactId}/responses`, data);
   }
 
   // Update contact response
+  async updateResponse(contactId: string, responseId: string, data: UpdateContactResponseData) {
+    return this.patchRequest(`${this.baseUrl}/${contactId}/responses/${responseId}`, data);
+  }
+
+  // Delete contact response
+  async deleteResponse(contactId: string, responseId: string) {
+    return this.deleteRequest(`${this.baseUrl}/${contactId}/responses/${responseId}`);
+  }
+
+  // Export contacts to CSV
+  async exportContacts(filters?: ContactFilters): Promise<Blob> {
+    const params: ContactQueryParams = {
+      search: filters?.search,
+      status: filters?.status,
+      dateFrom: filters?.dateFrom,
+      dateTo: filters?.dateTo,
+    };
+
+    return this.exportToCSV(params);
+  }
+
+  // Static methods for backward compatibility
+  static async getAll(filters?: ContactFilters, page = 1, limit = 10) {
+    return ContactService.getInstance().getAll(filters, page, limit);
+  }
+
+  static async getById(id: string) {
+    return ContactService.getInstance().getById(id);
+  }
+
+  static async update(id: string, data: UpdateContactData) {
+    return ContactService.getInstance().update(id, data);
+  }
+
+  static async delete(id: string) {
+    return ContactService.getInstance().delete(id);
+  }
+
+  static async getStats() {
+    return ContactService.getInstance().getStats();
+  }
+
+  static async getResponses(contactId: string) {
+    return ContactService.getInstance().getResponses(contactId);
+  }
+
+  static async createResponse(contactId: string, data: CreateContactResponseData) {
+    return ContactService.getInstance().createResponse(contactId, data);
+  }
+
   static async updateResponse(
     contactId: string,
     responseId: string,
     data: UpdateContactResponseData
   ) {
-    return apiService.patch(`${this.BASE_URL}/${contactId}/responses/${responseId}`, data);
+    return ContactService.getInstance().updateResponse(contactId, responseId, data);
   }
 
-  // Delete contact response
   static async deleteResponse(contactId: string, responseId: string) {
-    return apiService.delete(`${this.BASE_URL}/${contactId}/responses/${responseId}`);
+    return ContactService.getInstance().deleteResponse(contactId, responseId);
   }
 
-  // Export contacts
   static async export(filters?: ContactFilters) {
-    const params = new URLSearchParams();
-
-    if (filters?.status) params.append('status', filters.status);
-    if (filters?.search) params.append('search', filters.search);
-    if (filters?.dateFrom) params.append('dateFrom', filters.dateFrom);
-    if (filters?.dateTo) params.append('dateTo', filters.dateTo);
-
-    return apiService.get(`${this.BASE_URL}/export?${params.toString()}`);
+    return ContactService.getInstance().exportContacts(filters);
   }
 }
+
+// Export default instance
+export const contactService = ContactService.getInstance();

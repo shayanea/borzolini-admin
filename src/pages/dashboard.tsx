@@ -1,4 +1,4 @@
-import { ErrorState, LoadingState } from '@/components/common';
+import { Alert, Col, Row, Spin } from 'antd';
 import {
   DashboardHeader,
   QuickActions,
@@ -6,7 +6,7 @@ import {
   StatisticsCards,
   TopPerformingClinics,
 } from '@/components/dashboard';
-import { Alert, Col, Row, Spin } from 'antd';
+import { ErrorState, LoadingState } from '@/components/common';
 
 import { useDashboard } from '@/hooks/use-dashboard';
 
@@ -22,8 +22,6 @@ const Dashboard = () => {
     handleRefresh,
     isRefreshing,
   } = useDashboard();
-
-  console.log('stats', stats);
 
   if (loading && !stats) {
     return <LoadingState message='Loading dashboard...' fullScreen />;

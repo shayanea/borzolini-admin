@@ -1,4 +1,4 @@
-import { apiService } from './api/index';
+import { BaseQueryParams, BaseService, PaginatedResponse } from './base.service';
 
 export interface VeterinaryService {
   id: string;
@@ -15,88 +15,109 @@ export interface VeterinaryService {
   updatedAt: string;
 }
 
-export interface ServicesQueryParams {
-  page?: number;
-  limit?: number;
-  search?: string;
+export type CreateVeterinaryServiceData = Omit<VeterinaryService, 'id' | 'createdAt' | 'updatedAt'>;
+export type UpdateVeterinaryServiceData = Partial<CreateVeterinaryServiceData>;
+
+export interface ServicesQueryParams extends BaseQueryParams {
   category?: string;
   isActive?: boolean;
-  sortBy?: string;
-  sortOrder?: 'ASC' | 'DESC';
 }
 
-export class ServicesService {
-  // Get all services with pagination and filters
-  static async getServices(params: ServicesQueryParams = {}): Promise<{
-    data: VeterinaryService[];
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  }> {
-    const queryParams = new URLSearchParams();
+export class ServicesService extends BaseService<
+  VeterinaryService,
+  CreateVeterinaryServiceData,
+  UpdateVeterinaryServiceData
+> {
+  private static instance: ServicesService;
 
-    if (params.page) queryParams.append('page', params.page.toString());
-    if (params.limit) queryParams.append('limit', params.limit.toString());
-    if (params.search) queryParams.append('search', params.search);
-    if (params.category) queryParams.append('category', params.category);
-    if (params.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
-    if (params.sortBy) queryParams.append('sortBy', params.sortBy);
-    if (params.sortOrder) queryParams.append('sortOrder', params.sortOrder);
-
-    const url = `/services${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-    return apiService.get(url);
+  constructor() {
+    super('/services', 'lookups');
   }
 
-  // Get service by ID
-  static async getServiceById(id: string): Promise<VeterinaryService> {
-    return apiService.get<VeterinaryService>(`/services/${id}`);
+  static getInstance(): ServicesService {
+    if (!ServicesService.instance) {
+      ServicesService.instance = new ServicesService();
+    }
+    return ServicesService.instance;
+  }
+
+  protected getEntityName(): string {
+    return 'service';
+  }
+  // Override getAll to handle ServicesQueryParams
+  async getServices(
+    params: ServicesQueryParams = {}
+  ): Promise<PaginatedResponse<VeterinaryService>> {
+    return super.getAll(params);
   }
 
   // Get services by category
-  static async getServicesByCategory(category: string): Promise<VeterinaryService[]> {
-    return apiService.get<VeterinaryService[]>(`/services/category/${category}`);
+  async getServicesByCategory(category: string): Promise<VeterinaryService[]> {
+    return this.getRequest<VeterinaryService[]>(`${this.baseUrl}/category/${category}`);
   }
 
   // Get active services
-  static async getActiveServices(): Promise<VeterinaryService[]> {
-    return apiService.get<VeterinaryService[]>('/services/active');
-  }
-
-  // Create new service
-  static async createService(
-    data: Omit<VeterinaryService, 'id' | 'createdAt' | 'updatedAt'>
-  ): Promise<VeterinaryService> {
-    return apiService.post<VeterinaryService>('/services', data);
-  }
-
-  // Update service
-  static async updateService(
-    id: string,
-    data: Partial<Omit<VeterinaryService, 'id' | 'createdAt' | 'updatedAt'>>
-  ): Promise<VeterinaryService> {
-    return apiService.put<VeterinaryService>(`/services/${id}`, data);
-  }
-
-  // Delete service
-  static async deleteService(id: string): Promise<{ message: string }> {
-    return apiService.delete<{ message: string }>(`/services/${id}`);
+  async getActiveServices(): Promise<VeterinaryService[]> {
+    return this.getRequest<VeterinaryService[]>(`${this.baseUrl}/active`);
   }
 
   // Get service categories
-  static async getServiceCategories(): Promise<string[]> {
-    return apiService.get<string[]>('/services/categories');
+  async getServiceCategories(): Promise<string[]> {
+    return this.getRequest<string[]>(`${this.baseUrl}/categories`);
   }
 
   // Get services by clinic
-  static async getServicesByClinic(clinicId: string): Promise<VeterinaryService[]> {
-    return apiService.get<VeterinaryService[]>(`/services/clinic/${clinicId}`);
+  async getServicesByClinic(clinicId: string): Promise<VeterinaryService[]> {
+    return this.getRequest<VeterinaryService[]>(`${this.baseUrl}/clinic/${clinicId}`);
   }
 
   // Get services by veterinarian
-  static async getServicesByVeterinarian(veterinarianId: string): Promise<VeterinaryService[]> {
-    return apiService.get<VeterinaryService[]>(`/services/veterinarian/${veterinarianId}`);
+  async getServicesByVeterinarian(veterinarianId: string): Promise<VeterinaryService[]> {
+    return this.getRequest<VeterinaryService[]>(`${this.baseUrl}/veterinarian/${veterinarianId}`);
+  }
+
+  // Static methods for backward compatibility
+  static async getServices(params: ServicesQueryParams = {}) {
+    return ServicesService.getInstance().getServices(params);
+  }
+
+  static async getServiceById(id: string) {
+    return ServicesService.getInstance().getById(id);
+  }
+
+  static async createService(data: CreateVeterinaryServiceData) {
+    return ServicesService.getInstance().create(data);
+  }
+
+  static async updateService(id: string, data: UpdateVeterinaryServiceData) {
+    return ServicesService.getInstance().update(id, data);
+  }
+
+  static async deleteService(id: string) {
+    return ServicesService.getInstance().delete(id);
+  }
+
+  static async getServicesByCategory(category: string) {
+    return ServicesService.getInstance().getServicesByCategory(category);
+  }
+
+  static async getActiveServices() {
+    return ServicesService.getInstance().getActiveServices();
+  }
+
+  static async getServiceCategories() {
+    return ServicesService.getInstance().getServiceCategories();
+  }
+
+  static async getServicesByClinic(clinicId: string) {
+    return ServicesService.getInstance().getServicesByClinic(clinicId);
+  }
+
+  static async getServicesByVeterinarian(veterinarianId: string) {
+    return ServicesService.getInstance().getServicesByVeterinarian(veterinarianId);
   }
 }
 
+// Export default instance
+export const servicesService = ServicesService.getInstance();
 export default ServicesService;
