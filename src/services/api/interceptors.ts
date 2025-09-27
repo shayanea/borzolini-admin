@@ -111,10 +111,41 @@ api.interceptors.request.use(
     await checkAndRefreshTokenIfNeeded(config);
 
     // Hybrid authentication approach
-    const isAuthRoute = config.url?.startsWith('/auth/');
     const isDevelopment = environment.app.environment === 'development';
+    const isAuthRoute = config.url?.startsWith('/auth/');
+    
+    // Define public auth routes that should always use cookies
+    const publicAuthRoutes = ['/auth/login', '/auth/register', '/auth/logout', '/auth/forgot-password', '/auth/reset-password', '/auth/verify-email', '/auth/resend-verification'];
+    const isPublicAuthRoute = publicAuthRoutes.some(route => config.url?.startsWith(route));
+    
+    // Define protected auth routes that need authentication
+    const protectedAuthRoutes = ['/auth/me', '/auth/profile', '/auth/status', '/auth/change-password'];
+    const isProtectedAuthRoute = protectedAuthRoutes.some(route => config.url?.startsWith(route));
 
-    if (!isAuthRoute && isDevelopment) {
+    if (isAuthRoute) {
+      if (isPublicAuthRoute) {
+        // Public auth routes always use cookies
+        console.log('🍪 Using cookie authentication for public auth route:', config.url);
+      } else if (isProtectedAuthRoute && isDevelopment) {
+        // Protected auth routes use headers in development
+        const authHeader = TokenService.getAuthorizationHeader();
+        if (authHeader) {
+          config.headers = config.headers || {};
+          config.headers['Authorization'] = authHeader;
+          console.log(
+            '🔑 [DEV] Adding Authorization header for protected auth route',
+            config.url,
+            ':',
+            authHeader.substring(0, 20) + '...'
+          );
+        } else {
+          console.log('⚠️ [DEV] No Authorization header available for protected auth route', config.url);
+        }
+      } else {
+        // Fallback to cookies for other auth routes
+        console.log('🍪 Using cookie authentication for auth route:', config.url);
+      }
+    } else if (isDevelopment) {
       // Development mode: Add token-based authentication for non-auth routes
       const authHeader = TokenService.getAuthorizationHeader();
       if (authHeader) {
@@ -129,8 +160,6 @@ api.interceptors.request.use(
       } else {
         console.log('⚠️ [DEV] No Authorization header available for', config.url);
       }
-    } else if (isAuthRoute) {
-      console.log('🍪 Using cookie authentication for auth route:', config.url);
     } else {
       console.log('🍪 [PROD] Using cookie authentication for', config.url);
     }
