@@ -132,6 +132,27 @@ export class AuthService {
     );
   }
 
+  // Refresh tokens (development mode)
+  static async refreshTokens(): Promise<AuthResponse> {
+    const refreshToken = TokenService.getRefreshToken();
+    if (!refreshToken) {
+      throw new Error('No refresh token available');
+    }
+
+    const response = await defaultApi.post<AuthResponse>(
+      '/auth/refresh',
+      { refreshToken },
+      'Token refresh failed'
+    );
+
+    // Store new tokens
+    if (response.accessToken && response.refreshToken) {
+      TokenService.setTokens(response.accessToken, response.refreshToken);
+    }
+
+    return response;
+  }
+
   // Check if user has valid tokens
   static isAuthenticated(): boolean {
     return TokenService.hasTokens() && TokenService.isAccessTokenValid();

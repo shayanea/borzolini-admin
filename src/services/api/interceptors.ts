@@ -1,10 +1,17 @@
-import { environment } from '@/config/environment';
 import { InternalAxiosRequestConfig } from 'axios';
-import { emitAuthUnauthorized } from '../event-emitter.service';
 import { TokenService } from '../token.service';
 import { api } from './core';
+import { emitAuthUnauthorized } from '../event-emitter.service';
+import { environment } from '@/config/environment';
 import { handleApiError } from './error-handler';
 import { retryRequest } from './utils';
+
+// Auth response type for refresh token handling
+interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  user?: any;
+}
 
 // Global auth failure handler
 let globalAuthFailureHandler: (() => void) | null = null;
@@ -24,6 +31,11 @@ export const setDirectAuthFailureHandler = (handler: () => void) => {
 const forceLogout = () => {
   console.log('API Service: Force logout due to authentication failure');
 
+  // Clear tokens in development mode
+  if (environment.app.environment === 'development') {
+    TokenService.clearTokens();
+  }
+
   // Clear all caches - will be handled by individual services
   // Call all handlers
   if (globalAuthFailureHandler) {
@@ -40,13 +52,63 @@ const forceLogout = () => {
   window.location.href = '/login';
 };
 
+// Proactive token refresh for development mode
+const checkAndRefreshTokenIfNeeded = async (config: InternalAxiosRequestConfig): Promise<void> => {
+  const isDevelopment = environment.app.environment === 'development';
+  const isAuthRoute = config.url?.startsWith('/auth/');
+
+  // Only check for non-auth routes in development mode
+  if (!isDevelopment || isAuthRoute || isRefreshing) {
+    return;
+  }
+
+  // Check if access token is close to expiry (within 10 minutes)
+  const tokenData = TokenService.getTokenData();
+  if (!tokenData) {
+    return;
+  }
+
+  const now = Date.now();
+  const timeUntilExpiry = tokenData.expiresAt - now;
+  const tenMinutes = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+  if (timeUntilExpiry < tenMinutes && timeUntilExpiry > 0) {
+    console.log('🔄 [DEV] Token expires soon, proactively refreshing...');
+
+    isRefreshing = true;
+    try {
+      const refreshToken = TokenService.getRefreshToken();
+      if (!refreshToken) {
+        throw new Error('No refresh token available for proactive refresh');
+      }
+
+      const refreshResponse = await api.post<AuthResponse>('/auth/refresh', {
+        refreshToken,
+      });
+
+      if (refreshResponse.data.accessToken && refreshResponse.data.refreshToken) {
+        TokenService.setTokens(refreshResponse.data.accessToken, refreshResponse.data.refreshToken);
+        console.log('✅ [DEV] Proactive token refresh successful');
+      }
+    } catch (error) {
+      console.warn('⚠️ [DEV] Proactive token refresh failed:', error);
+      // Don't throw here, let the original request proceed and handle 401 if it occurs
+    } finally {
+      isRefreshing = false;
+    }
+  }
+};
+
 // Request interceptor
 api.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+  async (config: InternalAxiosRequestConfig) => {
     // Add request timestamp for performance/caching diagnostics
     (config as InternalAxiosRequestConfig & { metadata: { startTime: number } }).metadata = {
       startTime: Date.now(),
     };
+
+    // Check and refresh token proactively if needed (dev mode only)
+    await checkAndRefreshTokenIfNeeded(config);
 
     // Hybrid authentication approach
     const isAuthRoute = config.url?.startsWith('/auth/');
@@ -128,16 +190,51 @@ api.interceptors.response.use(
 
       isRefreshing = true;
       try {
-        await api.post('/auth/refresh');
+        const isDevelopment = environment.app.environment === 'development';
+        let refreshResponse;
+
+        if (isDevelopment) {
+          // Development mode: Send refresh token from localStorage
+          const refreshToken = TokenService.getRefreshToken();
+          if (!refreshToken) {
+            console.error('🚨 [DEV] No refresh token available in localStorage');
+            throw new Error('No refresh token available');
+          }
+
+          console.log('🔄 [DEV] Attempting token refresh with localStorage refresh token');
+          refreshResponse = await api.post<AuthResponse>('/auth/refresh', {
+            refreshToken,
+          });
+
+          // Store new tokens from response in development mode
+          if (refreshResponse.data.accessToken && refreshResponse.data.refreshToken) {
+            TokenService.setTokens(
+              refreshResponse.data.accessToken,
+              refreshResponse.data.refreshToken
+            );
+            console.log('✅ [DEV] New tokens stored successfully after refresh');
+          } else {
+            console.warn('⚠️ [DEV] Refresh response missing tokens:', refreshResponse.data);
+          }
+        } else {
+          // Production mode: Use cookie-based refresh
+          console.log('🔄 [PROD] Attempting cookie-based token refresh');
+          refreshResponse = await api.post('/auth/refresh');
+          console.log('✅ [PROD] Cookie-based refresh successful');
+        }
+
         // Reset failure count on successful refresh
         refreshFailureCount = 0;
+
         // Replay queued requests
         pendingRequests.forEach(callback => callback());
         pendingRequests = [];
+
         return api.request(originalRequest);
       } catch (refreshError) {
         pendingRequests = [];
         refreshFailureCount++;
+
         // On refresh fail, emit auth failure event using event emitter service
         if (environment.app.debug) {
           console.log(
@@ -146,6 +243,7 @@ api.interceptors.response.use(
           );
         }
         console.log('refreshError', refreshError);
+
         // Force immediate logout when refresh fails
         forceLogout();
 
