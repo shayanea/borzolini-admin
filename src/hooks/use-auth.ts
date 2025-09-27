@@ -11,7 +11,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AuthService } from '@/services/auth.service';
 import { ROUTES } from '@/constants';
 import { useAuthActions } from '@/stores/auth.store';
-import { message } from 'antd';
+import { useMessage } from './use-message';
 import { useNavigate } from 'react-router-dom';
 
 interface AuthResponse {
@@ -61,34 +61,34 @@ const useAuthDependencies = () => {
 // Custom hooks following PWA pattern
 export function useLogin() {
   const { queryClient, navigate, setUser } = useAuthDependencies();
+  const { success, error } = useMessage();
 
   return useMutation({
     mutationFn: authApi.login,
     onSuccess: data => {
       updateAuthState(queryClient, setUser, data.user);
-      message.success('Login successful!');
+      success('Login successful!');
       navigate(ROUTES.DASHBOARD);
     },
     onError: (error: any) => {
-      message.error(
-        error.response?.data?.message || 'Login failed. Please check your credentials.'
-      );
+      error(error.response?.data?.message || 'Login failed. Please check your credentials.');
     },
   });
 }
 
 export function useRegister() {
   const { queryClient, navigate, setUser } = useAuthDependencies();
+  const { success, error } = useMessage();
 
   return useMutation({
     mutationFn: authApi.register,
     onSuccess: data => {
       updateAuthState(queryClient, setUser, data.user);
-      message.success('Registration successful! Please check your email to verify your account.');
+      success('Registration successful! Please check your email to verify your account.');
       navigate(ROUTES.LOGIN);
     },
     onError: (error: any) => {
-      message.error(error.response?.data?.message || 'Registration failed. Please try again.');
+      error(error.response?.data?.message || 'Registration failed. Please try again.');
     },
   });
 }
@@ -123,64 +123,73 @@ export function useLogout() {
 }
 
 export function useChangePassword() {
+  const { success, error } = useMessage();
+
   return useMutation({
     mutationFn: authApi.changePassword,
     onSuccess: () => {
-      message.success('Password changed successfully!');
+      success('Password changed successfully!');
     },
     onError: (error: any) => {
-      message.error(error.response?.data?.message || 'Failed to change password');
+      error(error.response?.data?.message || 'Failed to change password');
     },
   });
 }
 
 export function useForgotPassword() {
+  const { success, error } = useMessage();
+
   return useMutation({
     mutationFn: authApi.forgotPassword,
     onSuccess: () => {
-      message.success('Password reset email sent! Please check your inbox.');
+      success('Password reset email sent! Please check your inbox.');
     },
     onError: (error: any) => {
-      message.error(error.response?.data?.message || 'Failed to send reset email');
+      error(error.response?.data?.message || 'Failed to send reset email');
     },
   });
 }
 
 export function useResetPassword() {
   const navigate = useNavigate();
+  const { success, error } = useMessage();
 
   return useMutation({
     mutationFn: authApi.resetPassword,
     onSuccess: () => {
-      message.success('Password reset successfully! You can now login with your new password.');
+      success('Password reset successfully! You can now login with your new password.');
       navigate(ROUTES.LOGIN);
     },
     onError: (error: any) => {
-      message.error(error.response?.data?.message || 'Failed to reset password');
+      error(error.response?.data?.message || 'Failed to reset password');
     },
   });
 }
 
 export function useVerifyEmail() {
+  const { success, error } = useMessage();
+
   return useMutation({
     mutationFn: authApi.verifyEmail,
     onSuccess: () => {
-      message.success('Email verified successfully!');
+      success('Email verified successfully!');
     },
     onError: (error: any) => {
-      message.error(error.response?.data?.message || 'Failed to verify email');
+      error(error.response?.data?.message || 'Failed to verify email');
     },
   });
 }
 
 export function useResendVerification() {
+  const { success, error } = useMessage();
+
   return useMutation({
     mutationFn: authApi.resendVerification,
     onSuccess: () => {
-      message.success('Verification email sent! Please check your inbox.');
+      success('Verification email sent! Please check your inbox.');
     },
     onError: (error: any) => {
-      message.error(error.response?.data?.message || 'Failed to resend verification email');
+      error(error.response?.data?.message || 'Failed to resend verification email');
     },
   });
 }

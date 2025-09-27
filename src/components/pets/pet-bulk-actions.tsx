@@ -1,13 +1,15 @@
-import { Button, Space, message } from 'antd';
+import { Button, Space } from 'antd';
 
-import type { PetBulkActionsProps } from '@/types';
 import { DeleteOutlined } from '@ant-design/icons';
+import type { PetBulkActionsProps } from '@/types';
+import { useMessage } from '@/hooks/use-message';
 
 const PetBulkActions = ({
   selectedRowKeys,
   onBulkDelete,
   loading = false,
 }: PetBulkActionsProps) => {
+  const { warning } = useMessage();
   const selectedCount = selectedRowKeys.length;
 
   if (selectedCount === 0) {
@@ -15,7 +17,7 @@ const PetBulkActions = ({
   }
 
   const handleBulkDelete = () => {
-    message.warning('Bulk delete functionality will be implemented');
+    warning('Bulk delete functionality will be implemented');
     onBulkDelete();
   };
 

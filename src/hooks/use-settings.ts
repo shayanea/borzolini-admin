@@ -1,13 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { DEFAULT_SETTINGS } from '@/constants/settings';
-import { SettingsService } from '@/services/settings.service';
 import type { SettingsFormValues } from '@/types/settings';
-import { message } from 'antd';
+import { SettingsService } from '@/services/settings.service';
 import { useCallback } from 'react';
+import { useMessage } from './use-message';
 
 export const useSettings = () => {
   const queryClient = useQueryClient();
+  const { success, error: showError } = useMessage();
 
   // Query for settings
   const {
@@ -28,11 +29,11 @@ export const useSettings = () => {
     onSuccess: updatedSettings => {
       // Update the cache with new settings
       queryClient.setQueryData(['settings'], updatedSettings);
-      message.success('Settings updated successfully');
+      success('Settings updated successfully');
     },
     onError: error => {
       console.error('Failed to update settings:', error);
-      message.error('Failed to update settings. Please try again.');
+      showError('Failed to update settings. Please try again.');
     },
   });
 
@@ -42,11 +43,11 @@ export const useSettings = () => {
     onSuccess: defaultSettings => {
       // Update the cache with default settings
       queryClient.setQueryData(['settings'], defaultSettings);
-      message.success('Settings reset to defaults successfully');
+      success('Settings reset to defaults successfully');
     },
     onError: error => {
       console.error('Failed to reset settings:', error);
-      message.error('Failed to reset settings. Please try again.');
+      showError('Failed to reset settings. Please try again.');
     },
   });
 

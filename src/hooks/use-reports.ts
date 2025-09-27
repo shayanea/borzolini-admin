@@ -2,8 +2,8 @@ import { DEFAULT_METRICS, REPORT_CATEGORIES } from '@/constants/reports';
 import type { Metric, ReportCategory, ReportFilters } from '@/types/reports';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { message } from 'antd';
 import { useCallback } from 'react';
+import { useMessage } from './use-message';
 
 // Mock service - replace with real service when available
 const ReportsService = {
@@ -27,6 +27,7 @@ const ReportsService = {
 };
 
 export const useReports = (filters: ReportFilters = {}) => {
+  const { success, error: showError } = useMessage();
   // Query for metrics
   const {
     data: metrics = [],
@@ -74,11 +75,11 @@ export const useReports = (filters: ReportFilters = {}) => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      message.success(`Report exported successfully as ${_format.toUpperCase()}`);
+      success(`Report exported successfully as ${_format.toUpperCase()}`);
     },
     onError: error => {
       console.error('Export failed:', error);
-      message.error('Failed to export report. Please try again.');
+      showError('Failed to export report. Please try again.');
     },
   });
 
