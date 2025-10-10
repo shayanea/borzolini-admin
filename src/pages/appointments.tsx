@@ -94,8 +94,6 @@ const Appointments = () => {
     );
   }
 
-  console.log('stats', stats);
-
   return (
     <ErrorBoundary>
       <div className='space-y-6'>

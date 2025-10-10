@@ -113,13 +113,26 @@ api.interceptors.request.use(
     // Hybrid authentication approach
     const isDevelopment = environment.app.environment === 'development';
     const isAuthRoute = config.url?.startsWith('/auth/');
-    
+
     // Define public auth routes that should always use cookies
-    const publicAuthRoutes = ['/auth/login', '/auth/register', '/auth/logout', '/auth/forgot-password', '/auth/reset-password', '/auth/verify-email', '/auth/resend-verification'];
+    const publicAuthRoutes = [
+      '/auth/login',
+      '/auth/register',
+      '/auth/logout',
+      '/auth/forgot-password',
+      '/auth/reset-password',
+      '/auth/verify-email',
+      '/auth/resend-verification',
+    ];
     const isPublicAuthRoute = publicAuthRoutes.some(route => config.url?.startsWith(route));
-    
+
     // Define protected auth routes that need authentication
-    const protectedAuthRoutes = ['/auth/me', '/auth/profile', '/auth/status', '/auth/change-password'];
+    const protectedAuthRoutes = [
+      '/auth/me',
+      '/auth/profile',
+      '/auth/status',
+      '/auth/change-password',
+    ];
     const isProtectedAuthRoute = protectedAuthRoutes.some(route => config.url?.startsWith(route));
 
     if (isAuthRoute) {
@@ -139,7 +152,10 @@ api.interceptors.request.use(
             authHeader.substring(0, 20) + '...'
           );
         } else {
-          console.log('⚠️ [DEV] No Authorization header available for protected auth route', config.url);
+          console.log(
+            '⚠️ [DEV] No Authorization header available for protected auth route',
+            config.url
+          );
         }
       } else {
         // Fallback to cookies for other auth routes

@@ -3,6 +3,8 @@
  * Handles localStorage-based token storage and retrieval for cross-machine authentication
  */
 
+import { decodeJWT, getJWTExpiration } from '@/utils/jwt.utils';
+
 export interface TokenData {
   accessToken: string;
   refreshToken: string;
@@ -16,20 +18,33 @@ export class TokenService {
 
   /**
    * Store tokens in localStorage
+   * Automatically extracts expiration time from JWT payload
    */
-  static setTokens(
-    accessToken: string,
-    refreshToken: string,
-    expiresIn: number = 30 * 60 * 1000
-  ): void {
+  static setTokens(accessToken: string, refreshToken: string, fallbackExpiresIn?: number): void {
     try {
-      const expiresAt = Date.now() + expiresIn;
+      // Try to get actual expiration from JWT payload
+      let expiresAt: number;
+
+      const jwtExpiration = getJWTExpiration(accessToken);
+      if (jwtExpiration) {
+        expiresAt = jwtExpiration;
+        console.log('TokenService: Using actual JWT expiration time');
+      } else {
+        // Fallback to provided expiration or default 30 minutes
+        const fallbackTime = fallbackExpiresIn || 30 * 60 * 1000;
+        expiresAt = Date.now() + fallbackTime;
+        console.warn(
+          'TokenService: Failed to decode JWT expiration, using fallback time:',
+          fallbackTime
+        );
+      }
 
       localStorage.setItem(this.ACCESS_TOKEN_KEY, accessToken);
       localStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
       localStorage.setItem(this.TOKEN_EXPIRY_KEY, expiresAt.toString());
 
       console.log('TokenService: Tokens stored successfully');
+      console.log('TokenService: Token expires at:', new Date(expiresAt).toISOString());
     } catch (error) {
       console.error('TokenService: Failed to store tokens:', error);
       throw new Error('Failed to store authentication tokens');
@@ -90,9 +105,34 @@ export class TokenService {
 
   /**
    * Check if access token is valid (not expired)
+   * Uses both stored expiration and actual JWT payload for validation
    */
   static isAccessTokenValid(): boolean {
     try {
+      const accessToken = this.getAccessToken();
+      if (!accessToken) {
+        return false;
+      }
+
+      // First check: Validate against actual JWT payload
+      const jwtPayload = decodeJWT(accessToken);
+      if (jwtPayload && jwtPayload.exp) {
+        const jwtExpiration = jwtPayload.exp * 1000; // Convert to milliseconds
+        const now = Date.now();
+        const bufferTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+        const isValidByJWT = now < jwtExpiration - bufferTime;
+
+        console.log('TokenService: JWT validation result:', {
+          exp: jwtExpiration,
+          now,
+          isValid: isValidByJWT,
+          expiresAt: new Date(jwtExpiration).toISOString(),
+        });
+
+        return isValidByJWT;
+      }
+
+      // Fallback: Check stored expiration
       const expiresAtStr = localStorage.getItem(this.TOKEN_EXPIRY_KEY);
       if (!expiresAtStr) {
         return false;
@@ -102,6 +142,13 @@ export class TokenService {
       const now = Date.now();
       const bufferTime = 5 * 60 * 1000; // 5 minutes in milliseconds
       const isValid = now < expiresAt - bufferTime;
+
+      console.log('TokenService: Stored expiration validation result:', {
+        storedExp: expiresAt,
+        now,
+        isValid,
+        expiresAt: new Date(expiresAt).toISOString(),
+      });
 
       return isValid;
     } catch (error) {

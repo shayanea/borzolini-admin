@@ -1,5 +1,5 @@
-import { environment } from '@/config/environment';
 import { TokenService } from './token.service';
+import { environment } from '@/config/environment';
 
 // Types for API responses
 export interface ApiError {
@@ -13,13 +13,26 @@ const getRequestHeaders = (endpoint: string): Record<string, string> => {
 
   const isDevelopment = environment.app.environment === 'development';
   const isAuthRoute = endpoint.startsWith('/auth/');
-  
+
   // Define public auth routes that should always use cookies
-  const publicAuthRoutes = ['/auth/login', '/auth/register', '/auth/logout', '/auth/forgot-password', '/auth/reset-password', '/auth/verify-email', '/auth/resend-verification'];
+  const publicAuthRoutes = [
+    '/auth/login',
+    '/auth/register',
+    '/auth/logout',
+    '/auth/forgot-password',
+    '/auth/reset-password',
+    '/auth/verify-email',
+    '/auth/resend-verification',
+  ];
   const isPublicAuthRoute = publicAuthRoutes.some(route => endpoint.startsWith(route));
-  
+
   // Define protected auth routes that need authentication
-  const protectedAuthRoutes = ['/auth/me', '/auth/profile', '/auth/status', '/auth/change-password'];
+  const protectedAuthRoutes = [
+    '/auth/me',
+    '/auth/profile',
+    '/auth/status',
+    '/auth/change-password',
+  ];
   const isProtectedAuthRoute = protectedAuthRoutes.some(route => endpoint.startsWith(route));
 
   if (isAuthRoute) {
@@ -39,7 +52,10 @@ const getRequestHeaders = (endpoint: string): Record<string, string> => {
           authHeader.substring(0, 20) + '...'
         );
       } else {
-        console.log('⚠️ [DEV] No Authorization header available for protected auth route', endpoint);
+        console.log(
+          '⚠️ [DEV] No Authorization header available for protected auth route',
+          endpoint
+        );
       }
       return headers;
     } else {

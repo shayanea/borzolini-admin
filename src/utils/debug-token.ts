@@ -3,9 +3,10 @@
  * This can be used to test and debug authentication functionality
  */
 
-import { environment } from '@/config/environment';
 import { AuthService } from '@/services/auth.service';
 import { TokenService } from '@/services/token.service';
+import { decodeJWT } from '@/utils/jwt.utils';
+import { environment } from '@/config/environment';
 
 export const debugTokenAuth = {
   /**
@@ -33,6 +34,28 @@ export const debugTokenAuth = {
     console.log('---');
     console.log('Access Token:', accessToken ? `${accessToken.substring(0, 20)}...` : 'None');
     console.log('Refresh Token:', refreshToken ? `${refreshToken.substring(0, 20)}...` : 'None');
+
+    // Test JWT decoding if we have a real token
+    if (accessToken && accessToken !== 'test-token-12345') {
+      console.log('\n🔍 JWT Token Analysis:');
+      try {
+        const payload = decodeJWT(accessToken);
+        if (payload) {
+          console.log('JWT Payload:', {
+            sub: payload.sub,
+            email: payload.email,
+            role: payload.role,
+            iat: new Date(payload.iat * 1000).toISOString(),
+            exp: new Date(payload.exp * 1000).toISOString(),
+            expiresInMinutes: Math.round((payload.exp * 1000 - Date.now()) / (1000 * 60)),
+          });
+        } else {
+          console.log('❌ Failed to decode JWT payload');
+        }
+      } catch (error) {
+        console.error('❌ Error decoding JWT:', error);
+      }
+    }
     console.log('Token Valid:', isTokenValid);
     console.log('Has Tokens:', hasTokens);
     console.log('Auth Header:', authHeader);
@@ -71,7 +94,7 @@ export const debugTokenAuth = {
     const testRefresh = 'test-refresh-67890';
 
     try {
-      TokenService.setTokens(testToken, testRefresh, 30 * 60 * 1000);
+      TokenService.setTokens(testToken, testRefresh);
       console.log('✅ Tokens stored successfully');
 
       const retrieved = TokenService.getAccessToken();

@@ -1,21 +1,16 @@
-# Cache Time Constants
+# Constants
 
-This directory contains constants for React Query cache configuration, specifically for `staleTime` and `gcTime` values used throughout the application.
+Centralized constants for the app.
 
-## Overview
+## Cache Times
 
-The cache time constants provide a centralized way to manage React Query caching behavior, ensuring consistency across all hooks and services.
+`cache-times.ts` defines React Query cache configurations.
 
-## Available Constants
+### Stale Times
 
-### STALE_TIMES
-
-Stale time determines how long data is considered "fresh" before React Query marks it as stale and potentially refetches it.
+How long data is considered fresh:
 
 ```typescript
-import { STALE_TIMES } from '@/constants';
-
-// Available values:
 STALE_TIMES.VERY_SHORT; // 30 seconds
 STALE_TIMES.SHORT; // 1 minute
 STALE_TIMES.MEDIUM; // 2 minutes
@@ -24,14 +19,11 @@ STALE_TIMES.LONG; // 10 minutes
 STALE_TIMES.VERY_LONG; // 30 minutes
 ```
 
-### GC_TIMES
+### GC Times
 
-Garbage collection time determines how long inactive data stays in the cache before being removed.
+How long inactive data stays in cache:
 
 ```typescript
-import { GC_TIMES } from '@/constants';
-
-// Available values:
 GC_TIMES.VERY_SHORT; // 2 minutes
 GC_TIMES.SHORT; // 5 minutes
 GC_TIMES.MEDIUM; // 10 minutes
@@ -40,49 +32,34 @@ GC_TIMES.LONG; // 30 minutes
 GC_TIMES.VERY_LONG; // 1 hour
 ```
 
-### CACHE_PRESETS
+### Presets
 
-Predefined combinations of stale time and GC time for common use cases.
+Predefined combinations for common use cases:
 
 ```typescript
-import { CACHE_PRESETS } from '@/constants';
-
-// Available presets:
-CACHE_PRESETS.REAL_TIME; // { staleTime: 30s, gcTime: 2m }
-CACHE_PRESETS.LIVE; // { staleTime: 1m, gcTime: 5m }
-CACHE_PRESETS.ACTIVE; // { staleTime: 2m, gcTime: 10m }
-CACHE_PRESETS.STANDARD; // { staleTime: 5m, gcTime: 15m }
-CACHE_PRESETS.STABLE; // { staleTime: 10m, gcTime: 30m }
-CACHE_PRESETS.STATIC; // { staleTime: 30m, gcTime: 1h }
+CACHE_PRESETS.REAL_TIME; // Very short times for live data
+CACHE_PRESETS.LIVE; // Short times for frequently updated data
+CACHE_PRESETS.ACTIVE; // Medium times for moderately changing data
+CACHE_PRESETS.STANDARD; // Default for most data
+CACHE_PRESETS.STABLE; // Long times for infrequently changing data
+CACHE_PRESETS.STATIC; // Very long times for rarely changing data
 ```
 
-## Usage Examples
+## Usage
 
-### Using Presets (Recommended)
+Use presets in React Query hooks:
 
 ```typescript
-import { CACHE_PRESETS } from '@/constants';
-
 const { data } = useQuery({
   queryKey: ['users'],
   queryFn: fetchUsers,
-  ...CACHE_PRESETS.STANDARD, // Spreads both staleTime and gcTime
-});
-
-// Or use individual properties
-const { data } = useQuery({
-  queryKey: ['users'],
-  queryFn: fetchUsers,
-  staleTime: CACHE_PRESETS.STANDARD.staleTime,
-  gcTime: CACHE_PRESETS.STANDARD.gcTime,
+  ...CACHE_PRESETS.STANDARD, // Spreads staleTime and gcTime
 });
 ```
 
-### Using Individual Constants
+Or use individual constants:
 
 ```typescript
-import { STALE_TIMES, GC_TIMES } from '@/constants';
-
 const { data } = useQuery({
   queryKey: ['real-time-data'],
   queryFn: fetchRealTimeData,
@@ -91,40 +68,33 @@ const { data } = useQuery({
 });
 ```
 
-### When to Use Each Preset
+## When to Use Which Preset
 
-- **REAL_TIME**: Data that changes very frequently (e.g., system health, live metrics)
-- **LIVE**: Data that updates regularly (e.g., API health, active sessions)
-- **ACTIVE**: Data that changes moderately (e.g., endpoint tests, user activity)
-- **STANDARD**: Default for most data (e.g., user lists, dashboard stats)
-- **STABLE**: Data that changes infrequently (e.g., clinic information, service lists)
-- **STATIC**: Data that rarely changes (e.g., configuration, reference data)
+- **REAL_TIME**: System health, live metrics
+- **LIVE**: API health, active sessions
+- **ACTIVE**: User activity, recent appointments
+- **STANDARD**: User lists, dashboard stats (default choice)
+- **STABLE**: Clinic info, service lists
+- **STATIC**: Configuration, reference data
 
-## Migration Guide
+## Why Use These
 
-When updating existing code, replace hardcoded values with constants:
+Instead of hardcoding:
 
 ```typescript
-// Before
-staleTime: 5 * 60 * 1000, // 5 minutes
-gcTime: 10 * 60 * 1000,    // 10 minutes
+// Bad
+staleTime: 5 * 60 * 1000,
+```
 
-// After
+Use constants:
+
+```typescript
+// Good
 ...CACHE_PRESETS.STANDARD
 ```
 
-## Benefits
+This makes it:
 
-1. **Consistency**: All cache times are defined in one place
-2. **Maintainability**: Easy to adjust cache behavior across the application
-3. **Readability**: Clear intent with descriptive constant names
-4. **Type Safety**: Full TypeScript support with proper types
-5. **Performance**: Optimized cache times for different data types
-
-## Best Practices
-
-1. Use presets when possible for common scenarios
-2. Use individual constants when you need specific combinations
-3. Choose the appropriate preset based on data volatility
-4. Consider user experience when setting cache times
-5. Monitor performance and adjust as needed
+- Easier to update cache times across the app
+- Clearer what the intent is
+- Consistent across all queries
