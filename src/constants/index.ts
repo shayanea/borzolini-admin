@@ -14,6 +14,16 @@ export {
   DEFAULT_CLINIC_COUNTRY,
 } from './clinics';
 export { ACTIVITY_COLORS, ACTIVITY_TYPES, QUICK_ACTIONS } from './dashboard';
+export {
+  EMAIL_RULE,
+  MAX_LENGTH_RULE,
+  MIN_LENGTH_RULE,
+  PHONE_PATTERN_RULE,
+  POSTAL_CODE_RULE,
+  REQUIRED_RULE,
+  URL_RULE,
+  VALIDATION_MESSAGES,
+} from './form-validation';
 export { DEFAULT_METRICS, METRIC_COLORS } from './reports';
 export { ROUTES } from './routes';
 export { APPOINTMENT_DURATIONS, CURRENCIES, DEFAULT_SETTINGS, TIMEZONES } from './settings';
