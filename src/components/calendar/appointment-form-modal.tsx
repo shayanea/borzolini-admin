@@ -3,6 +3,12 @@ import { Form, Modal, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 
+import {
+  APPOINTMENT_PRIORITIES,
+  getAppointmentPriorityOptions,
+  getAppointmentStatusOptions,
+  getAppointmentTypeOptions,
+} from '@/constants/appointments';
 import { useCalendarFormData } from '@/hooks/calendar/use-calendar-form-data';
 import type { CreateAppointmentData } from '@/services/appointments.service';
 import type { AppointmentFormModalProps } from '@/types/calendar-modals';
@@ -28,6 +34,11 @@ export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
 
   // Use the new hook for form data
   const { pets, clinics, services, loading: loadingData, error } = useCalendarFormData();
+
+  // Get appointment options from constants
+  const appointmentTypes = getAppointmentTypeOptions();
+  const priorities = getAppointmentPriorityOptions();
+  const statuses = getAppointmentStatusOptions();
 
   // Show error message if data loading fails
   useEffect(() => {
@@ -59,7 +70,7 @@ export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
       const appointmentData: CreateAppointmentData = {
         appointment_type: values.appointment_type,
         status: values.status || 'pending',
-        priority: values.priority || 'normal',
+        priority: values.priority || APPOINTMENT_PRIORITIES.NORMAL,
         scheduled_date: combinedDateTime.toISOString(),
         duration_minutes: values.duration_minutes || 30,
         notes: values.notes,
@@ -90,38 +101,6 @@ export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
     onCancel();
   };
 
-  const appointmentTypes: { value: AppointmentType; label: string }[] = [
-    { value: 'consultation', label: 'General Consultation' },
-    { value: 'vaccination', label: 'Vaccination' },
-    { value: 'surgery', label: 'Surgery' },
-    { value: 'follow_up', label: 'Follow-up' },
-    { value: 'emergency', label: 'Emergency' },
-    { value: 'wellness_exam', label: 'Wellness Exam' },
-    { value: 'dental_cleaning', label: 'Dental Cleaning' },
-    { value: 'laboratory_test', label: 'Laboratory Test' },
-    { value: 'imaging', label: 'Imaging' },
-    { value: 'therapy', label: 'Therapy' },
-  ];
-
-  const priorities: { value: AppointmentPriority; label: string }[] = [
-    { value: 'low', label: 'Low' },
-    { value: 'normal', label: 'Normal' },
-    { value: 'high', label: 'High' },
-    { value: 'urgent', label: 'Urgent' },
-    { value: 'emergency', label: 'Emergency' },
-  ];
-
-  const statuses: { value: AppointmentStatus; label: string }[] = [
-    { value: 'pending', label: 'Pending' },
-    { value: 'confirmed', label: 'Confirmed' },
-    { value: 'in_progress', label: 'In Progress' },
-    { value: 'completed', label: 'Completed' },
-    { value: 'cancelled', label: 'Cancelled' },
-    { value: 'no_show', label: 'No Show' },
-    { value: 'rescheduled', label: 'Rescheduled' },
-    { value: 'waiting', label: 'Waiting' },
-  ];
-
   return (
     <Modal
       title='Edit Appointment'
@@ -139,7 +118,7 @@ export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
           scheduled_date: currentDate,
           scheduled_time: dayjs().hour(9).minute(0),
           duration_minutes: 30,
-          priority: 'normal',
+          priority: APPOINTMENT_PRIORITIES.NORMAL,
           status: 'pending',
         }}
       >

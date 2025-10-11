@@ -1,13 +1,13 @@
 import { Divider, Form, Modal } from 'antd';
 import React, { useEffect } from 'react';
 import {
-  CASE_PRIORITY_LABELS,
-  CASE_TYPE_LABELS,
   CreatePetCaseRequest,
   UpdatePetCaseRequest,
 } from '../../types/pet-cases';
 
 import { HeartOutlined } from '@ant-design/icons';
+import { CASE_PRIORITIES } from '@/constants/pet-cases';
+import { getCasePriorityOptions, getCaseTypeOptions } from '@/constants/pet-cases';
 import { usePetCases } from '../../hooks/pet-cases';
 import { useMessage } from '../../hooks/use-message';
 import {
@@ -37,6 +37,10 @@ const PetCaseFormModal: React.FC<PetCaseFormModalProps> = ({
 
   const isEdit = !!editCase;
 
+  // Get case options from constants
+  const caseTypeOptions = getCaseTypeOptions();
+  const casePriorityOptions = getCasePriorityOptions();
+
   useEffect(() => {
     if (visible) {
       if (isEdit && editCase) {
@@ -62,7 +66,7 @@ const PetCaseFormModal: React.FC<PetCaseFormModalProps> = ({
         title: values.title,
         description: values.description,
         case_type: values.case_type,
-        priority: values.priority || 'normal',
+        priority: values.priority || CASE_PRIORITIES.NORMAL,
         initial_symptoms: values.initial_symptoms
           ? values.initial_symptoms.split('\n').filter((s: string) => s.trim())
           : [],
@@ -112,15 +116,15 @@ const PetCaseFormModal: React.FC<PetCaseFormModalProps> = ({
         layout='vertical'
         onFinish={handleSubmit}
         initialValues={{
-          priority: 'normal',
+          priority: CASE_PRIORITIES.NORMAL,
           case_type: 'consultation',
         }}
       >
         {/* Basic Information */}
         <CaseBasicInfoSection
           form={form}
-          caseTypeLabels={CASE_TYPE_LABELS}
-          casePriorityLabels={CASE_PRIORITY_LABELS}
+          caseTypeLabels={Object.fromEntries(caseTypeOptions.map(option => [option.value, option.label]))}
+          casePriorityLabels={Object.fromEntries(casePriorityOptions.map(option => [option.value, option.label]))}
           isCreating={isCreating}
           isUpdating={isUpdating}
         />
