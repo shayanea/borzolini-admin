@@ -1,7 +1,13 @@
+import type { UserFormModalProps, UserFormValues } from '@/types/user-management';
 import { Button, Col, Form, Input, Modal, Row, Select, Space, Switch } from 'antd';
 import React, { useCallback } from 'react';
-import type { UserFormModalProps, UserFormValues } from '@/types/user-management';
 
+import {
+  EMAIL_RULE,
+  MIN_LENGTH_RULE,
+  REQUIRED_RULE,
+  VALIDATION_MESSAGES,
+} from '@/constants/form-validation';
 import { USER_ROLES } from '@/constants/user-management';
 
 const { Option } = Select;
@@ -76,7 +82,7 @@ const UserFormModal = ({
             <Form.Item
               name='firstName'
               label='First Name'
-              rules={[{ required: true, message: 'Please enter first name' }]}
+              rules={[REQUIRED_RULE(VALIDATION_MESSAGES.FIRST_NAME_REQUIRED)]}
             >
               <Input placeholder='First Name' />
             </Form.Item>
@@ -85,7 +91,7 @@ const UserFormModal = ({
             <Form.Item
               name='lastName'
               label='Last Name'
-              rules={[{ required: true, message: 'Please enter last name' }]}
+              rules={[REQUIRED_RULE(VALIDATION_MESSAGES.LAST_NAME_REQUIRED)]}
             >
               <Input placeholder='Last Name' />
             </Form.Item>
@@ -97,10 +103,7 @@ const UserFormModal = ({
             <Form.Item
               name='email'
               label='Email'
-              rules={[
-                { required: true, message: 'Please enter email' },
-                { type: 'email', message: 'Please enter a valid email' },
-              ]}
+              rules={[REQUIRED_RULE(VALIDATION_MESSAGES.EMAIL_REQUIRED), EMAIL_RULE]}
             >
               <Input placeholder='Email' disabled={!!editingUser} />
             </Form.Item>
@@ -117,8 +120,8 @@ const UserFormModal = ({
             name='password'
             label='Password'
             rules={[
-              { required: true, message: 'Please enter password' },
-              { min: 8, message: 'Password must be at least 8 characters' },
+              REQUIRED_RULE(VALIDATION_MESSAGES.PASSWORD_REQUIRED),
+              MIN_LENGTH_RULE(8, VALIDATION_MESSAGES.PASSWORD_MIN_LENGTH),
             ]}
           >
             <Input.Password placeholder='Password' />
@@ -130,7 +133,7 @@ const UserFormModal = ({
             <Form.Item
               name='role'
               label='Role'
-              rules={[{ required: true, message: 'Please select role' }]}
+              rules={[REQUIRED_RULE(VALIDATION_MESSAGES.ROLE_REQUIRED)]}
             >
               <Select placeholder='Select Role'>
                 <Option value={USER_ROLES.ADMIN}>Admin</Option>

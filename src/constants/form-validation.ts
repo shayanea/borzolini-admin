@@ -36,6 +36,26 @@ export const POSTAL_CODE_RULE: Rule = {
   message: 'Please enter a valid postal code',
 };
 
+// Numeric validation rules
+export const POSITIVE_NUMBER_RULE: Rule = {
+  validator: (_: any, value: any) => {
+    if (value && (isNaN(parseFloat(value)) || parseFloat(value) < 0)) {
+      return Promise.reject('Please enter a valid positive number');
+    }
+    return Promise.resolve();
+  },
+};
+
+// Date validation rules
+export const FUTURE_DATE_RULE: Rule = {
+  validator: (_: any, value: any) => {
+    if (value && value.isBefore(new Date(), 'day')) {
+      return Promise.reject('Date must be in the future');
+    }
+    return Promise.resolve();
+  },
+};
+
 // Form validation messages
 export const VALIDATION_MESSAGES = {
   // Common
@@ -44,6 +64,7 @@ export const VALIDATION_MESSAGES = {
   INVALID_URL: 'Please enter a valid URL',
   INVALID_PHONE: 'Please enter a valid phone number',
   INVALID_POSTAL_CODE: 'Please enter a valid postal code',
+  POSITIVE_NUMBER: 'Please enter a valid positive number',
   
   // User form
   FIRST_NAME_REQUIRED: 'Please enter first name',
@@ -80,4 +101,19 @@ export const VALIDATION_MESSAGES = {
   CITY_MIN_LENGTH: 'City must be at least 2 characters',
   COUNTRY_REQUIRED: 'Please enter country',
   DESCRIPTION_MAX_LENGTH: 'Description must not exceed 500 characters',
+  
+  // Appointment form
+  APPOINTMENT_TYPE_REQUIRED: 'Please select appointment type',
+  PET_REQUIRED: 'Please select a pet',
+  CLINIC_REQUIRED: 'Please select a clinic',
+  DATE_REQUIRED: 'Please select date',
+  TIME_REQUIRED: 'Please select time',
+  REASON_REQUIRED: 'Please provide reason for visit',
+  TELEMEDICINE_LINK_REQUIRED: 'Please provide telemedicine link',
+  HOME_VISIT_ADDRESS_REQUIRED: 'Please provide home visit address',
+  
+  // Case form
+  CASE_TITLE_REQUIRED: 'Please enter case title',
+  CASE_TYPE_REQUIRED: 'Please select case type',
+  CASE_DESCRIPTION_REQUIRED: 'Please enter case description',
 };

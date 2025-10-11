@@ -1,6 +1,7 @@
 import { Col, Form, Input, Row } from 'antd';
 import { FC } from 'react';
 
+import { URL_RULE } from '@/constants/form-validation';
 import {
   SOCIAL_MEDIA_ERROR_MESSAGES,
   SOCIAL_MEDIA_FIELDS,
@@ -34,7 +35,7 @@ const SocialMediaFields: FC<SocialMediaFieldsProps> = ({ namePrefix }) => {
             name={fieldName(SOCIAL_MEDIA_FIELDS.FACEBOOK)}
             label={SOCIAL_MEDIA_LABELS.FACEBOOK}
             rules={[
-              { type: 'url', message: SOCIAL_MEDIA_ERROR_MESSAGES.URL },
+              URL_RULE,
               {
                 pattern: SOCIAL_MEDIA_URL_PATTERNS.FACEBOOK,
                 message: SOCIAL_MEDIA_ERROR_MESSAGES.FACEBOOK,
@@ -49,7 +50,7 @@ const SocialMediaFields: FC<SocialMediaFieldsProps> = ({ namePrefix }) => {
             name={fieldName(SOCIAL_MEDIA_FIELDS.TWITTER)}
             label={SOCIAL_MEDIA_LABELS.TWITTER}
             rules={[
-              { type: 'url', message: SOCIAL_MEDIA_ERROR_MESSAGES.URL },
+              URL_RULE,
               {
                 pattern: SOCIAL_MEDIA_URL_PATTERNS.TWITTER,
                 message: SOCIAL_MEDIA_ERROR_MESSAGES.TWITTER,
@@ -67,7 +68,7 @@ const SocialMediaFields: FC<SocialMediaFieldsProps> = ({ namePrefix }) => {
             name={fieldName(SOCIAL_MEDIA_FIELDS.INSTAGRAM)}
             label={SOCIAL_MEDIA_LABELS.INSTAGRAM}
             rules={[
-              { type: 'url', message: SOCIAL_MEDIA_ERROR_MESSAGES.URL },
+              URL_RULE,
               {
                 pattern: SOCIAL_MEDIA_URL_PATTERNS.INSTAGRAM,
                 message: SOCIAL_MEDIA_ERROR_MESSAGES.INSTAGRAM,
@@ -82,7 +83,7 @@ const SocialMediaFields: FC<SocialMediaFieldsProps> = ({ namePrefix }) => {
             name={fieldName(SOCIAL_MEDIA_FIELDS.LINKEDIN)}
             label={SOCIAL_MEDIA_LABELS.LINKEDIN}
             rules={[
-              { type: 'url', message: SOCIAL_MEDIA_ERROR_MESSAGES.URL },
+              URL_RULE,
               {
                 pattern: SOCIAL_MEDIA_URL_PATTERNS.LINKEDIN,
                 message: SOCIAL_MEDIA_ERROR_MESSAGES.LINKEDIN,
@@ -100,7 +101,7 @@ const SocialMediaFields: FC<SocialMediaFieldsProps> = ({ namePrefix }) => {
             name={fieldName(SOCIAL_MEDIA_FIELDS.YOUTUBE)}
             label={SOCIAL_MEDIA_LABELS.YOUTUBE}
             rules={[
-              { type: 'url', message: SOCIAL_MEDIA_ERROR_MESSAGES.URL },
+              URL_RULE,
               {
                 pattern: SOCIAL_MEDIA_URL_PATTERNS.YOUTUBE,
                 message: SOCIAL_MEDIA_ERROR_MESSAGES.YOUTUBE,
@@ -115,7 +116,7 @@ const SocialMediaFields: FC<SocialMediaFieldsProps> = ({ namePrefix }) => {
             name={fieldName(SOCIAL_MEDIA_FIELDS.TIKTOK)}
             label={SOCIAL_MEDIA_LABELS.TIKTOK}
             rules={[
-              { type: 'url', message: SOCIAL_MEDIA_ERROR_MESSAGES.URL },
+              URL_RULE,
               {
                 pattern: SOCIAL_MEDIA_URL_PATTERNS.TIKTOK,
                 message: SOCIAL_MEDIA_ERROR_MESSAGES.TIKTOK,

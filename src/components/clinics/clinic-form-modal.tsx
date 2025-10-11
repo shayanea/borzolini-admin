@@ -1,7 +1,19 @@
 import { Col, Form, Input, Modal, Row, Switch, Typography } from 'antd';
-
-import type { Clinic } from '@/types';
 import { useEffect } from 'react';
+
+import {
+  EMAIL_RULE,
+  MAX_LENGTH_RULE,
+  MIN_LENGTH_RULE,
+  PHONE_PATTERN_RULE,
+  POSTAL_CODE_RULE,
+  REQUIRED_RULE,
+  URL_RULE,
+  VALIDATION_MESSAGES,
+} from '@/constants/form-validation';
+import { SOCIAL_MEDIA_FIELDS, SOCIAL_MEDIA_LABELS, SOCIAL_MEDIA_PLACEHOLDERS, SOCIAL_MEDIA_URL_PATTERNS } from '@/constants/social-media';
+import { SocialMediaFields } from '@/components/shared';
+import type { Clinic } from '@/types';
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -117,8 +129,8 @@ const ClinicFormModal = ({
               name='name'
               label='Clinic Name'
               rules={[
-                { required: true, message: 'Please enter clinic name' },
-                { min: 2, message: 'Clinic name must be at least 2 characters' },
+                REQUIRED_RULE(VALIDATION_MESSAGES.CLINIC_NAME_REQUIRED),
+                MIN_LENGTH_RULE(2, VALIDATION_MESSAGES.CLINIC_NAME_MIN_LENGTH),
               ]}
             >
               <Input placeholder='Enter clinic name' />
@@ -130,11 +142,8 @@ const ClinicFormModal = ({
               name='phone'
               label='Phone Number'
               rules={[
-                { required: true, message: 'Please enter phone number' },
-                {
-                  pattern: /^[+]?[\d\s\-().]{7,20}$/,
-                  message: 'Please enter a valid phone number',
-                },
+                REQUIRED_RULE(VALIDATION_MESSAGES.REQUIRED),
+                PHONE_PATTERN_RULE,
               ]}
             >
               <Input placeholder='Enter phone number' />
@@ -147,7 +156,7 @@ const ClinicFormModal = ({
             <Form.Item
               name='description'
               label='Description'
-              rules={[{ max: 500, message: 'Description must not exceed 500 characters' }]}
+              rules={[MAX_LENGTH_RULE(500, VALIDATION_MESSAGES.DESCRIPTION_MAX_LENGTH)]}
             >
               <TextArea
                 rows={3}
@@ -165,8 +174,8 @@ const ClinicFormModal = ({
               name='address'
               label='Address'
               rules={[
-                { required: true, message: 'Please enter address' },
-                { min: 5, message: 'Address must be at least 5 characters' },
+                REQUIRED_RULE(VALIDATION_MESSAGES.ADDRESS_REQUIRED),
+                MIN_LENGTH_RULE(5, VALIDATION_MESSAGES.ADDRESS_MIN_LENGTH),
               ]}
             >
               <Input placeholder='Enter full address' />
@@ -180,8 +189,8 @@ const ClinicFormModal = ({
               name='city'
               label='City'
               rules={[
-                { required: true, message: 'Please enter city' },
-                { min: 2, message: 'City must be at least 2 characters' },
+                REQUIRED_RULE(VALIDATION_MESSAGES.CITY_REQUIRED),
+                MIN_LENGTH_RULE(2, VALIDATION_MESSAGES.CITY_MIN_LENGTH),
               ]}
             >
               <Input placeholder='Enter city' />
@@ -192,7 +201,7 @@ const ClinicFormModal = ({
             <Form.Item
               name='country'
               label='Country'
-              rules={[{ required: true, message: 'Please enter country' }]}
+              rules={[REQUIRED_RULE(VALIDATION_MESSAGES.COUNTRY_REQUIRED)]}
             >
               <Input placeholder='Enter country' />
             </Form.Item>
@@ -202,9 +211,7 @@ const ClinicFormModal = ({
             <Form.Item
               name='postal_code'
               label='Postal Code'
-              rules={[
-                { pattern: /^[0-9A-Za-z\s-]{3,10}$/, message: 'Please enter a valid postal code' },
-              ]}
+              rules={[POSTAL_CODE_RULE]}
             >
               <Input placeholder='Enter postal code' />
             </Form.Item>
@@ -217,8 +224,8 @@ const ClinicFormModal = ({
               name='email'
               label='Email'
               rules={[
-                { required: true, message: 'Please enter email' },
-                { type: 'email', message: 'Please enter a valid email' },
+                REQUIRED_RULE(VALIDATION_MESSAGES.EMAIL_REQUIRED),
+                EMAIL_RULE,
               ]}
             >
               <Input placeholder='Enter email address' />
@@ -229,7 +236,7 @@ const ClinicFormModal = ({
             <Form.Item
               name='website'
               label='Website'
-              rules={[{ type: 'url', message: 'Please enter a valid URL' }]}
+              rules={[URL_RULE]}
             >
               <Input placeholder='Enter website URL (optional)' />
             </Form.Item>
@@ -237,104 +244,7 @@ const ClinicFormModal = ({
         </Row>
 
         {/* Social Media Fields */}
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item
-              name='facebook_url'
-              label='Facebook URL'
-              rules={[
-                { type: 'url', message: 'Please enter a valid URL' },
-                {
-                  pattern: /^https?:\/\/(www\.)?facebook\.com\/.+/,
-                  message: 'Please enter a valid Facebook URL',
-                },
-              ]}
-            >
-              <Input placeholder='https://facebook.com/yourclinic' />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              name='twitter_url'
-              label='Twitter URL'
-              rules={[
-                { type: 'url', message: 'Please enter a valid URL' },
-                {
-                  pattern: /^https?:\/\/(www\.)?twitter\.com\/.+/,
-                  message: 'Please enter a valid Twitter URL',
-                },
-              ]}
-            >
-              <Input placeholder='https://twitter.com/yourclinic' />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item
-              name='instagram_url'
-              label='Instagram URL'
-              rules={[
-                { type: 'url', message: 'Please enter a valid URL' },
-                {
-                  pattern: /^https?:\/\/(www\.)?instagram\.com\/.+/,
-                  message: 'Please enter a valid Instagram URL',
-                },
-              ]}
-            >
-              <Input placeholder='https://instagram.com/yourclinic' />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              name='linkedin_url'
-              label='LinkedIn URL'
-              rules={[
-                { type: 'url', message: 'Please enter a valid URL' },
-                {
-                  pattern: /^https?:\/\/(www\.)?linkedin\.com\/.+/,
-                  message: 'Please enter a valid LinkedIn URL',
-                },
-              ]}
-            >
-              <Input placeholder='https://linkedin.com/company/yourclinic' />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item
-              name='youtube_url'
-              label='YouTube URL'
-              rules={[
-                { type: 'url', message: 'Please enter a valid URL' },
-                {
-                  pattern: /^https?:\/\/(www\.)?youtube\.com\/.+/,
-                  message: 'Please enter a valid YouTube URL',
-                },
-              ]}
-            >
-              <Input placeholder='https://youtube.com/c/yourclinic' />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              name='tiktok_url'
-              label='TikTok URL'
-              rules={[
-                { type: 'url', message: 'Please enter a valid URL' },
-                {
-                  pattern: /^https?:\/\/(www\.)?tiktok\.com\/.+/,
-                  message: 'Please enter a valid TikTok URL',
-                },
-              ]}
-            >
-              <Input placeholder='https://tiktok.com/@yourclinic' />
-            </Form.Item>
-          </Col>
-        </Row>
+        <SocialMediaFields />
 
         <Row gutter={16}>
           <Col span={12}>
