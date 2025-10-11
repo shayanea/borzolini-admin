@@ -91,7 +91,7 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
 
   const getFormattedType = (type: string) => {
     if (!type) return 'Unknown';
-    return APPOINTMENT_TYPE_LABELS[type] || formatAppointmentType(type);
+    return APPOINTMENT_TYPE_LABELS[type as keyof typeof APPOINTMENT_TYPE_LABELS] || formatAppointmentType(type);
   };
 
   if (!appointment) return null;

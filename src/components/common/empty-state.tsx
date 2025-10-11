@@ -12,7 +12,7 @@ import {
   MedicineBoxOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Button, Empty } from 'antd';
+import { Button } from 'antd';
 import { FC, ReactNode } from 'react';
 
 export type EmptyStateIconType =
