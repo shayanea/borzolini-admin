@@ -6,10 +6,25 @@ export {
   APPOINTMENT_TYPES,
 } from './appointments';
 export { CACHE_PRESETS, GC_TIMES, STALE_TIMES } from './cache-times';
+export {
+  CLINIC_FORM_LABELS,
+  CLINIC_SERVICE_OPTIONS,
+  CLINIC_SPECIALIZATION_OPTIONS,
+  CLINIC_VALIDATION_MESSAGES,
+  DEFAULT_CLINIC_COUNTRY,
+} from './clinics';
 export { ACTIVITY_COLORS, ACTIVITY_TYPES, QUICK_ACTIONS } from './dashboard';
 export { DEFAULT_METRICS, METRIC_COLORS } from './reports';
 export { ROUTES } from './routes';
 export { APPOINTMENT_DURATIONS, CURRENCIES, DEFAULT_SETTINGS, TIMEZONES } from './settings';
+export {
+  SOCIAL_MEDIA_ERROR_MESSAGES,
+  SOCIAL_MEDIA_FIELDS,
+  SOCIAL_MEDIA_LABELS,
+  SOCIAL_MEDIA_PLACEHOLDERS,
+  SOCIAL_MEDIA_PLATFORMS,
+  SOCIAL_MEDIA_URL_PATTERNS,
+} from './social-media';
 export { theme } from './theme';
 export {
   DEFAULT_SORT_FIELD,

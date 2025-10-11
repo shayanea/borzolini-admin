@@ -14,6 +14,13 @@ import {
   SocialMediaStep,
   StatusStep,
 } from '@/components/clinics/form';
+import {
+  CLINIC_FORM_LABELS,
+  CLINIC_SERVICE_OPTIONS,
+  CLINIC_SPECIALIZATION_OPTIONS,
+  CLINIC_VALIDATION_MESSAGES,
+  DEFAULT_CLINIC_COUNTRY,
+} from '@/constants/clinics';
 import { ROUTES } from '@/constants';
 import { useOperatingHours } from '@/hooks/use-operating-hours';
 import { ClinicsService } from '@/services/clinics.service';
@@ -58,7 +65,7 @@ const ClinicForm = () => {
     useOperatingHours();
 
   const isEditing = !!id;
-  const title = isEditing ? 'Edit Clinic' : 'Create New Clinic';
+  const title = isEditing ? CLINIC_FORM_LABELS.EDIT_TITLE : CLINIC_FORM_LABELS.CREATE_TITLE;
 
   // Fetch clinic data if editing
   const { data: clinic, isLoading: loadingClinic } = useQuery({
@@ -71,12 +78,12 @@ const ClinicForm = () => {
   const createMutation = useMutation({
     mutationFn: (data: CreateClinicData) => ClinicsService.createClinic(data),
     onSuccess: () => {
-      antMessage.success('Clinic created successfully');
+      antMessage.success(CLINIC_VALIDATION_MESSAGES.CREATE_SUCCESS);
       queryClient.invalidateQueries({ queryKey: ['clinics'] });
       navigate(ROUTES.CLINICS);
     },
     onError: (error: any) => {
-      antMessage.error(error?.response?.data?.message || 'Failed to create clinic');
+      antMessage.error(error?.response?.data?.message || CLINIC_VALIDATION_MESSAGES.CREATE_ERROR);
     },
   });
 
@@ -85,13 +92,13 @@ const ClinicForm = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateClinicData }) =>
       ClinicsService.updateClinic(id, data),
     onSuccess: () => {
-      antMessage.success('Clinic updated successfully');
+      antMessage.success(CLINIC_VALIDATION_MESSAGES.UPDATE_SUCCESS);
       queryClient.invalidateQueries({ queryKey: ['clinics'] });
       queryClient.invalidateQueries({ queryKey: ['clinic', id] });
       navigate(ROUTES.CLINICS);
     },
     onError: (error: any) => {
-      antMessage.error(error?.response?.data?.message || 'Failed to update clinic');
+      antMessage.error(error?.response?.data?.message || CLINIC_VALIDATION_MESSAGES.UPDATE_ERROR);
     },
   });
 
@@ -136,7 +143,7 @@ const ClinicForm = () => {
     } else if (!isEditing) {
       form.setFieldsValue({
         is_active: true,
-        country: 'United States',
+        country: DEFAULT_CLINIC_COUNTRY,
         services: [],
         specializations: [],
         operating_hours: getDefaultOperatingHours(),
@@ -150,9 +157,7 @@ const ClinicForm = () => {
 
       // Validate operating hours
       if (!validateOperatingHours(values.operating_hours)) {
-        antMessage.error(
-          'Please check operating hours - ensure all times are valid and close time is after open time'
-        );
+        antMessage.error(CLINIC_VALIDATION_MESSAGES.OPERATING_HOURS_ERROR);
         return;
       }
 
@@ -170,36 +175,6 @@ const ClinicForm = () => {
     navigate(ROUTES.CLINICS);
   };
 
-  const serviceOptions = [
-    'Vaccinations',
-    'Surgery',
-    'Dental Care',
-    'Emergency Care',
-    'Wellness Exams',
-    'Grooming',
-    'Boarding',
-    'Microchipping',
-    'Laboratory Services',
-    'Radiology',
-    'Pharmacy',
-    'Behavioral Consultation',
-  ];
-
-  const specializationOptions = [
-    'Feline Medicine',
-    'Canine Medicine',
-    'Exotic Animals',
-    'Emergency Medicine',
-    'Surgery',
-    'Dermatology',
-    'Cardiology',
-    'Oncology',
-    'Orthopedics',
-    'Neurology',
-    'Ophthalmology',
-    'Dentistry',
-  ];
-
   if (loadingClinic) {
     return <div>Loading...</div>;
   }
@@ -210,7 +185,7 @@ const ClinicForm = () => {
       <div className='flex items-center justify-between'>
         <div className='flex items-center space-x-4'>
           <Button icon={<ArrowLeftOutlined />} onClick={handleCancel} className='flex items-center'>
-            Back to Clinics
+            {CLINIC_FORM_LABELS.BACK_BUTTON}
           </Button>
           <div>
             <Title level={2} className='!mb-0'>
@@ -218,13 +193,13 @@ const ClinicForm = () => {
             </Title>
             <Text type='secondary'>
               {isEditing
-                ? 'Update clinic information and settings'
-                : 'Add a new clinic to the system'}
+                ? CLINIC_FORM_LABELS.EDIT_DESCRIPTION
+                : CLINIC_FORM_LABELS.CREATE_DESCRIPTION}
             </Text>
           </div>
         </div>
         <Space>
-          <Button onClick={handleCancel}>Cancel</Button>
+          <Button onClick={handleCancel}>{CLINIC_FORM_LABELS.CANCEL_BUTTON}</Button>
           <Button
             type='primary'
             icon={<SaveOutlined />}
@@ -232,7 +207,7 @@ const ClinicForm = () => {
             loading={loading}
             className='bg-primary-navy border-primary-navy hover:bg-primary-dark hover:border-primary-dark'
           >
-            {isEditing ? 'Update Clinic' : 'Create Clinic'}
+            {isEditing ? CLINIC_FORM_LABELS.UPDATE_BUTTON : CLINIC_FORM_LABELS.CREATE_BUTTON}
           </Button>
         </Space>
       </div>
@@ -242,7 +217,7 @@ const ClinicForm = () => {
         layout='vertical'
         initialValues={{
           is_active: true,
-          country: 'United States',
+          country: DEFAULT_CLINIC_COUNTRY,
           services: [],
           specializations: [],
           operating_hours: getDefaultOperatingHours(),
@@ -254,8 +229,8 @@ const ClinicForm = () => {
         <MediaBrandingStep />
         <SocialMediaStep />
         <ServicesSpecializationsStep
-          serviceOptions={serviceOptions}
-          specializationOptions={specializationOptions}
+          serviceOptions={CLINIC_SERVICE_OPTIONS}
+          specializationOptions={CLINIC_SPECIALIZATION_OPTIONS}
         />
         <OperatingHoursStep daysOfWeek={daysOfWeek} />
         <StatusStep />
