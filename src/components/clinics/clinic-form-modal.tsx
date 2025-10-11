@@ -1,22 +1,15 @@
-import { Col, Form, Input, Modal, Row, Switch, Typography } from 'antd';
+import { Form, Modal, Typography } from 'antd';
 import { useEffect } from 'react';
 
 import {
-  EMAIL_RULE,
-  MAX_LENGTH_RULE,
-  MIN_LENGTH_RULE,
-  PHONE_PATTERN_RULE,
-  POSTAL_CODE_RULE,
-  REQUIRED_RULE,
-  URL_RULE,
-  VALIDATION_MESSAGES,
-} from '@/constants/form-validation';
-import { SOCIAL_MEDIA_FIELDS, SOCIAL_MEDIA_LABELS, SOCIAL_MEDIA_PLACEHOLDERS, SOCIAL_MEDIA_URL_PATTERNS } from '@/constants/social-media';
-import { SocialMediaFields } from '@/components/shared';
+  BasicInfoSection,
+  ContactInfoSection,
+  LocationSection,
+  StatusSection,
+} from './clinic-form-sections';
 import type { Clinic } from '@/types';
 
 const { Title } = Typography;
-const { TextArea } = Input;
 
 interface ClinicFormModalProps {
   visible: boolean;
@@ -123,136 +116,17 @@ const ClinicFormModal = ({
           country: 'United States',
         }}
       >
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item
-              name='name'
-              label='Clinic Name'
-              rules={[
-                REQUIRED_RULE(VALIDATION_MESSAGES.CLINIC_NAME_REQUIRED),
-                MIN_LENGTH_RULE(2, VALIDATION_MESSAGES.CLINIC_NAME_MIN_LENGTH),
-              ]}
-            >
-              <Input placeholder='Enter clinic name' />
-            </Form.Item>
-          </Col>
-
-          <Col span={12}>
-            <Form.Item
-              name='phone'
-              label='Phone Number'
-              rules={[
-                REQUIRED_RULE(VALIDATION_MESSAGES.REQUIRED),
-                PHONE_PATTERN_RULE,
-              ]}
-            >
-              <Input placeholder='Enter phone number' />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={24}>
-            <Form.Item
-              name='description'
-              label='Description'
-              rules={[MAX_LENGTH_RULE(500, VALIDATION_MESSAGES.DESCRIPTION_MAX_LENGTH)]}
-            >
-              <TextArea
-                rows={3}
-                placeholder='Enter clinic description (optional)'
-                maxLength={500}
-                showCount
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={24}>
-            <Form.Item
-              name='address'
-              label='Address'
-              rules={[
-                REQUIRED_RULE(VALIDATION_MESSAGES.ADDRESS_REQUIRED),
-                MIN_LENGTH_RULE(5, VALIDATION_MESSAGES.ADDRESS_MIN_LENGTH),
-              ]}
-            >
-              <Input placeholder='Enter full address' />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={8}>
-            <Form.Item
-              name='city'
-              label='City'
-              rules={[
-                REQUIRED_RULE(VALIDATION_MESSAGES.CITY_REQUIRED),
-                MIN_LENGTH_RULE(2, VALIDATION_MESSAGES.CITY_MIN_LENGTH),
-              ]}
-            >
-              <Input placeholder='Enter city' />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              name='country'
-              label='Country'
-              rules={[REQUIRED_RULE(VALIDATION_MESSAGES.COUNTRY_REQUIRED)]}
-            >
-              <Input placeholder='Enter country' />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              name='postal_code'
-              label='Postal Code'
-              rules={[POSTAL_CODE_RULE]}
-            >
-              <Input placeholder='Enter postal code' />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item
-              name='email'
-              label='Email'
-              rules={[
-                REQUIRED_RULE(VALIDATION_MESSAGES.EMAIL_REQUIRED),
-                EMAIL_RULE,
-              ]}
-            >
-              <Input placeholder='Enter email address' />
-            </Form.Item>
-          </Col>
-
-          <Col span={12}>
-            <Form.Item
-              name='website'
-              label='Website'
-              rules={[URL_RULE]}
-            >
-              <Input placeholder='Enter website URL (optional)' />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        {/* Social Media Fields */}
-        <SocialMediaFields />
-
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item name='is_active' label='Status' valuePropName='checked'>
-              <Switch checkedChildren='Active' unCheckedChildren='Inactive' />
-            </Form.Item>
-          </Col>
-        </Row>
+        {/* Basic Information */}
+        <BasicInfoSection form={form} />
+        
+        {/* Location Information */}
+        <LocationSection form={form} />
+        
+        {/* Contact Information */}
+        <ContactInfoSection form={form} />
+        
+        {/* Status */}
+        <StatusSection form={form} />
       </Form>
     </Modal>
   );
