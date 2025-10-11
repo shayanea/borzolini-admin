@@ -1,39 +1,22 @@
-import { Button, Card, Col, Input, Row, Select } from 'antd';
 import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Input, Row, Select } from 'antd';
 
+import { COMMON_BREEDS, PET_GENDERS, PET_SIZES, PET_SPECIES } from '@/constants/pets';
 import type { PetFiltersProps } from '@/types';
 
 const { Search } = Input;
 const { Option } = Select;
 
-// Common pet species - using static list
-const petSpecies = [
-  'dog',
-  'cat',
-  'bird',
-  'fish',
-  'rabbit',
-  'hamster',
-  'guinea_pig',
-  'reptile',
-  'other',
-];
+// Get values from constants
+const petSpecies = Object.values(PET_SPECIES);
+const genders = Object.values(PET_GENDERS);
+const sizes = Object.values(PET_SIZES);
 
-// Common breeds based on API examples
+// Common breeds based on API examples - using first few from each species
 const breeds = [
-  'Ragdoll',
-  'Border Collie',
-  'Maine Coon',
-  'Cavalier King Charles Spaniel',
-  'German Shepherd',
-  'Persian',
-  'Labrador Retriever',
-  'Golden Retriever',
-  'Domestic Shorthair',
+  ...COMMON_BREEDS[PET_SPECIES.CAT].slice(0, 3),
+  ...COMMON_BREEDS[PET_SPECIES.DOG].slice(0, 6),
 ];
-
-const genders = ['male', 'female'];
-const sizes = ['tiny', 'small', 'medium', 'large', 'giant'];
 
 const PetFilters = ({
   searchText,

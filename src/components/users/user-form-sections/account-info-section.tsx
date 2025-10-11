@@ -1,11 +1,11 @@
 import { Col, Form, Input, Row, Select, Switch } from 'antd';
 import { FC } from 'react';
 
-import { 
-  EMAIL_RULE, 
-  MIN_LENGTH_RULE, 
-  REQUIRED_RULE, 
-  VALIDATION_MESSAGES 
+import {
+  EMAIL_RULE,
+  MIN_LENGTH_RULE,
+  REQUIRED_RULE,
+  VALIDATION_MESSAGES,
 } from '@/constants/form-validation';
 import { USER_ROLES } from '@/constants/user-management';
 import { AccountInfoSectionProps } from './types';

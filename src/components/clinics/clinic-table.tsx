@@ -2,14 +2,8 @@ import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
-  FacebookOutlined,
-  InstagramOutlined,
-  LinkedinOutlined,
   MedicineBoxOutlined,
   TeamOutlined,
-  TikTokOutlined,
-  TwitterOutlined,
-  YoutubeOutlined,
 } from '@ant-design/icons';
 import { Badge, Button, Space, Table, Tag, Typography } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
@@ -18,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import type { Clinic } from '@/types';
 import type { TablePaginationConfig } from 'antd';
+import { SocialMediaLinks } from '@/components/common';
 
 const { Text, Link } = Typography;
 
@@ -105,37 +100,16 @@ const ClinicTable = ({
             </Link>
           )}
           {/* Social Media Links */}
-          <div className='flex flex-wrap gap-1 mt-2'>
-            {record.facebook_url && (
-              <Link href={record.facebook_url} target='_blank' title='Facebook'>
-                <FacebookOutlined className='text-blue-600 hover:text-blue-800' />
-              </Link>
-            )}
-            {record.twitter_url && (
-              <Link href={record.twitter_url} target='_blank' title='Twitter'>
-                <TwitterOutlined className='text-blue-400 hover:text-blue-600' />
-              </Link>
-            )}
-            {record.instagram_url && (
-              <Link href={record.instagram_url} target='_blank' title='Instagram'>
-                <InstagramOutlined className='text-pink-600 hover:text-pink-800' />
-              </Link>
-            )}
-            {record.linkedin_url && (
-              <Link href={record.linkedin_url} target='_blank' title='LinkedIn'>
-                <LinkedinOutlined className='text-blue-700 hover:text-blue-900' />
-              </Link>
-            )}
-            {record.youtube_url && (
-              <Link href={record.youtube_url} target='_blank' title='YouTube'>
-                <YoutubeOutlined className='text-red-600 hover:text-red-800' />
-              </Link>
-            )}
-            {record.tiktok_url && (
-              <Link href={record.tiktok_url} target='_blank' title='TikTok'>
-                <TikTokOutlined className='text-black hover:text-gray-800' />
-              </Link>
-            )}
+          <div className='mt-2'>
+            <SocialMediaLinks
+              facebook_url={record.facebook_url}
+              twitter_url={record.twitter_url}
+              instagram_url={record.instagram_url}
+              linkedin_url={record.linkedin_url}
+              youtube_url={record.youtube_url}
+              tiktok_url={record.tiktok_url}
+              size='small'
+            />
           </div>
         </div>
       ),

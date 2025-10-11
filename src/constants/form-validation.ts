@@ -65,7 +65,7 @@ export const VALIDATION_MESSAGES = {
   INVALID_PHONE: 'Please enter a valid phone number',
   INVALID_POSTAL_CODE: 'Please enter a valid postal code',
   POSITIVE_NUMBER: 'Please enter a valid positive number',
-  
+
   // User form
   FIRST_NAME_REQUIRED: 'Please enter first name',
   LAST_NAME_REQUIRED: 'Please enter last name',
@@ -73,7 +73,7 @@ export const VALIDATION_MESSAGES = {
   PASSWORD_REQUIRED: 'Please enter password',
   PASSWORD_MIN_LENGTH: 'Password must be at least 8 characters',
   ROLE_REQUIRED: 'Please select role',
-  
+
   // Pet form
   PET_NAME_REQUIRED: 'Please enter pet name',
   PET_NAME_MIN_LENGTH: 'Pet name must be at least 1 character',
@@ -91,7 +91,7 @@ export const VALIDATION_MESSAGES = {
   EMERGENCY_PHONE_MAX_LENGTH: 'Emergency phone must be less than 20 characters',
   PHOTO_URL_MAX_LENGTH: 'Photo URL must be less than 500 characters',
   WEIGHT_INVALID: 'Weight must be a valid positive number',
-  
+
   // Clinic form
   CLINIC_NAME_REQUIRED: 'Please enter clinic name',
   CLINIC_NAME_MIN_LENGTH: 'Clinic name must be at least 2 characters',
@@ -101,7 +101,7 @@ export const VALIDATION_MESSAGES = {
   CITY_MIN_LENGTH: 'City must be at least 2 characters',
   COUNTRY_REQUIRED: 'Please enter country',
   DESCRIPTION_MAX_LENGTH: 'Description must not exceed 500 characters',
-  
+
   // Appointment form
   APPOINTMENT_TYPE_REQUIRED: 'Please select appointment type',
   PET_REQUIRED: 'Please select a pet',
@@ -111,7 +111,7 @@ export const VALIDATION_MESSAGES = {
   REASON_REQUIRED: 'Please provide reason for visit',
   TELEMEDICINE_LINK_REQUIRED: 'Please provide telemedicine link',
   HOME_VISIT_ADDRESS_REQUIRED: 'Please provide home visit address',
-  
+
   // Case form
   CASE_TITLE_REQUIRED: 'Please enter case title',
   CASE_TYPE_REQUIRED: 'Please select case type',

@@ -1,10 +1,7 @@
 import { Col, Form, Input, Row } from 'antd';
 import { FC } from 'react';
 
-import { 
-  REQUIRED_RULE, 
-  VALIDATION_MESSAGES 
-} from '@/constants/form-validation';
+import { REQUIRED_RULE, VALIDATION_MESSAGES } from '@/constants/form-validation';
 import { PersonalInfoSectionProps } from './types';
 
 const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({ form }) => {

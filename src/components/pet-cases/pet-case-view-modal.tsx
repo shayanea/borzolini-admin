@@ -1,9 +1,7 @@
 // Pet Case View Modal Component
 import {
-  AlertOutlined,
   ClockCircleOutlined,
   HeartOutlined,
-  MedicineBoxOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { Avatar, Button, Card, Descriptions, Divider, Modal, Space, Tabs, Tag } from 'antd';
@@ -12,6 +10,7 @@ import React, { useState } from 'react';
 import { PetCasesService } from '../../services/pet-cases.service';
 import { ClinicPetCase } from '../../types/pet-cases';
 import PetCaseTimeline from './pet-case-timeline';
+import { EmptyStateVariants } from '@/components/common';
 
 const { TabPane } = Tabs;
 
@@ -183,10 +182,7 @@ const PetCaseViewModal: React.FC<PetCaseViewModalProps> = ({
         )}
 
         {caseData.initial_symptoms.length === 0 && caseData.current_symptoms.length === 0 && (
-          <div className='text-center text-gray-500 py-4'>
-            <AlertOutlined className='text-2xl mb-2' />
-            <p>No symptoms recorded</p>
-          </div>
+          <EmptyStateVariants.NoSymptoms size='small' />
         )}
       </div>
     </Card>
@@ -227,10 +223,7 @@ const PetCaseViewModal: React.FC<PetCaseViewModalProps> = ({
           )}
         </Descriptions>
       ) : (
-        <div className='text-center text-gray-500 py-4'>
-          <MedicineBoxOutlined className='text-2xl mb-2' />
-          <p>No vital signs recorded</p>
-        </div>
+        <EmptyStateVariants.NoVitalSigns size='small' />
       )}
     </Card>
   );

@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
+import type { Pet, PetTableProps } from '@/types';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -6,9 +6,10 @@ import {
   PhoneOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import type { Pet, PetTableProps } from '@/types';
+import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 
 import { TABLE_PAGE_SIZES } from '@/constants';
+import { getPetGenderColor, getPetSizeColor, getPetSpeciesColor } from '@/utils/color-helpers';
 
 const PetTable = ({
   pets,
@@ -29,38 +30,6 @@ const PetTable = ({
     const handleDeletePet = () => onDeletePet(pet.id);
 
     return { handleViewPet, handleEditPet, handleDeletePet };
-  };
-
-  const getPetSpeciesColor = (species: string): string => {
-    const speciesColors: Record<string, string> = {
-      dog: 'blue',
-      cat: 'orange',
-      bird: 'green',
-      fish: 'cyan',
-      rabbit: 'purple',
-      hamster: 'magenta',
-      guinea_pig: 'lime',
-      reptile: 'volcano',
-      other: 'default',
-    };
-    return speciesColors[species.toLowerCase()] || 'default';
-  };
-
-  const getGenderColor = (gender: string): string => {
-    const genderColors: Record<string, string> = {
-      male: 'blue',
-      female: 'pink',
-    };
-    return genderColors[gender.toLowerCase()] || 'default';
-  };
-
-  const getSizeColor = (size: string): string => {
-    const sizeColors: Record<string, string> = {
-      small: 'green',
-      medium: 'orange',
-      large: 'red',
-    };
-    return sizeColors[size.toLowerCase()] || 'default';
   };
 
   const columns = [
@@ -97,8 +66,8 @@ const PetTable = ({
           </Tag>
           {pet.breed && <div className='text-sm text-text-light'>{pet.breed}</div>}
           <div className='flex gap-1'>
-            <Tag color={getGenderColor(pet.gender)}>{pet.gender}</Tag>
-            <Tag color={getSizeColor(pet.size)}>{pet.size}</Tag>
+            <Tag color={getPetGenderColor(pet.gender)}>{pet.gender}</Tag>
+            <Tag color={getPetSizeColor(pet.size)}>{pet.size}</Tag>
           </div>
         </div>
       ),

@@ -1,4 +1,3 @@
-import { APPOINTMENT_PRIORITY_COLORS, APPOINTMENT_STATUS_COLORS } from '@/constants/appointments';
 import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 import {
   CalendarOutlined,
@@ -14,6 +13,13 @@ import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 
 import type { Appointment } from '@/types';
 import { TABLE_PAGE_SIZES } from '@/constants';
+import {
+  formatAppointmentType,
+  getAppointmentPriorityColor,
+  getAppointmentStatusColor,
+  getPetGenderColor,
+  getPetSpeciesColor,
+} from '@/utils/color-helpers';
 
 export interface AppointmentsHeaderProps {
   onNewAppointment: (data: any) => void;
@@ -47,37 +53,6 @@ const AppointmentsTable = ({
     const handleCancel = () => onCancel(appointment.id || '');
 
     return { handleView, handleCancel };
-  };
-
-  const formatAppointmentType = (type: string) => {
-    if (!type) return 'Unknown';
-    return type
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-  };
-
-  const getPetSpeciesColor = (species: string): string => {
-    const speciesColors: Record<string, string> = {
-      dog: 'blue',
-      cat: 'orange',
-      bird: 'green',
-      fish: 'cyan',
-      rabbit: 'purple',
-      hamster: 'magenta',
-      guinea_pig: 'lime',
-      reptile: 'volcano',
-      other: 'default',
-    };
-    return speciesColors[species.toLowerCase()] || 'default';
-  };
-
-  const getGenderColor = (gender: string): string => {
-    const genderColors: Record<string, string> = {
-      male: 'blue',
-      female: 'pink',
-    };
-    return genderColors[gender.toLowerCase()] || 'default';
   };
 
   const columns: ColumnsType<Appointment> = [
@@ -127,7 +102,7 @@ const AppointmentsTable = ({
             </Tag>
           </div>
           <div>
-            <Tag color={APPOINTMENT_PRIORITY_COLORS[appointment.priority] || 'default'}>
+            <Tag color={getAppointmentPriorityColor(appointment.priority)}>
               {appointment.priority
                 ? appointment.priority.charAt(0).toUpperCase() + appointment.priority.slice(1)
                 : 'Normal'}
@@ -181,7 +156,7 @@ const AppointmentsTable = ({
                     : 'default'
             }
             text={
-              <Tag color={APPOINTMENT_STATUS_COLORS[appointment.status] || 'default'}>
+              <Tag color={getAppointmentStatusColor(appointment.status)}>
                 {appointment.status
                   ? appointment.status
                       .split('_')
@@ -241,7 +216,7 @@ const AppointmentsTable = ({
                   {appointment.pet.species.charAt(0).toUpperCase() +
                     appointment.pet.species.slice(1)}
                 </Tag>
-                <Tag color={getGenderColor(appointment.pet.gender)}>{appointment.pet.gender}</Tag>
+                <Tag color={getPetGenderColor(appointment.pet.gender)}>{appointment.pet.gender}</Tag>
               </div>
               <div className='text-xs text-text-light'>Weight: {appointment.pet.weight} kg</div>
               <div className='text-xs text-text-light'>

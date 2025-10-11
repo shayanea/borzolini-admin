@@ -17,6 +17,7 @@ import { ROLE_COLORS } from '@/constants';
 import { PetsService } from '@/services/pets.service';
 import type { User } from '@/types';
 import { useQuery } from '@tanstack/react-query';
+import { EmptyStateVariants } from '@/components/common';
 
 const { Text, Title } = Typography;
 
@@ -193,9 +194,7 @@ const UserViewModal = ({
                 <Text type='danger'>Failed to load pets. Please try again.</Text>
               </div>
             ) : pets.length === 0 ? (
-              <div className='text-center py-4'>
-                <Text type='secondary'>No pets found for this user.</Text>
-              </div>
+              <EmptyStateVariants.NoPets />
             ) : (
               <div className='w-full'>
                 <Table

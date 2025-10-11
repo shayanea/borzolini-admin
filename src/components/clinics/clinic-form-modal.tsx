@@ -1,13 +1,13 @@
 import { Form, Modal, Typography } from 'antd';
 import { useEffect } from 'react';
 
+import type { Clinic } from '@/types';
 import {
   BasicInfoSection,
   ContactInfoSection,
   LocationSection,
   StatusSection,
 } from './clinic-form-sections';
-import type { Clinic } from '@/types';
 
 const { Title } = Typography;
 
@@ -118,13 +118,13 @@ const ClinicFormModal = ({
       >
         {/* Basic Information */}
         <BasicInfoSection form={form} />
-        
+
         {/* Location Information */}
         <LocationSection form={form} />
-        
+
         {/* Contact Information */}
         <ContactInfoSection form={form} />
-        
+
         {/* Status */}
         <StatusSection form={form} />
       </Form>

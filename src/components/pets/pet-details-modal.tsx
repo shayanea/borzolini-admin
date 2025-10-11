@@ -1,42 +1,11 @@
-import { Avatar, Badge, Card, Descriptions, Modal, Tag } from 'antd';
 import { CalendarOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Badge, Card, Descriptions, Modal, Tag } from 'antd';
 
 import type { PetDetailsModalProps } from '@/types';
+import { getPetGenderColor, getPetSizeColor, getPetSpeciesColor } from '@/utils/color-helpers';
 
 const PetDetailsModal = ({ pet, isVisible, onClose }: PetDetailsModalProps) => {
   if (!pet) return null;
-
-  const getPetSpeciesColor = (species: string): string => {
-    const speciesColors: Record<string, string> = {
-      dog: 'blue',
-      cat: 'orange',
-      bird: 'green',
-      fish: 'cyan',
-      rabbit: 'purple',
-      hamster: 'magenta',
-      guinea_pig: 'lime',
-      reptile: 'volcano',
-      other: 'default',
-    };
-    return speciesColors[species.toLowerCase()] || 'default';
-  };
-
-  const getGenderColor = (gender: string): string => {
-    const genderColors: Record<string, string> = {
-      male: 'blue',
-      female: 'pink',
-    };
-    return genderColors[gender.toLowerCase()] || 'default';
-  };
-
-  const getSizeColor = (size: string): string => {
-    const sizeColors: Record<string, string> = {
-      small: 'green',
-      medium: 'orange',
-      large: 'red',
-    };
-    return sizeColors[size.toLowerCase()] || 'default';
-  };
 
   return (
     <Modal
@@ -78,13 +47,13 @@ const PetDetailsModal = ({ pet, isVisible, onClose }: PetDetailsModalProps) => {
             {pet.breed && <Descriptions.Item label='Breed'>{pet.breed}</Descriptions.Item>}
 
             <Descriptions.Item label='Gender'>
-              <Tag color={getGenderColor(pet.gender)}>
+              <Tag color={getPetGenderColor(pet.gender)}>
                 {pet.gender.charAt(0).toUpperCase() + pet.gender.slice(1)}
               </Tag>
             </Descriptions.Item>
 
             <Descriptions.Item label='Size'>
-              <Tag color={getSizeColor(pet.size)}>
+              <Tag color={getPetSizeColor(pet.size)}>
                 {pet.size.charAt(0).toUpperCase() + pet.size.slice(1)}
               </Tag>
             </Descriptions.Item>

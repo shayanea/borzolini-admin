@@ -1,10 +1,20 @@
 import { Button, Card, Descriptions, Modal, Select, Tag, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 
+import {
+  APPOINTMENT_PRIORITIES,
+  APPOINTMENT_STATUSES,
+  APPOINTMENT_TYPE_LABELS,
+} from '@/constants/appointments';
 import type { Appointment } from '@/types';
-import { AppointmentReviewsSection } from './appointment-reviews-section';
 import { SaveOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { AppointmentReviewsSection } from './appointment-reviews-section';
+import {
+  formatAppointmentType,
+  getAppointmentPriorityColor,
+  getAppointmentStatusColor,
+} from '@/utils/color-helpers';
 
 const { Option } = Select;
 
@@ -79,37 +89,9 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
     }
   };
 
-  const getStatusColor = (status: string) => {
-    const statusColors: Record<string, string> = {
-      pending: 'orange',
-      confirmed: 'green',
-      in_progress: 'blue',
-      completed: 'purple',
-      cancelled: 'red',
-      no_show: 'red',
-      rescheduled: 'yellow',
-      waiting: 'cyan',
-    };
-    return statusColors[status] || 'default';
-  };
-
-  const getPriorityColor = (priority: string) => {
-    const priorityColors: Record<string, string> = {
-      low: 'green',
-      normal: 'blue',
-      high: 'orange',
-      urgent: 'red',
-      emergency: 'red',
-    };
-    return priorityColors[priority] || 'default';
-  };
-
-  const formatAppointmentType = (type: string) => {
+  const getFormattedType = (type: string) => {
     if (!type) return 'Unknown';
-    return type
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+    return APPOINTMENT_TYPE_LABELS[type] || formatAppointmentType(type);
   };
 
   if (!appointment) return null;
@@ -180,7 +162,7 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
         <Card title='Appointment Information' size='small'>
           <Descriptions column={2} size='small'>
             <Descriptions.Item label='Service'>
-              {appointment.service?.name || formatAppointmentType(appointment.appointment_type)}
+              {appointment.service?.name || getFormattedType(appointment.appointment_type)}
             </Descriptions.Item>
             <Descriptions.Item label='Duration'>
               {appointment.duration_minutes} minutes
@@ -198,17 +180,17 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
                   onChange={value => setEditedData(prev => ({ ...prev, status: value }))}
                   style={{ width: 120 }}
                 >
-                  <Option value='pending'>Pending</Option>
-                  <Option value='confirmed'>Confirmed</Option>
-                  <Option value='in_progress'>In Progress</Option>
-                  <Option value='completed'>Completed</Option>
-                  <Option value='cancelled'>Cancelled</Option>
-                  <Option value='no_show'>No Show</Option>
-                  <Option value='rescheduled'>Rescheduled</Option>
-                  <Option value='waiting'>Waiting</Option>
+                  {Object.entries(APPOINTMENT_STATUSES).map(([_, value]) => (
+                    <Option key={value} value={value}>
+                      {value
+                        .split('_')
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(' ')}
+                    </Option>
+                  ))}
                 </Select>
               ) : (
-                <Tag color={getStatusColor(appointment.status)}>
+                <Tag color={getAppointmentStatusColor(appointment.status)}>
                   {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
                 </Tag>
               )}
@@ -220,14 +202,14 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
                   onChange={value => setEditedData(prev => ({ ...prev, priority: value }))}
                   style={{ width: 120 }}
                 >
-                  <Option value='low'>Low</Option>
-                  <Option value='normal'>Normal</Option>
-                  <Option value='high'>High</Option>
-                  <Option value='urgent'>Urgent</Option>
-                  <Option value='emergency'>Emergency</Option>
+                  {Object.entries(APPOINTMENT_PRIORITIES).map(([_, value]) => (
+                    <Option key={value} value={value}>
+                      {value.charAt(0).toUpperCase() + value.slice(1)}
+                    </Option>
+                  ))}
                 </Select>
               ) : (
-                <Tag color={getPriorityColor(appointment.priority)}>
+                <Tag color={getAppointmentPriorityColor(appointment.priority)}>
                   {appointment.priority.charAt(0).toUpperCase() + appointment.priority.slice(1)}
                 </Tag>
               )}

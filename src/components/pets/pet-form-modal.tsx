@@ -159,11 +159,7 @@ const PetFormModal = ({
         <PhotoStatusSection form={form} />
 
         <Form.Item className='mb-0'>
-          <ActionButtonsSection
-            onCancel={handleCancel}
-            loading={loading}
-            editingPet={editingPet}
-          />
+          <ActionButtonsSection onCancel={handleCancel} loading={loading} editingPet={editingPet} />
         </Form.Item>
       </Form>
     </Modal>
