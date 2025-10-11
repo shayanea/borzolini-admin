@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Form, Input, Modal, Row, Select, Space } from 'antd';
+import { Divider, Form, Modal } from 'antd';
 import React, { useEffect } from 'react';
 import {
   CASE_PRIORITY_LABELS,
@@ -7,13 +7,14 @@ import {
   UpdatePetCaseRequest,
 } from '../../types/pet-cases';
 
-// Pet Case Form Modal Component
 import { HeartOutlined } from '@ant-design/icons';
 import { usePetCases } from '../../hooks/pet-cases';
 import { useMessage } from '../../hooks/use-message';
-
-const { Option } = Select;
-const { TextArea } = Input;
+import {
+  CaseActionButtonsSection,
+  CaseBasicInfoSection,
+  CaseDetailsSection,
+} from './pet-case-form-sections';
 
 interface PetCaseFormModalProps {
   visible: boolean;
@@ -115,77 +116,31 @@ const PetCaseFormModal: React.FC<PetCaseFormModalProps> = ({
           case_type: 'consultation',
         }}
       >
-        <Row gutter={16}>
-          <Col xs={24} md={12}>
-            <Form.Item
-              label='Case Title'
-              name='title'
-              rules={[{ required: true, message: 'Please enter a case title' }]}
-            >
-              <Input placeholder='Brief description of the case' />
-            </Form.Item>
-          </Col>
+        {/* Basic Information */}
+        <CaseBasicInfoSection
+          form={form}
+          caseTypeLabels={CASE_TYPE_LABELS}
+          casePriorityLabels={CASE_PRIORITY_LABELS}
+          isCreating={isCreating}
+          isUpdating={isUpdating}
+        />
 
-          <Col xs={24} md={12}>
-            <Form.Item
-              label='Case Type'
-              name='case_type'
-              rules={[{ required: true, message: 'Please select a case type' }]}
-            >
-              <Select placeholder='Select case type'>
-                {Object.entries(CASE_TYPE_LABELS).map(([key, label]) => (
-                  <Option key={key} value={key}>
-                    {label}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Form.Item label='Priority' name='priority'>
-          <Select placeholder='Select priority level'>
-            {Object.entries(CASE_PRIORITY_LABELS).map(([key, label]) => (
-              <Option key={key} value={key}>
-                {label}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-
-        <Form.Item
-          label='Description'
-          name='description'
-          rules={[{ required: true, message: 'Please enter a case description' }]}
-        >
-          <TextArea rows={4} placeholder='Detailed description of the case and symptoms' />
-        </Form.Item>
-
-        <Form.Item
-          label='Initial Symptoms (one per line)'
-          name='initial_symptoms'
-          help='Enter each symptom on a new line'
-        >
-          <TextArea
-            rows={4}
-            placeholder='Coughing&#10;Lethargy&#10;Loss of appetite'
-          />
-        </Form.Item>
-
-        <Form.Item label='Additional Notes' name='notes'>
-          <TextArea rows={3} placeholder='Any additional notes or observations' />
-        </Form.Item>
+        {/* Case Details */}
+        <CaseDetailsSection
+          form={form}
+          isCreating={isCreating}
+          isUpdating={isUpdating}
+        />
 
         <Divider />
 
-        <Form.Item className='mb-0 text-right'>
-          <Space>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button type='primary' htmlType='submit' loading={isCreating || isUpdating}>
-              {isEdit ? 'Update Case' : 'Create Case'}
-            </Button>
-          </Space>
-        </Form.Item>
+        {/* Action Buttons */}
+        <CaseActionButtonsSection
+          onClose={handleClose}
+          isCreating={isCreating}
+          isUpdating={isUpdating}
+          isEdit={isEdit}
+        />
       </Form>
     </Modal>
   );

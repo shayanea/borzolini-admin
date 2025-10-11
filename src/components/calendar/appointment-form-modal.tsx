@@ -1,26 +1,18 @@
 import type { AppointmentPriority, AppointmentStatus, AppointmentType } from '@/types';
-import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Modal,
-  Select,
-  Switch,
-  TimePicker,
-  message,
-} from 'antd';
+import { Form, Modal, message } from 'antd';
 import React, { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 
 import { useCalendarFormData } from '@/hooks/calendar/use-calendar-form-data';
 import type { CreateAppointmentData } from '@/services/appointments.service';
 import type { AppointmentFormModalProps } from '@/types/calendar-modals';
-import { SaveOutlined } from '@ant-design/icons';
-import dayjs from 'dayjs';
-
-const { TextArea } = Input;
-const { Option } = Select;
+import {
+  ActionButtonsSection,
+  AdditionalInfoSection,
+  BasicInfoSection,
+  SchedulingSection,
+  VisitTypeSection,
+} from './appointment-form-sections';
 
 export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
   visible,
@@ -153,220 +145,47 @@ export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
       >
         <div className='grid grid-cols-2 gap-4'>
           {/* Left Column */}
-          <div className='space-y-4'>
-            <Form.Item
-              label='Appointment Type'
-              name='appointment_type'
-              rules={[{ required: true, message: 'Please select appointment type' }]}
-            >
-              <Select placeholder='Select appointment type' showSearch>
-                {appointmentTypes.map(type => (
-                  <Option key={type.value} value={type.value}>
-                    {type.label}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              label='Pet'
-              name='pet_id'
-              rules={[{ required: true, message: 'Please select a pet' }]}
-            >
-              <Select
-                placeholder='Select pet'
-                showSearch
-                loading={loadingData}
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)
-                    ?.toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-              >
-                {pets.map(pet => (
-                  <Option key={pet.id} value={pet.id}>
-                    {pet.name} ({pet.type}) - {pet.ownerName}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              label='Clinic'
-              name='clinic_id'
-              rules={[{ required: true, message: 'Please select a clinic' }]}
-            >
-              <Select
-                placeholder='Select clinic'
-                showSearch
-                loading={loadingData}
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)
-                    ?.toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-              >
-                {clinics.map(clinic => (
-                  <Option key={clinic.id} value={clinic.id}>
-                    {clinic.name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item label='Veterinarian' name='staff_id'>
-              <Select placeholder='Select veterinarian (optional)' showSearch>
-                {veterinarians.map(vet => (
-                  <Option key={vet.id} value={vet.id}>
-                    {vet.name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item label='Service' name='service_id'>
-              <Select
-                placeholder='Select service (optional)'
-                showSearch
-                loading={loadingData}
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)
-                    ?.toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-              >
-                {services.map(service => (
-                  <Option key={service.id} value={service.id}>
-                    {service.name} - ${service.price} ({service.duration}min)
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
+          <div>
+            <BasicInfoSection
+              form={form}
+              appointmentTypes={appointmentTypes}
+              pets={pets}
+              clinics={clinics}
+              veterinarians={veterinarians}
+              services={services}
+              loadingData={loadingData}
+            />
           </div>
 
           {/* Right Column */}
-          <div className='space-y-4'>
-            <Form.Item
-              label='Date'
-              name='scheduled_date'
-              rules={[{ required: true, message: 'Please select date' }]}
-            >
-              <DatePicker
-                className='w-full'
-                format='YYYY-MM-DD'
-                disabledDate={current => current && current < dayjs().startOf('day')}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label='Time'
-              name='scheduled_time'
-              rules={[{ required: true, message: 'Please select time' }]}
-            >
-              <TimePicker className='w-full' format='HH:mm' minuteStep={15} showNow={false} />
-            </Form.Item>
-
-            <Form.Item label='Duration (minutes)' name='duration_minutes'>
-              <InputNumber className='w-full' min={15} max={480} step={15} placeholder='30' />
-            </Form.Item>
-
-            <Form.Item label='Priority' name='priority'>
-              <Select placeholder='Select priority'>
-                {priorities.map(priority => (
-                  <Option key={priority.value} value={priority.value}>
-                    {priority.label}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item label='Status' name='status'>
-              <Select placeholder='Select status'>
-                {statuses.map(status => (
-                  <Option key={status.value} value={status.value}>
-                    {status.label}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
+          <div>
+            <SchedulingSection
+              form={form}
+              priorities={priorities}
+              statuses={statuses}
+              currentDate={currentDate}
+            />
           </div>
         </div>
 
         {/* Visit Type Options */}
-        <div className='space-y-4'>
-          <div className='flex items-center space-x-4'>
-            <Form.Item label='Telemedicine' className='mb-0'>
-              <Switch
-                checked={isTelemedicine}
-                onChange={setIsTelemedicine}
-                checkedChildren='Yes'
-                unCheckedChildren='No'
-              />
-            </Form.Item>
-
-            <Form.Item label='Home Visit' className='mb-0'>
-              <Switch
-                checked={isHomeVisit}
-                onChange={setIsHomeVisit}
-                checkedChildren='Yes'
-                unCheckedChildren='No'
-              />
-            </Form.Item>
-          </div>
-
-          {isTelemedicine && (
-            <Form.Item
-              label='Telemedicine Link'
-              name='telemedicine_link'
-              rules={[{ required: true, message: 'Please provide telemedicine link' }]}
-            >
-              <Input placeholder='https://meet.google.com/...' />
-            </Form.Item>
-          )}
-
-          {isHomeVisit && (
-            <Form.Item
-              label='Home Visit Address'
-              name='home_visit_address'
-              rules={[{ required: true, message: 'Please provide home visit address' }]}
-            >
-              <TextArea rows={2} placeholder='Enter full address for home visit' />
-            </Form.Item>
-          )}
-        </div>
+        <VisitTypeSection
+          form={form}
+          isTelemedicine={isTelemedicine}
+          setIsTelemedicine={setIsTelemedicine}
+          isHomeVisit={isHomeVisit}
+          setIsHomeVisit={setIsHomeVisit}
+        />
 
         {/* Additional Information */}
-        <div className='space-y-4'>
-          <Form.Item
-            label='Reason for Visit'
-            name='reason'
-            rules={[{ required: true, message: 'Please provide reason for visit' }]}
-          >
-            <TextArea rows={2} placeholder='Brief description of why the pet needs to be seen' />
-          </Form.Item>
-
-          <Form.Item label='Symptoms' name='symptoms'>
-            <TextArea rows={2} placeholder='Describe any symptoms the pet is experiencing' />
-          </Form.Item>
-
-          <Form.Item label='Additional Notes' name='notes'>
-            <TextArea rows={2} placeholder='Any additional information or special instructions' />
-          </Form.Item>
-        </div>
+        <AdditionalInfoSection form={form} />
 
         {/* Action Buttons */}
-        <div className='flex justify-end space-x-2 mt-6'>
-          <Button onClick={handleCancel}>Cancel</Button>
-          <Button
-            type='primary'
-            icon={<SaveOutlined />}
-            onClick={handleSubmit}
-            loading={loading}
-            className='bg-primary-navy border-primary-navy'
-          >
-            Update Appointment
-          </Button>
-        </div>
+        <ActionButtonsSection
+          onCancel={handleCancel}
+          onSubmit={handleSubmit}
+          loading={loading}
+        />
       </Form>
     </Modal>
   );
