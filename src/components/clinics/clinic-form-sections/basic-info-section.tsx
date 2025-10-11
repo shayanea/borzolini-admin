@@ -1,10 +1,10 @@
 import { Col, Form, Input, Row } from 'antd';
 import { FC } from 'react';
 
+import { PhoneField } from '@/components/shared';
 import {
   MAX_LENGTH_RULE,
   MIN_LENGTH_RULE,
-  PHONE_PATTERN_RULE,
   REQUIRED_RULE,
   VALIDATION_MESSAGES,
 } from '@/constants/form-validation';
@@ -12,7 +12,7 @@ import { BasicInfoSectionProps } from './types';
 
 const { TextArea } = Input;
 
-const BasicInfoSection: FC<BasicInfoSectionProps> = ({ form }) => {
+const BasicInfoSection: FC<BasicInfoSectionProps> = () => {
   return (
     <>
       <Row gutter={16}>
@@ -30,13 +30,7 @@ const BasicInfoSection: FC<BasicInfoSectionProps> = ({ form }) => {
         </Col>
 
         <Col span={12}>
-          <Form.Item
-            name='phone'
-            label='Phone Number'
-            rules={[REQUIRED_RULE(VALIDATION_MESSAGES.REQUIRED), PHONE_PATTERN_RULE]}
-          >
-            <Input placeholder='Enter phone number' />
-          </Form.Item>
+          <PhoneField label='Phone Number' placeholder='Enter phone number' />
         </Col>
       </Row>
 

@@ -1,6 +1,9 @@
 import { Card, Col, Form, Input, Row } from 'antd';
 import { FC } from 'react';
 
+import { PhoneField } from '@/components/shared';
+import { MIN_LENGTH_RULE, REQUIRED_RULE, VALIDATION_MESSAGES } from '@/constants/form-validation';
+
 const { TextArea } = Input;
 
 const BasicInformationStep: FC = () => {
@@ -12,27 +15,15 @@ const BasicInformationStep: FC = () => {
             name='name'
             label='Clinic Name'
             rules={[
-              { required: true, message: 'Please enter clinic name' },
-              { min: 2, message: 'Clinic name must be at least 2 characters' },
+              REQUIRED_RULE(VALIDATION_MESSAGES.CLINIC_NAME_REQUIRED),
+              MIN_LENGTH_RULE(2, VALIDATION_MESSAGES.CLINIC_NAME_MIN_LENGTH),
             ]}
           >
             <Input placeholder='Enter clinic name' />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item
-            name='phone'
-            label='Phone Number'
-            rules={[
-              { required: true, message: 'Please enter phone number' },
-              {
-                pattern: /^[+]?[\d\s\-().]{7,20}$/,
-                message: 'Please enter a valid phone number',
-              },
-            ]}
-          >
-            <Input placeholder='Enter phone number' />
-          </Form.Item>
+          <PhoneField label='Phone Number' placeholder='Enter phone number' />
         </Col>
       </Row>
 

@@ -1,34 +1,22 @@
 import { Col, Form, Input, Row, Select, Switch } from 'antd';
 import { FC } from 'react';
 
-import {
-  EMAIL_RULE,
-  MIN_LENGTH_RULE,
-  REQUIRED_RULE,
-  VALIDATION_MESSAGES,
-} from '@/constants/form-validation';
+import { EmailField, PhoneField } from '@/components/shared';
+import { MIN_LENGTH_RULE, REQUIRED_RULE, VALIDATION_MESSAGES } from '@/constants/form-validation';
 import { USER_ROLES } from '@/constants/user-management';
 import { AccountInfoSectionProps } from './types';
 
 const { Option } = Select;
 
-const AccountInfoSection: FC<AccountInfoSectionProps> = ({ form, editingUser }) => {
+const AccountInfoSection: FC<AccountInfoSectionProps> = ({ editingUser }) => {
   return (
     <>
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item
-            name='email'
-            label='Email'
-            rules={[REQUIRED_RULE(VALIDATION_MESSAGES.EMAIL_REQUIRED), EMAIL_RULE]}
-          >
-            <Input placeholder='Email' disabled={!!editingUser} />
-          </Form.Item>
+          <EmailField disabled={!!editingUser} placeholder='Email' />
         </Col>
         <Col span={12}>
-          <Form.Item name='phone' label='Phone' rules={[{ required: false }]}>
-            <Input placeholder='Phone' />
-          </Form.Item>
+          <PhoneField required={false} placeholder='Phone' />
         </Col>
       </Row>
 

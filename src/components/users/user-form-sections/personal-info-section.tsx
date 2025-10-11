@@ -4,7 +4,7 @@ import { FC } from 'react';
 import { REQUIRED_RULE, VALIDATION_MESSAGES } from '@/constants/form-validation';
 import { PersonalInfoSectionProps } from './types';
 
-const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({ form }) => {
+const PersonalInfoSection: FC<PersonalInfoSectionProps> = () => {
   return (
     <Row gutter={16}>
       <Col span={12}>
