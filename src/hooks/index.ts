@@ -15,6 +15,7 @@ export { useMessage } from './use-message';
 export { useOperatingHours } from './use-operating-hours';
 export { useDistinctAllergies, useDistinctMedications } from './use-pet-lookups';
 export { usePetManagement } from './use-pet-management';
+export { usePetOwners } from './use-pet-owners';
 export { useReports } from './use-reports';
 export { useReviews } from './use-reviews';
 export { useSettings } from './use-settings';

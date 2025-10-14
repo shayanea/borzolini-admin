@@ -1,3 +1,4 @@
+import type { PetOwnerOption } from '@/hooks/use-pet-owners';
 import { FormInstance } from 'antd';
 
 export interface PetFormSectionProps {
@@ -11,6 +12,8 @@ export interface BasicInfoSectionProps extends PetFormSectionProps {
   sizes: string[];
   selectedSpecies: string;
   onSpeciesChange: (value: string) => void;
+  owners: PetOwnerOption[];
+  loadingOwners?: boolean;
 }
 
 export interface MedicalInfoSectionProps extends PetFormSectionProps {

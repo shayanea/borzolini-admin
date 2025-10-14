@@ -1,7 +1,7 @@
 import { Col, DatePicker, Form, Input, Row, Select } from 'antd';
-import { FC } from 'react';
 
 import { BasicInfoSectionProps } from './types';
+import { FC } from 'react';
 
 const { Option } = Select;
 
@@ -13,6 +13,8 @@ const BasicInfoSection: FC<BasicInfoSectionProps> = ({
   sizes,
   selectedSpecies,
   onSpeciesChange,
+  owners,
+  loadingOwners,
 }) => {
   return (
     <div className='mb-6'>
@@ -33,6 +35,30 @@ const BasicInfoSection: FC<BasicInfoSectionProps> = ({
         </Col>
         <Col span={12}>
           <Form.Item
+            name='owner_id'
+            label='Owner'
+            rules={[{ required: true, message: 'Please select pet owner' }]}
+          >
+            <Select
+              placeholder='Select Owner'
+              showSearch
+              loading={loadingOwners}
+              filterOption={(input, option) => {
+                const label = option?.label || '';
+                return String(label).toLowerCase().includes(input.toLowerCase());
+              }}
+              options={owners.map(owner => ({
+                label: `${owner.name} (${owner.email})`,
+                value: owner.id,
+              }))}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item
             name='species'
             label='Species'
             rules={[{ required: true, message: 'Please select species' }]}
@@ -46,25 +72,7 @@ const BasicInfoSection: FC<BasicInfoSectionProps> = ({
             </Select>
           </Form.Item>
         </Col>
-      </Row>
-
-      <Row gutter={16}>
-        <Col span={8}>
-          <Form.Item
-            name='breed'
-            label='Breed'
-            rules={[{ max: 100, message: 'Breed must be less than 100 characters' }]}
-          >
-            <Select placeholder='Select Breed' disabled={!selectedSpecies}>
-              {breeds.map(breed => (
-                <Option key={breed} value={breed}>
-                  {breed}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </Col>
-        <Col span={8}>
+        <Col span={12}>
           <Form.Item
             name='gender'
             label='Gender'
@@ -79,7 +87,25 @@ const BasicInfoSection: FC<BasicInfoSectionProps> = ({
             </Select>
           </Form.Item>
         </Col>
-        <Col span={8}>
+      </Row>
+
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item
+            name='breed'
+            label='Breed'
+            rules={[{ max: 100, message: 'Breed must be less than 100 characters' }]}
+          >
+            <Select placeholder='Select Breed' disabled={!selectedSpecies}>
+              {breeds.map(breed => (
+                <Option key={breed} value={breed}>
+                  {breed}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col span={12}>
           <Form.Item
             name='size'
             label='Size'

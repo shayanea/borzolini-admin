@@ -1,10 +1,3 @@
-import { COMMON_BREEDS, PET_GENDERS, PET_SIZES, PET_SPECIES } from '@/constants/pets';
-import { useDistinctAllergies, useDistinctMedications } from '@/hooks/use-pet-lookups';
-import type { PetFormData, PetFormModalProps } from '@/types';
-import { Form, Modal } from 'antd';
-import { useCallback, useEffect, useState } from 'react';
-
-import dayjs from 'dayjs';
 import {
   ActionButtonsSection,
   BasicInfoSection,
@@ -13,6 +6,14 @@ import {
   MedicalInfoSection,
   PhotoStatusSection,
 } from './pet-form-sections';
+import { COMMON_BREEDS, PET_GENDERS, PET_SIZES, PET_SPECIES } from '@/constants/pets';
+import { Form, Modal } from 'antd';
+import type { PetFormData, PetFormModalProps } from '@/types';
+import { useCallback, useEffect, useState } from 'react';
+import { useDistinctAllergies, useDistinctMedications } from '@/hooks/use-pet-lookups';
+
+import dayjs from 'dayjs';
+import { usePetOwners } from '@/hooks/use-pet-owners';
 
 const PetFormModal = ({
   isVisible,
@@ -26,6 +27,7 @@ const PetFormModal = ({
   const [selectedSpecies, setSelectedSpecies] = useState<string>('');
   const { data: allergyOptions = [] } = useDistinctAllergies();
   const { data: medicationOptions = [] } = useDistinctMedications();
+  const { data: owners = [], isLoading: loadingOwners } = usePetOwners();
 
   // Using species, genders, and sizes from constants
   const petSpecies = Object.values(PET_SPECIES);
@@ -37,6 +39,7 @@ const PetFormModal = ({
       if (editingPet) {
         form.setFieldsValue({
           name: editingPet.name,
+          owner_id: editingPet.owner_id,
           species: editingPet.species,
           breed: editingPet.breed,
           gender: editingPet.gender,
@@ -140,6 +143,8 @@ const PetFormModal = ({
           sizes={sizes}
           selectedSpecies={selectedSpecies}
           onSpeciesChange={handleSpeciesChange}
+          owners={owners}
+          loadingOwners={loadingOwners}
         />
 
         {/* Medical Information */}
