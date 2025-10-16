@@ -1,6 +1,6 @@
 import { Col, DatePicker, Form, Input, Row } from 'antd';
-import { FC } from 'react';
 import dayjs from 'dayjs';
+import { FC } from 'react';
 
 import { REQUIRED_RULE, VALIDATION_MESSAGES } from '@/constants/form-validation';
 import { PersonalInfoSectionProps } from './types';

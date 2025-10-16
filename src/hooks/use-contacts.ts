@@ -222,7 +222,7 @@ export const useContacts = (params: UseContactsParams = {}): UseContactsReturn =
       pageSize: limit,
       total: contactsData?.total || 0,
     },
-    stats,
+    stats: stats ?? null,
     statsLoading,
     handleFilters,
     handlePagination,

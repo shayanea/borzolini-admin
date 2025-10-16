@@ -1,4 +1,9 @@
 import { DEFAULT_SORT_FIELD, DEFAULT_SORT_ORDER } from '@/constants/user-management';
+import UsersService, {
+  CreateUserData,
+  UpdateUserData,
+  UsersQueryParams,
+} from '@/services/users.service';
 import type { PaginatedResponse, User, UserRole } from '@/types';
 import {
   QueryObserverResult,
@@ -7,11 +12,6 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import UsersService, {
-  CreateUserData,
-  UpdateUserData,
-  UsersQueryParams,
-} from '@/services/users.service';
 import { useCallback, useState } from 'react';
 
 import { message as antMessage } from 'antd';

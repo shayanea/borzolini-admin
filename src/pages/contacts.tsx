@@ -1,10 +1,9 @@
-import { Button, Card, Col, Modal, Row, Statistic } from 'antd';
+import { Card, Col, Modal, Row, Statistic } from 'antd';
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
   MessageOutlined,
-  PlusOutlined,
 } from '@ant-design/icons';
 import type { Contact, ContactFilters as ContactFiltersType } from '@/types';
 import { ContactDetailsModal, ContactFilters, ContactTable } from '@/components/contact';
@@ -77,9 +76,6 @@ const Contacts = () => {
           <h1 className='text-2xl font-bold'>Contact Messages</h1>
           <p className='text-gray-600'>Manage contact form submissions</p>
         </div>
-        <Button type='primary' icon={<PlusOutlined />}>
-          New Contact
-        </Button>
       </div>
 
       {/* Stats Cards */}

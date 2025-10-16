@@ -1,7 +1,7 @@
 import type { UserFormModalProps, UserFormValues } from '@/types/user-management';
 import { Form, Modal } from 'antd';
-import React, { useCallback } from 'react';
 import dayjs from 'dayjs';
+import React, { useCallback } from 'react';
 
 import { USER_ROLES } from '@/constants/user-management';
 import {
@@ -90,10 +90,10 @@ const UserFormModal = ({
 
         {/* Action Buttons */}
         <Form.Item className='mb-0'>
-          <ActionButtonsSection 
-            onCancel={handleCancel} 
-            loading={loading} 
-            editingUser={editingUser} 
+          <ActionButtonsSection
+            onCancel={handleCancel}
+            loading={loading}
+            editingUser={editingUser}
           />
         </Form.Item>
       </Form>

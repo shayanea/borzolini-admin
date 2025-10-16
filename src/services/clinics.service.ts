@@ -3,11 +3,12 @@ import type {
   ClinicPhoto,
   ClinicReview,
   ClinicService,
-  ClinicsQueryParams,
   ClinicStaff,
+  ClinicsQueryParams,
   CreateClinicData,
   UpdateClinicData,
 } from '@/types';
+
 import { BaseService } from './base.service';
 
 export class ClinicsService extends BaseService<Clinic, CreateClinicData, UpdateClinicData> {
@@ -44,10 +45,10 @@ export class ClinicsService extends BaseService<Clinic, CreateClinicData, Update
     return service.getById(id);
   }
 
-  // Create new clinic
+  // Create new clinic (public registration endpoint)
   static async createClinic(data: CreateClinicData): Promise<Clinic> {
     const service = new ClinicsService();
-    return service.create(data);
+    return service.postRequest<Clinic>('/public/register', data);
   }
 
   // Update clinic

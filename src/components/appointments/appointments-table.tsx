@@ -10,9 +10,6 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-
-import type { Appointment } from '@/types';
-import { TABLE_PAGE_SIZES } from '@/constants';
 import {
   formatAppointmentType,
   getAppointmentPriorityColor,
@@ -20,6 +17,10 @@ import {
   getPetGenderColor,
   getPetSpeciesColor,
 } from '@/utils/color-helpers';
+
+import type { Appointment } from '@/types';
+import { AppointmentsDataService } from '@/services/appointments-data.service';
+import { TABLE_PAGE_SIZES } from '@/constants';
 
 export interface AppointmentsHeaderProps {
   onNewAppointment: (data: any) => void;
@@ -216,7 +217,9 @@ const AppointmentsTable = ({
                   {appointment.pet.species.charAt(0).toUpperCase() +
                     appointment.pet.species.slice(1)}
                 </Tag>
-                <Tag color={getPetGenderColor(appointment.pet.gender)}>{appointment.pet.gender}</Tag>
+                <Tag color={getPetGenderColor(appointment.pet.gender)}>
+                  {appointment.pet.gender}
+                </Tag>
               </div>
               <div className='text-xs text-text-light'>Weight: {appointment.pet.weight} kg</div>
               <div className='text-xs text-text-light'>
@@ -245,11 +248,14 @@ const AppointmentsTable = ({
     {
       title: 'Notes',
       key: 'notes',
-      width: 250,
+      width: 80,
       ellipsis: true,
       render: (appointment: Appointment) => (
         <Tooltip title={appointment.notes || 'No notes'}>
-          <div className='text-sm text-text-light truncate'>{appointment.notes || 'No notes'}</div>
+          <div className='text-sm text-text-light truncate'>
+            {appointment.notes?.slice(0, 40) || 'No notes'}
+            {appointment.notes?.length && appointment.notes?.length > 40 && '...'}
+          </div>
         </Tooltip>
       ),
     },
@@ -322,55 +328,8 @@ const AppointmentsTable = ({
       }
     : false;
 
-  // Ensure appointments is always an array and validate each appointment
-  const safeAppointments = Array.isArray(appointments)
-    ? appointments
-        .filter(appointment => appointment && typeof appointment === 'object' && appointment.id)
-        .map(appointment => {
-          // Log any problematic appointments for debugging
-          if (!appointment.priority || !appointment.status || !appointment.appointment_type) {
-            console.warn('Appointment missing required fields:', appointment);
-          }
-
-          return appointment;
-        })
-        .map(appointment => ({
-          ...appointment,
-          priority: appointment.priority || 'normal',
-          status: appointment.status || 'pending',
-          appointment_type: appointment.appointment_type || 'consultation',
-          scheduled_date: appointment.scheduled_date || new Date().toISOString(),
-          duration_minutes: appointment.duration_minutes || 30,
-          notes: appointment.notes || '',
-          reason: appointment.reason || '',
-          symptoms: appointment.symptoms || '',
-          diagnosis: appointment.diagnosis || '',
-          treatment_plan: appointment.treatment_plan || '',
-          prescriptions: appointment.prescriptions || [],
-          follow_up_instructions: appointment.follow_up_instructions || '',
-          cost: appointment.cost || 0,
-          payment_status: appointment.payment_status || 'pending',
-          is_telemedicine: appointment.is_telemedicine || false,
-          telemedicine_link: appointment.telemedicine_link || '',
-          home_visit_address: appointment.home_visit_address || '',
-          is_home_visit: appointment.is_home_visit || false,
-          reminder_settings: appointment.reminder_settings || {},
-          is_active: appointment.is_active ?? true,
-          created_at: appointment.created_at || new Date().toISOString(),
-          updated_at: appointment.updated_at || new Date().toISOString(),
-          owner_id: appointment.owner_id || '',
-          pet_id: appointment.pet_id || '',
-          clinic_id: appointment.clinic_id || '',
-          staff_id: appointment.staff_id || '',
-          service_id: appointment.service_id || '',
-        }))
-    : [];
-
-  // Add additional safety check
-  if (!Array.isArray(safeAppointments)) {
-    console.error('safeAppointments is not an array:', safeAppointments);
-    return <div>Error: Invalid appointments data</div>;
-  }
+  // Normalize appointments data using the data service
+  const safeAppointments = AppointmentsDataService.normalizeAppointments(appointments);
 
   return (
     <div className='admin-card'>
