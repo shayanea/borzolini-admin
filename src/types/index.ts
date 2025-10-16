@@ -9,6 +9,9 @@ export interface User {
   address?: string;
   city?: string;
   country?: string;
+  postalCode?: string;
+  dateOfBirth?: string;
+  avatar?: string;
   isEmailVerified?: boolean;
   isPhoneVerified?: boolean;
   profileCompletionPercentage?: number;

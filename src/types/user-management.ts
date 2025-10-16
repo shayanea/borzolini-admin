@@ -55,6 +55,9 @@ export interface UserFormValues {
   address?: string;
   city?: string;
   country?: string;
+  postalCode?: string;
+  dateOfBirth?: string;
+  avatar?: string;
   isActive?: boolean;
   isEmailVerified?: boolean;
 }

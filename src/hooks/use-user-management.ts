@@ -247,6 +247,13 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   // Handle form submission
   const handleSubmit = useCallback(
     async (values: any) => {
+      // Convert dateOfBirth if it's a dayjs object
+      const dateOfBirth = values.dateOfBirth
+        ? typeof values.dateOfBirth === 'string'
+          ? values.dateOfBirth
+          : values.dateOfBirth.format('YYYY-MM-DD')
+        : undefined;
+
       if (editingUser) {
         // Update existing user
         const updateData: UpdateUserData = {
@@ -256,6 +263,9 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
           address: values.address,
           city: values.city,
           country: values.country,
+          postalCode: values.postalCode,
+          dateOfBirth: dateOfBirth,
+          avatar: values.avatar,
           role: values.role,
           isActive: values.isActive,
           isEmailVerified: values.isEmailVerified,

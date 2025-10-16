@@ -1,6 +1,7 @@
 import type { UserFormModalProps, UserFormValues } from '@/types/user-management';
 import { Form, Modal } from 'antd';
 import React, { useCallback } from 'react';
+import dayjs from 'dayjs';
 
 import { USER_ROLES } from '@/constants/user-management';
 import {
@@ -31,6 +32,9 @@ const UserFormModal = ({
           address: editingUser.address,
           city: editingUser.city,
           country: editingUser.country,
+          postalCode: editingUser.postalCode,
+          dateOfBirth: editingUser.dateOfBirth ? dayjs(editingUser.dateOfBirth) : undefined,
+          avatar: editingUser.avatar,
           isActive: editingUser.isActive,
           isEmailVerified: editingUser.isEmailVerified,
         });
@@ -64,7 +68,7 @@ const UserFormModal = ({
       onCancel={handleCancel}
       footer={null}
       width={600}
-      destroyOnHidden={true}
+      destroyOnClose={true}
     >
       <Form
         form={form}

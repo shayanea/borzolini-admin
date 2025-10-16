@@ -21,6 +21,9 @@ export interface UpdateUserData {
   address?: string;
   city?: string;
   country?: string;
+  postalCode?: string;
+  dateOfBirth?: string;
+  avatar?: string;
   role?: UserRole;
   isActive?: boolean;
   isEmailVerified?: boolean;
