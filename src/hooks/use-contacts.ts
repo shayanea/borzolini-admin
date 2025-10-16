@@ -1,14 +1,15 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { message } from 'antd';
-import { ContactService } from '@/services/contact.service';
-import type { 
-  Contact, 
-  ContactFilters, 
-  ContactStats, 
-  UpdateContactData,
+import type {
+  Contact,
+  ContactFilters,
+  ContactStats,
   CreateContactResponseData,
-  UpdateContactResponseData 
+  UpdateContactData,
+  UpdateContactResponseData,
 } from '@/types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { ContactService } from '@/services/contact.service';
+import { message } from 'antd';
 
 interface UseContactsParams {
   filters?: ContactFilters;
@@ -28,14 +29,18 @@ interface UseContactsReturn {
   };
   stats: ContactStats | null;
   statsLoading: boolean;
-  
+
   handleFilters: (newFilters: ContactFilters) => void;
   handlePagination: (page: number, pageSize: number) => void;
   handleUpdateContact: (id: string, data: UpdateContactData) => Promise<Contact>;
   handleDeleteContact: (id: string) => Promise<void>;
   handleExport: (filters?: ContactFilters) => Promise<void>;
   handleCreateResponse: (contactId: string, data: CreateContactResponseData) => Promise<void>;
-  handleUpdateResponse: (contactId: string, responseId: string, data: UpdateContactResponseData) => Promise<void>;
+  handleUpdateResponse: (
+    contactId: string,
+    responseId: string,
+    data: UpdateContactResponseData
+  ) => Promise<void>;
   handleDeleteResponse: (contactId: string, responseId: string) => Promise<void>;
   clearError: () => void;
 }
@@ -52,15 +57,22 @@ export const useContacts = (params: UseContactsParams = {}): UseContactsReturn =
   } = useQuery({
     queryKey: ['contacts', filters, page, limit],
     queryFn: () => ContactService.getAll(filters, page, limit),
+    retry: false, // Disable retries explicitly for this query
+    staleTime: 30000, // 30 seconds - prevent excessive refetching
+    gcTime: 60000, // 1 minute
+    refetchOnWindowFocus: false, // Don't refetch on window focus
+    refetchOnMount: false, // Don't refetch on every mount
   });
 
   // Fetch stats
-  const {
-    data: stats,
-    isLoading: statsLoading,
-  } = useQuery({
+  const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['contact-stats'],
     queryFn: ContactService.getStats,
+    retry: false, // Disable retries explicitly for this query
+    staleTime: 60000, // 1 minute - stats don't change frequently
+    gcTime: 300000, // 5 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   // Update contact mutation
@@ -93,7 +105,7 @@ export const useContacts = (params: UseContactsParams = {}): UseContactsReturn =
   // Export contacts mutation
   const exportMutation = useMutation({
     mutationFn: ContactService.export,
-    onSuccess: (blob) => {
+    onSuccess: blob => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -124,8 +136,15 @@ export const useContacts = (params: UseContactsParams = {}): UseContactsReturn =
 
   // Update response mutation
   const updateResponseMutation = useMutation({
-    mutationFn: ({ contactId, responseId, data }: { contactId: string; responseId: string; data: UpdateContactResponseData }) =>
-      ContactService.updateResponse(contactId, responseId, data),
+    mutationFn: ({
+      contactId,
+      responseId,
+      data,
+    }: {
+      contactId: string;
+      responseId: string;
+      data: UpdateContactResponseData;
+    }) => ContactService.updateResponse(contactId, responseId, data),
     onSuccess: () => {
       message.success('Response updated successfully');
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
@@ -170,11 +189,18 @@ export const useContacts = (params: UseContactsParams = {}): UseContactsReturn =
     await exportMutation.mutateAsync(exportFilters || filters);
   };
 
-  const handleCreateResponse = async (contactId: string, data: CreateContactResponseData): Promise<void> => {
+  const handleCreateResponse = async (
+    contactId: string,
+    data: CreateContactResponseData
+  ): Promise<void> => {
     await createResponseMutation.mutateAsync({ contactId, data });
   };
 
-  const handleUpdateResponse = async (contactId: string, responseId: string, data: UpdateContactResponseData): Promise<void> => {
+  const handleUpdateResponse = async (
+    contactId: string,
+    responseId: string,
+    data: UpdateContactResponseData
+  ): Promise<void> => {
     await updateResponseMutation.mutateAsync({ contactId, responseId, data });
   };
 
