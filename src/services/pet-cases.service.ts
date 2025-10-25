@@ -14,6 +14,43 @@ import { apiService } from './api/index';
 export class PetCasesService {
   private static readonly BASE_URL = '/clinics';
 
+  // Get all pet cases across all clinics (admin only)
+  static async getAllCases(
+    filters: CaseFilters = {},
+    page: number = 1,
+    limit: number = 10
+  ): Promise<PetCasesResponse> {
+    const params = new URLSearchParams();
+
+    // Add pagination
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+
+    // Add filters
+    if (filters.status && filters.status.length > 0) {
+      params.append('status', filters.status.join(','));
+    }
+    if (filters.priority && filters.priority.length > 0) {
+      params.append('priority', filters.priority.join(','));
+    }
+    if (filters.case_type && filters.case_type.length > 0) {
+      params.append('case_type', filters.case_type.join(','));
+    }
+    if (filters.pet_id) params.append('pet_id', filters.pet_id);
+    if (filters.owner_id) params.append('owner_id', filters.owner_id);
+    if (filters.vet_id) params.append('vet_id', filters.vet_id);
+    if (filters.is_urgent !== undefined) params.append('is_urgent', filters.is_urgent.toString());
+    if (filters.is_resolved !== undefined)
+      params.append('is_resolved', filters.is_resolved.toString());
+    if (filters.date_from) params.append('date_from', filters.date_from);
+    if (filters.date_to) params.append('date_to', filters.date_to);
+
+    const response = await apiService.get<PetCasesResponse>(
+      `${this.BASE_URL}/cases/all?${params.toString()}`
+    );
+    return response;
+  }
+
   // Get all pet cases for a clinic
   static async getCasesByClinic(
     clinicId: string,

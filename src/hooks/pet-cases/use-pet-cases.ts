@@ -157,6 +157,40 @@ export const usePetCase = (clinicId: string, caseId: string) => {
   };
 };
 
+export const useAllPetCases = (filters: CaseFilters = {}, page: number = 1, limit: number = 10) => {
+  const queryClient = useQueryClient();
+  const { success, error: showError } = useMessage();
+
+  // Query for fetching all cases across all clinics
+  const {
+    data: casesData,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery<PetCasesResponse>({
+    queryKey: ['all-pet-cases', filters, page, limit],
+    queryFn: () => PetCasesService.getAllCases(filters, page, limit),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  return {
+    // Data
+    cases: casesData?.cases || [],
+    total: casesData?.total || 0,
+    page: casesData?.page || 1,
+    totalPages: casesData?.totalPages || 1,
+
+    // Loading states
+    isLoading,
+
+    // Errors
+    error,
+
+    // Actions
+    refetch,
+  };
+};
+
 export const useCaseTimeline = (clinicId: string, caseId: string) => {
   const queryClient = useQueryClient();
   const { success, error: showError } = useMessage();

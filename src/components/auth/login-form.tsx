@@ -1,7 +1,7 @@
 import { Alert, Button, Card, Form, Input, Typography } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, UserOutlined } from '@ant-design/icons';
 
-import { AuthBackground } from '@/components/common';
+import BG from '@/ui/icons/auth-bg.jpg';
 import type { LoginCredentials } from '@/types';
 import { useCallback } from 'react';
 import { useLogin } from '@/hooks/use-auth';
@@ -29,8 +29,11 @@ export const LoginForm = () => {
   }, []);
 
   return (
-    <AuthBackground variant='geometric'>
-      <Card className='w-full shadow-2xl p-8 bg-white border border-gray-200 rounded-2xl'>
+    <div
+      className='min-h-screen flex items-center justify-center p-4 w-full bg-cover bg-center bg-no-repeat'
+      style={{ backgroundImage: `url(${BG})` }}
+    >
+      <Card className='w-1/3 shadow-2xl p-8 bg-white border border-gray-200 rounded-2xl backdrop-blur-sm'>
         <div className='text-center mb-8'>
           <div className='mb-4'>
             <div className='flex items-center justify-center mx-auto'>
@@ -112,7 +115,7 @@ export const LoginForm = () => {
           </Form.Item>
         </Form>
       </Card>
-    </AuthBackground>
+    </div>
   );
 };
 

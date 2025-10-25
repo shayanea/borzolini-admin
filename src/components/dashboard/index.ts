@@ -4,3 +4,7 @@ export { default as RecentActivity } from './recent-activity';
 export { default as QuickActions } from './quick-actions';
 export { default as TopPerformingClinics } from './top-performing-clinics';
 export { DebugSection } from '../debug-section';
+
+// Modern components
+export { default as DashboardCards, DashboardCard } from './dashboard-cards';
+export { default as AppointmentsList } from './appointments-list';

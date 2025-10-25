@@ -4,7 +4,15 @@ import React from 'react';
 interface AuthBackgroundProps {
   children: React.ReactNode;
   className?: string;
-  variant?: 'default' | 'minimal' | 'gradient' | 'pattern' | 'modern' | 'geometric' | 'animated';
+  variant?:
+    | 'default'
+    | 'minimal'
+    | 'gradient'
+    | 'pattern'
+    | 'modern'
+    | 'geometric'
+    | 'animated'
+    | 'image';
 }
 
 const AuthBackground: React.FC<AuthBackgroundProps> = ({

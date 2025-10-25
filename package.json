@@ -24,6 +24,7 @@
     "clsx": "^2.0.0",
     "dayjs": "^1.11.10",
     "eventemitter3": "^5.0.1",
+    "lucide-react": "^0.408.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",
