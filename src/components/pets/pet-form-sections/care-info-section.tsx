@@ -5,7 +5,7 @@ import { CareInfoSectionProps } from './types';
 
 const { TextArea } = Input;
 
-const CareInfoSection: FC<CareInfoSectionProps> = ({ form, allergyOptions, medicationOptions }) => {
+const CareInfoSection: FC<CareInfoSectionProps> = ({ allergyOptions, medicationOptions }) => {
   return (
     <div className='mb-6'>
       <h3 className='text-lg font-semibold mb-4'>Care Information</h3>

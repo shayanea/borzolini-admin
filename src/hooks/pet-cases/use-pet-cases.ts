@@ -158,8 +158,6 @@ export const usePetCase = (clinicId: string, caseId: string) => {
 };
 
 export const useAllPetCases = (filters: CaseFilters = {}, page: number = 1, limit: number = 10) => {
-  const queryClient = useQueryClient();
-  const { success, error: showError } = useMessage();
 
   // Query for fetching all cases across all clinics
   const {

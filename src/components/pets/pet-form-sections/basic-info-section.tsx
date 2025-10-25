@@ -9,7 +9,6 @@ import { useValidationMessages } from '@/hooks/use-validation-messages';
 const { Option } = Select;
 
 const BasicInfoSection: FC<BasicInfoSectionProps> = ({
-  form,
   petSpecies,
   breeds,
   genders,

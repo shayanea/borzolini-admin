@@ -5,7 +5,7 @@ import { CaseDetailsSectionProps } from './types';
 
 const { TextArea } = Input;
 
-export const CaseDetailsSection: FC<CaseDetailsSectionProps> = ({ form }) => {
+export const CaseDetailsSection: FC<CaseDetailsSectionProps> = () => {
   return (
     <>
       <Form.Item

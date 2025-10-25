@@ -7,7 +7,6 @@ import { CaseBasicInfoSectionProps } from './types';
 const { Option } = Select;
 
 export const CaseBasicInfoSection: FC<CaseBasicInfoSectionProps> = ({
-  form,
   caseTypeLabels,
   casePriorityLabels,
 }) => {

@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 const { Option } = Select;
 
 export const BasicInfoSection: FC<BasicInfoSectionProps> = ({
-  form,
   appointmentTypes,
   pets,
   clinics,

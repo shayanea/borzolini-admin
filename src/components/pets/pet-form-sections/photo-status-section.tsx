@@ -3,7 +3,7 @@ import { FC } from 'react';
 
 import { PhotoStatusSectionProps } from './types';
 
-const PhotoStatusSection: FC<PhotoStatusSectionProps> = ({ form }) => {
+const PhotoStatusSection: FC<PhotoStatusSectionProps> = () => {
   return (
     <div className='mb-6'>
       <Form.Item

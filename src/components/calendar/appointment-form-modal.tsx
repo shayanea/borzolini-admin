@@ -1,6 +1,5 @@
-import type { AppointmentPriority, AppointmentStatus, AppointmentType } from '@/types';
-import { Form, Modal, message } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { Form, Modal, message } from 'antd';
 import dayjs from 'dayjs';
 
 import {

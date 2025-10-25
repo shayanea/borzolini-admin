@@ -3,7 +3,7 @@ import { FC } from 'react';
 
 import { StatusSectionProps } from './types';
 
-const StatusSection: FC<StatusSectionProps> = ({ form }) => {
+const StatusSection: FC<StatusSectionProps> = () => {
   return (
     <Row gutter={16}>
       <Col span={12}>

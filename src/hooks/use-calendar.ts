@@ -37,7 +37,6 @@ export const useCalendar = () => {
   // Initialize selected veterinarians when veterinarians data loads
   useMemo(() => {
     if (data.veterinarians.length > 0 && veterinarians.selectedVeterinarians.length === 0) {
-      const vetIds = data.veterinarians.map(v => v.id);
       // This is a bit of a hack - we need to update the selected veterinarians state
       // The proper way would be to have this logic in a useEffect in the veterinarians hook
       veterinarians.toggleAllVeterinarians(data.veterinarians);

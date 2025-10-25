@@ -62,7 +62,7 @@ const useAuthDependencies = () => {
 // Custom hooks following PWA pattern
 export function useLogin() {
   const { queryClient, navigate, setUser } = useAuthDependencies();
-  const { success, error } = useMessage();
+  const { success } = useMessage();
 
   return useMutation({
     mutationFn: authApi.login,
@@ -79,7 +79,7 @@ export function useLogin() {
 
 export function useRegister() {
   const { queryClient, navigate, setUser } = useAuthDependencies();
-  const { success, error } = useMessage();
+  const { success } = useMessage();
 
   return useMutation({
     mutationFn: authApi.register,
@@ -124,7 +124,7 @@ export function useLogout() {
 }
 
 export function useChangePassword() {
-  const { success, error } = useMessage();
+  const { success } = useMessage();
 
   return useMutation({
     mutationFn: authApi.changePassword,
@@ -138,7 +138,7 @@ export function useChangePassword() {
 }
 
 export function useForgotPassword() {
-  const { success, error } = useMessage();
+  const { success } = useMessage();
 
   return useMutation({
     mutationFn: authApi.forgotPassword,
@@ -153,7 +153,7 @@ export function useForgotPassword() {
 
 export function useResetPassword() {
   const navigate = useNavigate();
-  const { success, error } = useMessage();
+  const { success } = useMessage();
 
   return useMutation({
     mutationFn: authApi.resetPassword,
@@ -168,7 +168,7 @@ export function useResetPassword() {
 }
 
 export function useVerifyEmail() {
-  const { success, error } = useMessage();
+  const { success } = useMessage();
 
   return useMutation({
     mutationFn: authApi.verifyEmail,
@@ -182,7 +182,7 @@ export function useVerifyEmail() {
 }
 
 export function useResendVerification() {
-  const { success, error } = useMessage();
+  const { success } = useMessage();
 
   return useMutation({
     mutationFn: authApi.resendVerification,

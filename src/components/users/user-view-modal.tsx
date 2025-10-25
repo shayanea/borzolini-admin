@@ -1,10 +1,8 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Modal, Typography } from 'antd';
+import { Avatar, Button, Modal } from 'antd';
 
 import type { User } from '@/types';
 import { UserInfoCard, UserPetsCard } from './user-view-sections';
-
-const { Title } = Typography;
 
 interface UserViewModalProps {
   isVisible: boolean;

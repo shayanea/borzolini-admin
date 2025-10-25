@@ -6,7 +6,6 @@ import { Card, Descriptions, Select, Tag } from 'antd';
 import type { Appointment } from '@/types';
 import { APPOINTMENT_PRIORITIES, APPOINTMENT_STATUSES } from '@/constants/appointments';
 import {
-  formatAppointmentType,
   getAppointmentPriorityColor,
   getAppointmentStatusColor,
 } from '@/utils/color-helpers';

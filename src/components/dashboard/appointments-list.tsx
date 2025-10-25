@@ -60,7 +60,6 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({
   ],
   onViewDetails = () => {},
   onReschedule = () => {},
-  onCancel = () => {},
 }) => {
   const { t } = useTranslation('components');
 
