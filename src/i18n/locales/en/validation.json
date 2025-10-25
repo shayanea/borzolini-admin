@@ -1,0 +1,61 @@
+{
+  "common": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email",
+    "invalidUrl": "Please enter a valid URL",
+    "invalidPhone": "Please enter a valid phone number",
+    "invalidPostalCode": "Please enter a valid postal code",
+    "positiveNumber": "Please enter a valid positive number"
+  },
+  "user": {
+    "firstNameRequired": "Please enter first name",
+    "lastNameRequired": "Please enter last name",
+    "emailRequired": "Please enter email",
+    "passwordRequired": "Please enter password",
+    "passwordMinLength": "Password must be at least 8 characters",
+    "roleRequired": "Please select role"
+  },
+  "pet": {
+    "nameRequired": "Please enter pet name",
+    "nameMinLength": "Pet name must be at least 1 character",
+    "nameMaxLength": "Pet name must be less than 100 characters",
+    "speciesRequired": "Please select species",
+    "genderRequired": "Please select gender",
+    "sizeRequired": "Please select size",
+    "dobRequired": "Please select date of birth",
+    "breedMaxLength": "Breed must be less than 100 characters",
+    "colorMaxLength": "Color must be less than 100 characters",
+    "microchipMaxLength": "Microchip number must be less than 50 characters",
+    "emergencyContactRequired": "Please enter emergency contact name",
+    "emergencyContactMaxLength": "Emergency contact name must be less than 255 characters",
+    "emergencyPhoneRequired": "Please enter emergency phone",
+    "emergencyPhoneMaxLength": "Emergency phone must be less than 20 characters",
+    "photoUrlMaxLength": "Photo URL must be less than 500 characters",
+    "weightInvalid": "Weight must be a valid positive number"
+  },
+  "clinic": {
+    "nameRequired": "Please enter clinic name",
+    "nameMinLength": "Clinic name must be at least 2 characters",
+    "addressRequired": "Please enter address",
+    "addressMinLength": "Address must be at least 5 characters",
+    "cityRequired": "Please enter city",
+    "cityMinLength": "City must be at least 2 characters",
+    "countryRequired": "Please enter country",
+    "descriptionMaxLength": "Description must not exceed 500 characters"
+  },
+  "appointment": {
+    "typeRequired": "Please select appointment type",
+    "petRequired": "Please select a pet",
+    "clinicRequired": "Please select a clinic",
+    "dateRequired": "Please select date",
+    "timeRequired": "Please select time",
+    "reasonRequired": "Please provide reason for visit",
+    "telemedicineLinkRequired": "Please provide telemedicine link",
+    "homeVisitAddressRequired": "Please provide home visit address"
+  },
+  "case": {
+    "titleRequired": "Please enter case title",
+    "typeRequired": "Please select case type",
+    "descriptionRequired": "Please enter case description"
+  }
+}

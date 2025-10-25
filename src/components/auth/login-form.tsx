@@ -1,14 +1,16 @@
-import { Alert, Button, Card, Form, Input, Typography } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, Form, Input, Typography } from 'antd';
+import { useTranslation } from 'react-i18next';
 
-import BG from '@/ui/icons/auth-bg.jpg';
-import type { LoginCredentials } from '@/types';
-import { useCallback } from 'react';
 import { useLogin } from '@/hooks/use-auth';
+import type { LoginCredentials } from '@/types';
+import BG from '@/ui/icons/auth-bg.jpg';
+import { useCallback } from 'react';
 
 const { Title, Text } = Typography;
 
 export const LoginForm = () => {
+  const { t } = useTranslation(['pages', 'common']);
   const [form] = Form.useForm();
   const loginMutation = useLogin();
 
@@ -45,17 +47,15 @@ export const LoginForm = () => {
             </div>
           </div>
           <Title level={2} className='!mb-2 !text-gray-800'>
-            Welcome Back
+            {t('pages:login.title')}
           </Title>
-          <Text className='text-gray-600'>Sign in to your Borzolini Admin account</Text>
+          <Text className='text-gray-600'>{t('pages:login.subtitle')}</Text>
         </div>
 
         {loginMutation.error && (
           <Alert
-            message='Login Failed'
-            description={
-              loginMutation.error.message || 'Please check your credentials and try again.'
-            }
+            message={t('pages:login.loginFailed')}
+            description={loginMutation.error.message || t('pages:login.checkCredentials')}
             type='error'
             showIcon
             className='mb-6'
@@ -72,15 +72,15 @@ export const LoginForm = () => {
         >
           <Form.Item
             name='email'
-            label={<span className='text-gray-700'>Email Address</span>}
+            label={<span className='text-gray-700'>{t('pages:login.email')}</span>}
             rules={[
-              { required: true, message: 'Please enter your email address' },
-              { type: 'email', message: 'Please enter a valid email address' },
+              { required: true, message: t('pages:login.enterEmailAddress') },
+              { type: 'email', message: t('pages:login.validEmailAddress') },
             ]}
           >
             <Input
               prefix={<UserOutlined className='text-gray-400' />}
-              placeholder='Enter your email'
+              placeholder={t('pages:login.enterEmail')}
               autoComplete='email'
               className='h-12 bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500'
             />
@@ -88,15 +88,15 @@ export const LoginForm = () => {
 
           <Form.Item
             name='password'
-            label={<span className='text-gray-700'>Password</span>}
+            label={<span className='text-gray-700'>{t('pages:login.password')}</span>}
             rules={[
-              { required: true, message: 'Please enter your password' },
-              { min: 8, message: 'Password must be at least 8 characters' },
+              { required: true, message: t('pages:login.enterPasswordField') },
+              { min: 8, message: t('pages:login.passwordMinChars') },
             ]}
           >
             <Input.Password
               prefix={<LockOutlined className='text-gray-400' />}
-              placeholder='Enter your password'
+              placeholder={t('pages:login.enterPassword')}
               autoComplete='current-password'
               iconRender={handleIconRender}
               className='h-12 bg-gray-50 border-gray-300 text-gray-800 placeholder-gray-500'
@@ -110,7 +110,7 @@ export const LoginForm = () => {
               loading={loginMutation.isPending}
               className='w-full h-12 bg-primary-500 hover:bg-primary-600 border-0 shadow-lg text-white font-medium'
             >
-              {loginMutation.isPending ? 'Signing In...' : 'Sign In'}
+              {loginMutation.isPending ? t('pages:login.signingIn') : t('pages:login.signIn')}
             </Button>
           </Form.Item>
         </Form>

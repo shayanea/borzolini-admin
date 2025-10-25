@@ -1,18 +1,19 @@
 import 'dayjs/locale/en';
+import './i18n/config';
 import './index.css';
 import './utils/debug-token';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App as AntdApp, ConfigProvider } from 'antd';
 import { CACHE_PRESETS, theme } from './constants';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import App from './app.tsx';
-import { AuthProvider } from './components/auth/auth-provider';
-import { BrowserRouter } from 'react-router-dom';
-import React from 'react';
-import ReactDOM from 'react-dom/client';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import dayjs from 'dayjs';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './app.tsx';
+import { AuthProvider } from './components/auth/auth-provider';
 
 // Configure dayjs
 dayjs.locale('en');

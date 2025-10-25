@@ -1,0 +1,155 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back",
+    "welcomeMessage": "Welcome back! Here's what's happening with your clinic today.",
+    "subtitle": "Manage clinic appointments and schedules",
+    "loading": "Loading dashboard...",
+    "loadingCharts": "Loading charts...",
+    "chartsError": "Charts Error",
+    "errorTitle": "Error Loading Dashboard",
+    "noDataTitle": "No Data Available",
+    "noDataMessage": "Unable to load dashboard statistics.",
+    "quickActions": "Quick Actions",
+    "recentActivity": "Recent Activity",
+    "statistics": "Statistics",
+    "topClinics": "Top Performing Clinics",
+    "petCases": "Pet Cases",
+    "dateRange": "Date Range",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "clearFilters": "Clear Filters",
+    "refresh": "Refresh",
+    "retry": "Retry"
+  },
+  "appointments": {
+    "title": "Appointments",
+    "subtitle": "Manage clinic appointments and schedules",
+    "create": "Create Appointment",
+    "filter": "Filter Appointments",
+    "noData": "No appointments found",
+    "viewDetails": "View Details",
+    "loading": "Loading appointments...",
+    "updating": "Updating appointments...",
+    "errorLoading": "Error Loading Appointments",
+    "authRequired": "Authentication Required",
+    "pleaseLogin": "Please log in to view and manage appointments.",
+    "autoRedirect": "You will be redirected to the login page automatically.",
+    "total": "Total",
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "today": "Today"
+  },
+  "calendar": {
+    "title": "Calendar",
+    "subtitle": "View and manage appointments",
+    "month": "Month",
+    "week": "Week",
+    "day": "Day",
+    "today": "Today"
+  },
+  "clinics": {
+    "title": "Clinics",
+    "subtitle": "Manage clinic information",
+    "create": "Create Clinic",
+    "edit": "Edit Clinic",
+    "view": "View Clinic",
+    "noData": "No clinics found"
+  },
+  "users": {
+    "title": "Users",
+    "subtitle": "Manage users and access",
+    "create": "Create User",
+    "edit": "Edit User",
+    "noData": "No users found",
+    "veterinarians": "Veterinarians",
+    "manageVeterinarians": "Manage clinic veterinarians",
+    "manageUsers": "Manage clinic users and staff members"
+  },
+  "pets": {
+    "title": "Pets",
+    "subtitle": "Manage pet information",
+    "create": "Create Pet",
+    "edit": "Edit Pet",
+    "view": "View Pet",
+    "noData": "No pets found",
+    "deleteConfirm": "Are you sure you want to delete this pet?",
+    "deleteConfirmBulk": "Are you sure you want to delete {{count}} pets?",
+    "deleteWarning": "This action cannot be undone.",
+    "yesDelete": "Yes, Delete",
+    "yesDeleteAll": "Yes, Delete All",
+    "cancel": "Cancel"
+  },
+  "petCases": {
+    "title": "Pet Cases",
+    "subtitle": "Manage medical cases",
+    "create": "Create Case",
+    "edit": "Edit Case",
+    "view": "View Case",
+    "noData": "No cases found"
+  },
+  "reports": {
+    "title": "Reports",
+    "subtitle": "View clinic reports",
+    "noData": "No reports available",
+    "comingSoon": "Coming Soon"
+  },
+  "reviews": {
+    "title": "Reviews",
+    "subtitle": "Manage clinic reviews",
+    "create": "Create Review",
+    "noData": "No reviews found"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage application settings",
+    "general": "General Settings",
+    "notifications": "Notifications",
+    "security": "Security",
+    "privacy": "Privacy"
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your profile",
+    "information": "Profile Information",
+    "security": "Security Settings",
+    "notifications": "Notification Preferences",
+    "privacy": "Privacy Settings"
+  },
+  "contacts": {
+    "title": "Contacts",
+    "subtitle": "Manage contact inquiries",
+    "noData": "No contacts found"
+  },
+  "apiHealth": {
+    "title": "API Health",
+    "subtitle": "Monitor API status",
+    "status": "System Status",
+    "metrics": "System Metrics",
+    "endpoints": "Endpoint Health",
+    "database": "Database Health",
+    "analytics": "Analytics Health"
+  },
+  "login": {
+    "title": "Welcome Back",
+    "subtitle": "Sign in to your Borzolini Admin account",
+    "email": "Email Address",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign In",
+    "signingIn": "Signing In...",
+    "invalidCredentials": "Invalid email or password",
+    "loginFailed": "Login Failed",
+    "checkCredentials": "Please check your credentials and try again.",
+    "enterEmail": "Enter your email",
+    "enterPassword": "Enter your password",
+    "enterEmailAddress": "Please enter your email address",
+    "validEmailAddress": "Please enter a valid email address",
+    "enterPasswordField": "Please enter your password",
+    "passwordMinChars": "Password must be at least 8 characters"
+  }
+}

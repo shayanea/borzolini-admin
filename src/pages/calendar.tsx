@@ -68,7 +68,7 @@ const CalendarPage = () => {
           <h3 className='text-red-800 font-medium'>Error Loading Calendar</h3>
           <p className='text-red-600 mt-1'>{error}</p>
           <button
-            onClick={refreshCalendar}
+            onClick={() => refreshCalendar()}
             className='mt-3 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700'
           >
             Try Again
@@ -106,7 +106,7 @@ const CalendarPage = () => {
         veterinarians={veterinarians}
         selectedVeterinarians={selectedVeterinarians}
         onToggleVeterinarian={toggleVeterinarian}
-        onToggleAll={toggleAllVeterinarians}
+        onToggleAll={() => toggleAllVeterinarians(veterinarians)}
         onAddNew={addNewCalendar}
       />
 
@@ -135,14 +135,16 @@ const CalendarPage = () => {
       />
 
       {/* Appointment Details Modal */}
-      <AppointmentDetailsModal
-        visible={isDetailsModalVisible}
-        onCancel={closeDetailsModal}
-        onUpdate={updateAppointment}
-        onDelete={deleteAppointment}
-        veterinarians={veterinarians}
-        appointment={selectedAppointment}
-      />
+      {selectedAppointment && 'appointment_type' in selectedAppointment && (
+        <AppointmentDetailsModal
+          visible={isDetailsModalVisible}
+          onCancel={closeDetailsModal}
+          onUpdate={updateAppointment}
+          onDelete={deleteAppointment}
+          veterinarians={veterinarians}
+          appointment={selectedAppointment}
+        />
+      )}
     </div>
   );
 };

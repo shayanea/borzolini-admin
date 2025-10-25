@@ -15,6 +15,7 @@ import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 
 import type { Review } from '@/types';
 import type { UpdateReviewData } from '@/services/reviews.service';
+import { useTranslation } from 'react-i18next';
 
 const { Paragraph } = Typography;
 
@@ -51,6 +52,7 @@ const ReviewsTable = ({
   onAddResponse,
   onPagination,
 }: ReviewsTableProps) => {
+  const { t } = useTranslation('components');
   const createActionHandlers = (review: Review) => {
     const handleEdit = () => {
       const updateData: UpdateReviewData = {
@@ -90,15 +92,15 @@ const ReviewsTable = ({
   };
 
   const getStatusText = (review: Review) => {
-    if (review.flagged) return 'Flagged';
-    if (!review.isPublished) return 'Unpublished';
-    if (review.isVerified) return 'Verified';
-    return 'Published';
+    if (review.flagged) return t('reviewsTable.flagged');
+    if (!review.isPublished) return t('reviewsTable.unpublished');
+    if (review.isVerified) return t('reviewsTable.verified');
+    return t('reviewsTable.published');
   };
 
   const columns: ColumnsType<Review> = [
     {
-      title: 'User & Clinic',
+      title: t('reviewsTable.userClinic'),
       key: 'user_clinic',
       width: 280,
       render: (review: Review) => (
@@ -109,9 +111,11 @@ const ReviewsTable = ({
             className='bg-gradient-to-r from-cyan-500 to-blue-500'
           />
           <div>
-            <div className='font-medium'>{review.userName || review.userId || 'Unknown User'}</div>
+            <div className='font-medium'>
+              {review.userName || review.userId || t('reviewsTable.unknownUser')}
+            </div>
             <div className='text-sm text-text-light'>
-              {review.clinicName || review.clinicId || 'Unknown Clinic'}
+              {review.clinicName || review.clinicId || t('reviewsTable.unknownClinic')}
             </div>
             {review.appointmentDate && (
               <div className='text-xs text-text-light'>
@@ -123,7 +127,7 @@ const ReviewsTable = ({
       ),
     },
     {
-      title: 'Rating & Comment',
+      title: t('reviewsTable.ratingComment'),
       key: 'rating_comment',
       width: 300,
       render: (review: Review) => (
@@ -142,7 +146,7 @@ const ReviewsTable = ({
       ),
     },
     {
-      title: 'Status',
+      title: t('reviewsTable.status'),
       key: 'status',
       width: 150,
       render: (review: Review) => (
@@ -151,20 +155,22 @@ const ReviewsTable = ({
           {review.response && (
             <div className='flex items-center space-x-1'>
               <MessageOutlined className='text-xs text-green-600' />
-              <span className='text-xs text-green-600'>Responded</span>
+              <span className='text-xs text-green-600'>{t('reviewsTable.responded')}</span>
             </div>
           )}
           {review.helpfulVotes > 0 && (
             <div className='flex items-center space-x-1'>
               <StarOutlined className='text-xs text-yellow-600' />
-              <span className='text-xs text-yellow-600'>{review.helpfulVotes} helpful</span>
+              <span className='text-xs text-yellow-600'>
+                {review.helpfulVotes} {t('reviewsTable.helpful')}
+              </span>
             </div>
           )}
         </div>
       ),
     },
     {
-      title: 'Date',
+      title: t('reviewsTable.date'),
       key: 'date',
       width: 120,
       render: (review: Review) => (
@@ -175,7 +181,7 @@ const ReviewsTable = ({
       ),
     },
     {
-      title: 'Actions',
+      title: t('reviewsTable.actions'),
       key: 'actions',
       width: 200,
       fixed: 'right',
@@ -184,7 +190,7 @@ const ReviewsTable = ({
 
         return (
           <Space size='small'>
-            <Tooltip title='Edit Review'>
+            <Tooltip title={t('reviewsTable.editReview')}>
               <Button
                 type='text'
                 icon={<EditOutlined />}
@@ -194,7 +200,7 @@ const ReviewsTable = ({
             </Tooltip>
 
             {review.isPublished ? (
-              <Tooltip title='Unpublish Review'>
+              <Tooltip title={t('reviewsTable.unpublishReview')}>
                 <Button
                   type='text'
                   icon={<EyeInvisibleOutlined />}
@@ -204,7 +210,7 @@ const ReviewsTable = ({
                 />
               </Tooltip>
             ) : (
-              <Tooltip title='Publish Review'>
+              <Tooltip title={t('reviewsTable.publishReview')}>
                 <Button
                   type='text'
                   icon={<EyeOutlined />}
@@ -216,7 +222,7 @@ const ReviewsTable = ({
             )}
 
             {review.flagged ? (
-              <Tooltip title='Unflag Review'>
+              <Tooltip title={t('reviewsTable.unflagReview')}>
                 <Button
                   type='text'
                   icon={<WarningOutlined />}
@@ -226,7 +232,7 @@ const ReviewsTable = ({
                 />
               </Tooltip>
             ) : (
-              <Tooltip title='Flag Review'>
+              <Tooltip title={t('reviewsTable.flagReview')}>
                 <Button
                   type='text'
                   icon={<FlagOutlined />}
@@ -238,7 +244,7 @@ const ReviewsTable = ({
             )}
 
             {!review.isVerified && (
-              <Tooltip title='Verify Review'>
+              <Tooltip title={t('reviewsTable.verifyReview')}>
                 <Button
                   type='text'
                   icon={<CheckCircleOutlined />}
@@ -250,7 +256,7 @@ const ReviewsTable = ({
             )}
 
             {!review.response && (
-              <Tooltip title='Add Response'>
+              <Tooltip title={t('reviewsTable.addResponse')}>
                 <Button
                   type='text'
                   icon={<MessageOutlined />}
@@ -261,7 +267,7 @@ const ReviewsTable = ({
               </Tooltip>
             )}
 
-            <Tooltip title='Delete Review'>
+            <Tooltip title={t('reviewsTable.deleteReview')}>
               <Button
                 type='text'
                 icon={<DeleteOutlined />}
@@ -280,7 +286,8 @@ const ReviewsTable = ({
     ...pagination,
     showSizeChanger: true,
     showQuickJumper: true,
-    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} reviews`,
+    showTotal: (total, range) =>
+      t('reviewsTable.showTotal', { start: range[0], end: range[1], total }),
     position: ['bottomCenter'],
     onChange: (page, pageSize) => {
       onPagination?.(page, pageSize);

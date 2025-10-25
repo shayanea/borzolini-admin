@@ -1,6 +1,7 @@
 import { Button, Result, Spin } from 'antd';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { AuthBackground } from '@/components/common';
 import { ROUTES } from '@/constants';
@@ -12,6 +13,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
+  const { t } = useTranslation('components');
   const location = useLocation();
   const navigate = useNavigate();
   const { data: user, isLoading, error } = useCurrentUser();
@@ -31,7 +33,7 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
       <AuthBackground variant='gradient'>
         <div className='text-center'>
           <Spin size='large' className='mb-4' />
-          <div className='text-white text-lg'>Validating authentication...</div>
+          <div className='text-white text-lg'>{t('auth.validatingAuth')}</div>
         </div>
       </AuthBackground>
     );
@@ -48,14 +50,14 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
       <AuthBackground variant='gradient'>
         <Result
           status='403'
-          title='Access Denied'
-          subTitle="You don't have permission to access this page."
+          title={t('auth.accessDenied')}
+          subTitle={t('auth.noPermission')}
           extra={[
             <Button type='primary' key='dashboard' onClick={handleGoToDashboard}>
-              Go to Dashboard
+              {t('auth.goToDashboard')}
             </Button>,
             <Button key='logout' onClick={handleLogout}>
-              Logout
+              {t('header.logout')}
             </Button>,
           ]}
         />

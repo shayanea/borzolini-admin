@@ -3,6 +3,8 @@ import { DeleteOutlined, EditOutlined, EyeOutlined, PhoneOutlined } from '@ant-d
 import { ROLE_COLORS, TABLE_PAGE_SIZES, USER_TABLE_COLUMNS } from '@/constants';
 import type { User, UserTableProps } from '@/types';
 
+import { useTranslation } from 'react-i18next';
+
 const UserTable = ({
   users,
   loading = false,
@@ -15,6 +17,7 @@ const UserTable = ({
   onDeleteUser,
   onTableChange,
 }: UserTableProps) => {
+  const { t } = useTranslation('components');
   const createActionHandlers = (user: User) => {
     const handleViewUser = () => onViewUser(user);
     const handleEditUser = () => onEditUser(user);
@@ -25,7 +28,7 @@ const UserTable = ({
 
   const columns = [
     {
-      title: 'User',
+      title: t('userTable.user'),
       key: USER_TABLE_COLUMNS.USER,
       render: (user: User) => (
         <div className='flex items-center space-x-3'>
@@ -50,7 +53,7 @@ const UserTable = ({
       ),
     },
     {
-      title: 'Role',
+      title: t('userTable.role'),
       key: USER_TABLE_COLUMNS.ROLE,
       render: (user: User) => (
         <Tag color={ROLE_COLORS[user.role] || 'default'}>
@@ -59,7 +62,7 @@ const UserTable = ({
       ),
     },
     {
-      title: 'Verification',
+      title: t('userTable.verification'),
       key: USER_TABLE_COLUMNS.VERIFICATION,
       render: (user: User) => {
         return (
@@ -68,14 +71,20 @@ const UserTable = ({
               status={user.isEmailVerified ? 'success' : 'error'}
               text={
                 <span className='text-xs'>
-                  {user.isEmailVerified ? 'Email Verified' : 'Email Unverified'}
+                  {user.isEmailVerified
+                    ? t('userTable.emailVerified')
+                    : t('userTable.emailUnverified')}
                 </span>
               }
             />
             <div>
               <Badge
                 status={user.isActive ? 'success' : 'error'}
-                text={<span className='text-xs'>{user.isActive ? 'Active' : 'Inactive'}</span>}
+                text={
+                  <span className='text-xs'>
+                    {user.isActive ? t('userTable.active') : t('userTable.inactive')}
+                  </span>
+                }
               />
             </div>
           </div>
@@ -83,29 +92,31 @@ const UserTable = ({
       },
     },
     {
-      title: 'Location',
+      title: t('userTable.location'),
       key: USER_TABLE_COLUMNS.LOCATION,
       render: (user: User) => (
         <div className='text-sm text-text-light'>
-          {user.city && user.country ? `${user.city}, ${user.country}` : 'Not specified'}
+          {user.city && user.country
+            ? `${user.city}, ${user.country}`
+            : t('userTable.notSpecified')}
         </div>
       ),
     },
     {
-      title: 'Actions',
+      title: t('userTable.actions'),
       key: USER_TABLE_COLUMNS.ACTIONS,
       render: (user: User) => {
         const { handleViewUser, handleEditUser, handleDeleteUser } = createActionHandlers(user);
 
         return (
           <Space>
-            <Tooltip title='View Details'>
+            <Tooltip title={t('userTable.viewDetails')}>
               <Button size='small' icon={<EyeOutlined />} onClick={handleViewUser} />
             </Tooltip>
-            <Tooltip title='Edit User'>
+            <Tooltip title={t('userTable.editUser')}>
               <Button size='small' icon={<EditOutlined />} onClick={handleEditUser} />
             </Tooltip>
-            <Tooltip title='Delete User'>
+            <Tooltip title={t('userTable.deleteUser')}>
               <Button size='small' danger icon={<DeleteOutlined />} onClick={handleDeleteUser} />
             </Tooltip>
           </Space>
@@ -115,7 +126,7 @@ const UserTable = ({
   ];
 
   const handleShowTotal = (total: number, range: [number, number]) => {
-    return `${range[0]}-${range[1]} of ${total} users`;
+    return t('userTable.showTotal', { start: range[0], end: range[1], total });
   };
 
   return (

@@ -73,6 +73,7 @@ export class DashboardService {
       averageAppointmentDuration = 0,
       topPerformingClinics = [],
       recentActivity = [],
+      petCases = undefined,
     } = apiResponse || {};
 
     return {
@@ -93,6 +94,7 @@ export class DashboardService {
       averageAppointmentDuration,
       topPerformingClinics,
       recentActivity,
+      petCases,
     };
   }
 
@@ -116,6 +118,7 @@ export class DashboardService {
       averageAppointmentDuration: 0,
       topPerformingClinics: [],
       recentActivity: [],
+      petCases: undefined,
     };
   }
 

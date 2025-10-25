@@ -1,3 +1,4 @@
+import { Button, Dropdown, Space } from 'antd';
 // Pet Case Bulk Actions Component
 import {
   CheckCircleOutlined,
@@ -6,9 +7,10 @@ import {
   ExclamationCircleOutlined,
   MoreOutlined,
 } from '@ant-design/icons';
-import { Button, Dropdown, Space } from 'antd';
+
 import React from 'react';
 import { useMessage } from '../../hooks/use-message';
+import { useTranslation } from 'react-i18next';
 
 interface PetCaseBulkActionsProps {
   selectedCaseIds: string[];
@@ -23,51 +25,52 @@ const PetCaseBulkActions: React.FC<PetCaseBulkActionsProps> = ({
   onClearSelection,
   loading = false,
 }) => {
+  const { t } = useTranslation('components');
   const { success, error, warning, info } = useMessage();
   const handleBulkAction = (action: string) => {
     if (selectedCaseIds.length === 0) {
-      warning('Please select cases first');
+      warning(t('petCaseBulkActions.pleaseSelectCases'));
       return;
     }
 
     switch (action) {
       case 'mark_resolved':
         onBulkUpdate(selectedCaseIds, 'resolved');
-        success(`Marked ${selectedCaseIds.length} cases as resolved`);
+        success(t('petCaseBulkActions.markedAsResolved', { count: selectedCaseIds.length }));
         break;
       case 'mark_pending':
         onBulkUpdate(selectedCaseIds, 'pending_consultation');
-        success(`Marked ${selectedCaseIds.length} cases as pending`);
+        success(t('petCaseBulkActions.markedAsPending', { count: selectedCaseIds.length }));
         break;
       case 'mark_urgent':
         onBulkUpdate(selectedCaseIds, 'urgent');
-        success(`Marked ${selectedCaseIds.length} cases as urgent`);
+        success(t('petCaseBulkActions.markedAsUrgent', { count: selectedCaseIds.length }));
         break;
       case 'delete':
         // TODO: Implement delete confirmation modal
-        info('Delete functionality coming soon');
+        info(t('petCaseBulkActions.deleteComingSoon'));
         break;
       default:
-        error('Unknown action');
+        error(t('petCaseBulkActions.unknownAction'));
     }
   };
 
   const bulkActionItems = [
     {
       key: 'mark_resolved',
-      label: 'Mark as Resolved',
+      label: t('petCaseBulkActions.markAsResolved'),
       icon: <CheckCircleOutlined />,
       onClick: () => handleBulkAction('mark_resolved'),
     },
     {
       key: 'mark_pending',
-      label: 'Mark as Pending',
+      label: t('petCaseBulkActions.markAsPending'),
       icon: <ClockCircleOutlined />,
       onClick: () => handleBulkAction('mark_pending'),
     },
     {
       key: 'mark_urgent',
-      label: 'Mark as Urgent',
+      label: t('petCaseBulkActions.markAsUrgent'),
       icon: <ExclamationCircleOutlined />,
       onClick: () => handleBulkAction('mark_urgent'),
     },
@@ -77,7 +80,7 @@ const PetCaseBulkActions: React.FC<PetCaseBulkActionsProps> = ({
     },
     {
       key: 'delete',
-      label: 'Delete Cases',
+      label: t('petCaseBulkActions.deleteCases'),
       icon: <DeleteOutlined />,
       danger: true,
       onClick: () => handleBulkAction('delete'),
@@ -91,19 +94,21 @@ const PetCaseBulkActions: React.FC<PetCaseBulkActionsProps> = ({
   return (
     <div className='flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded'>
       <span className='text-sm text-blue-700'>
-        {selectedCaseIds.length} case{selectedCaseIds.length > 1 ? 's' : ''} selected
+        {selectedCaseIds.length === 1
+          ? t('petCaseBulkActions.casesSelected', { count: selectedCaseIds.length })
+          : t('petCaseBulkActions.casesSelectedPlural', { count: selectedCaseIds.length })}
       </span>
 
       <Space size='small'>
         <Dropdown menu={{ items: bulkActionItems }} trigger={['click']} disabled={loading}>
           <Button size='small' loading={loading}>
             <MoreOutlined />
-            Bulk Actions
+            {t('petCaseBulkActions.bulkActions')}
           </Button>
         </Dropdown>
 
         <Button size='small' onClick={onClearSelection} disabled={loading}>
-          Clear Selection
+          {t('petCaseBulkActions.clearSelection')}
         </Button>
       </Space>
     </div>

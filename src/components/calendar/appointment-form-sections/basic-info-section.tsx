@@ -1,7 +1,8 @@
 import { Form, Select } from 'antd';
-import { FC } from 'react';
 
 import { BasicInfoSectionProps } from './types';
+import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const { Option } = Select;
 
@@ -14,14 +15,19 @@ export const BasicInfoSection: FC<BasicInfoSectionProps> = ({
   services,
   loadingData,
 }) => {
+  const { t } = useTranslation('components');
+
   return (
     <div className='space-y-4'>
       <Form.Item
-        label='Appointment Type'
+        label={t('forms.appointmentForm.appointmentType')}
         name='appointment_type'
-        rules={[{ required: true, message: 'Please select appointment type' }]}
+        rules={[{ required: true, message: t('forms.appointmentForm.appointmentTypeRequired') }]}
       >
-        <Select placeholder='Select appointment type' showSearch>
+        <Select
+          placeholder={t('forms.appointmentForm.selectAppointmentTypePlaceholder')}
+          showSearch
+        >
           {appointmentTypes.map(type => (
             <Option key={type.value} value={type.value}>
               {type.label}
@@ -31,12 +37,12 @@ export const BasicInfoSection: FC<BasicInfoSectionProps> = ({
       </Form.Item>
 
       <Form.Item
-        label='Pet'
+        label={t('forms.appointmentForm.pet')}
         name='pet_id'
-        rules={[{ required: true, message: 'Please select a pet' }]}
+        rules={[{ required: true, message: t('forms.appointmentForm.petRequired') }]}
       >
         <Select
-          placeholder='Select pet'
+          placeholder={t('forms.appointmentForm.selectPetPlaceholder')}
           showSearch
           loading={loadingData}
           filterOption={(input, option) =>
@@ -52,12 +58,12 @@ export const BasicInfoSection: FC<BasicInfoSectionProps> = ({
       </Form.Item>
 
       <Form.Item
-        label='Clinic'
+        label={t('forms.appointmentForm.clinic')}
         name='clinic_id'
-        rules={[{ required: true, message: 'Please select a clinic' }]}
+        rules={[{ required: true, message: t('forms.appointmentForm.clinicRequired') }]}
       >
         <Select
-          placeholder='Select clinic'
+          placeholder={t('forms.appointmentForm.selectClinicPlaceholder')}
           showSearch
           loading={loadingData}
           filterOption={(input, option) =>
@@ -72,8 +78,8 @@ export const BasicInfoSection: FC<BasicInfoSectionProps> = ({
         </Select>
       </Form.Item>
 
-      <Form.Item label='Veterinarian' name='staff_id'>
-        <Select placeholder='Select veterinarian (optional)' showSearch>
+      <Form.Item label={t('forms.appointmentForm.veterinarian')} name='staff_id'>
+        <Select placeholder={t('forms.appointmentForm.selectVeterinarianPlaceholder')} showSearch>
           {veterinarians.map(vet => (
             <Option key={vet.id} value={vet.id}>
               {vet.name}
@@ -82,9 +88,9 @@ export const BasicInfoSection: FC<BasicInfoSectionProps> = ({
         </Select>
       </Form.Item>
 
-      <Form.Item label='Service' name='service_id'>
+      <Form.Item label={t('forms.appointmentForm.service')} name='service_id'>
         <Select
-          placeholder='Select service (optional)'
+          placeholder={t('forms.appointmentForm.selectServicePlaceholder')}
           showSearch
           loading={loadingData}
           filterOption={(input, option) =>

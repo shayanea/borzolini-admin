@@ -1,16 +1,19 @@
-import { Alert, Col, Row, Spin } from 'antd';
+import { ErrorState, LoadingState } from '@/components/common';
 import {
   DashboardHeader,
+  PetCasesWidget,
   QuickActions,
   RecentActivity,
   StatisticsCards,
   TopPerformingClinics,
 } from '@/components/dashboard';
-import { ErrorState, LoadingState } from '@/components/common';
+import { Alert, Col, Row, Spin } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import { useDashboard } from '@/hooks/use-dashboard';
 
 const Dashboard = () => {
+  const { t } = useTranslation('pages');
   const {
     stats,
     loading,
@@ -24,16 +27,16 @@ const Dashboard = () => {
   } = useDashboard();
 
   if (loading && !stats) {
-    return <LoadingState message='Loading dashboard...' fullScreen />;
+    return <LoadingState message={t('dashboard.loading')} fullScreen />;
   }
 
   if (error) {
     return (
       <ErrorState
-        title='Error Loading Dashboard'
+        title={t('dashboard.errorTitle')}
         message={error}
         onRetry={handleRefresh}
-        retryText='Retry'
+        retryText={t('dashboard.retry')}
       />
     );
   }
@@ -41,8 +44,8 @@ const Dashboard = () => {
   if (!stats) {
     return (
       <ErrorState
-        title='No Data Available'
-        message='Unable to load dashboard statistics.'
+        title={t('dashboard.noDataTitle')}
+        message={t('dashboard.noDataMessage')}
         type='warning'
       />
     );
@@ -71,6 +74,15 @@ const Dashboard = () => {
         </Col>
       </Row>
 
+      {/* Pet Cases Widget */}
+      {stats.petCases && (
+        <Row gutter={[24, 24]}>
+          <Col xs={24}>
+            <PetCasesWidget stats={stats} loading={loading} />
+          </Col>
+        </Row>
+      )}
+
       {/* Top Performing Clinics */}
       <TopPerformingClinics stats={stats} />
 
@@ -78,14 +90,14 @@ const Dashboard = () => {
       {chartsLoading && (
         <div className='text-center py-4'>
           <Spin size='default' />
-          <div className='mt-2 text-sm text-gray-500'>Loading charts...</div>
+          <div className='mt-2 text-sm text-gray-500'>{t('dashboard.loadingCharts')}</div>
         </div>
       )}
 
       {/* Show charts error if needed */}
       {chartsError && (
         <Alert
-          message='Charts Error'
+          message={t('dashboard.chartsError')}
           description={chartsError}
           type='warning'
           showIcon

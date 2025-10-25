@@ -11,24 +11,35 @@ import {
 } from '../components/pet-cases';
 // Pet Cases Management Page
 import { Alert, Pagination } from 'antd';
-import React, { useEffect } from 'react';
 import { ErrorState, LoadingState, PageLayout } from '../components/common';
+import React, { useEffect } from 'react';
+import {
+  useAllPetCases,
+  usePetCases,
+  usePetCasesModals,
+  usePetCasesState,
+} from '../hooks/pet-cases';
 
-import { useSearchParams } from 'react-router-dom';
-import { usePetCases, usePetCasesModals, usePetCasesState } from '../hooks/pet-cases';
 import { useCurrentUser } from '../hooks/use-auth';
+import { useSearchParams } from 'react-router-dom';
 
 const PetCasesPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { data: user, isLoading: userLoading } = useCurrentUser();
   const urlClinicId = searchParams.get('clinicId');
 
-  // Use custom hooks for state management
-  const state = usePetCasesState();
-  const modals = usePetCasesModals();
-
   // Get clinic ID from URL params or user profile
   const clinicId = urlClinicId || user?.clinicId || user?.clinic_id || user?.clinic?.id;
+
+  // Use custom hooks for state management
+  const state = usePetCasesState({ clinicId });
+  const modals = usePetCasesModals();
+
+  // Check if user is admin
+  const isAdmin = user?.role === 'admin';
+
+  // Determine if we should fetch all cases (admin without clinic ID) or clinic-specific cases
+  const shouldFetchAllCases = isAdmin && !clinicId;
 
   // Default stats object to avoid repetition
   const defaultStats = {
@@ -59,22 +70,23 @@ const PetCasesPage: React.FC = () => {
     averageResolutionTime: 0,
   };
 
-  const {
-    cases,
-    total,
-    page: currentPage,
-    totalPages,
-    stats,
-    isLoading,
-    error,
-    refetch,
-  } = usePetCases(clinicId || '', state.filters, state.page, 10);
+  // Use different hooks based on whether we're fetching all cases or clinic-specific cases
+  const clinicCasesResult = usePetCases(clinicId || '', state.filters, state.page, 10);
+  const allCasesResult = useAllPetCases(state.filters, state.page, 10);
+
+  // Select the appropriate result based on the condition
+  const result = shouldFetchAllCases ? allCasesResult : clinicCasesResult;
+
+  const { cases, total, page: currentPage, totalPages, isLoading, error, refetch } = result;
+
+  // Stats are only available when fetching clinic-specific cases
+  const stats = shouldFetchAllCases ? undefined : clinicCasesResult.stats;
 
   useEffect(() => {
-    if (!userLoading && !clinicId) {
-      console.error('No clinic ID provided');
+    if (!userLoading && !clinicId && !isAdmin) {
+      console.error('No clinic ID provided and user is not admin');
     }
-  }, [clinicId, userLoading]);
+  }, [clinicId, userLoading, isAdmin]);
 
   const handleRefresh = () => {
     refetch();
@@ -86,8 +98,8 @@ const PetCasesPage: React.FC = () => {
     return <LoadingState message='Loading pet cases...' fullScreen />;
   }
 
-  // Show error if no clinic ID is available
-  if (!clinicId) {
+  // Show error if no clinic ID is available and user is not admin
+  if (!clinicId && !isAdmin) {
     return (
       <ErrorState
         title='Access Error'
@@ -118,10 +130,12 @@ const PetCasesPage: React.FC = () => {
         selectedCount={state.selectedRowKeys.length}
         stats={stats || defaultStats}
         loading={isLoading}
-        onCreateCase={state.handleCreateCase}
+        onCreateCase={modals.handleCreateCase}
         onExport={state.handleExport}
         onRefresh={handleRefresh}
         onViewStats={state.handleViewStats}
+        viewAllCases={shouldFetchAllCases}
+        clinicName={user?.clinic?.name}
       />
 
       {/* Filters */}
@@ -178,7 +192,7 @@ const PetCasesPage: React.FC = () => {
         visible={modals.viewModalVisible}
         onClose={modals.handleCloseViewModal}
         onEdit={modals.handleEditCase}
-        clinicId={clinicId}
+        clinicId={modals.selectedCase?.clinic_id || clinicId}
       />
 
       {/* Edit Case Modal */}
@@ -186,7 +200,7 @@ const PetCasesPage: React.FC = () => {
         visible={modals.editModalVisible}
         onClose={modals.handleCloseEditModal}
         onSuccess={modals.handleEditSuccess}
-        clinicId={clinicId}
+        clinicId={modals.selectedCase?.clinic_id || clinicId}
         editCase={modals.selectedCase}
       />
     </PageLayout>

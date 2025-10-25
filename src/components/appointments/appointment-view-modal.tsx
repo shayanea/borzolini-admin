@@ -1,17 +1,18 @@
-import { Button, Modal, message } from 'antd';
-import React, { useEffect, useState } from 'react';
-
-import { APPOINTMENT_TYPE_LABELS } from '@/constants/appointments';
-import type { Appointment } from '@/types';
-import { formatAppointmentType } from '@/utils/color-helpers';
-import { SaveOutlined } from '@ant-design/icons';
-import { AppointmentReviewsSection } from './appointment-reviews-section';
 import {
   AppointmentInfoCard,
   ClinicStaffInfoCard,
   MedicalInfoCard,
   PetOwnerInfoCard,
 } from './appointment-view-sections';
+import { Button, Modal, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+
+import { APPOINTMENT_TYPE_LABELS } from '@/constants/appointments';
+import type { Appointment } from '@/types';
+import { AppointmentReviewsSection } from './appointment-reviews-section';
+import { SaveOutlined } from '@ant-design/icons';
+import { formatAppointmentType } from '@/utils/color-helpers';
+import { useTranslation } from 'react-i18next';
 
 export interface AppointmentViewModalProps {
   visible: boolean;
@@ -27,6 +28,7 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
   onCancel,
   onUpdate,
 }) => {
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState<Partial<Appointment>>({});
   const [saving, setSaving] = useState(false);
@@ -58,9 +60,9 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
       setSaving(true);
       await onUpdate(appointment.id, editedData);
       setIsEditing(false);
-      message.success('Appointment updated successfully');
+      message.success(t('modals.appointmentView.appointmentUpdatedSuccess'));
     } catch (error) {
-      message.error('Failed to update appointment');
+      message.error(t('modals.appointmentView.appointmentUpdateFailed'));
       console.error('Update error:', error);
     } finally {
       setSaving(false);
@@ -85,7 +87,7 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
   };
 
   const getFormattedType = (type: string) => {
-    if (!type) return 'Unknown';
+    if (!type) return t('modals.appointmentView.unknown');
     return (
       APPOINTMENT_TYPE_LABELS[type as keyof typeof APPOINTMENT_TYPE_LABELS] ||
       formatAppointmentType(type)
@@ -100,7 +102,7 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
 
   return (
     <Modal
-      title='Appointment Details'
+      title={t('modals.appointmentView.title')}
       open={visible}
       onCancel={onCancel}
       footer={null}
@@ -148,16 +150,16 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
         <div className='flex justify-end space-x-2 pt-4 border-t'>
           {!isEditing ? (
             <>
-              <Button onClick={onCancel}>Close</Button>
+              <Button onClick={onCancel}>{t('modals.appointmentView.close')}</Button>
               {onUpdate && (
                 <Button type='primary' onClick={handleEdit}>
-                  Edit Critical Fields
+                  {t('modals.appointmentView.editCriticalFields')}
                 </Button>
               )}
             </>
           ) : (
             <>
-              <Button onClick={handleCancel}>Cancel</Button>
+              <Button onClick={handleCancel}>{t('modals.appointmentView.cancel')}</Button>
               <Button
                 type='primary'
                 icon={<SaveOutlined />}
@@ -165,7 +167,7 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
                 loading={saving}
                 className='bg-primary-navy border-primary-navy'
               >
-                Save Changes
+                {t('modals.appointmentView.saveChanges')}
               </Button>
             </>
           )}

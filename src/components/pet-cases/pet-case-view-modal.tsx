@@ -1,8 +1,3 @@
-// Pet Case View Modal Component
-import { Button, Divider, Modal, Tabs } from 'antd';
-import React, { useState } from 'react';
-import type { ClinicPetCase } from '../../types/pet-cases';
-import PetCaseTimeline from './pet-case-timeline';
 import {
   BasicInfoCard,
   DiagnosisCard,
@@ -12,6 +7,12 @@ import {
   VeterinarianInfoCard,
   VitalSignsCard,
 } from './pet-case-view-sections';
+// Pet Case View Modal Component
+import { Button, Divider, Modal, Space, Tabs } from 'antd';
+import React, { useState } from 'react';
+
+import type { ClinicPetCase } from '../../types/pet-cases';
+import PetCaseTimeline from './pet-case-timeline';
 
 const { TabPane } = Tabs;
 

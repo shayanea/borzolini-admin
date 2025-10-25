@@ -1,4 +1,4 @@
-import type { Pet, PetTableProps } from '@/types';
+import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -6,10 +6,11 @@ import {
   PhoneOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
+import type { Pet, PetTableProps } from '@/types';
+import { getPetGenderColor, getPetSizeColor, getPetSpeciesColor } from '@/utils/color-helpers';
 
 import { TABLE_PAGE_SIZES } from '@/constants';
-import { getPetGenderColor, getPetSizeColor, getPetSpeciesColor } from '@/utils/color-helpers';
+import { useTranslation } from 'react-i18next';
 
 const PetTable = ({
   pets,
@@ -24,6 +25,7 @@ const PetTable = ({
   onTableChange,
   onRowSelectionChange,
 }: PetTableProps) => {
+  const { t } = useTranslation('components');
   const createActionHandlers = (pet: Pet) => {
     const handleViewPet = () => onViewPet(pet);
     const handleEditPet = () => onEditPet(pet);
@@ -34,7 +36,7 @@ const PetTable = ({
 
   const columns = [
     {
-      title: 'Pet',
+      title: t('petTable.pet'),
       key: 'pet',
       render: (pet: Pet) => (
         <div className='flex items-center space-x-3'>
@@ -50,14 +52,15 @@ const PetTable = ({
               {pet.breed ? `${pet.breed} ${pet.species}` : pet.species}
             </div>
             <div className='text-xs text-text-light'>
-              {pet.date_of_birth && `Born: ${new Date(pet.date_of_birth).toLocaleDateString()}`}
+              {pet.date_of_birth &&
+                `${t('petTable.born')}: ${new Date(pet.date_of_birth).toLocaleDateString()}`}
             </div>
           </div>
         </div>
       ),
     },
     {
-      title: 'Species & Details',
+      title: t('petTable.speciesDetails'),
       key: 'species_details',
       render: (pet: Pet) => (
         <div className='space-y-1'>
@@ -73,7 +76,7 @@ const PetTable = ({
       ),
     },
     {
-      title: 'Owner',
+      title: t('petTable.owner'),
       key: 'owner',
       render: (pet: Pet) => (
         <div className='space-y-1'>
@@ -89,64 +92,66 @@ const PetTable = ({
       ),
     },
     {
-      title: 'Details',
+      title: t('petTable.details'),
       key: 'details',
       render: (pet: Pet) => (
         <div className='space-y-1'>
           <div className='text-sm'>
-            <span className='text-text-light'>Weight: </span>
+            <span className='text-text-light'>{t('petTable.weight')}: </span>
             {pet.weight} kg
           </div>
           {pet.color && (
             <div className='text-sm'>
-              <span className='text-text-light'>Color: </span>
+              <span className='text-text-light'>{t('petTable.color')}: </span>
               {pet.color}
             </div>
           )}
           {pet.microchip_number && (
             <div className='text-sm'>
-              <span className='text-text-light'>Microchip: </span>
+              <span className='text-text-light'>{t('petTable.microchip')}: </span>
               {pet.microchip_number}
             </div>
           )}
           <div className='text-xs'>
             <Tag color={pet.is_spayed_neutered ? 'green' : 'orange'}>
-              {pet.is_spayed_neutered ? 'Spayed/Neutered' : 'Not Spayed/Neutered'}
+              {pet.is_spayed_neutered
+                ? t('petTable.spayedNeutered')
+                : t('petTable.notSpayedNeutered')}
             </Tag>
           </div>
           <div className='text-xs'>
             <Tag color={pet.is_vaccinated ? 'green' : 'red'}>
-              {pet.is_vaccinated ? 'Vaccinated' : 'Not Vaccinated'}
+              {pet.is_vaccinated ? t('petTable.vaccinated') : t('petTable.notVaccinated')}
             </Tag>
           </div>
         </div>
       ),
     },
     {
-      title: 'Status',
+      title: t('petTable.status'),
       key: 'status',
       render: (pet: Pet) => (
         <Badge
           status={pet.is_active ? 'success' : 'error'}
-          text={pet.is_active ? 'Active' : 'Inactive'}
+          text={pet.is_active ? t('petTable.active') : t('petTable.inactive')}
         />
       ),
     },
     {
-      title: 'Actions',
+      title: t('petTable.actions'),
       key: 'actions',
       render: (pet: Pet) => {
         const { handleViewPet, handleEditPet, handleDeletePet } = createActionHandlers(pet);
 
         return (
           <Space>
-            <Tooltip title='View Details'>
+            <Tooltip title={t('petTable.viewDetails')}>
               <Button size='small' icon={<EyeOutlined />} onClick={handleViewPet} />
             </Tooltip>
-            <Tooltip title='Edit Pet'>
+            <Tooltip title={t('petTable.editPet')}>
               <Button size='small' icon={<EditOutlined />} onClick={handleEditPet} />
             </Tooltip>
-            <Tooltip title='Delete Pet'>
+            <Tooltip title={t('petTable.deletePet')}>
               <Button size='small' danger icon={<DeleteOutlined />} onClick={handleDeletePet} />
             </Tooltip>
           </Space>
@@ -156,7 +161,7 @@ const PetTable = ({
   ];
 
   const handleShowTotal = (total: number, range: [number, number]) => {
-    return `${range[0]}-${range[1]} of ${total} pets`;
+    return t('petTable.showTotal', { start: range[0], end: range[1], total });
   };
 
   return (

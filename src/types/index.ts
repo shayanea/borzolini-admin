@@ -308,6 +308,27 @@ export interface DashboardStats {
   averageAppointmentDuration: number;
   recentActivity: RecentActivityItem[];
   topPerformingClinics: TopPerformingClinic[];
+  // Pet Cases data
+  petCases?: {
+    total: number;
+    urgent: number;
+    resolved: number;
+    open: number;
+    inProgress: number;
+    byType: Record<string, number>;
+    recentCases: PetCaseSummary[];
+  };
+}
+
+export interface PetCaseSummary {
+  id: string;
+  case_number: string;
+  title: string;
+  status: string;
+  priority: string;
+  pet_name: string;
+  clinic_name: string;
+  created_at: string;
 }
 
 export interface RecentActivityItem {

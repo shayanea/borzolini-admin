@@ -1,4 +1,5 @@
 import { Avatar, Card, List, Tag } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import type { DashboardStats } from '@/types';
 import { HomeOutlined } from '@ant-design/icons';
@@ -8,6 +9,8 @@ interface TopPerformingClinicsProps {
 }
 
 const TopPerformingClinics = ({ stats }: TopPerformingClinicsProps) => {
+  const { t } = useTranslation('components');
+
   if (stats.topPerformingClinics.length === 0) {
     return null;
   }
@@ -22,16 +25,18 @@ const TopPerformingClinics = ({ stats }: TopPerformingClinicsProps) => {
               <span className='font-medium'>{clinic.name}</span>
               <div className='flex items-center space-x-4'>
                 <span className='text-sm text-text-light'>
-                  Rating: {clinic.rating.toFixed(1)} ⭐
+                  {t('dashboard.topClinics.rating')}: {clinic.rating.toFixed(1)} ⭐
                 </span>
                 <span className='text-sm text-text-light'>
-                  Revenue: ${clinic.revenue.toLocaleString()}
+                  {t('dashboard.topClinics.revenue')}: ${clinic.revenue.toLocaleString()}
                 </span>
               </div>
             </div>
           }
           description={
-            <div className='text-sm text-text-light'>{clinic.totalAppointments} appointments</div>
+            <div className='text-sm text-text-light'>
+              {clinic.totalAppointments} {t('dashboard.topClinics.appointments')}
+            </div>
           }
         />
       </List.Item>
@@ -42,8 +47,8 @@ const TopPerformingClinics = ({ stats }: TopPerformingClinicsProps) => {
     <Card
       title={
         <div className='flex items-center gap-2'>
-          Top Performing Clinics
-          <Tag color='orange'>Soon</Tag>
+          {t('dashboard.topClinics.title')}
+          <Tag color='orange'>{t('dashboard.topClinics.soon')}</Tag>
         </div>
       }
       className='admin-card'

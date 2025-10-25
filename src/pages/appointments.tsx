@@ -1,4 +1,3 @@
-import { Alert, Empty } from 'antd';
 import {
   AppointmentViewModal,
   AppointmentsFilters,
@@ -6,15 +5,18 @@ import {
   AppointmentsTable,
 } from '@/components/appointments';
 import { ExclamationCircleOutlined, LockOutlined } from '@ant-design/icons';
+import { Alert, Empty } from 'antd';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import type { Appointment } from '@/types';
 import ErrorBoundary from '@/components/common/error-boundary';
 import LoadingSpinner from '@/components/common/loading-spinner';
 import { useAppointments } from '@/hooks/use-appointments';
 import { useAuthStore } from '@/stores/auth.store';
+import type { Appointment } from '@/types';
 
 const Appointments = () => {
+  const { t } = useTranslation('pages');
   const { isAuthenticated } = useAuthStore();
   const {
     appointments,
@@ -73,7 +75,7 @@ const Appointments = () => {
 
   // Show loading spinner for initial load
   if (loading) {
-    return <LoadingSpinner fullScreen text='Loading appointments...' />;
+    return <LoadingSpinner fullScreen text={t('appointments.loading')} />;
   }
 
   // Show authentication required message if not authenticated
@@ -82,13 +84,9 @@ const Appointments = () => {
       <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-navy to-primary-dark'>
         <div className='text-center text-white'>
           <LockOutlined className='text-6xl mb-4 text-primary-orange' />
-          <h1 className='text-2xl font-bold mb-2'>Authentication Required</h1>
-          <p className='text-lg text-gray-300 mb-6'>
-            Please log in to view and manage appointments.
-          </p>
-          <p className='text-sm text-gray-400'>
-            You will be redirected to the login page automatically.
-          </p>
+          <h1 className='text-2xl font-bold mb-2'>{t('appointments.authRequired')}</h1>
+          <p className='text-lg text-gray-300 mb-6'>{t('appointments.pleaseLogin')}</p>
+          <p className='text-sm text-gray-400'>{t('appointments.autoRedirect')}</p>
         </div>
       </div>
     );
@@ -100,7 +98,7 @@ const Appointments = () => {
         {/* Error Alert */}
         {error && (
           <Alert
-            message='Error Loading Appointments'
+            message={t('appointments.errorLoading')}
             description={error}
             type='error'
             showIcon
@@ -127,27 +125,27 @@ const Appointments = () => {
           <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6'>
             <div className='bg-white p-4 rounded-lg shadow border'>
               <div className='text-2xl font-bold text-primary-navy'>{stats.total}</div>
-              <div className='text-sm text-gray-600'>Total</div>
+              <div className='text-sm text-gray-600'>{t('appointments.total')}</div>
             </div>
             <div className='bg-white p-4 rounded-lg shadow border'>
               <div className='text-2xl font-bold text-blue-600'>{stats.byStatus.pending}</div>
-              <div className='text-sm text-gray-600'>Pending</div>
+              <div className='text-sm text-gray-600'>{t('appointments.pending')}</div>
             </div>
             <div className='bg-white p-4 rounded-lg shadow border'>
               <div className='text-2xl font-bold text-green-600'>{stats.byStatus.confirmed}</div>
-              <div className='text-sm text-gray-600'>Confirmed</div>
+              <div className='text-sm text-gray-600'>{t('appointments.confirmed')}</div>
             </div>
             <div className='bg-white p-4 rounded-lg shadow border'>
               <div className='text-2xl font-bold text-orange-600'>{stats.byStatus.in_progress}</div>
-              <div className='text-sm text-gray-600'>In Progress</div>
+              <div className='text-sm text-gray-600'>{t('appointments.inProgress')}</div>
             </div>
             <div className='bg-white p-4 rounded-lg shadow border'>
               <div className='text-2xl font-bold text-purple-600'>{stats.byStatus.completed}</div>
-              <div className='text-sm text-gray-600'>Completed</div>
+              <div className='text-sm text-gray-600'>{t('appointments.completed')}</div>
             </div>
             <div className='bg-white p-4 rounded-lg shadow border'>
               <div className='text-2xl font-bold text-red-600'>{stats.byStatus.cancelled}</div>
-              <div className='text-sm text-gray-600'>Today</div>
+              <div className='text-sm text-gray-600'>{t('appointments.today')}</div>
             </div>
           </div>
         )}
@@ -163,13 +161,13 @@ const Appointments = () => {
             onPagination={handlePagination}
           />
         ) : !loading ? (
-          <Empty description='No appointments found' className='my-12' />
+          <Empty description={t('appointments.noData')} className='my-12' />
         ) : null}
 
         {/* Loading indicator for subsequent loads */}
         {loading && appointments.length > 0 && (
           <div className='text-center py-4'>
-            <LoadingSpinner size='small' text='Updating appointments...' />
+            <LoadingSpinner size='small' text={t('appointments.updating')} />
           </div>
         )}
 

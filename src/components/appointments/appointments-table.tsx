@@ -1,4 +1,10 @@
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
+import {
+  formatAppointmentType,
+  getAppointmentPriorityColor,
+  getAppointmentStatusColor,
+  getPetGenderColor,
+  getPetSpeciesColor,
+} from '@/utils/color-helpers';
 import {
   CalendarOutlined,
   ClockCircleOutlined,
@@ -9,18 +15,13 @@ import {
   StarOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import {
-  formatAppointmentType,
-  getAppointmentPriorityColor,
-  getAppointmentStatusColor,
-  getPetGenderColor,
-  getPetSpeciesColor,
-} from '@/utils/color-helpers';
+import { useTranslation } from 'react-i18next';
 
-import type { Appointment } from '@/types';
-import { AppointmentsDataService } from '@/services/appointments-data.service';
 import { TABLE_PAGE_SIZES } from '@/constants';
+import { AppointmentsDataService } from '@/services/appointments-data.service';
+import type { Appointment } from '@/types';
 
 export interface AppointmentsHeaderProps {
   onNewAppointment: (data: any) => void;
@@ -47,6 +48,8 @@ const AppointmentsTable = ({
   onCancel,
   onPagination,
 }: AppointmentsTableProps) => {
+  const { t } = useTranslation('components');
+
   const createActionHandlers = (appointment: Appointment) => {
     const handleView = () => {
       onView(appointment);
@@ -58,7 +61,7 @@ const AppointmentsTable = ({
 
   const columns: ColumnsType<Appointment> = [
     {
-      title: 'Pet & Owner',
+      title: t('appointments.petOwner'),
       key: 'pet_owner',
       width: 280,
       render: (appointment: Appointment) => (
@@ -70,14 +73,16 @@ const AppointmentsTable = ({
             className='bg-gradient-to-r from-cyan-500 to-blue-500'
           />
           <div className='flex-1'>
-            <div className='font-medium'>{appointment.pet?.name || 'Unknown Pet'}</div>
+            <div className='font-medium'>
+              {appointment.pet?.name || t('appointments.unknownPet')}
+            </div>
             <div className='text-sm text-text-light'>
               {appointment.pet?.breed
                 ? `${appointment.pet.breed} ${appointment.pet.species}`
-                : appointment.pet?.species || 'Unknown Species'}
+                : appointment.pet?.species || t('appointments.unknownSpecies')}
             </div>
             <div className='text-xs text-text-light'>
-              Owner ID: {appointment.owner_id || 'Unknown'}
+              {t('appointments.ownerId')}: {appointment.owner_id || t('appointments.unknown')}
             </div>
             {appointment.pet?.emergency_contact && (
               <div className='text-xs text-text-light flex items-center'>
@@ -90,7 +95,7 @@ const AppointmentsTable = ({
       ),
     },
     {
-      title: 'Service & Type',
+      title: t('appointments.serviceType'),
       key: 'service_type',
       width: 200,
       render: (appointment: Appointment) => (
@@ -118,7 +123,7 @@ const AppointmentsTable = ({
       ),
     },
     {
-      title: 'Date & Time',
+      title: t('appointments.dateTime'),
       key: 'datetime',
       width: 180,
       render: (appointment: Appointment) => (
@@ -140,7 +145,7 @@ const AppointmentsTable = ({
       ),
     },
     {
-      title: 'Status',
+      title: t('common:common.status'),
       key: 'status',
       width: 120,
       align: 'center',
@@ -179,33 +184,36 @@ const AppointmentsTable = ({
       ),
     },
     {
-      title: 'Clinic & Staff',
+      title: t('appointments.clinicStaff'),
       key: 'clinic_staff',
       width: 250,
       render: (appointment: Appointment) => (
         <div className='text-sm'>
           <div className='font-medium flex items-center'>
             <EnvironmentOutlined className='mr-1 text-xs' />
-            {appointment.clinic?.name || 'Unknown Clinic'}
+            {appointment.clinic?.name || t('appointments.unknownClinic')}
           </div>
           <div className='text-text-light'>
             {appointment.clinic?.city && appointment.clinic?.state
               ? `${appointment.clinic.city}, ${appointment.clinic.state}`
-              : 'Location not specified'}
+              : t('appointments.locationNotSpecified')}
           </div>
           <div className='text-xs text-text-light'>
-            Staff: {appointment.staff?.specialization || appointment.staff?.role || 'Unassigned'}
+            {t('appointments.staff')}:{' '}
+            {appointment.staff?.specialization ||
+              appointment.staff?.role ||
+              t('appointments.unassigned')}
           </div>
           {appointment.staff?.license_number && (
             <div className='text-xs text-text-light'>
-              License: {appointment.staff.license_number}
+              {t('appointments.license')}: {appointment.staff.license_number}
             </div>
           )}
         </div>
       ),
     },
     {
-      title: 'Pet Details',
+      title: t('appointments.petDetails'),
       key: 'pet_details',
       width: 200,
       render: (appointment: Appointment) => (
@@ -221,23 +229,29 @@ const AppointmentsTable = ({
                   {appointment.pet.gender}
                 </Tag>
               </div>
-              <div className='text-xs text-text-light'>Weight: {appointment.pet.weight} kg</div>
               <div className='text-xs text-text-light'>
-                Age:{' '}
+                {t('appointments.weight')}: {appointment.pet.weight} kg
+              </div>
+              <div className='text-xs text-text-light'>
+                {t('appointments.age')}:{' '}
                 {appointment.pet.date_of_birth
                   ? Math.floor(
                       (new Date().getTime() - new Date(appointment.pet.date_of_birth).getTime()) /
                         (365.25 * 24 * 60 * 60 * 1000)
                     )
-                  : 'Unknown'}{' '}
-                years
+                  : t('appointments.unknown')}{' '}
+                {t('appointments.years')}
               </div>
               <div className='flex gap-1'>
                 <Tag color={appointment.pet.is_vaccinated ? 'green' : 'red'}>
-                  {appointment.pet.is_vaccinated ? 'Vaccinated' : 'Not Vaccinated'}
+                  {appointment.pet.is_vaccinated
+                    ? t('appointments.vaccinated')
+                    : t('appointments.notVaccinated')}
                 </Tag>
                 <Tag color={appointment.pet.is_spayed_neutered ? 'green' : 'orange'}>
-                  {appointment.pet.is_spayed_neutered ? 'Spayed/Neutered' : 'Not Spayed/Neutered'}
+                  {appointment.pet.is_spayed_neutered
+                    ? t('appointments.spayedNeutered')
+                    : t('appointments.notSpayedNeutered')}
                 </Tag>
               </div>
             </>
@@ -246,21 +260,21 @@ const AppointmentsTable = ({
       ),
     },
     {
-      title: 'Notes',
+      title: t('appointments.notes'),
       key: 'notes',
       width: 80,
       ellipsis: true,
       render: (appointment: Appointment) => (
-        <Tooltip title={appointment.notes || 'No notes'}>
+        <Tooltip title={appointment.notes || t('common:common.noResults')}>
           <div className='text-sm text-text-light truncate'>
-            {appointment.notes?.slice(0, 40) || 'No notes'}
+            {appointment.notes?.slice(0, 40) || t('common:common.noResults')}
             {appointment.notes?.length && appointment.notes?.length > 40 && '...'}
           </div>
         </Tooltip>
       ),
     },
     {
-      title: 'Actions',
+      title: t('appointments.actions'),
       key: 'actions',
       width: 110,
       align: 'center',
@@ -269,7 +283,7 @@ const AppointmentsTable = ({
 
         return (
           <Space size='small'>
-            <Tooltip title='View Appointment Details'>
+            <Tooltip title={t('pages:appointments.viewDetails')}>
               <Button
                 type='text'
                 icon={<EyeOutlined />}
@@ -278,7 +292,7 @@ const AppointmentsTable = ({
                 onClick={handleView}
               />
             </Tooltip>
-            <Tooltip title='Cancel Appointment'>
+            <Tooltip title={t('appointments.cancel')}>
               <Button
                 type='text'
                 icon={<DeleteOutlined />}

@@ -1,5 +1,7 @@
-import { Form, FormInstance, Modal, Typography } from 'antd';
 import { FC, ReactNode } from 'react';
+import { Form, FormInstance, Modal, Typography } from 'antd';
+
+import { useTranslation } from 'react-i18next';
 
 const { Title } = Typography;
 
@@ -91,13 +93,15 @@ const FormModal: FC<FormModalProps> = ({
   layout = 'vertical',
   showFooter = true,
   okText,
-  cancelText = 'Cancel',
+  cancelText,
   className,
   formClassName,
   onSubmit,
   onCancel,
   destroyOnClose = true,
 }) => {
+  const { t } = useTranslation('components');
+
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
@@ -113,7 +117,9 @@ const FormModal: FC<FormModalProps> = ({
     onCancel();
   };
 
-  const defaultOkText = okText ?? (isEditMode ? 'Update' : 'Create');
+  const defaultOkText =
+    okText ?? (isEditMode ? t('forms.common.update') : t('forms.common.create'));
+  const defaultCancelText = cancelText ?? t('forms.common.cancel');
 
   return (
     <Modal
@@ -125,7 +131,7 @@ const FormModal: FC<FormModalProps> = ({
       width={width}
       destroyOnClose={destroyOnClose}
       okText={defaultOkText}
-      cancelText={cancelText}
+      cancelText={defaultCancelText}
       footer={showFooter ? undefined : null}
       className={className}
     >

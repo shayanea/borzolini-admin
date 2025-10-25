@@ -1,8 +1,9 @@
-import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Input, Row, Select } from 'antd';
-
 import { COMMON_BREEDS, PET_GENDERS, PET_SIZES, PET_SPECIES } from '@/constants/pets';
+import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
+
 import type { PetFiltersProps } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -33,13 +34,15 @@ const PetFilters = ({
   onActiveFilter,
   onClearFilters,
 }: PetFiltersProps) => {
+  const { t } = useTranslation('components');
+
   return (
     <Card className='admin-card admin-filters'>
       {/* First Row */}
       <Row gutter={[16, 16]} className='mb-4'>
         <Col xs={24} sm={12} md={6}>
           <Search
-            placeholder='Search pets...'
+            placeholder={t('petManagement.searchPlaceholder')}
             allowClear
             value={searchText}
             onSearch={onSearch}
@@ -49,7 +52,7 @@ const PetFilters = ({
         </Col>
         <Col xs={24} sm={12} md={4}>
           <Select
-            placeholder='Species'
+            placeholder={t('petManagement.species')}
             allowClear
             value={selectedSpecies}
             onChange={onSpeciesFilter}
@@ -64,7 +67,7 @@ const PetFilters = ({
         </Col>
         <Col xs={24} sm={12} md={4}>
           <Select
-            placeholder='Breed'
+            placeholder={t('petManagement.breed')}
             allowClear
             value={selectedBreed}
             onChange={onBreedFilter}
@@ -79,7 +82,7 @@ const PetFilters = ({
         </Col>
         <Col xs={24} sm={12} md={4}>
           <Select
-            placeholder='Gender'
+            placeholder={t('petManagement.gender')}
             allowClear
             value={selectedGender}
             onChange={onGenderFilter}
@@ -94,7 +97,7 @@ const PetFilters = ({
         </Col>
         <Col xs={24} sm={12} md={4}>
           <Select
-            placeholder='Size'
+            placeholder={t('petManagement.size')}
             allowClear
             value={selectedSize}
             onChange={onSizeFilter}
@@ -113,19 +116,19 @@ const PetFilters = ({
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} md={4}>
           <Select
-            placeholder='Status'
+            placeholder={t('userManagement.status')}
             allowClear
             value={isActiveFilter}
             onChange={onActiveFilter}
             className='w-full'
           >
-            <Option value={true}>Active</Option>
-            <Option value={false}>Inactive</Option>
+            <Option value={true}>{t('userManagement.active')}</Option>
+            <Option value={false}>{t('userManagement.inactive')}</Option>
           </Select>
         </Col>
         <Col xs={24} sm={12} md={4}>
           <Button icon={<FilterOutlined />} onClick={onClearFilters} className='w-full'>
-            Clear Filters
+            {t('petManagement.clearFilters')}
           </Button>
         </Col>
       </Row>

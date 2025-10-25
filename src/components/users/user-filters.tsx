@@ -3,6 +3,7 @@ import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 
 import { USER_ROLES } from '@/constants/user-management';
 import type { UserFiltersProps } from '@/types/user-management';
+import { useTranslation } from 'react-i18next';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -16,12 +17,14 @@ const UserFilters = ({
   onIsActiveFilter,
   onClearFilters,
 }: UserFiltersProps) => {
+  const { t } = useTranslation('components');
+
   return (
     <Card className='admin-card admin-filters'>
       <Row gutter={[16, 16]} className='mb-4'>
         <Col xs={24} sm={12} md={6}>
           <Search
-            placeholder='Search users...'
+            placeholder={t('userManagement.searchPlaceholder')}
             allowClear
             value={searchText}
             onSearch={onSearch}
@@ -31,7 +34,7 @@ const UserFilters = ({
         </Col>
         <Col xs={24} sm={12} md={4}>
           <Select
-            placeholder='Role'
+            placeholder={t('userManagement.role')}
             allowClear
             value={selectedRole}
             onChange={onRoleFilter}
@@ -45,20 +48,20 @@ const UserFilters = ({
         </Col>
         <Col xs={24} sm={12} md={4}>
           <Select
-            placeholder='Status'
+            placeholder={t('userManagement.status')}
             allowClear
             value={selectedIsActive}
             onChange={onIsActiveFilter}
             className='w-full'
           >
-            <Option value={true}>Active</Option>
-            <Option value={false}>Inactive</Option>
+            <Option value={true}>{t('userManagement.active')}</Option>
+            <Option value={false}>{t('userManagement.inactive')}</Option>
           </Select>
         </Col>
 
         <Col xs={24} sm={12} md={4}>
           <Button icon={<FilterOutlined />} onClick={onClearFilters} className='w-full'>
-            Clear Filters
+            {t('userManagement.clearFilters')}
           </Button>
         </Col>
       </Row>

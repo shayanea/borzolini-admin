@@ -1,20 +1,17 @@
-import { Divider, Form, Modal } from 'antd';
-import React, { useEffect } from 'react';
-import {
-  CreatePetCaseRequest,
-  UpdatePetCaseRequest,
-} from '../../types/pet-cases';
-
-import { HeartOutlined } from '@ant-design/icons';
-import { CASE_PRIORITIES } from '@/constants/pet-cases';
-import { getCasePriorityOptions, getCaseTypeOptions } from '@/constants/pet-cases';
-import { usePetCases } from '../../hooks/pet-cases';
-import { useMessage } from '../../hooks/use-message';
+import { CASE_PRIORITIES, getCasePriorityOptions, getCaseTypeOptions } from '@/constants/pet-cases';
 import {
   CaseActionButtonsSection,
   CaseBasicInfoSection,
   CaseDetailsSection,
 } from './pet-case-form-sections';
+import { CreatePetCaseRequest, UpdatePetCaseRequest } from '../../types/pet-cases';
+import { Divider, Form, Modal } from 'antd';
+import React, { useEffect } from 'react';
+
+import { HeartOutlined } from '@ant-design/icons';
+import { useMessage } from '../../hooks/use-message';
+import { usePetCases } from '../../hooks/pet-cases';
+import { useTranslation } from 'react-i18next';
 
 interface PetCaseFormModalProps {
   visible: boolean;
@@ -32,6 +29,7 @@ const PetCaseFormModal: React.FC<PetCaseFormModalProps> = ({
   editCase,
 }) => {
   const [form] = Form.useForm();
+  const { t } = useTranslation('components');
   const { updateCase, isCreating, isUpdating } = usePetCases(clinicId);
   const { success, error: showError, warning } = useMessage();
 
@@ -102,7 +100,7 @@ const PetCaseFormModal: React.FC<PetCaseFormModalProps> = ({
       title={
         <div className='flex items-center gap-2'>
           <HeartOutlined />
-          {isEdit ? 'Edit Pet Case' : 'Create New Pet Case'}
+          {isEdit ? t('forms.petCaseForm.modalTitleEdit') : t('forms.petCaseForm.modalTitle')}
         </div>
       }
       open={visible}
@@ -123,18 +121,18 @@ const PetCaseFormModal: React.FC<PetCaseFormModalProps> = ({
         {/* Basic Information */}
         <CaseBasicInfoSection
           form={form}
-          caseTypeLabels={Object.fromEntries(caseTypeOptions.map(option => [option.value, option.label]))}
-          casePriorityLabels={Object.fromEntries(casePriorityOptions.map(option => [option.value, option.label]))}
+          caseTypeLabels={Object.fromEntries(
+            caseTypeOptions.map(option => [option.value, option.label])
+          )}
+          casePriorityLabels={Object.fromEntries(
+            casePriorityOptions.map(option => [option.value, option.label])
+          )}
           isCreating={isCreating}
           isUpdating={isUpdating}
         />
 
         {/* Case Details */}
-        <CaseDetailsSection
-          form={form}
-          isCreating={isCreating}
-          isUpdating={isUpdating}
-        />
+        <CaseDetailsSection form={form} isCreating={isCreating} isUpdating={isUpdating} />
 
         <Divider />
 

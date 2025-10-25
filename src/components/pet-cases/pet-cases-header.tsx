@@ -21,6 +21,8 @@ interface PetCasesHeaderProps {
   onExport: () => void;
   onRefresh: () => void;
   onViewStats: () => void;
+  viewAllCases?: boolean;
+  clinicName?: string;
 }
 
 const PetCasesHeader: React.FC<PetCasesHeaderProps> = ({
@@ -32,12 +34,18 @@ const PetCasesHeader: React.FC<PetCasesHeaderProps> = ({
   onExport,
   onRefresh,
   onViewStats,
+  viewAllCases = false,
+  clinicName,
 }) => {
   return (
     <div className='mb-6'>
-      <Title level={3} className='mb-4'>
-        Pet Cases Management
-      </Title>
+      <div className='flex items-center gap-3 mb-4'>
+        <Title level={3} className='mb-0'>
+          Pet Cases Management
+        </Title>
+        {viewAllCases && <Badge color='purple' text='All Clinics' />}
+        {clinicName && !viewAllCases && <Badge color='blue' text={clinicName} />}
+      </div>
       <div className='flex items-center gap-4 text-gray-600 mb-4'>
         <span>Total Cases: {totalCases}</span>
         {stats && (

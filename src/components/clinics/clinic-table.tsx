@@ -1,3 +1,5 @@
+import { Badge, Button, Space, Table, Tag, Typography } from 'antd';
+import type { ColumnsType, TableProps } from 'antd/es/table';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -5,14 +7,13 @@ import {
   MedicineBoxOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
-import { Badge, Button, Space, Table, Tag, Typography } from 'antd';
-import type { ColumnsType, TableProps } from 'antd/es/table';
-import { useNavigate } from 'react-router-dom';
 
-import { ROUTES } from '@/constants/routes';
 import type { Clinic } from '@/types';
-import type { TablePaginationConfig } from 'antd';
+import { ROUTES } from '@/constants/routes';
 import { SocialMediaLinks } from '@/components/common';
+import type { TablePaginationConfig } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const { Text, Link } = Typography;
 
@@ -40,13 +41,14 @@ const ClinicTable = ({
   onViewStaff,
 }: ClinicTableProps) => {
   const navigate = useNavigate();
+  const { t } = useTranslation('components');
 
   const handleViewPetCases = (clinic: Clinic) => {
     navigate(`${ROUTES.PET_CASES}?clinicId=${clinic.id}`);
   };
   const columns: ColumnsType<Clinic> = [
     {
-      title: 'Name',
+      title: t('clinicTable.name'),
       dataIndex: 'name',
       key: 'name',
       sorter: true,
@@ -59,7 +61,7 @@ const ClinicTable = ({
       ),
     },
     {
-      title: 'Location',
+      title: t('clinicTable.location'),
       key: 'location',
       render: (_, record: Clinic) => (
         <div className='flex flex-col'>
@@ -84,7 +86,7 @@ const ClinicTable = ({
       ),
     },
     {
-      title: 'Contact',
+      title: t('clinicTable.contact'),
       key: 'contact',
       render: (_, record: Clinic) => (
         <div className='flex flex-col space-y-1'>
@@ -115,7 +117,7 @@ const ClinicTable = ({
       ),
     },
     {
-      title: 'Rating',
+      title: t('clinicTable.rating'),
       dataIndex: 'rating',
       key: 'rating',
       sorter: true,
@@ -131,38 +133,41 @@ const ClinicTable = ({
             />
             <Text
               className='text-text-secondary text-sm'
-              ellipsis={{ tooltip: `(${record.totalReviews} reviews)` }}
+              ellipsis={{ tooltip: `(${record.totalReviews} ${t('clinicTable.reviews')})` }}
             >
-              ({record.totalReviews} reviews)
+              ({record.totalReviews} {t('clinicTable.reviews')})
             </Text>
           </div>
         </div>
       ),
     },
     {
-      title: 'Services',
+      title: t('clinicTable.services'),
       key: 'services',
       render: (_, record: Clinic) => (
         <div className='flex flex-wrap gap-1'>
           {record.services.length > 3 && (
             <Tag color='default' className='text-xs'>
-              +{record.services.length - 3} more
+              {t('clinicTable.moreServices', { count: record.services.length - 3 })}
             </Tag>
           )}
         </div>
       ),
     },
     {
-      title: 'Status',
+      title: t('clinicTable.status'),
       dataIndex: 'isActive',
       key: 'isActive',
       width: 120,
       render: (isActive: boolean) => (
-        <Badge status={isActive ? 'success' : 'default'} text={isActive ? 'Active' : 'Inactive'} />
+        <Badge
+          status={isActive ? 'success' : 'default'}
+          text={isActive ? t('clinicTable.active') : t('clinicTable.inactive')}
+        />
       ),
     },
     {
-      title: 'Actions',
+      title: t('clinicTable.actions'),
       key: 'actions',
       width: 120,
       render: (_, record: Clinic) => (
@@ -172,7 +177,7 @@ const ClinicTable = ({
             icon={<EyeOutlined />}
             size='small'
             className='text-primary-navy hover:text-primary-dark'
-            title='View Details'
+            title={t('clinicTable.viewDetails')}
             onClick={() => onView && onView(record)}
           />
           <Button
@@ -180,7 +185,7 @@ const ClinicTable = ({
             icon={<TeamOutlined />}
             size='small'
             className='text-primary-navy hover:text-primary-dark'
-            title='View Staff & Veterinarians'
+            title={t('clinicTable.viewStaffVeterinarians')}
             onClick={() => onViewStaff && onViewStaff(record)}
           />
           <Button
@@ -188,7 +193,7 @@ const ClinicTable = ({
             icon={<MedicineBoxOutlined />}
             size='small'
             className='text-primary-navy hover:text-primary-dark'
-            title='View Pet Cases'
+            title={t('clinicTable.viewPetCases')}
             onClick={() => handleViewPetCases(record)}
           />
           <Button
@@ -197,7 +202,7 @@ const ClinicTable = ({
             size='small'
             className='text-primary-navy hover:text-primary-dark'
             onClick={() => onEdit(record)}
-            title='Edit Clinic'
+            title={t('clinicTable.editClinic')}
           />
           <Button
             type='text'
@@ -205,7 +210,7 @@ const ClinicTable = ({
             size='small'
             danger
             onClick={() => onDelete(record.id)}
-            title='Delete Clinic'
+            title={t('clinicTable.deleteClinic')}
           />
         </Space>
       ),

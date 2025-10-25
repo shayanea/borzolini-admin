@@ -13,6 +13,7 @@ import React, { useState } from 'react';
 import { ClinicPetCase } from '../../types/pet-cases';
 import { PetCasesService } from '../../services/pet-cases.service';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 interface PetCasesTableProps {
   cases: ClinicPetCase[];
@@ -31,6 +32,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
   selectedRowKeys,
   onSelectionChange,
 }) => {
+  const { t } = useTranslation('components');
   const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
 
   const getStatusColor = (status: string) => PetCasesService.getStatusColor(status);
@@ -41,7 +43,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
 
   const columns = [
     {
-      title: 'Case #',
+      title: t('petCasesTable.caseNumber'),
       dataIndex: 'case_number',
       key: 'case_number',
       width: 120,
@@ -50,14 +52,16 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
       ),
     },
     {
-      title: 'Pet & Owner',
+      title: t('petCasesTable.petOwner'),
       key: 'pet_owner',
       width: 250,
       render: (record: ClinicPetCase) => (
         <div className='flex items-center space-x-3'>
           <Avatar src={record.pet?.photo_url} icon={<HeartOutlined />} size='small' />
           <div>
-            <div className='font-medium text-sm'>{record.pet?.name || 'Unknown Pet'}</div>
+            <div className='font-medium text-sm'>
+              {record.pet?.name || t('petCasesTable.unknownPet')}
+            </div>
             <div className='text-xs text-gray-500'>
               {record.pet?.species} {record.pet?.breed ? `• ${record.pet?.breed}` : ''}
             </div>
@@ -69,7 +73,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
       ),
     },
     {
-      title: 'Type',
+      title: t('petCasesTable.type'),
       dataIndex: 'case_type',
       key: 'case_type',
       width: 180,
@@ -78,7 +82,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
       ),
     },
     {
-      title: 'Status',
+      title: t('petCasesTable.status'),
       dataIndex: 'status',
       key: 'status',
       width: 180,
@@ -87,7 +91,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
       ),
     },
     {
-      title: 'Priority',
+      title: t('petCasesTable.priority'),
       dataIndex: 'priority',
       key: 'priority',
       width: 100,
@@ -96,7 +100,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
       ),
     },
     {
-      title: 'Vet',
+      title: t('petCasesTable.vet'),
       key: 'vet',
       width: 200,
       render: (record: ClinicPetCase) => (
@@ -105,13 +109,13 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
           <span className='text-sm'>
             {record.veterinarian
               ? `${record.veterinarian.firstName} ${record.veterinarian.lastName}`
-              : 'Unassigned'}
+              : t('petCasesTable.unassigned')}
           </span>
         </div>
       ),
     },
     {
-      title: 'Days Open',
+      title: t('petCasesTable.daysOpen'),
       key: 'days_open',
       width: 100,
       render: (record: ClinicPetCase) => {
@@ -125,7 +129,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
       },
     },
     {
-      title: 'Created',
+      title: t('petCasesTable.created'),
       dataIndex: 'created_at',
       key: 'created_at',
       width: 120,
@@ -134,13 +138,13 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
       ),
     },
     {
-      title: 'Actions',
+      title: t('petCasesTable.actions'),
       key: 'actions',
       width: 120,
       fixed: 'right' as const,
       render: (record: ClinicPetCase) => (
         <Space size='small'>
-          <Tooltip title='View Details'>
+          <Tooltip title={t('petCasesTable.viewDetails')}>
             <Button
               type='text'
               size='small'
@@ -148,7 +152,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
               onClick={() => onViewCase(record)}
             />
           </Tooltip>
-          <Tooltip title='Edit Case'>
+          <Tooltip title={t('petCasesTable.editCase')}>
             <Button
               type='text'
               size='small'
@@ -161,7 +165,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
               items: [
                 {
                   key: 'timeline',
-                  label: 'View Timeline',
+                  label: t('petCasesTable.viewTimeline'),
                   onClick: () => {
                     setExpandedRowKeys(prev =>
                       prev.includes(record.id)
@@ -185,32 +189,34 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
     <div className='p-4 bg-gray-50 rounded'>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         <div>
-          <h4 className='font-medium mb-2'>Case Details</h4>
+          <h4 className='font-medium mb-2'>{t('petCasesTable.caseDetails')}</h4>
           <div className='space-y-1 text-sm'>
             <p>
-              <strong>Title:</strong> {record.title}
+              <strong>{t('petCasesTable.title')}:</strong> {record.title}
             </p>
             <p>
-              <strong>Description:</strong> {record.description}
+              <strong>{t('petCasesTable.description')}:</strong> {record.description}
             </p>
             {record.diagnosis && (
               <p>
-                <strong>Diagnosis:</strong> {record.diagnosis}
+                <strong>{t('petCasesTable.diagnosis')}:</strong> {record.diagnosis}
               </p>
             )}
             {record.notes && (
               <p>
-                <strong>Notes:</strong> {record.notes}
+                <strong>{t('petCasesTable.notes')}:</strong> {record.notes}
               </p>
             )}
           </div>
         </div>
         <div>
-          <h4 className='font-medium mb-2'>Symptoms</h4>
+          <h4 className='font-medium mb-2'>{t('petCasesTable.symptoms')}</h4>
           <div className='space-y-2'>
             {record.initial_symptoms.length > 0 && (
               <div>
-                <p className='text-sm font-medium text-gray-700'>Initial Symptoms:</p>
+                <p className='text-sm font-medium text-gray-700'>
+                  {t('petCasesTable.initialSymptoms')}:
+                </p>
                 <div className='flex flex-wrap gap-1 mt-1'>
                   {record.initial_symptoms.map((symptom, index) => (
                     <Tag key={index} color='orange'>
@@ -222,7 +228,9 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
             )}
             {record.current_symptoms.length > 0 && (
               <div>
-                <p className='text-sm font-medium text-gray-700'>Current Symptoms:</p>
+                <p className='text-sm font-medium text-gray-700'>
+                  {t('petCasesTable.currentSymptoms')}:
+                </p>
                 <div className='flex flex-wrap gap-1 mt-1'>
                   {record.current_symptoms.map((symptom, index) => (
                     <Tag key={index} color='blue'>

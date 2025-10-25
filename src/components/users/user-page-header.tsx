@@ -1,8 +1,9 @@
-import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Button, Space, Typography } from 'antd';
+import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 
 import { ExportButton } from '@/components/common';
 import type { UserPageHeaderProps } from '@/types/user-management';
+import { useTranslation } from 'react-i18next';
 
 const { Title, Text } = Typography;
 
@@ -26,6 +27,8 @@ const UserPageHeader = ({
   filters = {},
   estimatedRecordCount = 0,
 }: UserPageHeaderPropsWithTitle) => {
+  const { t } = useTranslation('components');
+
   return (
     <div className='flex items-center justify-between'>
       <div>
@@ -37,7 +40,7 @@ const UserPageHeader = ({
 
       <Space>
         <Button icon={<ReloadOutlined />} onClick={onRefresh} loading={loading}>
-          Refresh
+          {t('userManagement.refresh')}
         </Button>
         <ExportButton
           entityType={title === 'Veterinarians' ? 'veterinarians' : 'users'}
@@ -53,7 +56,9 @@ const UserPageHeader = ({
           className='bg-primary-navy border-primary-navy'
           onClick={onAddUser}
         >
-          Add {title === 'Veterinarians' ? 'Veterinarian' : 'User'}
+          {title === 'Veterinarians'
+            ? t('userManagement.addVeterinarian')
+            : t('userManagement.addUser')}
         </Button>
       </Space>
     </div>

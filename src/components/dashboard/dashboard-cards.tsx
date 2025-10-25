@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface DashboardCardProps {
   title: string;
@@ -53,37 +54,36 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   color,
   trend,
 }) => {
+  const { t } = useTranslation('components');
   const config = colorConfig[color];
 
   return (
     <div
       className={`bg-gradient-to-br ${config.gradient} border-2 ${config.border} rounded-2xl p-6 hover:shadow-lg transition-all cursor-pointer group`}
     >
-      <div className="flex items-start justify-between mb-4">
+      <div className='flex items-start justify-between mb-4'>
         <span className={`text-4xl group-hover:scale-110 transition-transform ${config.icon}`}>
           {icon}
         </span>
-        <span className="text-xs bg-white px-3 py-1 rounded-full text-slate-600 font-medium shadow-sm">
-          Today
+        <span className='text-xs bg-white px-3 py-1 rounded-full text-slate-600 font-medium shadow-sm'>
+          {t('dashboard.cards.today')}
         </span>
       </div>
 
-      <h3 className="text-slate-600 text-sm font-medium mb-1">{title}</h3>
-      <div className="flex items-end justify-between">
-        <p className="text-3xl font-bold text-slate-900">{value}</p>
+      <h3 className='text-slate-600 text-sm font-medium mb-1'>{title}</h3>
+      <div className='flex items-end justify-between'>
+        <p className='text-3xl font-bold text-slate-900'>{value}</p>
         {trend && (
           <span
             className={`text-xs font-semibold px-2 py-1 rounded-lg ${
-              trend.isPositive
-                ? 'bg-emerald-100 text-emerald-700'
-                : 'bg-red-100 text-red-700'
+              trend.isPositive ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
             }`}
           >
             {trend.isPositive ? '↑' : '↓'} {trend.value}%
           </span>
         )}
       </div>
-      <p className="text-sm text-slate-500 mt-3">{subtitle}</p>
+      <p className='text-sm text-slate-500 mt-3'>{subtitle}</p>
     </div>
   );
 };
@@ -128,9 +128,28 @@ const DashboardCards: React.FC<DashboardCardsProps> = ({
     },
   ],
 }) => {
+  const { t } = useTranslation('components');
+
+  // Translate default cards if they match the hardcoded values
+  const translatedCards = cards.map(card => {
+    if (card.title === "Today's Appointments") {
+      return { ...card, title: t('dashboard.cards.todaysAppointments') };
+    }
+    if (card.title === 'Active Patients') {
+      return { ...card, title: t('dashboard.cards.activePatients') };
+    }
+    if (card.title === 'Pending Tasks') {
+      return { ...card, title: t('dashboard.cards.pendingTasks') };
+    }
+    if (card.title === 'Revenue (Month)') {
+      return { ...card, title: t('dashboard.cards.revenueMonth') };
+    }
+    return card;
+  });
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      {cards.map((card, idx) => (
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
+      {translatedCards.map((card, idx) => (
         <DashboardCard key={idx} {...card} />
       ))}
     </div>

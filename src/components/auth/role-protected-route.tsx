@@ -1,13 +1,14 @@
 // Role-based route protection component
 import { Button, Result } from 'antd';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { AuthBackground } from '@/components/common';
 import { ROUTES } from '@/constants';
-import { UserRole } from '@/types';
 import { getAccessibleRoutes } from '@/constants/menu-permissions';
 import { useCurrentUser } from '@/hooks/use-auth';
+import { UserRole } from '@/types';
 
 interface RoleProtectedRouteProps {
   children: React.ReactNode;
@@ -20,6 +21,7 @@ const RoleProtectedRoute = ({
   requiredRole,
   fallbackRoute = ROUTES.APPOINTMENTS,
 }: RoleProtectedRouteProps) => {
+  const { t } = useTranslation('components');
   const location = useLocation();
   const navigate = useNavigate();
   const { data: user, isLoading, error } = useCurrentUser();
@@ -37,7 +39,7 @@ const RoleProtectedRoute = ({
     return (
       <AuthBackground variant='gradient'>
         <div className='text-center'>
-          <div className='text-white text-lg'>Validating access...</div>
+          <div className='text-white text-lg'>{t('auth.validatingAccess')}</div>
         </div>
       </AuthBackground>
     );
@@ -64,14 +66,14 @@ const RoleProtectedRoute = ({
       <AuthBackground variant='gradient'>
         <Result
           status='403'
-          title='Access Denied'
-          subTitle={`This page requires ${requiredRole} role. Your role: ${userRole}`}
+          title={t('auth.accessDenied')}
+          subTitle={t('auth.roleRequired', { role: requiredRole, userRole })}
           extra={[
             <Button type='primary' key='dashboard' onClick={handleGoToDashboard}>
-              Go to Dashboard
+              {t('auth.goToDashboard')}
             </Button>,
             <Button key='fallback' onClick={handleGoToFallback}>
-              Go to Fallback
+              {t('auth.goToFallback')}
             </Button>,
           ]}
         />
@@ -92,14 +94,14 @@ const RoleProtectedRoute = ({
       <AuthBackground variant='gradient'>
         <Result
           status='403'
-          title='Access Denied'
-          subTitle={`You don't have permission to access this page with your current role (${userRole}).`}
+          title={t('auth.accessDenied')}
+          subTitle={t('auth.noPermissionRole', { role: userRole })}
           extra={[
             <Button type='primary' key='dashboard' onClick={handleGoToDashboard}>
-              Go to Dashboard
+              {t('auth.goToDashboard')}
             </Button>,
             <Button key='fallback' onClick={handleGoToFallback}>
-              Go to Fallback
+              {t('auth.goToFallback')}
             </Button>,
           ]}
         />

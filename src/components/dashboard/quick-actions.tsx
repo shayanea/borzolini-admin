@@ -1,10 +1,12 @@
 import { CalendarOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
 import { Card, Space } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import { ROUTES } from '@/constants';
 import { useNavigate } from 'react-router-dom';
 
 const QuickActions = () => {
+  const { t } = useTranslation('components');
   const navigate = useNavigate();
 
   const handleNewAppointment = () => {
@@ -22,29 +24,29 @@ const QuickActions = () => {
   const actions = [
     {
       icon: <CalendarOutlined className='text-white text-lg' />,
-      title: 'New Appointment',
-      description: 'Schedule a new visit',
+      title: t('dashboard.quickActions.newAppointment'),
+      description: t('dashboard.quickActions.scheduleVisit'),
       bgColor: 'bg-primary-navy',
       onClick: handleNewAppointment,
     },
     {
       icon: <UserOutlined className='text-white text-lg' />,
-      title: 'Add Patient',
-      description: 'Register new patient',
+      title: t('dashboard.quickActions.addPatient'),
+      description: t('dashboard.quickActions.registerPatient'),
       bgColor: 'bg-primary-orange',
       onClick: handleAddPatient,
     },
     {
       icon: <HomeOutlined className='text-white text-lg' />,
-      title: 'Add Clinic',
-      description: 'Register new clinic',
+      title: t('dashboard.quickActions.addClinic'),
+      description: t('dashboard.quickActions.registerClinic'),
       bgColor: 'bg-health-excellent',
       onClick: handleAddClinic,
     },
   ];
 
   return (
-    <Card title='Quick Actions' className='admin-card border-0 shadow-sm'>
+    <Card title={t('dashboard.quickActions.title')} className='admin-card border-0 shadow-sm'>
       <Space direction='vertical' className='w-full' size='middle'>
         {actions.map((action, index) => (
           <div

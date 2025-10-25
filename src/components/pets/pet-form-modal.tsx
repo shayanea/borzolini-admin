@@ -14,6 +14,7 @@ import { useDistinctAllergies, useDistinctMedications } from '@/hooks/use-pet-lo
 
 import dayjs from 'dayjs';
 import { usePetOwners } from '@/hooks/use-pet-owners';
+import { useTranslation } from 'react-i18next';
 
 const PetFormModal = ({
   isVisible,
@@ -22,6 +23,7 @@ const PetFormModal = ({
   onCancel,
   onSubmit,
 }: PetFormModalProps) => {
+  const { t } = useTranslation('components');
   const [form] = Form.useForm();
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedSpecies, setSelectedSpecies] = useState<string>('');
@@ -116,7 +118,7 @@ const PetFormModal = ({
 
   return (
     <Modal
-      title={editingPet ? 'Edit Pet' : 'Add New Pet'}
+      title={editingPet ? t('modals.petForm.titleEdit') : t('modals.petForm.titleAdd')}
       open={isVisible}
       onCancel={handleCancel}
       footer={null}

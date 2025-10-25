@@ -1,15 +1,16 @@
-import type { UserFormModalProps, UserFormValues } from '@/types/user-management';
-import { Form, Modal } from 'antd';
-import dayjs from 'dayjs';
-import React, { useCallback } from 'react';
-
-import { USER_ROLES } from '@/constants/user-management';
 import {
   AccountInfoSection,
   ActionButtonsSection,
   AddressSection,
   PersonalInfoSection,
 } from './user-form-sections';
+import { Form, Modal } from 'antd';
+import React, { useCallback } from 'react';
+import type { UserFormModalProps, UserFormValues } from '@/types/user-management';
+
+import { USER_ROLES } from '@/constants/user-management';
+import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 const UserFormModal = ({
   isVisible,
@@ -18,6 +19,7 @@ const UserFormModal = ({
   onCancel,
   onSubmit,
 }: UserFormModalProps) => {
+  const { t } = useTranslation('components');
   const [form] = Form.useForm();
 
   React.useEffect(() => {
@@ -63,7 +65,7 @@ const UserFormModal = ({
 
   return (
     <Modal
-      title={editingUser ? 'Edit User' : 'Create New User'}
+      title={editingUser ? t('modals.userForm.titleEdit') : t('modals.userForm.titleCreate')}
       open={isVisible}
       onCancel={handleCancel}
       footer={null}

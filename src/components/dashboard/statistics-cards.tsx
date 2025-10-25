@@ -9,6 +9,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Card, Col, Row, Statistic, Typography } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import type { DashboardStats } from '@/types';
 
@@ -19,6 +20,8 @@ interface StatisticsCardsProps {
 }
 
 const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
+  const { t } = useTranslation('components');
+
   return (
     <div className='space-y-6'>
       {/* Main Statistics Row */}
@@ -32,7 +35,11 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
                 </div>
               </div>
               <Statistic
-                title={<span className='text-sm font-medium text-text-primary'>Total Users</span>}
+                title={
+                  <span className='text-sm font-medium text-text-primary'>
+                    {t('dashboard.stats.totalUsers')}
+                  </span>
+                }
                 value={stats.totalUsers}
                 valueStyle={{
                   color: '#023e8a',
@@ -42,7 +49,9 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
                 }}
               />
               <div className='mt-2'>
-                <Text className='text-sm text-text-light'>+{stats.newUsersThisWeek} this week</Text>
+                <Text className='text-sm text-text-light'>
+                  +{stats.newUsersThisWeek} {t('dashboard.stats.newUsersThisWeek')}
+                </Text>
               </div>
             </div>
           </Card>
@@ -59,7 +68,7 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
               <Statistic
                 title={
                   <span className='text-sm font-medium text-text-primary'>
-                    Today's Appointments
+                    {t('dashboard.stats.appointmentsToday')}
                   </span>
                 }
                 value={stats.appointmentsToday}
@@ -71,7 +80,9 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
                 }}
               />
               <div className='mt-2'>
-                <Text className='text-sm text-text-light'>{stats.pendingAppointments} pending</Text>
+                <Text className='text-sm text-text-light'>
+                  {stats.pendingAppointments} {t('dashboard.stats.pendingAppointments')}
+                </Text>
               </div>
             </div>
           </Card>
@@ -86,7 +97,11 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
                 </div>
               </div>
               <Statistic
-                title={<span className='text-sm font-medium text-text-primary'>Veterinarians</span>}
+                title={
+                  <span className='text-sm font-medium text-text-primary'>
+                    {t('dashboard.stats.veterinarians')}
+                  </span>
+                }
                 value={stats.totalVeterinarians}
                 valueStyle={{
                   color: '#059669',
@@ -96,7 +111,9 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
                 }}
               />
               <div className='mt-2'>
-                <Text className='text-sm text-text-light'>{stats.totalClinics} clinics</Text>
+                <Text className='text-sm text-text-light'>
+                  {stats.totalClinics} {t('dashboard.stats.clinics')}
+                </Text>
               </div>
             </div>
           </Card>
@@ -112,7 +129,9 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
               </div>
               <Statistic
                 title={
-                  <span className='text-sm font-medium text-text-primary'>Monthly Revenue</span>
+                  <span className='text-sm font-medium text-text-primary'>
+                    {t('dashboard.stats.monthlyRevenue')}
+                  </span>
                 }
                 value={0}
                 suffix='USD'
@@ -125,7 +144,9 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
               />
               <div className='mt-2 flex items-center justify-center'>
                 <RiseOutlined className='text-green-500 mr-1' />
-                <Text className='text-green-500 text-sm font-medium'>+0% from last month</Text>
+                <Text className='text-green-500 text-sm font-medium'>
+                  +0% {t('dashboard.stats.fromLastMonth')}
+                </Text>
               </div>
             </div>
           </Card>
@@ -143,7 +164,11 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
                 </div>
               </div>
               <Statistic
-                title={<span className='text-sm font-medium text-text-primary'>Total Clinics</span>}
+                title={
+                  <span className='text-sm font-medium text-text-primary'>
+                    {t('dashboard.stats.totalClinics')}
+                  </span>
+                }
                 value={stats.totalClinics}
                 valueStyle={{
                   color: '#3b82f6',
@@ -154,7 +179,7 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
               />
               <div className='mt-2'>
                 <Text className='text-sm text-text-light'>
-                  +{stats.newClinicsThisMonth} this month
+                  +{stats.newClinicsThisMonth} {t('dashboard.stats.newClinicsThisMonth')}
                 </Text>
               </div>
             </div>
@@ -170,7 +195,11 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
                 </div>
               </div>
               <Statistic
-                title={<span className='text-sm font-medium text-text-primary'>Urgent Cases</span>}
+                title={
+                  <span className='text-sm font-medium text-text-primary'>
+                    {t('dashboard.stats.urgentCases')}
+                  </span>
+                }
                 value={stats.urgentAppointments}
                 valueStyle={{
                   color: '#ef4444',
@@ -196,7 +225,9 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
               </div>
               <Statistic
                 title={
-                  <span className='text-sm font-medium text-text-primary'>Completed Today</span>
+                  <span className='text-sm font-medium text-text-primary'>
+                    {t('dashboard.stats.completedToday')}
+                  </span>
                 }
                 value={stats.completedAppointments}
                 valueStyle={{
@@ -208,7 +239,7 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
               />
               <div className='mt-2'>
                 <Text className='text-sm text-text-light'>
-                  {stats.averageAppointmentDuration} min avg
+                  {stats.averageAppointmentDuration} {t('dashboard.stats.minAvg')}
                 </Text>
               </div>
             </div>
@@ -225,7 +256,9 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
               </div>
               <Statistic
                 title={
-                  <span className='text-sm font-medium text-text-primary'>Total Patients</span>
+                  <span className='text-sm font-medium text-text-primary'>
+                    {t('dashboard.stats.totalPatients')}
+                  </span>
                 }
                 value={stats.totalPatients}
                 valueStyle={{
@@ -236,7 +269,9 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
                 }}
               />
               <div className='mt-2'>
-                <Text className='text-sm text-text-light'>Active patients</Text>
+                <Text className='text-sm text-text-light'>
+                  {t('dashboard.stats.activePatients')}
+                </Text>
               </div>
             </div>
           </Card>

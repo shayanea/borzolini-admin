@@ -1,12 +1,8 @@
 import { Col, Form, Input, Row } from 'antd';
-import { FC } from 'react';
+import { MIN_LENGTH_RULE, REQUIRED_RULE, createPostalCodeRule } from '@/constants/form-validation';
 
-import {
-  MIN_LENGTH_RULE,
-  POSTAL_CODE_RULE,
-  REQUIRED_RULE,
-  VALIDATION_MESSAGES,
-} from '@/constants/form-validation';
+import { FC } from 'react';
+import { useValidationMessages } from '@/hooks/use-validation-messages';
 
 const { TextArea } = Input;
 
@@ -84,8 +80,10 @@ const AddressFields: FC<AddressFieldsProps> = ({
   addressMinLength = 5,
   cityMinLength = 2,
   disabled = false,
-  validationMessages = {},
+  validationMessages: customValidationMessages = {},
 }) => {
+  const validationMessages = useValidationMessages();
+
   const fieldLabels = {
     address: labels.address ?? 'Address',
     city: labels.city ?? 'City',
@@ -109,39 +107,45 @@ const AddressFields: FC<AddressFieldsProps> = ({
 
   const addressRules = required
     ? [
-        REQUIRED_RULE(validationMessages.addressRequired ?? VALIDATION_MESSAGES.ADDRESS_REQUIRED),
+        REQUIRED_RULE(
+          customValidationMessages.addressRequired ?? validationMessages.ADDRESS_REQUIRED
+        ),
         MIN_LENGTH_RULE(
           addressMinLength,
-          validationMessages.addressMinLength ?? VALIDATION_MESSAGES.ADDRESS_MIN_LENGTH
+          customValidationMessages.addressMinLength ?? validationMessages.ADDRESS_MIN_LENGTH
         ),
       ]
     : [
         MIN_LENGTH_RULE(
           addressMinLength,
-          validationMessages.addressMinLength ?? VALIDATION_MESSAGES.ADDRESS_MIN_LENGTH
+          customValidationMessages.addressMinLength ?? validationMessages.ADDRESS_MIN_LENGTH
         ),
       ];
 
   const cityRules = required
     ? [
-        REQUIRED_RULE(validationMessages.cityRequired ?? VALIDATION_MESSAGES.CITY_REQUIRED),
+        REQUIRED_RULE(customValidationMessages.cityRequired ?? validationMessages.CITY_REQUIRED),
         MIN_LENGTH_RULE(
           cityMinLength,
-          validationMessages.cityMinLength ?? VALIDATION_MESSAGES.CITY_MIN_LENGTH
+          customValidationMessages.cityMinLength ?? validationMessages.CITY_MIN_LENGTH
         ),
       ]
     : [
         MIN_LENGTH_RULE(
           cityMinLength,
-          validationMessages.cityMinLength ?? VALIDATION_MESSAGES.CITY_MIN_LENGTH
+          customValidationMessages.cityMinLength ?? validationMessages.CITY_MIN_LENGTH
         ),
       ];
 
   const countryRules = required
-    ? [REQUIRED_RULE(validationMessages.countryRequired ?? VALIDATION_MESSAGES.COUNTRY_REQUIRED)]
+    ? [
+        REQUIRED_RULE(
+          customValidationMessages.countryRequired ?? validationMessages.COUNTRY_REQUIRED
+        ),
+      ]
     : [];
 
-  const postalCodeRules = [POSTAL_CODE_RULE];
+  const postalCodeRules = [createPostalCodeRule(validationMessages.INVALID_POSTAL_CODE)];
 
   return (
     <>
