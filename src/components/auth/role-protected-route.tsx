@@ -1,14 +1,14 @@
 // Role-based route protection component
 import { Button, Result } from 'antd';
-import React, { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import React, { useCallback } from 'react';
 
 import { AuthBackground } from '@/components/common';
 import { ROUTES } from '@/constants';
+import { UserRole } from '@/types';
 import { getAccessibleRoutes } from '@/constants/menu-permissions';
 import { useCurrentUser } from '@/hooks/use-auth';
-import { UserRole } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface RoleProtectedRouteProps {
   children: React.ReactNode;
@@ -37,7 +37,7 @@ const RoleProtectedRoute = ({
   // Show loading while checking authentication
   if (isLoading) {
     return (
-      <AuthBackground variant='gradient'>
+      <AuthBackground variant='default'>
         <div className='text-center'>
           <div className='text-white text-lg'>{t('auth.validatingAccess')}</div>
         </div>
@@ -63,7 +63,7 @@ const RoleProtectedRoute = ({
   // Check specific role requirement if specified
   if (requiredRole && userRole !== requiredRole) {
     return (
-      <AuthBackground variant='gradient'>
+      <AuthBackground variant='default'>
         <Result
           status='403'
           title={t('auth.accessDenied')}
@@ -91,7 +91,7 @@ const RoleProtectedRoute = ({
     }
 
     return (
-      <AuthBackground variant='gradient'>
+      <AuthBackground variant='default'>
         <Result
           status='403'
           title={t('auth.accessDenied')}

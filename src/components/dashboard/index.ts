@@ -8,4 +8,3 @@ export { default as TopPerformingClinics } from './top-performing-clinics';
 
 // Modern components
 export { default as AppointmentsList } from './appointments-list';
-export { DashboardCard, default as DashboardCards } from './dashboard-cards';

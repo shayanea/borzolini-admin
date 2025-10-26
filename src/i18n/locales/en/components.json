@@ -2,7 +2,12 @@
   "header": {
     "welcome": "Welcome back",
     "readyToHelp": "Ready to help your patients",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "logout": "Logout",
+    "searchPlaceholder": "Search appointments, patients...",
+    "viewAllNotifications": "View all notifications",
+    "notificationsWithCount": "{{count}} new"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -10,7 +15,13 @@
     "patients": "Patients",
     "team": "Team",
     "reports": "Reports",
-    "settings": "Settings"
+    "settings": "Settings",
+    "petCases": "Pet Cases",
+    "clinics": "Clinics",
+    "reviews": "Reviews",
+    "quickAccess": "Quick Access",
+    "analytics": "Analytics",
+    "trends": "Trends"
   },
   "filters": {
     "all": "All",

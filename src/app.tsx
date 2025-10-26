@@ -1,10 +1,10 @@
+import { ClinicRegister, ClinicRegisterSuccess } from './pages';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import LoginForm from '@/components/auth/login-form';
+import ModernAdminLayoutV2 from '@/components/layout/modern-admin-layout-v2';
 import ProtectedRoute from '@/components/auth/protected-route';
-import AdminLayout from '@/components/layout/admin-layout';
 import { ROUTES } from './constants';
-import { ClinicRegister, ClinicRegisterSuccess } from './pages';
 
 const App = () => {
   return (
@@ -19,7 +19,7 @@ const App = () => {
         path='/*'
         element={
           <ProtectedRoute>
-            <AdminLayout />
+            <ModernAdminLayoutV2 />
           </ProtectedRoute>
         }
       />
