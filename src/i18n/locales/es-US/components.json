@@ -544,6 +544,12 @@
       "registerPatient": "Registrar un nuevo paciente",
       "addClinic": "Agregar Clínica",
       "registerClinic": "Registrar una nueva clínica"
+    },
+    "recentActivity": {
+      "title": "Actividad Reciente",
+      "clinic": "Clínica",
+      "noData": "No hay actividad reciente",
+      "noActivity": "La actividad se mostrará aquí cuando ocurra"
     }
   },
   "modals": {
