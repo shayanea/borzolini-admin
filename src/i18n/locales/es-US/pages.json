@@ -1,0 +1,155 @@
+{
+  "dashboard": {
+    "title": "Panel de Control",
+    "welcome": "Bienvenido de nuevo",
+    "welcomeMessage": "¡Bienvenido de nuevo! Esto es lo que está sucediendo en su clínica hoy.",
+    "subtitle": "Administrar citas y horarios de la clínica",
+    "loading": "Cargando panel de control...",
+    "loadingCharts": "Cargando gráficos...",
+    "chartsError": "Error de Gráficos",
+    "errorTitle": "Error al Cargar el Panel de Control",
+    "noDataTitle": "No Hay Datos Disponibles",
+    "noDataMessage": "No se pudieron cargar las estadísticas del panel de control.",
+    "quickActions": "Acciones Rápidas",
+    "recentActivity": "Actividad Reciente",
+    "statistics": "Estadísticas",
+    "topClinics": "Clínicas con Mejor Rendimiento",
+    "petCases": "Casos de Mascotas",
+    "dateRange": "Rango de Fechas",
+    "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Fin",
+    "clearFilters": "Limpiar Filtros",
+    "refresh": "Actualizar",
+    "retry": "Reintentar"
+  },
+  "appointments": {
+    "title": "Citas",
+    "subtitle": "Administrar citas y horarios de la clínica",
+    "create": "Crear Cita",
+    "filter": "Filtrar Citas",
+    "noData": "No se encontraron citas",
+    "viewDetails": "Ver Detalles",
+    "loading": "Cargando citas...",
+    "updating": "Actualizando citas...",
+    "errorLoading": "Error al Cargar Citas",
+    "authRequired": "Autenticación Requerida",
+    "pleaseLogin": "Por favor inicie sesión para ver y administrar citas.",
+    "autoRedirect": "Será redirigido a la página de inicio de sesión automáticamente.",
+    "total": "Total",
+    "pending": "Pendiente",
+    "confirmed": "Confirmado",
+    "inProgress": "En Progreso",
+    "completed": "Completado",
+    "cancelled": "Cancelado",
+    "today": "Hoy"
+  },
+  "calendar": {
+    "title": "Calendario",
+    "subtitle": "Ver y administrar citas",
+    "month": "Mes",
+    "week": "Semana",
+    "day": "Día",
+    "today": "Hoy"
+  },
+  "clinics": {
+    "title": "Clínicas",
+    "subtitle": "Administrar información de clínicas",
+    "create": "Crear Clínica",
+    "edit": "Editar Clínica",
+    "view": "Ver Clínica",
+    "noData": "No se encontraron clínicas"
+  },
+  "users": {
+    "title": "Usuarios",
+    "subtitle": "Administrar usuarios y acceso",
+    "create": "Crear Usuario",
+    "edit": "Editar Usuario",
+    "noData": "No se encontraron usuarios",
+    "veterinarians": "Veterinarios",
+    "manageVeterinarians": "Administrar veterinarios de la clínica",
+    "manageUsers": "Administrar usuarios y miembros del personal de la clínica"
+  },
+  "pets": {
+    "title": "Mascotas",
+    "subtitle": "Administrar información de mascotas",
+    "create": "Crear Mascota",
+    "edit": "Editar Mascota",
+    "view": "Ver Mascota",
+    "noData": "No se encontraron mascotas",
+    "deleteConfirm": "¿Está seguro de que desea eliminar esta mascota?",
+    "deleteConfirmBulk": "¿Está seguro de que desea eliminar {{count}} mascotas?",
+    "deleteWarning": "Esta acción no se puede deshacer.",
+    "yesDelete": "Sí, Eliminar",
+    "yesDeleteAll": "Sí, Eliminar Todo",
+    "cancel": "Cancelar"
+  },
+  "petCases": {
+    "title": "Casos de Mascotas",
+    "subtitle": "Administrar casos médicos",
+    "create": "Crear Caso",
+    "edit": "Editar Caso",
+    "view": "Ver Caso",
+    "noData": "No se encontraron casos"
+  },
+  "reports": {
+    "title": "Reportes",
+    "subtitle": "Ver reportes de la clínica",
+    "noData": "No hay reportes disponibles",
+    "comingSoon": "Próximamente"
+  },
+  "reviews": {
+    "title": "Reseñas",
+    "subtitle": "Administrar reseñas de la clínica",
+    "create": "Crear Reseña",
+    "noData": "No se encontraron reseñas"
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Administrar configuración de la aplicación",
+    "general": "Configuración General",
+    "notifications": "Notificaciones",
+    "security": "Seguridad",
+    "privacy": "Privacidad"
+  },
+  "profile": {
+    "title": "Perfil",
+    "subtitle": "Administrar su perfil",
+    "information": "Información del Perfil",
+    "security": "Configuración de Seguridad",
+    "notifications": "Preferencias de Notificaciones",
+    "privacy": "Configuración de Privacidad"
+  },
+  "contacts": {
+    "title": "Contactos",
+    "subtitle": "Administrar consultas de contacto",
+    "noData": "No se encontraron contactos"
+  },
+  "apiHealth": {
+    "title": "Estado de la API",
+    "subtitle": "Monitorear estado de la API",
+    "status": "Estado del Sistema",
+    "metrics": "Métricas del Sistema",
+    "endpoints": "Estado de los Puntos Finales",
+    "database": "Estado de la Base de Datos",
+    "analytics": "Estado de Analíticas"
+  },
+  "login": {
+    "title": "Bienvenido de Nuevo",
+    "subtitle": "Inicie sesión en su cuenta de Borzolini Admin",
+    "email": "Dirección de Correo Electrónico",
+    "password": "Contraseña",
+    "rememberMe": "Recordarme",
+    "forgotPassword": "¿Olvidó su contraseña?",
+    "signIn": "Iniciar Sesión",
+    "signingIn": "Iniciando Sesión...",
+    "invalidCredentials": "Correo electrónico o contraseña inválidos",
+    "loginFailed": "Error al Iniciar Sesión",
+    "checkCredentials": "Por favor verifique sus credenciales e intente nuevamente.",
+    "enterEmail": "Ingrese su correo electrónico",
+    "enterPassword": "Ingrese su contraseña",
+    "enterEmailAddress": "Por favor ingrese su dirección de correo electrónico",
+    "validEmailAddress": "Por favor ingrese una dirección de correo electrónico válida",
+    "enterPasswordField": "Por favor ingrese su contraseña",
+    "passwordMinChars": "La contraseña debe tener al menos 8 caracteres"
+  }
+}
