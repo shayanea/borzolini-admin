@@ -39,15 +39,15 @@ const menuItemsConfig = [
 ];
 
 const quickLinksConfig = [
-  { labelKey: 'sidebar.analytics', key: 'analytics', icon: Activity, href: ROUTES.DASHBOARD },
+  { labelKey: 'sidebar.analytics', key: 'analytics', icon: Activity, href: ROUTES.API_HEALTH },
   { labelKey: 'sidebar.trends', key: 'trends', icon: TrendingUp, href: ROUTES.REPORTS },
 ];
 
-interface ModernSidebarV2Props {
+interface ModernSidebarProps {
   collapsed?: boolean;
 }
 
-const ModernSidebarV2: React.FC<ModernSidebarV2Props> = () => {
+const ModernSidebar: React.FC<ModernSidebarProps> = () => {
   const { t } = useTranslation(['components', 'common']);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
@@ -184,4 +184,4 @@ const ModernSidebarV2: React.FC<ModernSidebarV2Props> = () => {
   );
 };
 
-export default ModernSidebarV2;
+export default ModernSidebar;

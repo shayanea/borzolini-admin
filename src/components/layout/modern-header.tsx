@@ -6,13 +6,13 @@ import { ROUTES } from '@/constants';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-interface ModernHeaderV2Props {
+interface ModernHeaderProps {
   userName?: string;
   userRole?: string;
   onLogout?: () => void;
 }
 
-const ModernHeaderV2: React.FC<ModernHeaderV2Props> = ({
+const ModernHeader: React.FC<ModernHeaderProps> = ({
   userName = 'Dr. Sarah',
   userRole = 'Clinic Manager',
   onLogout,
@@ -219,4 +219,4 @@ const ModernHeaderV2: React.FC<ModernHeaderV2Props> = ({
   );
 };
 
-export default ModernHeaderV2;
+export default ModernHeader;

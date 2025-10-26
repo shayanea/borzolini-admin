@@ -1,14 +1,14 @@
 import AdminRoutes from './admin-routes';
-import ModernHeaderV2 from './modern-header-v2';
-import ModernSidebarV2 from './modern-sidebar-v2';
+import ModernHeader from './modern-header';
+import ModernSidebar from './modern-sidebar';
 import React from 'react';
 import { useAuthStore } from '@/stores/auth.store';
 
-interface ModernAdminLayoutV2Props {
+interface ModernAdminLayoutProps {
   onLogout?: () => void;
 }
 
-const ModernAdminLayoutV2: React.FC<ModernAdminLayoutV2Props> = ({ onLogout }) => {
+const ModernAdminLayout: React.FC<ModernAdminLayoutProps> = ({ onLogout }) => {
   const { user, logout } = useAuthStore();
 
   const handleLogout = (): void => {
@@ -25,12 +25,12 @@ const ModernAdminLayoutV2: React.FC<ModernAdminLayoutV2Props> = ({ onLogout }) =
   return (
     <div className='flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
       {/* Sidebar */}
-      <ModernSidebarV2 />
+      <ModernSidebar />
 
       {/* Main Content Area */}
       <div className='flex-1 flex flex-col overflow-hidden'>
         {/* Header */}
-        <ModernHeaderV2 userName={userName} userRole={userRole} onLogout={handleLogout} />
+        <ModernHeader userName={userName} userRole={userRole} onLogout={handleLogout} />
 
         {/* Page Content */}
         <main className='flex-1 overflow-auto bg-gradient-to-b from-transparent to-white/50'>
@@ -43,4 +43,4 @@ const ModernAdminLayoutV2: React.FC<ModernAdminLayoutV2Props> = ({ onLogout }) =
   );
 };
 
-export default ModernAdminLayoutV2;
+export default ModernAdminLayout;
