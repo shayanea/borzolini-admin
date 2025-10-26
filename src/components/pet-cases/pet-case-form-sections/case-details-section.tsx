@@ -1,34 +1,37 @@
 import { Form, Input } from 'antd';
 import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { CaseDetailsSectionProps } from './types';
 
 const { TextArea } = Input;
 
 export const CaseDetailsSection: FC<CaseDetailsSectionProps> = () => {
+  const { t } = useTranslation('components');
+
   return (
     <>
       <Form.Item
-        label='Description'
+        label={t('forms.petCaseForm.description')}
         name='description'
-        rules={[{ required: true, message: 'Please enter a case description' }]}
+        rules={[{ required: true, message: t('forms.petCaseForm.descriptionRequired') }]}
       >
-        <TextArea rows={4} placeholder='Detailed description of the case and symptoms' />
+        <TextArea rows={4} placeholder={t('forms.petCaseForm.descriptionPlaceholder')} />
       </Form.Item>
 
       <Form.Item
-        label='Initial Symptoms (one per line)'
+        label={t('forms.petCaseForm.initialSymptoms')}
         name='initial_symptoms'
-        help='Enter each symptom on a new line'
+        help={t('forms.petCaseForm.initialSymptomsHelp')}
       >
         <TextArea
           rows={4}
-          placeholder='Coughing&#10;Lethargy&#10;Loss of appetite'
+          placeholder={t('forms.petCaseForm.initialSymptomsPlaceholder')}
         />
       </Form.Item>
 
-      <Form.Item label='Additional Notes' name='notes'>
-        <TextArea rows={3} placeholder='Any additional notes or observations' />
+      <Form.Item label={t('forms.petCaseForm.additionalNotes')} name='notes'>
+        <TextArea rows={3} placeholder={t('forms.petCaseForm.additionalNotesPlaceholder')} />
       </Form.Item>
     </>
   );
