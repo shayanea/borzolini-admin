@@ -89,7 +89,13 @@
     "create": "Create Case",
     "edit": "Edit Case",
     "view": "View Case",
-    "noData": "No cases found"
+    "noData": "No cases found",
+    "loading": "Loading pet cases...",
+    "accessError": "Access Error",
+    "accessErrorMessage": "Unable to determine your clinic. Please contact support or try accessing pet cases from a clinic-specific page.",
+    "goBack": "Go Back",
+    "errorLoadingCases": "Error Loading Cases",
+    "errorLoadingCasesDescription": "An error occurred while loading cases"
   },
   "reports": {
     "title": "Reports",
@@ -101,7 +107,9 @@
     "title": "Reviews",
     "subtitle": "Manage clinic reviews",
     "create": "Create Review",
-    "noData": "No reviews found"
+    "noData": "No reviews found",
+    "errorLoading": "Error Loading Reviews",
+    "updating": "Updating reviews..."
   },
   "settings": {
     "title": "Settings",
@@ -109,7 +117,10 @@
     "general": "General Settings",
     "notifications": "Notifications",
     "security": "Security",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "loadError": "Failed to Load Settings",
+    "loadErrorDescription": "There was an error loading the settings. Please try refreshing the page.",
+    "refreshPage": "Refresh Page"
   },
   "profile": {
     "title": "Profile",
@@ -131,7 +142,8 @@
     "metrics": "System Metrics",
     "endpoints": "Endpoint Health",
     "database": "Database Health",
-    "analytics": "Analytics Health"
+    "analytics": "Analytics Health",
+    "healthCheckError": "Health Check Error"
   },
   "login": {
     "title": "Welcome Back",
@@ -151,5 +163,14 @@
     "validEmailAddress": "Please enter a valid email address",
     "enterPasswordField": "Please enter your password",
     "passwordMinChars": "Password must be at least 8 characters"
+  },
+  "roleDemo": {
+    "title": "Role Demo",
+    "subtitle": "Test different user roles",
+    "howItWorks": "How it works",
+    "adminDescription": "Admin: Full access to all features including user management, clinics, and API health.",
+    "veterinarianDescription": "Veterinarian: Access to their schedule, appointments, patients, and cases. No access to user management or clinics.",
+    "staffDescription": "Staff: Basic access to schedule, appointments, pets, and cases. No administrative features.",
+    "patientDescription": "Patient: Limited access to their own appointments, pets, and cases. No access to administrative features."
   }
 }

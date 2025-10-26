@@ -518,6 +518,32 @@
       "pet": "Mascota",
       "status": "Estado",
       "priority": "Prioridad"
+    },
+    "stats": {
+      "totalUsers": "Total de Usuarios",
+      "newUsersThisWeek": "nuevos esta semana",
+      "appointmentsToday": "Citas de Hoy",
+      "pendingAppointments": "pendientes",
+      "veterinarians": "Veterinarios",
+      "clinics": "clínicas",
+      "monthlyRevenue": "Ingresos Mensuales",
+      "fromLastMonth": "del mes pasado",
+      "totalClinics": "Total de Clínicas",
+      "newClinicsThisMonth": "nuevas este mes",
+      "urgentCases": "Casos Urgentes",
+      "completedToday": "Completados Hoy",
+      "minAvg": "min promedio",
+      "totalPatients": "Total de Pacientes",
+      "activePatients": "pacientes activos"
+    },
+    "quickActions": {
+      "title": "Acciones Rápidas",
+      "newAppointment": "Nueva Cita",
+      "scheduleVisit": "Programar una nueva visita",
+      "addPatient": "Agregar Paciente",
+      "registerPatient": "Registrar un nuevo paciente",
+      "addClinic": "Agregar Clínica",
+      "registerClinic": "Registrar una nueva clínica"
     }
   },
   "modals": {

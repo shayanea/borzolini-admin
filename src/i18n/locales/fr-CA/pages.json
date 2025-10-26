@@ -89,7 +89,13 @@
     "create": "Créer un dossier",
     "edit": "Modifier le dossier",
     "view": "Voir le dossier",
-    "noData": "Aucun dossier trouvé"
+    "noData": "Aucun dossier trouvé",
+    "loading": "Chargement des dossiers d'animaux...",
+    "accessError": "Erreur d'accès",
+    "accessErrorMessage": "Impossible de déterminer votre clinique. Veuillez contacter le support ou essayer d'accéder aux dossiers d'animaux depuis une page spécifique à la clinique.",
+    "goBack": "Retour",
+    "errorLoadingCases": "Erreur de chargement des dossiers",
+    "errorLoadingCasesDescription": "Une erreur s'est produite lors du chargement des dossiers"
   },
   "reports": {
     "title": "Rapports",
@@ -101,7 +107,9 @@
     "title": "Commentaires",
     "subtitle": "Gérer les commentaires de la clinique",
     "create": "Créer un commentaire",
-    "noData": "Aucun commentaire trouvé"
+    "noData": "Aucun commentaire trouvé",
+    "errorLoading": "Erreur de chargement des commentaires",
+    "updating": "Mise à jour des commentaires..."
   },
   "settings": {
     "title": "Paramètres",
@@ -109,7 +117,10 @@
     "general": "Paramètres généraux",
     "notifications": "Notifications",
     "security": "Sécurité",
-    "privacy": "Confidentialité"
+    "privacy": "Confidentialité",
+    "loadError": "Échec du chargement des paramètres",
+    "loadErrorDescription": "Une erreur s'est produite lors du chargement des paramètres. Veuillez essayer de rafraîchir la page.",
+    "refreshPage": "Rafraîchir la page"
   },
   "profile": {
     "title": "Profil",
@@ -131,7 +142,8 @@
     "metrics": "Métriques du système",
     "endpoints": "État des points de terminaison",
     "database": "État de la base de données",
-    "analytics": "État des analyses"
+    "analytics": "État des analyses",
+    "healthCheckError": "Erreur de vérification de santé"
   },
   "login": {
     "title": "Content de vous revoir",
@@ -151,6 +163,14 @@
     "validEmailAddress": "Veuillez entrer une adresse courriel valide",
     "enterPasswordField": "Veuillez entrer votre mot de passe",
     "passwordMinChars": "Le mot de passe doit contenir au moins 8 caractères"
+  },
+  "roleDemo": {
+    "title": "Démonstration de rôles",
+    "subtitle": "Tester différents rôles d'utilisateur",
+    "howItWorks": "Comment cela fonctionne",
+    "adminDescription": "Administrateur: Accès complet à toutes les fonctionnalités, y compris la gestion des utilisateurs, des cliniques et de l'état de l'API.",
+    "veterinarianDescription": "Vétérinaire: Accès à leur horaire, rendez-vous, patients et dossiers. Aucun accès à la gestion des utilisateurs ou des cliniques.",
+    "staffDescription": "Personnel: Accès de base à l'horaire, rendez-vous, animaux et dossiers. Aucune fonctionnalité administrative.",
+    "patientDescription": "Patient: Accès limité à leurs propres rendez-vous, animaux et dossiers. Aucun accès aux fonctionnalités administratives."
   }
 }
-

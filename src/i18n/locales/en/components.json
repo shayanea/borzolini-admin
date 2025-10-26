@@ -518,6 +518,32 @@
       "pet": "Pet",
       "status": "Status",
       "priority": "Priority"
+    },
+    "stats": {
+      "totalUsers": "Total Users",
+      "newUsersThisWeek": "new this week",
+      "appointmentsToday": "Appointments Today",
+      "pendingAppointments": "pending",
+      "veterinarians": "Veterinarians",
+      "clinics": "clinics",
+      "monthlyRevenue": "Monthly Revenue",
+      "fromLastMonth": "from last month",
+      "totalClinics": "Total Clinics",
+      "newClinicsThisMonth": "new this month",
+      "urgentCases": "Urgent Cases",
+      "completedToday": "Completed Today",
+      "minAvg": "min avg",
+      "totalPatients": "Total Patients",
+      "activePatients": "active patients"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "newAppointment": "New Appointment",
+      "scheduleVisit": "Schedule a new visit",
+      "addPatient": "Add Patient",
+      "registerPatient": "Register a new patient",
+      "addClinic": "Add Clinic",
+      "registerClinic": "Register a new clinic"
     }
   },
   "modals": {

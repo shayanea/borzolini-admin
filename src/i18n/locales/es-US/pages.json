@@ -89,7 +89,13 @@
     "create": "Crear Caso",
     "edit": "Editar Caso",
     "view": "Ver Caso",
-    "noData": "No se encontraron casos"
+    "noData": "No se encontraron casos",
+    "loading": "Cargando casos de mascotas...",
+    "accessError": "Error de Acceso",
+    "accessErrorMessage": "No se puede determinar su clínica. Por favor contacte soporte o intente acceder a los casos de mascotas desde una página específica de clínica.",
+    "goBack": "Volver",
+    "errorLoadingCases": "Error al Cargar Casos",
+    "errorLoadingCasesDescription": "Ocurrió un error al cargar los casos"
   },
   "reports": {
     "title": "Reportes",
@@ -101,7 +107,9 @@
     "title": "Reseñas",
     "subtitle": "Administrar reseñas de la clínica",
     "create": "Crear Reseña",
-    "noData": "No se encontraron reseñas"
+    "noData": "No se encontraron reseñas",
+    "errorLoading": "Error al Cargar Reseñas",
+    "updating": "Actualizando reseñas..."
   },
   "settings": {
     "title": "Configuración",
@@ -109,7 +117,10 @@
     "general": "Configuración General",
     "notifications": "Notificaciones",
     "security": "Seguridad",
-    "privacy": "Privacidad"
+    "privacy": "Privacidad",
+    "loadError": "Error al Cargar Configuración",
+    "loadErrorDescription": "Ocurrió un error al cargar la configuración. Por favor intente actualizar la página.",
+    "refreshPage": "Actualizar Página"
   },
   "profile": {
     "title": "Perfil",
@@ -131,7 +142,8 @@
     "metrics": "Métricas del Sistema",
     "endpoints": "Estado de los Puntos Finales",
     "database": "Estado de la Base de Datos",
-    "analytics": "Estado de Analíticas"
+    "analytics": "Estado de Analíticas",
+    "healthCheckError": "Error de Verificación de Salud"
   },
   "login": {
     "title": "Bienvenido de Nuevo",
@@ -151,5 +163,14 @@
     "validEmailAddress": "Por favor ingrese una dirección de correo electrónico válida",
     "enterPasswordField": "Por favor ingrese su contraseña",
     "passwordMinChars": "La contraseña debe tener al menos 8 caracteres"
+  },
+  "roleDemo": {
+    "title": "Demostración de Roles",
+    "subtitle": "Probar diferentes roles de usuario",
+    "howItWorks": "Cómo funciona",
+    "adminDescription": "Administrador: Acceso completo a todas las funciones incluyendo gestión de usuarios, clínicas y estado de la API.",
+    "veterinarianDescription": "Veterinario: Acceso a su horario, citas, pacientes y casos. Sin acceso a gestión de usuarios o clínicas.",
+    "staffDescription": "Personal: Acceso básico a horario, citas, mascotas y casos. Sin funciones administrativas.",
+    "patientDescription": "Paciente: Acceso limitado a sus propias citas, mascotas y casos. Sin acceso a funciones administrativas."
   }
 }

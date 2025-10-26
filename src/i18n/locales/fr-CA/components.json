@@ -518,6 +518,32 @@
       "pet": "Animal",
       "status": "Statut",
       "priority": "Priorité"
+    },
+    "stats": {
+      "totalUsers": "Nombre total d'utilisateurs",
+      "newUsersThisWeek": "nouveaux cette semaine",
+      "appointmentsToday": "Rendez-vous aujourd'hui",
+      "pendingAppointments": "en attente",
+      "veterinarians": "Vétérinaires",
+      "clinics": "cliniques",
+      "monthlyRevenue": "Revenus mensuels",
+      "fromLastMonth": "du mois dernier",
+      "totalClinics": "Nombre total de cliniques",
+      "newClinicsThisMonth": "nouvelles ce mois-ci",
+      "urgentCases": "Dossiers urgents",
+      "completedToday": "Complétés aujourd'hui",
+      "minAvg": "min moy",
+      "totalPatients": "Nombre total de patients",
+      "activePatients": "patients actifs"
+    },
+    "quickActions": {
+      "title": "Actions rapides",
+      "newAppointment": "Nouveau rendez-vous",
+      "scheduleVisit": "Planifier une nouvelle visite",
+      "addPatient": "Ajouter un patient",
+      "registerPatient": "Enregistrer un nouveau patient",
+      "addClinic": "Ajouter une clinique",
+      "registerClinic": "Enregistrer une nouvelle clinique"
     }
   },
   "modals": {
