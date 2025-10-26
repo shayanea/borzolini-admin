@@ -398,12 +398,16 @@
       "email": "Email",
       "phone": "Phone",
       "password": "Password",
+      "firstName": "First Name",
+      "lastName": "Last Name",
       "role": "Role",
       "accountStatus": "Account Status",
       "emailVerification": "Email Verification",
       "emailPlaceholder": "Email",
       "phonePlaceholder": "Phone",
       "passwordPlaceholder": "Password",
+      "firstNamePlaceholder": "Enter first name",
+      "lastNamePlaceholder": "Enter last name",
       "selectRolePlaceholder": "Select Role",
       "admin": "Admin",
       "veterinarian": "Veterinarian",
@@ -412,16 +416,39 @@
       "active": "Active",
       "inactive": "Inactive",
       "verified": "Verified",
-      "unverified": "Unverified"
+      "unverified": "Unverified",
+      "firstNameRequired": "Please enter first name",
+      "lastNameRequired": "Please enter last name",
+      "emailRequired": "Please enter email",
+      "passwordRequired": "Please enter password",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "roleRequired": "Please select role"
     },
     "clinicForm": {
       "basicInfo": "Basic Information",
       "clinicName": "Clinic Name",
       "phoneNumber": "Phone Number",
+      "address": "Address",
+      "city": "City",
+      "state": "State/Province",
+      "postalCode": "Postal Code",
+      "country": "Country",
       "description": "Description",
       "clinicNamePlaceholder": "Enter clinic name",
       "phonePlaceholder": "Enter phone number",
+      "addressPlaceholder": "Enter street address",
+      "cityPlaceholder": "Enter city",
+      "statePlaceholder": "Enter state/province",
+      "postalCodePlaceholder": "Enter postal code",
+      "countryPlaceholder": "Enter country",
       "descriptionPlaceholder": "Enter clinic description (optional)",
+      "clinicNameRequired": "Please enter clinic name",
+      "clinicNameMinLength": "Clinic name must be at least 2 characters",
+      "addressRequired": "Please enter address",
+      "addressMinLength": "Address must be at least 5 characters",
+      "cityRequired": "Please enter city",
+      "cityMinLength": "City must be at least 2 characters",
+      "countryRequired": "Please enter country",
       "descriptionMaxLength": "Description must not exceed 500 characters"
     },
     "appointmentForm": {
@@ -430,14 +457,23 @@
       "clinic": "Clinic",
       "veterinarian": "Veterinarian",
       "service": "Service",
+      "date": "Date",
+      "time": "Time",
+      "reason": "Reason for Visit",
       "selectAppointmentTypePlaceholder": "Select appointment type",
       "selectPetPlaceholder": "Select pet",
       "selectClinicPlaceholder": "Select clinic",
       "selectVeterinarianPlaceholder": "Select veterinarian (optional)",
       "selectServicePlaceholder": "Select service (optional)",
+      "selectDatePlaceholder": "Select date",
+      "selectTimePlaceholder": "Select time",
+      "reasonPlaceholder": "Describe reason for appointment",
       "appointmentTypeRequired": "Please select appointment type",
       "petRequired": "Please select a pet",
-      "clinicRequired": "Please select a clinic"
+      "clinicRequired": "Please select a clinic",
+      "dateRequired": "Please select date",
+      "timeRequired": "Please select time",
+      "reasonRequired": "Please provide reason for visit"
     }
   },
   "dashboard": {
@@ -493,19 +529,42 @@
       "saveChanges": "Save Changes",
       "appointmentUpdatedSuccess": "Appointment updated successfully",
       "appointmentUpdateFailed": "Failed to update appointment",
-      "unknown": "Unknown"
+      "unknown": "Unknown",
+      "confirmDelete": "Are you sure you want to delete this appointment?",
+      "deleteSuccess": "Appointment deleted successfully",
+      "deleteFailed": "Failed to delete appointment"
     },
     "petForm": {
       "titleEdit": "Edit Pet",
-      "titleAdd": "Add New Pet"
+      "titleAdd": "Add New Pet",
+      "saveSuccess": "Pet saved successfully",
+      "saveFailed": "Failed to save pet",
+      "deleteSuccess": "Pet deleted successfully",
+      "deleteFailed": "Failed to delete pet"
     },
     "userForm": {
       "titleEdit": "Edit User",
-      "titleCreate": "Create New User"
+      "titleCreate": "Create New User",
+      "saveSuccess": "User saved successfully",
+      "saveFailed": "Failed to save user",
+      "deleteSuccess": "User deleted successfully",
+      "deleteFailed": "Failed to delete user"
     },
     "clinicForm": {
       "titleEdit": "Edit Clinic",
-      "titleAdd": "Add New Clinic"
+      "titleAdd": "Add New Clinic",
+      "saveSuccess": "Clinic saved successfully",
+      "saveFailed": "Failed to save clinic",
+      "deleteSuccess": "Clinic deleted successfully",
+      "deleteFailed": "Failed to delete clinic"
+    },
+    "petCaseForm": {
+      "titleCreate": "Create New Case",
+      "titleEdit": "Edit Case",
+      "saveSuccess": "Case saved successfully",
+      "saveFailed": "Failed to save case",
+      "deleteSuccess": "Case deleted successfully",
+      "deleteFailed": "Failed to delete case"
     }
   }
 }
