@@ -1,0 +1,62 @@
+{
+  "common": {
+    "required": "Ce champ est requis",
+    "invalidEmail": "Veuillez entrer un courriel valide",
+    "invalidUrl": "Veuillez entrer une URL valide",
+    "invalidPhone": "Veuillez entrer un numéro de téléphone valide",
+    "invalidPostalCode": "Veuillez entrer un code postal valide",
+    "positiveNumber": "Veuillez entrer un nombre positif valide"
+  },
+  "user": {
+    "firstNameRequired": "Veuillez entrer le prénom",
+    "lastNameRequired": "Veuillez entrer le nom de famille",
+    "emailRequired": "Veuillez entrer un courriel",
+    "passwordRequired": "Veuillez entrer un mot de passe",
+    "passwordMinLength": "Le mot de passe doit contenir au moins 8 caractères",
+    "roleRequired": "Veuillez sélectionner un rôle"
+  },
+  "pet": {
+    "nameRequired": "Veuillez entrer le nom de l'animal",
+    "nameMinLength": "Le nom de l'animal doit contenir au moins 1 caractère",
+    "nameMaxLength": "Le nom de l'animal doit contenir moins de 100 caractères",
+    "speciesRequired": "Veuillez sélectionner une espèce",
+    "genderRequired": "Veuillez sélectionner un genre",
+    "sizeRequired": "Veuillez sélectionner une taille",
+    "dobRequired": "Veuillez sélectionner la date de naissance",
+    "breedMaxLength": "La race doit contenir moins de 100 caractères",
+    "colorMaxLength": "La couleur doit contenir moins de 100 caractères",
+    "microchipMaxLength": "Le numéro de micropuce doit contenir moins de 50 caractères",
+    "emergencyContactRequired": "Veuillez entrer le nom du contact d'urgence",
+    "emergencyContactMaxLength": "Le nom du contact d'urgence doit contenir moins de 255 caractères",
+    "emergencyPhoneRequired": "Veuillez entrer un téléphone d'urgence",
+    "emergencyPhoneMaxLength": "Le téléphone d'urgence doit contenir moins de 20 caractères",
+    "photoUrlMaxLength": "L'URL de la photo doit contenir moins de 500 caractères",
+    "weightInvalid": "Le poids doit être un nombre positif valide"
+  },
+  "clinic": {
+    "nameRequired": "Veuillez entrer le nom de la clinique",
+    "nameMinLength": "Le nom de la clinique doit contenir au moins 2 caractères",
+    "addressRequired": "Veuillez entrer une adresse",
+    "addressMinLength": "L'adresse doit contenir au moins 5 caractères",
+    "cityRequired": "Veuillez entrer une ville",
+    "cityMinLength": "La ville doit contenir au moins 2 caractères",
+    "countryRequired": "Veuillez entrer un pays",
+    "descriptionMaxLength": "La description ne doit pas dépasser 500 caractères"
+  },
+  "appointment": {
+    "typeRequired": "Veuillez sélectionner un type de rendez-vous",
+    "petRequired": "Veuillez sélectionner un animal",
+    "clinicRequired": "Veuillez sélectionner une clinique",
+    "dateRequired": "Veuillez sélectionner une date",
+    "timeRequired": "Veuillez sélectionner une heure",
+    "reasonRequired": "Veuillez fournir la raison de la visite",
+    "telemedicineLinkRequired": "Veuillez fournir le lien de téléconsultation",
+    "homeVisitAddressRequired": "Veuillez fournir l'adresse de visite à domicile"
+  },
+  "case": {
+    "titleRequired": "Veuillez entrer le titre du dossier",
+    "typeRequired": "Veuillez sélectionner un type de dossier",
+    "descriptionRequired": "Veuillez entrer la description du dossier"
+  }
+}
+

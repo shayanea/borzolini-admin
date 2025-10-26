@@ -7,6 +7,11 @@ import enComponents from './locales/en/components.json';
 import enPages from './locales/en/pages.json';
 import enValidation from './locales/en/validation.json';
 
+import frCACommon from './locales/fr-CA/common.json';
+import frCAComponents from './locales/fr-CA/components.json';
+import frCAPages from './locales/fr-CA/pages.json';
+import frCAValidation from './locales/fr-CA/validation.json';
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -17,6 +22,12 @@ i18n
         validation: enValidation,
         pages: enPages,
         components: enComponents,
+      },
+      'fr-CA': {
+        common: frCACommon,
+        validation: frCAValidation,
+        pages: frCAPages,
+        components: frCAComponents,
       },
     },
     fallbackLng: 'en',
