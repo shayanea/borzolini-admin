@@ -49,7 +49,9 @@
     "month": "Mois",
     "week": "Semaine",
     "day": "Jour",
-    "today": "Aujourd'hui"
+    "today": "Aujourd'hui",
+    "errorLoading": "Erreur de chargement du calendrier",
+    "tryAgain": "Réessayer"
   },
   "clinics": {
     "title": "Cliniques",
@@ -133,7 +135,17 @@
   "contacts": {
     "title": "Contacts",
     "subtitle": "Gérer les demandes de contact",
-    "noData": "Aucun contact trouvé"
+    "noData": "Aucun contact trouvé",
+    "contactMessages": "Messages de contact",
+    "manageContactSubmissions": "Gérer les soumissions de formulaire de contact",
+    "totalMessages": "Total de messages",
+    "pending": "En attente",
+    "resolved": "Résolu",
+    "closed": "Fermé",
+    "deleteContact": "Supprimer le contact",
+    "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer ce contact? Cette action ne peut pas être annulée.",
+    "delete": "Supprimer",
+    "cancel": "Annuler"
   },
   "apiHealth": {
     "title": "État de l'API",
@@ -143,7 +155,12 @@
     "endpoints": "État des points de terminaison",
     "database": "État de la base de données",
     "analytics": "État des analyses",
-    "healthCheckError": "Erreur de vérification de santé"
+    "healthCheckError": "Erreur de vérification de santé",
+    "healthMonitor": "Surveillance de l'état de l'API",
+    "realTimeMonitoring": "Surveillance de l'état du système en temps réel",
+    "refreshAll": "Tout actualiser",
+    "runningHealthChecks": "Exécution des vérifications de santé...",
+    "someChecksFailed": "Certaines vérifications de santé n'ont pas pu être actualisées"
   },
   "login": {
     "title": "Content de vous revoir",

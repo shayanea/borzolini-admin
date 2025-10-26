@@ -49,7 +49,9 @@
     "month": "Month",
     "week": "Week",
     "day": "Day",
-    "today": "Today"
+    "today": "Today",
+    "errorLoading": "Error Loading Calendar",
+    "tryAgain": "Try Again"
   },
   "clinics": {
     "title": "Clinics",
@@ -133,7 +135,17 @@
   "contacts": {
     "title": "Contacts",
     "subtitle": "Manage contact inquiries",
-    "noData": "No contacts found"
+    "noData": "No contacts found",
+    "contactMessages": "Contact Messages",
+    "manageContactSubmissions": "Manage contact form submissions",
+    "totalMessages": "Total Messages",
+    "pending": "Pending",
+    "resolved": "Resolved",
+    "closed": "Closed",
+    "deleteContact": "Delete Contact",
+    "deleteConfirmation": "Are you sure you want to delete this contact? This action cannot be undone.",
+    "delete": "Delete",
+    "cancel": "Cancel"
   },
   "apiHealth": {
     "title": "API Health",
@@ -143,7 +155,12 @@
     "endpoints": "Endpoint Health",
     "database": "Database Health",
     "analytics": "Analytics Health",
-    "healthCheckError": "Health Check Error"
+    "healthCheckError": "Health Check Error",
+    "healthMonitor": "API Health Monitor",
+    "realTimeMonitoring": "Real-time system health monitoring",
+    "refreshAll": "Refresh All",
+    "runningHealthChecks": "Running health checks...",
+    "someChecksFailed": "Some health checks failed to refresh"
   },
   "login": {
     "title": "Welcome Back",

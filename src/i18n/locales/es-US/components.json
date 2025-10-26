@@ -550,6 +550,13 @@
       "clinic": "Clínica",
       "noData": "No hay actividad reciente",
       "noActivity": "La actividad se mostrará aquí cuando ocurra"
+    },
+    "topClinics": {
+      "title": "Clínicas con Mejor Rendimiento",
+      "soon": "Próximamente",
+      "rating": "Calificación",
+      "revenue": "Ingresos",
+      "appointments": "citas"
     }
   },
   "modals": {

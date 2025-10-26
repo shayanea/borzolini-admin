@@ -550,6 +550,13 @@
       "clinic": "Clinique",
       "noData": "Aucune activité récente",
       "noActivity": "L'activité sera affichée ici au fur et à mesure"
+    },
+    "topClinics": {
+      "title": "Cliniques les plus performantes",
+      "soon": "Bientôt disponible",
+      "rating": "Note",
+      "revenue": "Revenus",
+      "appointments": "rendez-vous"
     }
   },
   "modals": {

@@ -550,6 +550,13 @@
       "clinic": "Clinic",
       "noData": "No recent activity",
       "noActivity": "Activity will be shown here as it happens"
+    },
+    "topClinics": {
+      "title": "Top Performing Clinics",
+      "soon": "Coming Soon",
+      "rating": "Rating",
+      "revenue": "Revenue",
+      "appointments": "appointments"
     }
   },
   "modals": {
