@@ -94,6 +94,7 @@
     "updatedAt": "Updated At",
     "actions": "Actions",
     "noResults": "No results found",
+    "noData": "No data available",
     "searchPlaceholder": "Search...",
     "filterBy": "Filter by",
     "sortBy": "Sort by"

@@ -2,10 +2,7 @@
   "header": {
     "welcome": "Welcome back",
     "readyToHelp": "Ready to help your patients",
-    "notifications": "Notifications",
-    "settings": "Settings",
-    "profile": "Profile",
-    "logout": "Logout"
+    "notifications": "Notifications"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -16,11 +13,6 @@
     "settings": "Settings"
   },
   "filters": {
-    "search": "Search",
-    "filter": "Filter",
-    "reset": "Reset",
-    "apply": "Apply",
-    "clear": "Clear",
     "all": "All",
     "selectStatus": "Select Status",
     "selectDateRange": "Select Date Range",
@@ -28,8 +20,6 @@
     "selectType": "Select Type"
   },
   "emptyState": {
-    "noData": "No data available",
-    "noResults": "No results found",
     "emptyList": "List is empty",
     "createFirst": "Create your first item"
   },
@@ -39,28 +29,16 @@
     "deleteError": "Error deleting data",
     "networkError": "Network error. Please check your connection.",
     "unauthorized": "You are not authorized to perform this action",
-    "tryAgain": "Try Again",
     "retry": "Retry"
   },
   "tables": {
-    "noData": "No data available",
-    "loading": "Loading...",
-    "search": "Search",
-    "actions": "Actions",
-    "view": "View",
-    "edit": "Edit",
-    "delete": "Delete",
     "rowsPerPage": "Rows per page",
     "showing": "Showing",
     "of": "of",
     "entries": "entries"
   },
   "buttons": {
-    "export": "Export",
-    "import": "Import",
     "bulkActions": "Bulk Actions",
-    "selectAll": "Select All",
-    "deselectAll": "Deselect All",
     "deleteSelected": "Delete Selected",
     "viewAll": "View All"
   },
@@ -348,24 +326,8 @@
   },
   "forms": {
     "common": {
-      "cancel": "Cancel",
-      "create": "Create",
-      "update": "Update",
-      "save": "Save",
-      "submit": "Submit",
-      "reset": "Reset",
-      "close": "Close",
-      "edit": "Edit",
-      "delete": "Delete",
-      "confirm": "Confirm",
-      "yes": "Yes",
-      "no": "No",
-      "optional": "Optional",
-      "required": "Required",
       "selectPlaceholder": "Please select",
-      "enterPlaceholder": "Please enter",
-      "loading": "Loading...",
-      "noData": "No data available"
+      "enterPlaceholder": "Please enter"
     },
     "petCaseForm": {
       "title": "Case Title",

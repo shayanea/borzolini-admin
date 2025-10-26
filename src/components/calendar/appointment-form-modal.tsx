@@ -1,16 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Form, Modal, message } from 'antd';
-import dayjs from 'dayjs';
-
 import {
   APPOINTMENT_PRIORITIES,
   getAppointmentPriorityOptions,
   getAppointmentStatusOptions,
   getAppointmentTypeOptions,
 } from '@/constants/appointments';
-import { useCalendarFormData } from '@/hooks/calendar/use-calendar-form-data';
-import type { CreateAppointmentData } from '@/services/appointments.service';
-import type { AppointmentFormModalProps } from '@/types/calendar-modals';
 import {
   ActionButtonsSection,
   AdditionalInfoSection,
@@ -18,6 +11,13 @@ import {
   SchedulingSection,
   VisitTypeSection,
 } from './appointment-form-sections';
+import { Form, Modal, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+
+import type { AppointmentFormModalProps } from '@/types/calendar-modals';
+import type { CreateAppointmentData } from '@/services/appointments.service';
+import dayjs from 'dayjs';
+import { useCalendarFormData } from '@/hooks/calendar/use-calendar-form-data';
 
 export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
   visible,
@@ -159,11 +159,7 @@ export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
         <AdditionalInfoSection form={form} />
 
         {/* Action Buttons */}
-        <ActionButtonsSection
-          onCancel={handleCancel}
-          onSubmit={handleSubmit}
-          loading={loading}
-        />
+        <ActionButtonsSection onCancel={handleCancel} onSubmit={handleSubmit} loading={loading} />
       </Form>
     </Modal>
   );
