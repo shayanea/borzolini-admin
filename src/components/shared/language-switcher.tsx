@@ -1,5 +1,5 @@
-import { Select } from 'antd';
 import { Globe } from 'lucide-react';
+import { Select } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 interface Language {
@@ -25,8 +25,8 @@ const LanguageSwitcher: React.FC = () => {
     <Select
       value={i18n.language}
       onChange={handleLanguageChange}
-      style={{ width: 140 }}
-      bordered={false}
+      style={{ width: 120 }}
+      variant='borderless'
       suffixIcon={<Globe size={16} />}
     >
       {languages.map(lang => (

@@ -1,5 +1,3 @@
-import { Route, Routes } from 'react-router-dom';
-
 import {
   ApiHealth,
   Appointments,
@@ -15,8 +13,11 @@ import {
   Reviews,
   RoleDemo,
   Settings,
+  Staff,
   Users,
 } from '@/pages';
+import { Route, Routes } from 'react-router-dom';
+
 import RoleProtectedRoute from '../auth/role-protected-route';
 
 const VETERINARIAN_ROLE_FILTER = 'veterinarian' as const;
@@ -85,6 +86,14 @@ const AdminRoutes = () => {
         element={
           <RoleProtectedRoute requiredRole='admin'>
             <Users roleFilter={VETERINARIAN_ROLE_FILTER} />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path='staff'
+        element={
+          <RoleProtectedRoute>
+            <Staff />
           </RoleProtectedRoute>
         }
       />

@@ -69,7 +69,9 @@
     "noData": "No users found",
     "veterinarians": "Veterinarians",
     "manageVeterinarians": "Manage clinic veterinarians",
-    "manageUsers": "Manage clinic users and staff members"
+    "manageUsers": "Manage clinic users and staff members",
+    "clinicStaff": "Clinic Staff",
+    "manageClinicStaff": "View and manage your clinic employees"
   },
   "pets": {
     "title": "Pets",

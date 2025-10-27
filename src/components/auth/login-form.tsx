@@ -1,11 +1,11 @@
-import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Alert, Button, Card, Form, Input, Typography } from 'antd';
-import { useTranslation } from 'react-i18next';
+import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, UserOutlined } from '@ant-design/icons';
 
-import { useLogin } from '@/hooks/use-auth';
-import type { LoginCredentials } from '@/types';
 import BG from '@/ui/icons/auth-bg.jpg';
+import type { LoginCredentials } from '@/types';
 import { useCallback } from 'react';
+import { useLogin } from '@/hooks/use-auth';
+import { useTranslation } from 'react-i18next';
 
 const { Title, Text } = Typography;
 
@@ -13,7 +13,6 @@ export const LoginForm = () => {
   const { t } = useTranslation(['pages', 'common']);
   const [form] = Form.useForm();
   const loginMutation = useLogin();
-
   const handleFinish = useCallback(
     async (values: LoginCredentials) => {
       try {

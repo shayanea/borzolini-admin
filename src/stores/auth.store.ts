@@ -1,8 +1,8 @@
 import type { LoadingState, User } from '@/types';
 
 import { AuthService } from '@/services/auth.service';
-import { emitAuthRedirect } from '@/services/event-emitter.service';
 import { create } from 'zustand';
+import { emitAuthRedirect } from '@/services/event-emitter.service';
 import { persist } from 'zustand/middleware';
 
 interface AuthState {
@@ -64,6 +64,9 @@ export const useAuthStore = create<AuthState>()(
           loading: 'idle',
           error: null,
         });
+
+        // Emit redirect event to login
+        emitAuthRedirect('/login');
       },
 
       updateUser: updates => {
@@ -115,15 +118,10 @@ export const useAuthStore = create<AuthState>()(
             return;
           }
 
-          // Try to get user info using the stored tokens
-          const user = await AuthService.getCurrentUser();
-
-          set({
-            user,
-            isAuthenticated: true,
-            loading: 'success',
-            error: null,
-          });
+          // Don't fetch user here - let react-query handle it
+          // This prevents duplicate calls to /auth/me
+          // The useCurrentUser hook will fetch the user and update this store
+          setLoading('success');
         } catch (error) {
           console.error('Failed to initialize from tokens:', error);
 

@@ -20,16 +20,22 @@ import {
   usePetCasesState,
 } from '../hooks/pet-cases';
 
+import { User } from '@/types';
 import { useCurrentUser } from '../hooks/use-auth';
 import { useSearchParams } from 'react-router-dom';
 
 const PetCasesPage: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const { data: user, isLoading: userLoading } = useCurrentUser();
+  const { data: user, isLoading: userLoading } = useCurrentUser() as {
+    data: User;
+    isLoading: boolean;
+  };
   const urlClinicId = searchParams.get('clinicId');
 
   // Get clinic ID from URL params or user profile
-  const clinicId = urlClinicId || user?.clinicId || user?.clinic_id || user?.clinic?.id;
+  const clinicId: string | undefined =
+    urlClinicId || user?.clinicId || user?.clinic_id || user?.clinic?.id;
+  console.log('clinicId', clinicId);
 
   // Use custom hooks for state management
   const state = usePetCasesState({ clinicId });
@@ -72,7 +78,7 @@ const PetCasesPage: React.FC = () => {
 
   // Use different hooks based on whether we're fetching all cases or clinic-specific cases
   const clinicCasesResult = usePetCases(clinicId || '', state.filters, state.page, 10);
-  const allCasesResult = useAllPetCases(state.filters, state.page, 10);
+  const allCasesResult = useAllPetCases(state.filters, state.page, 10, !!clinicId);
 
   // Select the appropriate result based on the condition
   const result = shouldFetchAllCases ? allCasesResult : clinicCasesResult;
@@ -83,7 +89,8 @@ const PetCasesPage: React.FC = () => {
   const stats = shouldFetchAllCases ? undefined : clinicCasesResult.stats;
 
   useEffect(() => {
-    if (!userLoading && !clinicId && !isAdmin) {
+    const isNotValid = !userLoading && !clinicId && !isAdmin;
+    if (isNotValid) {
       console.error('No clinic ID provided and user is not admin');
     }
   }, [clinicId, userLoading, isAdmin]);
@@ -192,7 +199,7 @@ const PetCasesPage: React.FC = () => {
         visible={modals.viewModalVisible}
         onClose={modals.handleCloseViewModal}
         onEdit={modals.handleEditCase}
-        clinicId={modals.selectedCase?.clinic_id || clinicId}
+        clinicId={modals.selectedCase?.clinic_id || clinicId || ''}
       />
 
       {/* Edit Case Modal */}
@@ -200,7 +207,7 @@ const PetCasesPage: React.FC = () => {
         visible={modals.editModalVisible}
         onClose={modals.handleCloseEditModal}
         onSuccess={modals.handleEditSuccess}
-        clinicId={modals.selectedCase?.clinic_id || clinicId}
+        clinicId={modals.selectedCase?.clinic_id || clinicId || ''}
         editCase={modals.selectedCase}
       />
     </PageLayout>

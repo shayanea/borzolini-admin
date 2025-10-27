@@ -7,13 +7,14 @@ import type {
   User,
 } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import React from 'react';
 
-import { AuthService } from '@/services/auth.service';
 import { ROUTES } from '@/constants';
+import { AuthService } from '@/services/auth.service';
+import { useAuthActions, useAuthStore } from '@/stores/auth.store';
 import { message } from 'antd';
-import { useAuthActions } from '@/stores/auth.store';
-import { useMessage } from './use-message';
 import { useNavigate } from 'react-router-dom';
+import { useMessage } from './use-message';
 
 interface AuthResponse {
   user: User;
@@ -95,7 +96,10 @@ export function useRegister() {
 }
 
 export function useCurrentUser() {
-  return useQuery({
+  const setUser = useAuthStore(state => state.setUser);
+  const setAuthenticated = useAuthStore(state => state.setAuthenticated);
+
+  const query = useQuery({
     queryKey: ['current-user'],
     queryFn: authApi.getCurrentUser,
     retry: false, // Don't retry on auth failures
@@ -103,6 +107,20 @@ export function useCurrentUser() {
     refetchOnWindowFocus: false, // Prevent refetch on window focus
     refetchOnMount: false, // Prevent refetch on mount if data exists
   });
+
+  // Sync with Zustand store when data changes (useEffect to avoid render-phase updates)
+  React.useEffect(() => {
+    if (query.data) {
+      setUser(query.data);
+      setAuthenticated(true);
+    } else if (query.error) {
+      // Clear auth state on error
+      setUser(null);
+      setAuthenticated(false);
+    }
+  }, [query.data, query.error, setUser, setAuthenticated]);
+
+  return query;
 }
 
 export function useLogout() {

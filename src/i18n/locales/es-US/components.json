@@ -2,7 +2,12 @@
   "header": {
     "welcome": "Bienvenido de nuevo",
     "readyToHelp": "Listo para ayudar a sus pacientes",
-    "notifications": "Notificaciones"
+    "notifications": "Notificaciones",
+    "settings": "Configuración",
+    "logout": "Cerrar Sesión",
+    "searchPlaceholder": "Buscar citas, pacientes...",
+    "viewAllNotifications": "Ver todas las notificaciones",
+    "notificationsWithCount": "{{count}} nuevo"
   },
   "sidebar": {
     "dashboard": "Panel de Control",
@@ -10,7 +15,14 @@
     "patients": "Pacientes",
     "team": "Equipo",
     "reports": "Reportes",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "petCases": "Casos de Mascotas",
+    "clinics": "Clínicas",
+    "reviews": "Reseñas",
+    "quickAccess": "Acceso Rápido",
+    "analytics": "Analíticas",
+    "contacts": "Contactos",
+    "trends": "Tendencias"
   },
   "filters": {
     "all": "Todos",

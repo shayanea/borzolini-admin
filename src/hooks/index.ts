@@ -8,6 +8,7 @@ export * from './pet-cases';
 export { useApiHealth } from './use-api-health';
 export { useAppointments } from './use-appointments';
 export { useAuth } from './use-auth';
+export { useClinicContext, useClinicId, useIsClinicAdmin } from './use-clinic-context';
 export { useClinicManagement } from './use-clinic-management';
 export { useContacts } from './use-contacts';
 export { useDashboard } from './use-dashboard';

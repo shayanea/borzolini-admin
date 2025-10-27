@@ -25,6 +25,17 @@ export interface User {
   profileCompletion?: number;
   timestamp?: string;
 
+  // Clinic context (for clinic_admin and staff users)
+  clinicId?: string;
+  clinic_id?: string;
+  clinic?: {
+    id: string;
+    name: string;
+    address?: string;
+    city?: string;
+    phone?: string;
+  };
+
   // Admin-specific properties (only present when accessed by admin)
   isAdminView?: boolean;
   canEdit?: boolean;
@@ -48,7 +59,7 @@ export interface AdminUserProperties {
   priority: 'low' | 'normal' | 'high' | 'urgent';
 }
 
-export type UserRole = 'admin' | 'veterinarian' | 'staff' | 'patient';
+export type UserRole = 'admin' | 'veterinarian' | 'staff' | 'patient' | 'clinic_admin';
 export type AccountStatus = 'active' | 'inactive' | 'suspended' | 'pending';
 
 // Authentication Types

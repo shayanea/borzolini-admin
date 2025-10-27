@@ -1,8 +1,8 @@
-import { ExportOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Card, Col, DatePicker, Input, Row, Select, Space } from 'antd';
-import dayjs from 'dayjs';
+import { ExportOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 
 import type { ContactFilters as ContactFiltersType } from '@/types';
+import dayjs from 'dayjs';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -45,7 +45,7 @@ export const ContactFilters = ({
   return (
     <Card className='mb-4'>
       <Row gutter={[16, 16]} align='middle'>
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={5}>
           <Select
             placeholder='Filter by status'
             value={filters.status}
@@ -60,16 +60,17 @@ export const ContactFilters = ({
           </Select>
         </Col>
 
-        <Col xs={24} sm={12} md={6}>
+        <Col xs={24} sm={12} md={5}>
           <Input
             placeholder='Search contacts...'
             value={filters.search}
             onChange={handleSearchChange}
             prefix={<SearchOutlined />}
+            style={{ width: '100%' }}
           />
         </Col>
 
-        <Col xs={24} sm={12} md={8}>
+        <Col xs={24} sm={12} md={10}>
           <RangePicker
             placeholder={['From Date', 'To Date']}
             onChange={handleDateRangeChange}

@@ -61,7 +61,30 @@ const RoleProtectedRoute = ({
   );
 
   // Check specific role requirement if specified
+  // clinic_admin should not have access to admin-only routes
   if (requiredRole && userRole !== requiredRole) {
+    // Special case: clinic_admin should be able to access some pages but not admin-specific ones
+    const isClinicAdminTryingToAccessAdminRoute =
+      userRole === 'clinic_admin' && requiredRole === 'admin';
+    if (isClinicAdminTryingToAccessAdminRoute) {
+      return (
+        <AuthBackground variant='default'>
+          <Result
+            status='403'
+            title={t('auth.accessDenied')}
+            subTitle={'You do not have permission to access this section'}
+            extra={[
+              <Button type='primary' key='dashboard' onClick={handleGoToDashboard}>
+                {t('auth.goToDashboard')}
+              </Button>,
+              <Button key='fallback' onClick={handleGoToFallback}>
+                {t('auth.goToFallback')}
+              </Button>,
+            ]}
+          />
+        </AuthBackground>
+      );
+    }
     return (
       <AuthBackground variant='default'>
         <Result

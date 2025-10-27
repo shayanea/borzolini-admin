@@ -20,7 +20,7 @@ const ModernAdminLayout: React.FC<ModernAdminLayoutProps> = ({ onLogout }) => {
   };
 
   const userName = user ? `${user.firstName} ${user.lastName}` : 'User';
-  const userRole = user?.role?.name || 'Staff';
+  const userRole = user?.role || 'Staff';
 
   return (
     <div className='flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>

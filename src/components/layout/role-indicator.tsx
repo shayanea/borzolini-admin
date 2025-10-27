@@ -10,6 +10,7 @@ interface RoleIndicatorProps {
 
 const ROLE_COLORS: Record<UserRole, string> = {
   admin: 'red',
+  clinic_admin: 'purple',
   veterinarian: 'blue',
   staff: 'green',
   patient: 'default',
@@ -17,6 +18,7 @@ const ROLE_COLORS: Record<UserRole, string> = {
 
 const ROLE_LABELS: Record<UserRole, string> = {
   admin: 'Admin',
+  clinic_admin: 'Clinic Admin',
   veterinarian: 'Veterinarian',
   staff: 'Staff',
   patient: 'Patient',

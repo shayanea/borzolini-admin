@@ -88,7 +88,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
               <input
                 type='text'
                 placeholder={t('components:header.searchPlaceholder')}
-                className='w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 text-sm transition-all'
+                className='w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:border-primary-gradientFrom focus:outline-none focus:ring-2 focus:ring-blue-100 text-sm transition-all'
               />
             </div>
           </div>
@@ -168,7 +168,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 className='flex items-center gap-3 px-3 py-2 hover:bg-slate-100 rounded-xl transition-all group'
               >
-                <div className='w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:shadow-xl transition-shadow'>
+                <div className='w-9 h-9 rounded-xl bg-[#38a3a5] flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:shadow-xl transition-shadow'>
                   {userName.charAt(0)}
                 </div>
                 <div className='text-left hidden xl:block'>
@@ -182,7 +182,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
                 <div className='absolute right-0 mt-2 w-56 bg-white rounded-2xl border border-slate-200 shadow-xl z-50 overflow-hidden'>
                   <div className='p-4 bg-gradient-to-br from-blue-50 to-indigo-50 border-b border-slate-200'>
                     <div className='flex items-center gap-3'>
-                      <div className='w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg'>
+                      <div className='w-12 h-12 rounded-xl bg-[#38a3a5] flex items-center justify-center text-white font-bold text-lg'>
                         {userName.charAt(0)}
                       </div>
                       <div>

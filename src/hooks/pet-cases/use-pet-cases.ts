@@ -29,7 +29,7 @@ export const usePetCases = (
     error,
     refetch,
   } = useQuery<PetCasesResponse>({
-    queryKey: ['pet-cases', clinicId, filters, page, limit],
+    queryKey: ['pet-cases-by-clinic-id', clinicId, filters, page, limit],
     queryFn: () => PetCasesService.getCasesByClinic(clinicId, filters, page, limit),
     enabled: !!clinicId,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -37,7 +37,7 @@ export const usePetCases = (
 
   // Query for case statistics
   const { data: statsData, isLoading: statsLoading } = useQuery<CaseStats>({
-    queryKey: ['pet-cases-stats', clinicId],
+    queryKey: ['pet-cases-stats-by-clinic-id', clinicId],
     queryFn: () => PetCasesService.getCaseStats(clinicId),
     enabled: !!clinicId,
     staleTime: 10 * 60 * 1000, // 10 minutes
@@ -47,8 +47,8 @@ export const usePetCases = (
   const createCaseMutation = useMutation({
     mutationFn: (caseData: CreatePetCaseRequest) => PetCasesService.createCase(clinicId, caseData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['pet-cases', clinicId] });
-      queryClient.invalidateQueries({ queryKey: ['pet-cases-stats', clinicId] });
+      queryClient.invalidateQueries({ queryKey: ['pet-cases-by-clinic-id', clinicId] });
+      queryClient.invalidateQueries({ queryKey: ['pet-cases-stats-by-clinic-id', clinicId] });
       success('Pet case created successfully');
     },
     onError: (error: any) => {
@@ -61,8 +61,8 @@ export const usePetCases = (
     mutationFn: ({ caseId, updateData }: { caseId: string; updateData: UpdatePetCaseRequest }) =>
       PetCasesService.updateCase(clinicId, caseId, updateData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['pet-cases', clinicId] });
-      queryClient.invalidateQueries({ queryKey: ['pet-cases-stats', clinicId] });
+      queryClient.invalidateQueries({ queryKey: ['pet-cases-by-clinic-id', clinicId] });
+      queryClient.invalidateQueries({ queryKey: ['pet-cases-stats-by-clinic-id', clinicId] });
       success('Pet case updated successfully');
     },
     onError: (error: any) => {
@@ -75,7 +75,7 @@ export const usePetCases = (
     mutationFn: ({ caseId, eventData }: { caseId: string; eventData: AddTimelineEventRequest }) =>
       PetCasesService.addTimelineEvent(clinicId, caseId, eventData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['pet-cases', clinicId] });
+      queryClient.invalidateQueries({ queryKey: ['pet-cases-by-clinic-id', clinicId] });
       success('Timeline event added successfully');
     },
     onError: (error: any) => {
@@ -157,8 +157,12 @@ export const usePetCase = (clinicId: string, caseId: string) => {
   };
 };
 
-export const useAllPetCases = (filters: CaseFilters = {}, page: number = 1, limit: number = 10) => {
-
+export const useAllPetCases = (
+  filters: CaseFilters = {},
+  page: number = 1,
+  limit: number = 10,
+  enabled?: boolean
+) => {
   // Query for fetching all cases across all clinics
   const {
     data: casesData,
@@ -169,6 +173,7 @@ export const useAllPetCases = (filters: CaseFilters = {}, page: number = 1, limi
     queryKey: ['all-pet-cases', filters, page, limit],
     queryFn: () => PetCasesService.getAllCases(filters, page, limit),
     staleTime: 5 * 60 * 1000, // 5 minutes
+    enabled,
   });
 
   return {

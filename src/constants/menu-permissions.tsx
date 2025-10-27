@@ -1,6 +1,7 @@
 // Role-based menu permissions and configurations
 import {
   BarChartOutlined,
+  CalendarOutlined,
   DashboardOutlined,
   ExperimentOutlined,
   FileTextOutlined,
@@ -10,6 +11,7 @@ import {
   MonitorOutlined,
   SettingOutlined,
   StarOutlined,
+  TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 
@@ -46,6 +48,13 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     roles: ['admin', 'veterinarian', 'staff', 'patient'],
   },
   {
+    key: '/calendar',
+    label: 'Calendar',
+    icon: React.createElement(CalendarOutlined),
+    onClick: () => {},
+    roles: ['admin', 'veterinarian', 'staff', 'patient'],
+  },
+  {
     key: '/clinics',
     label: 'Clinics',
     icon: React.createElement(MedicineBoxOutlined),
@@ -62,7 +71,7 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
   {
     key: '/veterinarians',
     label: 'Veterinarians',
-    icon: React.createElement(ExperimentOutlined),
+    icon: React.createElement(TeamOutlined),
     onClick: () => {},
     roles: ['admin'],
   },
@@ -79,7 +88,13 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     icon: React.createElement(FileTextOutlined),
     onClick: () => {},
     roles: ['admin', 'veterinarian', 'staff'],
-    hidden: true,
+  },
+  {
+    key: '/staff',
+    label: 'Staff',
+    icon: React.createElement(TeamOutlined),
+    onClick: () => {},
+    roles: ['admin', 'clinic_admin'],
   },
   {
     key: '/reports',
@@ -93,7 +108,7 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     ),
     icon: React.createElement(BarChartOutlined),
     onClick: () => {},
-    roles: ['admin', 'veterinarian', 'staff'],
+    roles: ['admin'],
   },
   {
     key: '/reviews',
@@ -107,7 +122,7 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     ),
     icon: React.createElement(StarOutlined),
     onClick: () => {},
-    roles: ['admin', 'veterinarian', 'staff', 'patient'],
+    roles: ['admin'],
   },
   {
     key: '/contacts',
@@ -156,6 +171,19 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
 // Role-based menu configurations
 export const MENU_ITEMS: Record<UserRole, MenuItemConfig[]> = {
   admin: ALL_MENU_ITEMS.filter(item => item.roles.includes('admin')),
+  // clinic_admin should only see pages related to their clinic (not admin pages like clinics, users, settings)
+  clinic_admin: ALL_MENU_ITEMS.filter(
+    item =>
+      item.roles.includes('veterinarian') ||
+      item.roles.includes('staff') ||
+      item.key === '/dashboard' ||
+      item.key === '/appointments' ||
+      item.key === '/calendar' ||
+      item.key === '/pets' ||
+      item.key === '/pet-cases' ||
+      item.key === '/staff' ||
+      item.key === '/profile'
+  ),
   veterinarian: ALL_MENU_ITEMS.filter(item => item.roles.includes('veterinarian')),
   staff: ALL_MENU_ITEMS.filter(item => item.roles.includes('staff')),
   patient: ALL_MENU_ITEMS.filter(item => item.roles.includes('patient')),

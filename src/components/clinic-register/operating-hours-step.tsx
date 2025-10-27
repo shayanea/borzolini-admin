@@ -45,7 +45,8 @@ export const OperatingHoursStep: React.FC = () => {
                 <div className='flex items-center gap-3'>
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                     isWeekend ? 'bg-orange-200 text-orange-700' : 'bg-indigo-200 text-indigo-700'
-                  } font-semibold`}>
+                  } font-semibold`}
+                  >
                     {day.label.substring(0, 2)}
                   </div>
                   <div>

@@ -1,3 +1,5 @@
+import type { UserRole } from '@/types';
+
 export const USER_ROLES = {
   ADMIN: 'admin',
   VETERINARIAN: 'veterinarian',
@@ -19,12 +21,13 @@ export const USER_TABLE_COLUMNS = {
   ACTIONS: 'actions',
 } as const;
 
-export const ROLE_COLORS = {
-  [USER_ROLES.ADMIN]: 'red',
-  [USER_ROLES.VETERINARIAN]: 'blue',
-  [USER_ROLES.STAFF]: 'green',
-  [USER_ROLES.PATIENT]: 'default',
-} as const;
+export const ROLE_COLORS: Record<UserRole, string> = {
+  admin: 'red',
+  clinic_admin: 'purple',
+  veterinarian: 'blue',
+  staff: 'green',
+  patient: 'default',
+};
 
 export const IS_ACTIVE_COLORS = {
   true: 'green',

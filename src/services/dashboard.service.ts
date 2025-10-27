@@ -6,19 +6,41 @@ export class DashboardService {
   // Get comprehensive dashboard statistics from centralized endpoint
   static async getDashboardStats(filters: DashboardFilters = {}): Promise<DashboardStats> {
     try {
-      // Use the new centralized dashboard endpoint
+      // For clinic_admin users, use clinic-specific endpoint
+      let url: string;
       const params = new URLSearchParams();
 
-      if (filters.dateRange) {
-        params.append('dateRange', JSON.stringify(filters.dateRange));
-      }
-
       if (filters.clinicId) {
-        params.append('clinicId', filters.clinicId);
-      }
+        // Use clinic-specific endpoint for clinic admins
+        url = `/clinics/${filters.clinicId}/dashboard/stats`;
 
-      const queryString = params.toString();
-      const url = `/dashboard/stats${queryString ? `?${queryString}` : ''}`;
+        if (filters.dateRange) {
+          params.append('dateRange', JSON.stringify(filters.dateRange));
+        }
+
+        const queryString = params.toString();
+        if (queryString) {
+          url += `?${queryString}`;
+        }
+
+        console.log('🏥 DashboardService: Using clinic stats endpoint', {
+          url,
+          clinicId: filters.clinicId,
+        });
+      } else {
+        // Use general dashboard endpoint
+        if (filters.dateRange) {
+          params.append('dateRange', JSON.stringify(filters.dateRange));
+        }
+
+        const queryString = params.toString();
+        url = `/dashboard/stats${queryString ? `?${queryString}` : ''}`;
+
+        console.log('📊 DashboardService: Using general dashboard endpoint', {
+          url,
+          filters,
+        });
+      }
 
       const response = await apiService.get(url);
 
@@ -125,19 +147,41 @@ export class DashboardService {
   // Get dashboard charts data from centralized endpoint
   static async getDashboardCharts(filters: DashboardFilters = {}) {
     try {
-      // Use the new centralized dashboard charts endpoint
+      // For clinic_admin users, use clinic-specific endpoint
+      let url: string;
       const params = new URLSearchParams();
 
-      if (filters.dateRange) {
-        params.append('dateRange', JSON.stringify(filters.dateRange));
-      }
-
       if (filters.clinicId) {
-        params.append('clinicId', filters.clinicId);
-      }
+        // Use clinic-specific endpoint for clinic admins
+        url = `/clinics/${filters.clinicId}/dashboard/charts`;
 
-      const queryString = params.toString();
-      const url = `/dashboard/charts${queryString ? `?${queryString}` : ''}`;
+        if (filters.dateRange) {
+          params.append('dateRange', JSON.stringify(filters.dateRange));
+        }
+
+        const queryString = params.toString();
+        if (queryString) {
+          url += `?${queryString}`;
+        }
+
+        console.log('🏥 DashboardService: Using clinic charts endpoint', {
+          url,
+          clinicId: filters.clinicId,
+        });
+      } else {
+        // Use general dashboard endpoint
+        if (filters.dateRange) {
+          params.append('dateRange', JSON.stringify(filters.dateRange));
+        }
+
+        const queryString = params.toString();
+        url = `/dashboard/charts${queryString ? `?${queryString}` : ''}`;
+
+        console.log('📊 DashboardService: Using general charts endpoint', {
+          url,
+          filters,
+        });
+      }
 
       const response = await apiService.get(url);
 
