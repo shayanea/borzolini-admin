@@ -80,7 +80,7 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     label: 'Veterinarians',
     icon: React.createElement(TeamOutlined),
     onClick: () => {},
-    roles: ['admin'],
+    roles: [],
   },
   {
     key: '/pets',
@@ -94,14 +94,14 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     label: 'Pet Cases',
     icon: React.createElement(FileTextOutlined),
     onClick: () => {},
-    roles: ['admin', 'veterinarian', 'staff'],
+    roles: ['veterinarian', 'staff'],
   },
   {
     key: '/staff',
     label: 'Staff',
     icon: React.createElement(TeamOutlined),
     onClick: () => {},
-    roles: ['admin', 'clinic_admin'],
+    roles: ['clinic_admin'],
   },
   {
     key: '/reports',
