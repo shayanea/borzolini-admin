@@ -11,16 +11,17 @@ import { useCallback } from 'react';
 import { useCurrentUser } from '@/hooks/use-auth';
 import { useTranslation } from 'react-i18next';
 import { useUserManagement } from '@/hooks';
+import { useClinicStaff } from '@/hooks/use-clinic-staff';
+import { useClinicContext } from '@/hooks/use-clinic-context';
+import type { User } from '@/types';
 
 const Staff = () => {
   const { t } = useTranslation('pages');
   const { data: currentUser } = useCurrentUser();
 
   const {
-    // State
-    users,
+    // State from legacy user management (filters, modals, exports)
     loading,
-    total,
     currentPage,
     pageSize,
     searchText,
@@ -52,9 +53,23 @@ const Staff = () => {
     refetch,
   } = useUserManagement('staff');
 
+  // Fetch clinic staff via clinics/{id}/staff
+  const { clinicContext } = useClinicContext();
+  const {
+    data: clinicStaffResponse,
+    isLoading: staffLoading,
+    refetch: refetchClinicStaff,
+  } = useClinicStaff({ clinicId: clinicContext?.clinicId });
+
+  const users: User[] = (clinicStaffResponse?.staff ?? [])
+    .map(s => s.user)
+    .filter(Boolean) as User[];
+  const total = clinicStaffResponse?.total ?? users.length;
+
   const handleRefresh = useCallback(() => {
     refetch();
-  }, [refetch]);
+    refetchClinicStaff();
+  }, [refetch, refetchClinicStaff]);
 
   const handleAddUser = useCallback(() => {
     showModal();
@@ -94,7 +109,7 @@ const Staff = () => {
       <Card className='admin-card'>
         <UserTable
           users={users}
-          loading={loading}
+          loading={loading || staffLoading}
           currentPage={currentPage}
           pageSize={pageSize}
           total={total}

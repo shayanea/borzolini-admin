@@ -22,3 +22,4 @@ export { useReviews } from './use-reviews';
 export { useSettings } from './use-settings';
 export { useUserManagement } from './use-user-management';
 export { useAuthInitialization } from './useAuthInitialization';
+export { useClinicStaff } from './use-clinic-staff';

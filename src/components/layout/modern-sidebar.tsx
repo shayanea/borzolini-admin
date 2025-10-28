@@ -70,7 +70,7 @@ const ModernSidebar: React.FC<ModernSidebarProps> = () => {
     <aside
       className={`${
         isCollapsed ? 'w-20' : 'w-58'
-      } bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 border-r border-slate-700/50 transition-all duration-300 ease-out shadow-xl flex flex-col overflow-hidden transform-gpu`}
+      } bg-slate-900 border-r border-slate-700/50 transition-all duration-300 ease-out shadow-xl flex flex-col overflow-hidden transform-gpu`}
     >
       {/* Logo Section */}
       <div className='p-6 border-b border-slate-700/50 relative overflow-hidden'>
@@ -83,14 +83,18 @@ const ModernSidebar: React.FC<ModernSidebarProps> = () => {
             <div>
               <span
                 className={`font-bold text-xl text-white block whitespace-nowrap transition-all duration-300 ${
-                  isCollapsed ? 'opacity-0 -translate-x-2 w-0 hidden' : 'opacity-100 translate-x-0 w-auto'
+                  isCollapsed
+                    ? 'opacity-0 -translate-x-2 w-0 hidden'
+                    : 'opacity-100 translate-x-0 w-auto'
                 }`}
               >
                 Borzolini
               </span>
               <span
                 className={`text-xs text-slate-400 font-medium whitespace-nowrap transition-all duration-300 ${
-                  isCollapsed ? 'opacity-0 -translate-x-2 w-0 hidden' : 'opacity-100 translate-x-0 w-auto'
+                  isCollapsed
+                    ? 'opacity-0 -translate-x-2 w-0 hidden'
+                    : 'opacity-100 translate-x-0 w-auto'
                 }`}
               >
                 Veterinary Clinic
@@ -131,7 +135,9 @@ const ModernSidebar: React.FC<ModernSidebarProps> = () => {
                 />
                 <span
                   className={`text-sm font-medium flex-1 text-left whitespace-nowrap transition-all duration-300 ${
-                    isCollapsed ? 'opacity-0 -translate-x-2 w-0' : 'opacity-100 translate-x-0 w-auto'
+                    isCollapsed
+                      ? 'opacity-0 -translate-x-2 w-0'
+                      : 'opacity-100 translate-x-0 w-auto'
                   }`}
                 >
                   {item.label}
