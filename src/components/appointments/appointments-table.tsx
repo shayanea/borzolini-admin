@@ -1,10 +1,4 @@
-import {
-  formatAppointmentType,
-  getAppointmentPriorityColor,
-  getAppointmentStatusColor,
-  getPetGenderColor,
-  getPetSpeciesColor,
-} from '@/utils/color-helpers';
+import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 import {
   CalendarOutlined,
   ClockCircleOutlined,
@@ -15,13 +9,19 @@ import {
   StarOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import { useTranslation } from 'react-i18next';
+import {
+  formatAppointmentType,
+  getAppointmentPriorityColor,
+  getAppointmentStatusColor,
+  getPetGenderColor,
+  getPetSpeciesColor,
+} from '@/utils/color-helpers';
 
-import { TABLE_PAGE_SIZES } from '@/constants';
-import { AppointmentsDataService } from '@/services/appointments-data.service';
 import type { Appointment } from '@/types';
+import { AppointmentsDataService } from '@/services/appointments-data.service';
+import { TABLE_PAGE_SIZES } from '@/constants';
+import { useTranslation } from 'react-i18next';
 
 export interface AppointmentsHeaderProps {
   onNewAppointment: (data: any) => void;
@@ -80,9 +80,6 @@ const AppointmentsTable = ({
               {appointment.pet?.breed
                 ? `${appointment.pet.breed} ${appointment.pet.species}`
                 : appointment.pet?.species || t('appointments.unknownSpecies')}
-            </div>
-            <div className='text-xs text-text-light'>
-              {t('appointments.ownerId')}: {appointment.owner_id || t('appointments.unknown')}
             </div>
             {appointment.pet?.emergency_contact && (
               <div className='text-xs text-text-light flex items-center'>

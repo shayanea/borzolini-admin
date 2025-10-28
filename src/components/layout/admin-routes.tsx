@@ -19,8 +19,10 @@ import {
 import { Route, Routes } from 'react-router-dom';
 
 import RoleProtectedRoute from '../auth/role-protected-route';
+import { UserRole } from '@/types';
 
 const VETERINARIAN_ROLE_FILTER = 'veterinarian' as const;
+const PATIENT_ROLE_FILTER: UserRole = 'patient';
 
 const AdminRoutes = () => {
   return (
@@ -90,6 +92,14 @@ const AdminRoutes = () => {
         }
       />
       <Route
+        path='patients'
+        element={
+          <RoleProtectedRoute>
+            <Users roleFilter={PATIENT_ROLE_FILTER} />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
         path='staff'
         element={
           <RoleProtectedRoute>
@@ -116,7 +126,7 @@ const AdminRoutes = () => {
       <Route
         path='reports'
         element={
-          <RoleProtectedRoute>
+          <RoleProtectedRoute requiredRole='admin'>
             <Reports />
           </RoleProtectedRoute>
         }
@@ -124,7 +134,7 @@ const AdminRoutes = () => {
       <Route
         path='reviews'
         element={
-          <RoleProtectedRoute>
+          <RoleProtectedRoute requiredRole='admin'>
             <Reviews />
           </RoleProtectedRoute>
         }

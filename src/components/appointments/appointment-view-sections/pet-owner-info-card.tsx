@@ -3,6 +3,7 @@
  */
 
 import { Card, Descriptions, Tag } from 'antd';
+
 import type { Appointment } from '@/types';
 import { FC } from 'react';
 
@@ -27,7 +28,6 @@ export const PetOwnerInfoCard: FC<PetOwnerInfoCardProps> = ({ appointment }) => 
           <p className='text-gray-600'>
             {appointment.pet?.breed} {appointment.pet?.species}
           </p>
-          <p className='text-sm text-gray-500'>Owner ID: {appointment.owner_id}</p>
         </div>
       </div>
 
@@ -64,4 +64,3 @@ export const PetOwnerInfoCard: FC<PetOwnerInfoCardProps> = ({ appointment }) => 
     </Card>
   );
 };
-

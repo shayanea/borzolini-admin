@@ -20,9 +20,9 @@ import {
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { Tooltip } from 'antd';
 import { getMenuItemsForRole } from '@/constants/menu-permissions';
 import { useAuthStore } from '@/stores/auth.store';
+import { Tooltip } from 'antd';
 
 // Icon mapping for menu items
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,6 +34,7 @@ const iconMap: Record<string, any> = {
   '/users': Users,
   '/staff': Users,
   '/veterinarians': HeartPulse,
+  '/patients': Users,
   '/pets': PawPrint,
   '/pet-cases': Stethoscope,
   '/reports': BarChart,
