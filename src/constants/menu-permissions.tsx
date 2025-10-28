@@ -69,6 +69,13 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     roles: ['admin'],
   },
   {
+    key: '/patients',
+    label: 'Patients',
+    icon: React.createElement(UserOutlined),
+    onClick: () => {},
+    roles: ['clinic_admin', 'staff'],
+  },
+  {
     key: '/veterinarians',
     label: 'Veterinarians',
     icon: React.createElement(TeamOutlined),
