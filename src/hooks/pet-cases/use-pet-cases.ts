@@ -163,6 +163,7 @@ export const useAllPetCases = (
   limit: number = 10,
   enabled?: boolean
 ) => {
+  console.log('enabled', enabled);
   // Query for fetching all cases across all clinics
   const {
     data: casesData,
@@ -177,19 +178,12 @@ export const useAllPetCases = (
   });
 
   return {
-    // Data
     cases: casesData?.cases || [],
     total: casesData?.total || 0,
     page: casesData?.page || 1,
     totalPages: casesData?.totalPages || 1,
-
-    // Loading states
     isLoading,
-
-    // Errors
     error,
-
-    // Actions
     refetch,
   };
 };

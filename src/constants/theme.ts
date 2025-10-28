@@ -1,7 +1,7 @@
 // Ant Design theme configuration
 export const theme = {
   token: {
-    colorPrimary: '#38a3a5',
+    colorPrimary: '#6ecefd',
     colorSuccess: '#10b981',
     colorWarning: '#f59e0b',
     colorError: '#ef4444',
@@ -19,12 +19,12 @@ export const theme = {
     Menu: {
       darkItemBg: '#0b1220',
       darkItemHoverBg: '#111827',
-      darkItemSelectedBg: '#38a3a5',
+      darkItemSelectedBg: '#6ecefd',
       darkItemSelectedColor: '#ffffff',
     },
     Button: {
       primaryColor: '#ffffff',
-      primaryBg: '#38a3a5',
+      primaryBg: '#6ecefd',
       borderRadius: 10,
     },
     Card: {

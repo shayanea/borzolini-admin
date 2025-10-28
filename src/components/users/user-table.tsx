@@ -35,8 +35,9 @@ const UserTable = ({
           <Avatar
             size={25}
             className='bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center'
-            src='/borzolini-logo.svg'
-          />
+          >
+            {user.firstName.charAt(0)}
+          </Avatar>
           <div>
             <div className='font-medium'>
               {user.firstName} {user.lastName}

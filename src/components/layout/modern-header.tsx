@@ -168,7 +168,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 className='flex items-center gap-3 px-3 py-2 hover:bg-slate-100 rounded-xl transition-all group'
               >
-                <div className='w-9 h-9 rounded-xl bg-[#38a3a5] flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:shadow-xl transition-shadow'>
+                <div className='w-9 h-9 rounded-xl bg-[#6ecefd] flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:shadow-xl transition-shadow'>
                   {userName.charAt(0)}
                 </div>
                 <div className='text-left hidden xl:block'>
@@ -182,7 +182,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
                 <div className='absolute right-0 mt-2 w-56 bg-white rounded-2xl border border-slate-200 shadow-xl z-50 overflow-hidden'>
                   <div className='p-4 bg-gradient-to-br from-blue-50 to-indigo-50 border-b border-slate-200'>
                     <div className='flex items-center gap-3'>
-                      <div className='w-12 h-12 rounded-xl bg-[#38a3a5] flex items-center justify-center text-white font-bold text-lg'>
+                      <div className='w-12 h-12 rounded-xl bg-[#6ecefd] flex items-center justify-center text-white font-bold text-lg'>
                         {userName.charAt(0)}
                       </div>
                       <div>

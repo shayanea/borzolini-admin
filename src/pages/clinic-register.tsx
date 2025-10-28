@@ -127,7 +127,7 @@ const ClinicRegister: React.FC = () => {
             <Progress
               percent={progressPercentage}
               strokeColor={{
-                '0%': '#38a3a5',
+                '0%': '#6ecefd',
                 '100%': '#9333ea',
               }}
               showInfo={false}

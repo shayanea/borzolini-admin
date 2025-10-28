@@ -209,7 +209,7 @@
   }
 
   .appointment-blue {
-    background: linear-gradient(135deg, #38a3a5 0%, #06b6d4 100%);
+    background: linear-gradient(135deg, #6ecefd 0%, #06b6d4 100%);
   }
 
   .appointment-orange {
@@ -275,7 +275,7 @@
 
 @layer utilities {
   .text-gradient {
-    background: linear-gradient(135deg, #38a3a5 0%, #06b6d4 100%);
+    background: linear-gradient(135deg, #6ecefd 0%, #06b6d4 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -353,7 +353,7 @@
 .admin-filters .ant-picker-focused,
 .admin-filters .ant-input:focus,
 .admin-filters .ant-btn:focus {
-  border-color: #38a3a5 !important;
+  border-color: #6ecefd !important;
   box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2) !important;
 }
 
@@ -373,7 +373,7 @@
 
 .admin-filters .ant-select-item-option-selected {
   background-color: #eef2ff !important;
-  color: #38a3a5 !important;
+  color: #6ecefd !important;
 }
 
 .admin-filters .ant-select-item-option-active {
@@ -382,8 +382,8 @@
 
 /* Modern Steps Styling for Clinic Registration */
 .modern-steps .ant-steps-item-finish .ant-steps-item-icon {
-  background-color: #38a3a5 !important;
-  border-color: #38a3a5 !important;
+  background-color: #6ecefd !important;
+  border-color: #6ecefd !important;
 }
 
 .modern-steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
@@ -391,8 +391,8 @@
 }
 
 .modern-steps .ant-steps-item-process .ant-steps-item-icon {
-  background: linear-gradient(135deg, #38a3a5 0%, #7c3aed 100%) !important;
-  border-color: #38a3a5 !important;
+  background: linear-gradient(135deg, #6ecefd 0%, #7c3aed 100%) !important;
+  border-color: #6ecefd !important;
   box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3) !important;
 }
 
@@ -402,7 +402,7 @@
 }
 
 .modern-steps .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
-  background-color: #38a3a5 !important;
+  background-color: #6ecefd !important;
 }
 
 .modern-steps .ant-steps-item-title {

@@ -35,7 +35,6 @@ const PetCasesPage: React.FC = () => {
   // Get clinic ID from URL params or user profile
   const clinicId: string | undefined =
     urlClinicId || user?.clinicId || user?.clinic_id || user?.clinic?.id;
-  console.log('clinicId', clinicId);
 
   // Use custom hooks for state management
   const state = usePetCasesState({ clinicId });
@@ -78,7 +77,7 @@ const PetCasesPage: React.FC = () => {
 
   // Use different hooks based on whether we're fetching all cases or clinic-specific cases
   const clinicCasesResult = usePetCases(clinicId || '', state.filters, state.page, 10);
-  const allCasesResult = useAllPetCases(state.filters, state.page, 10, !!clinicId);
+  const allCasesResult = useAllPetCases(state.filters, state.page, 10, clinicId ? false : true);
 
   // Select the appropriate result based on the condition
   const result = shouldFetchAllCases ? allCasesResult : clinicCasesResult;

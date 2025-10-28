@@ -17,7 +17,7 @@ export default {
           orange: '#f59e0b',
           light: '#eef2ff',
           white: '#ffffff',
-          gradientFrom: '#38a3a5',
+          gradientFrom: '#6ecefd',
           gradientTo: '#06b6d4',
         },
         // Semantic Colors
@@ -33,7 +33,7 @@ export default {
         'background-accent': '#eef2ff',
         // Interactive Elements
         button: {
-          primary: '#38a3a5',
+          primary: '#6ecefd',
           secondary: '#06b6d4',
           accent: '#0ea5e9',
         },
@@ -45,7 +45,7 @@ export default {
         },
         // AI/Tech Specific
         ai: {
-          primary: '#38a3a5',
+          primary: '#6ecefd',
           accent: '#06b6d4',
           background: '#f1f5f9',
         },
@@ -53,7 +53,7 @@ export default {
         admin: {
           sidebar: '#0b1220',
           'sidebar-hover': '#111827',
-          'sidebar-active': '#38a3a5',
+          'sidebar-active': '#6ecefd',
           header: '#ffffff',
           'header-border': '#e5e7eb',
           card: '#ffffff',

@@ -50,7 +50,7 @@ const Staff = () => {
     handleExportExcel,
 
     refetch,
-  } = useUserManagement();
+  } = useUserManagement('staff');
 
   const handleRefresh = useCallback(() => {
     refetch();

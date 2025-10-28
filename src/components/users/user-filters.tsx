@@ -3,6 +3,7 @@ import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 
 import { USER_ROLES } from '@/constants/user-management';
 import type { UserFiltersProps } from '@/types/user-management';
+import { useCurrentUser } from '@/hooks/use-auth';
 import { useTranslation } from 'react-i18next';
 
 const { Search } = Input;
@@ -18,6 +19,8 @@ const UserFilters = ({
   onClearFilters,
 }: UserFiltersProps) => {
   const { t } = useTranslation('components');
+  const { data: currentUser } = useCurrentUser();
+  const canSeeRoleDropdown = currentUser?.role === 'admin' || currentUser?.role === 'clinic_admin';
 
   return (
     <Card className='admin-card admin-filters'>
@@ -32,20 +35,22 @@ const UserFilters = ({
             className='w-full'
           />
         </Col>
-        <Col xs={24} sm={12} md={4}>
-          <Select
-            placeholder={t('userManagement.role')}
-            allowClear
-            value={selectedRole}
-            onChange={onRoleFilter}
-            className='w-full'
-          >
-            <Option value={USER_ROLES.ADMIN}>Admin</Option>
-            <Option value={USER_ROLES.VETERINARIAN}>Veterinarian</Option>
-            <Option value={USER_ROLES.STAFF}>Staff</Option>
-            <Option value={USER_ROLES.PATIENT}>Patient</Option>
-          </Select>
-        </Col>
+        {canSeeRoleDropdown && (
+          <Col xs={24} sm={12} md={4}>
+            <Select
+              placeholder={t('userManagement.role')}
+              allowClear
+              value={selectedRole}
+              onChange={onRoleFilter}
+              className='w-full'
+            >
+              <Option value={USER_ROLES.ADMIN}>Admin</Option>
+              <Option value={USER_ROLES.VETERINARIAN}>Veterinarian</Option>
+              <Option value={USER_ROLES.STAFF}>Staff</Option>
+              <Option value={USER_ROLES.PATIENT}>Patient</Option>
+            </Select>
+          </Col>
+        )}
         <Col xs={24} sm={12} md={4}>
           <Select
             placeholder={t('userManagement.status')}

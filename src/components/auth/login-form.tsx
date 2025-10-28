@@ -1,7 +1,7 @@
 import { Alert, Button, Card, Form, Input, Typography } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, UserOutlined } from '@ant-design/icons';
 
-import BG from '@/ui/icons/auth-bg.jpg';
+import BG from '@/ui/icons/auth-bg.svg';
 import type { LoginCredentials } from '@/types';
 import { useCallback } from 'react';
 import { useLogin } from '@/hooks/use-auth';
@@ -34,14 +34,14 @@ export const LoginForm = () => {
       className='min-h-screen flex items-center justify-center p-4 w-full bg-cover bg-center bg-no-repeat'
       style={{ backgroundImage: `url(${BG})` }}
     >
-      <Card className='w-1/3 shadow-2xl p-8 bg-white border border-gray-200 rounded-2xl backdrop-blur-sm'>
+      <Card className='w-1/3 shadow-2xl p-4 py-0 bg-white border border-gray-200 rounded-2xl backdrop-blur-sm'>
         <div className='text-center mb-8'>
           <div className='mb-4'>
             <div className='flex items-center justify-center mx-auto'>
               <img
-                src='/borzolini-logo.svg'
+                src='/web-app-manifest-512x512.png'
                 alt='Borzolini Logo'
-                className='w-16 h-16 object-contain'
+                className='w-16 h-16 object-contain rounded-xl'
               />
             </div>
           </div>

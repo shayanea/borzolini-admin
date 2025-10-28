@@ -69,25 +69,29 @@ const ModernSidebar: React.FC<ModernSidebarProps> = () => {
   return (
     <aside
       className={`${
-        isCollapsed ? 'w-20' : 'w-72'
-      } bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 border-r border-slate-700/50 transition-all duration-300 ease-out shadow-xl flex flex-col overflow-hidden`}
+        isCollapsed ? 'w-20' : 'w-58'
+      } bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 border-r border-slate-700/50 transition-all duration-300 ease-out shadow-xl flex flex-col overflow-hidden transform-gpu`}
     >
       {/* Logo Section */}
       <div className='p-6 border-b border-slate-700/50 relative overflow-hidden'>
         <div className='absolute inset-0 bg-gradient-to-br from-blue-600/10 to-purple-600/10' />
         <div className='relative flex items-center justify-between'>
           <div className={`flex items-center ${isCollapsed ? 'w-full justify-center' : 'gap-3'}`}>
-            <div className='min-w-12 w-12 h-12 rounded-xl bg-[#38a3a5] flex items-center justify-center shadow-lg shadow-[#38a3a5]/30'>
+            <div className='min-w-12 w-12 h-12 rounded-xl bg-[#6ecefd] flex items-center justify-center shadow-lg shadow-[#6ecefd]/30'>
               <span className='text-white font-bold text-lg'>B</span>
             </div>
             <div>
               <span
-                className={`font-bold text-xl text-white block whitespace-nowrap ${isCollapsed ? 'hidden' : ''}`}
+                className={`font-bold text-xl text-white block whitespace-nowrap transition-all duration-300 ${
+                  isCollapsed ? 'opacity-0 -translate-x-2 w-0 hidden' : 'opacity-100 translate-x-0 w-auto'
+                }`}
               >
                 Borzolini
               </span>
               <span
-                className={`text-xs text-slate-400 font-medium whitespace-nowrap ${isCollapsed ? 'hidden' : ''}`}
+                className={`text-xs text-slate-400 font-medium whitespace-nowrap transition-all duration-300 ${
+                  isCollapsed ? 'opacity-0 -translate-x-2 w-0 hidden' : 'opacity-100 translate-x-0 w-auto'
+                }`}
               >
                 Veterinary Clinic
               </span>
@@ -114,9 +118,9 @@ const ModernSidebar: React.FC<ModernSidebarProps> = () => {
                   isCollapsed ? 'justify-center' : 'gap-3'
                 } px-3 py-3 rounded-xl transition-all duration-200 group ${
                   active
-                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30'
+                    ? 'bg-[#6ecefd] text-white shadow-lg shadow-primary-gradient/30'
                     : 'text-slate-300 hover:bg-slate-800/50 hover:text-white'
-                }`}
+                } overflow-hidden`}
                 title={isCollapsed && typeof item.label === 'string' ? (item.label as string) : ''}
               >
                 <IconComponent
@@ -126,7 +130,9 @@ const ModernSidebar: React.FC<ModernSidebarProps> = () => {
                   }`}
                 />
                 <span
-                  className={`text-sm font-medium flex-1 text-left whitespace-nowrap ${isCollapsed ? 'w-0 hidden' : 'w-auto'}`}
+                  className={`text-sm font-medium flex-1 text-left whitespace-nowrap transition-all duration-300 ${
+                    isCollapsed ? 'opacity-0 -translate-x-2 w-0' : 'opacity-100 translate-x-0 w-auto'
+                  }`}
                 >
                   {item.label}
                 </span>
