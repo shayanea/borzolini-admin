@@ -6,15 +6,15 @@ import type {
   ResetPasswordData,
   User,
 } from '@/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React from 'react';
-
-import { ROUTES } from '@/constants';
-import { AuthService } from '@/services/auth.service';
 import { useAuthActions, useAuthStore } from '@/stores/auth.store';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { AuthService } from '@/services/auth.service';
+import { ROUTES } from '@/constants';
 import { message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useMessage } from './use-message';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthResponse {
   user: User;
@@ -109,7 +109,7 @@ export function useCurrentUser() {
   });
 
   // Sync with Zustand store when data changes (useEffect to avoid render-phase updates)
-  React.useEffect(() => {
+  useEffect(() => {
     if (query.data) {
       setUser(query.data);
       setAuthenticated(true);

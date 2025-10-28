@@ -187,6 +187,11 @@
       0 6px 12px rgba(2, 6, 23, 0.05);
   }
 
+  /* Utility: minimum width for AntD table header cells to avoid label wrapping */
+  .ant-table-thead > tr > th.th-min {
+    min-width: 140px;
+  }
+
   /* Calendar styles inspired by the reference image */
   .calendar-time-slot {
     border-bottom: 1px solid #e5e7eb;

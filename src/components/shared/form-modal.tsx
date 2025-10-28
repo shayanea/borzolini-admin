@@ -72,9 +72,9 @@ interface FormModalProps {
    */
   onCancel: () => void;
   /**
-   * Whether to destroy form on close
+   * Whether to destroy form when hidden
    */
-  destroyOnClose?: boolean;
+  destroyOnHidden?: boolean;
 }
 
 /**
@@ -98,7 +98,7 @@ const FormModal: FC<FormModalProps> = ({
   formClassName,
   onSubmit,
   onCancel,
-  destroyOnClose = true,
+  destroyOnHidden = true,
 }) => {
   const { t } = useTranslation('components');
 
@@ -129,7 +129,7 @@ const FormModal: FC<FormModalProps> = ({
       onOk={showFooter ? handleSubmit : undefined}
       confirmLoading={loading}
       width={width}
-      destroyOnClose={destroyOnClose}
+      destroyOnHidden={destroyOnHidden}
       okText={defaultOkText}
       cancelText={defaultCancelText}
       footer={showFooter ? undefined : null}

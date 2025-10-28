@@ -5,8 +5,8 @@ import {
   PersonalInfoSection,
 } from './user-form-sections';
 import { Form, Modal } from 'antd';
-import React, { useCallback } from 'react';
 import type { UserFormModalProps, UserFormValues } from '@/types/user-management';
+import { useCallback, useEffect } from 'react';
 
 import { USER_ROLES } from '@/constants/user-management';
 import dayjs from 'dayjs';
@@ -22,7 +22,7 @@ const UserFormModal = ({
   const { t } = useTranslation('components');
   const [form] = Form.useForm();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isVisible) {
       if (editingUser) {
         form.setFieldsValue({
@@ -70,7 +70,7 @@ const UserFormModal = ({
       onCancel={handleCancel}
       footer={null}
       width={600}
-      destroyOnClose={true}
+      destroyOnHidden={true}
     >
       <Form
         form={form}
@@ -82,13 +82,13 @@ const UserFormModal = ({
         }}
       >
         {/* Personal Information */}
-        <PersonalInfoSection form={form} />
+        <PersonalInfoSection />
 
         {/* Account Information */}
-        <AccountInfoSection form={form} editingUser={editingUser} />
+        <AccountInfoSection editingUser={editingUser} />
 
         {/* Address Information */}
-        <AddressSection form={form} />
+        <AddressSection />
 
         {/* Action Buttons */}
         <Form.Item className='mb-0'>

@@ -1,6 +1,7 @@
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { ClinicsService } from '@/services/clinics.service';
 import type { ClinicStaff, User } from '@/types';
+import { UseQueryOptions, useQuery } from '@tanstack/react-query';
+
+import { ClinicsService } from '@/services/clinics.service';
 import { useClinicContext } from '@/hooks/use-clinic-context';
 
 export interface ClinicStaffWithUser extends ClinicStaff {
@@ -8,7 +9,7 @@ export interface ClinicStaffWithUser extends ClinicStaff {
 }
 
 interface ClinicStaffResponse {
-  staff: ClinicStaffWithUser[];
+  data: ClinicStaffWithUser[];
   total: number;
   page: number;
   limit: number;
@@ -36,7 +37,9 @@ export function useClinicStaff(
     queryKey: ['clinic-staff', effectiveClinicId],
     queryFn: () => {
       if (!effectiveClinicId) throw new Error('Clinic ID is required to fetch staff');
-      return ClinicsService.getClinicStaff(effectiveClinicId) as Promise<ClinicStaffResponse>;
+      return ClinicsService.getClinicStaff(
+        effectiveClinicId
+      ) as unknown as Promise<ClinicStaffResponse>;
     },
     enabled: Boolean(effectiveClinicId) && (options.enabled ?? true),
     staleTime: 5 * 60 * 1000,
@@ -44,5 +47,3 @@ export function useClinicStaff(
     ...(queryOptions as object),
   });
 }
-
-

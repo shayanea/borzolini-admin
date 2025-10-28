@@ -10,7 +10,6 @@ export function useClinicContext() {
 
   const clinicContext = useMemo(() => {
     if (!user) {
-      console.log('🔍 ClinicContext: No user data');
       return null;
     }
 
@@ -26,17 +25,6 @@ export function useClinicContext() {
       // For clinic_admin, they should only access their clinic's data
       shouldFilterByClinic: user.role === 'clinic_admin',
     };
-
-    console.log('🔍 ClinicContext:', {
-      userRole: user.role,
-      clinicId,
-      clinicName,
-      isClinicAdmin: context.isClinicAdmin,
-      shouldFilterByClinic: context.shouldFilterByClinic,
-      userClinicId: user.clinicId,
-      userClinic_id: user.clinic_id,
-      userClinic: user.clinic,
-    });
 
     return context;
   }, [user]);

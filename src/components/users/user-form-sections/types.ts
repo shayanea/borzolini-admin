@@ -1,16 +1,10 @@
-import { FormInstance } from 'antd';
+export interface PersonalInfoSectionProps {}
 
-export interface UserFormSectionProps {
-  form: FormInstance;
-}
-
-export interface PersonalInfoSectionProps extends UserFormSectionProps {}
-
-export interface AccountInfoSectionProps extends UserFormSectionProps {
+export interface AccountInfoSectionProps {
   editingUser?: any;
 }
 
-export interface AddressSectionProps extends UserFormSectionProps {}
+export interface AddressSectionProps {}
 
 export interface ActionButtonsSectionProps {
   onCancel: () => void;

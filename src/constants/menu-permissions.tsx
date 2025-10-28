@@ -52,7 +52,7 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     label: 'Calendar',
     icon: React.createElement(CalendarOutlined),
     onClick: () => {},
-    roles: ['admin', 'veterinarian', 'staff', 'patient'],
+    roles: ['clinic_admin', 'staff'],
   },
   {
     key: '/clinics',

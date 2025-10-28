@@ -1,9 +1,9 @@
 import { Col, DatePicker, Form, Input, Row } from 'antd';
-import dayjs from 'dayjs';
-import { FC } from 'react';
-
 import { REQUIRED_RULE, VALIDATION_MESSAGES } from '@/constants/form-validation';
+
+import { FC } from 'react';
 import { PersonalInfoSectionProps } from './types';
+import dayjs from 'dayjs';
 
 const PersonalInfoSection: FC<PersonalInfoSectionProps> = () => {
   return (

@@ -56,8 +56,8 @@ const Staff = () => {
     refetch: refetchClinicStaff,
   } = useClinicStaff({ clinicId: clinicContext?.clinicId });
 
-  const staff = clinicStaffResponse?.staff ?? [];
-  const total = clinicStaffResponse?.total ?? staff.length;
+  const staff = clinicStaffResponse?.data ?? [];
+  const total = clinicStaffResponse?.total;
 
   const handleRefresh = useCallback(() => {
     refetch();
@@ -117,11 +117,7 @@ const Staff = () => {
               ? showModal
               : () => {}
           }
-          onDeleteUser={
-            currentUser?.role === 'admin' || currentUser?.role === 'clinic_admin'
-              ? handleDeleteUser
-              : () => {}
-          }
+          onDeleteUser={currentUser?.role === 'clinic_admin' ? handleDeleteUser : () => {}}
           onResolveViewUser={userId => {
             (async () => {
               try {

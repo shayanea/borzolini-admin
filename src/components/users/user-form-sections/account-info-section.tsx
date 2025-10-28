@@ -1,11 +1,11 @@
 import { Col, Form, Input, Row, Select, Switch } from 'antd';
-import { FC } from 'react';
-import { useTranslation } from 'react-i18next';
-
 import { EmailField, PhoneField } from '@/components/shared';
 import { MIN_LENGTH_RULE, REQUIRED_RULE, VALIDATION_MESSAGES } from '@/constants/form-validation';
-import { USER_ROLES } from '@/constants/user-management';
+
 import { AccountInfoSectionProps } from './types';
+import { FC } from 'react';
+import { USER_ROLES } from '@/constants/user-management';
+import { useTranslation } from 'react-i18next';
 
 const { Option } = Select;
 
@@ -52,16 +52,30 @@ const AccountInfoSection: FC<AccountInfoSectionProps> = ({ editingUser }) => {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name='isActive' label={t('forms.userForm.accountStatus')} valuePropName='checked'>
-            <Switch checkedChildren={t('forms.userForm.active')} unCheckedChildren={t('forms.userForm.inactive')} />
+          <Form.Item
+            name='isActive'
+            label={t('forms.userForm.accountStatus')}
+            valuePropName='checked'
+          >
+            <Switch
+              checkedChildren={t('forms.userForm.active')}
+              unCheckedChildren={t('forms.userForm.inactive')}
+            />
           </Form.Item>
         </Col>
       </Row>
 
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item name='isEmailVerified' label={t('forms.userForm.emailVerification')} valuePropName='checked'>
-            <Switch checkedChildren={t('forms.userForm.verified')} unCheckedChildren={t('forms.userForm.unverified')} />
+          <Form.Item
+            name='isEmailVerified'
+            label={t('forms.userForm.emailVerification')}
+            valuePropName='checked'
+          >
+            <Switch
+              checkedChildren={t('forms.userForm.verified')}
+              unCheckedChildren={t('forms.userForm.unverified')}
+            />
           </Form.Item>
         </Col>
       </Row>
