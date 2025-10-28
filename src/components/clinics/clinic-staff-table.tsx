@@ -23,6 +23,8 @@ export interface ClinicStaffTableProps {
   onViewUser: (user: User) => void;
   onEditUser: (user: User) => void;
   onDeleteUser: (userId: string) => void;
+  onResolveViewUser?: (userId: string) => void;
+  onResolveEditUser?: (userId: string) => void;
 }
 
 const roleColorMap: Record<ClinicStaff['role'], string> = {
@@ -42,6 +44,8 @@ const ClinicStaffTable = ({
   onViewUser,
   onEditUser,
   onDeleteUser,
+  onResolveViewUser,
+  onResolveEditUser,
 }: ClinicStaffTableProps) => {
   const columns: ColumnsType<ClinicStaffWithUser> = [
     {
@@ -122,12 +126,18 @@ const ClinicStaffTable = ({
         return (
           <Space>
             <Tooltip title='View Details'>
-              <Button size='small' disabled={!user} onClick={() => user && onViewUser(user)}>
+              <Button
+                size='small'
+                onClick={() => (user ? onViewUser(user) : onResolveViewUser?.(record.userId))}
+              >
                 View
               </Button>
             </Tooltip>
             <Tooltip title='Edit User'>
-              <Button size='small' disabled={!user} onClick={() => user && onEditUser(user)}>
+              <Button
+                size='small'
+                onClick={() => (user ? onEditUser(user) : onResolveEditUser?.(record.userId))}
+              >
                 Edit
               </Button>
             </Tooltip>

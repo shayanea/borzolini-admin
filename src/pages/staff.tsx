@@ -2,6 +2,7 @@ import { UserFilters, UserFormModal, UserPageHeader, UserViewModal } from '@/com
 
 import { Card } from 'antd';
 import ClinicStaffTable from '@/components/clinics/clinic-staff-table';
+import UsersService from '@/services/users.service';
 import { useCallback } from 'react';
 import { useClinicContext } from '@/hooks/use-clinic-context';
 import { useClinicStaff } from '@/hooks/use-clinic-staff';
@@ -74,7 +75,11 @@ const Staff = () => {
         onRefresh={handleRefresh}
         onExportCSV={handleExportCSV}
         onExportExcel={handleExportExcel}
-        onAddUser={currentUser?.role === 'admin' ? handleAddUser : () => {}}
+        onAddUser={
+          currentUser?.role === 'admin' || currentUser?.role === 'clinic_admin'
+            ? handleAddUser
+            : () => {}
+        }
         loading={loading}
         title={t('users.clinicStaff')}
         subtitle={t('users.manageClinicStaff')}
@@ -107,13 +112,44 @@ const Staff = () => {
           total={total}
           onTableChange={handleTableChange as any}
           onViewUser={showViewModal}
-          onEditUser={currentUser?.role === 'admin' ? showModal : () => {}}
-          onDeleteUser={currentUser?.role === 'admin' ? handleDeleteUser : () => {}}
+          onEditUser={
+            currentUser?.role === 'admin' || currentUser?.role === 'clinic_admin'
+              ? showModal
+              : () => {}
+          }
+          onDeleteUser={
+            currentUser?.role === 'admin' || currentUser?.role === 'clinic_admin'
+              ? handleDeleteUser
+              : () => {}
+          }
+          onResolveViewUser={userId => {
+            (async () => {
+              try {
+                const user = await UsersService.getUserById(userId);
+                showViewModal(user);
+              } catch (error) {
+                // no-op
+              }
+            })();
+          }}
+          onResolveEditUser={userId => {
+            (async () => {
+              try {
+                const user = await UsersService.getUserById(userId);
+                if (currentUser?.role === 'admin' || currentUser?.role === 'clinic_admin') {
+                  showModal(user);
+                }
+              } catch (error) {
+                console.error(error);
+                // no-op
+              }
+            })();
+          }}
         />
       </Card>
 
       {/* Create/Edit User Modal */}
-      {currentUser?.role === 'admin' && (
+      {(currentUser?.role === 'admin' || currentUser?.role === 'clinic_admin') && (
         <UserFormModal
           isVisible={isModalVisible}
           editingUser={editingUser}
