@@ -18,6 +18,7 @@ import {
   Users,
 } from 'lucide-react';
 import React, { useState } from 'react';
+import { Tooltip } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getMenuItemsForRole } from '@/constants/menu-permissions';
@@ -70,7 +71,7 @@ const ModernSidebar: React.FC<ModernSidebarProps> = () => {
     <aside
       className={`${
         isCollapsed ? 'w-20' : 'w-58'
-      } bg-slate-900 border-r border-slate-700/50 transition-all duration-300 ease-out shadow-xl flex flex-col overflow-hidden transform-gpu`}
+      } bg-slate-900 border-r border-slate-700/50 transition-width duration-300 ease-out shadow-xl flex flex-col overflow-hidden transform-gpu`}
     >
       {/* Logo Section */}
       <div className='p-6 border-b border-slate-700/50 relative overflow-hidden'>
@@ -113,8 +114,9 @@ const ModernSidebar: React.FC<ModernSidebarProps> = () => {
 
             const active = isActive(item.key);
             const IconComponent = iconMap[item.key] || FileText;
+            const labelText = typeof item.label === 'string' ? (item.label as string) : undefined;
 
-            return (
+            const buttonEl = (
               <button
                 key={item.key}
                 onClick={() => handleNavClick(item.key)}
@@ -125,7 +127,6 @@ const ModernSidebar: React.FC<ModernSidebarProps> = () => {
                     ? 'bg-[#6ecefd] text-white shadow-lg shadow-primary-gradient/30'
                     : 'text-slate-300 hover:bg-slate-800/50 hover:text-white'
                 } overflow-hidden`}
-                title={isCollapsed && typeof item.label === 'string' ? (item.label as string) : ''}
               >
                 <IconComponent
                   size={20}
@@ -135,14 +136,20 @@ const ModernSidebar: React.FC<ModernSidebarProps> = () => {
                 />
                 <span
                   className={`text-sm font-medium flex-1 text-left whitespace-nowrap transition-all duration-300 ${
-                    isCollapsed
-                      ? 'opacity-0 -translate-x-2 w-0'
-                      : 'opacity-100 translate-x-0 w-auto'
+                    isCollapsed ? 'hidden w-auto' : 'translate-x-0 w-auto'
                   }`}
                 >
                   {item.label}
                 </span>
               </button>
+            );
+
+            return isCollapsed && labelText ? (
+              <Tooltip placement='right' title={labelText} key={item.key}>
+                {buttonEl}
+              </Tooltip>
+            ) : (
+              buttonEl
             );
           })}
         </nav>

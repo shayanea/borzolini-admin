@@ -1,19 +1,13 @@
-import {
-  UserFilters,
-  UserFormModal,
-  UserPageHeader,
-  UserTable,
-  UserViewModal,
-} from '@/components/users';
+import { UserFilters, UserFormModal, UserPageHeader, UserViewModal } from '@/components/users';
 
 import { Card } from 'antd';
+import ClinicStaffTable from '@/components/clinics/clinic-staff-table';
 import { useCallback } from 'react';
+import { useClinicContext } from '@/hooks/use-clinic-context';
+import { useClinicStaff } from '@/hooks/use-clinic-staff';
 import { useCurrentUser } from '@/hooks/use-auth';
 import { useTranslation } from 'react-i18next';
 import { useUserManagement } from '@/hooks';
-import { useClinicStaff } from '@/hooks/use-clinic-staff';
-import { useClinicContext } from '@/hooks/use-clinic-context';
-import type { User } from '@/types';
 
 const Staff = () => {
   const { t } = useTranslation('pages');
@@ -61,10 +55,8 @@ const Staff = () => {
     refetch: refetchClinicStaff,
   } = useClinicStaff({ clinicId: clinicContext?.clinicId });
 
-  const users: User[] = (clinicStaffResponse?.staff ?? [])
-    .map(s => s.user)
-    .filter(Boolean) as User[];
-  const total = clinicStaffResponse?.total ?? users.length;
+  const staff = clinicStaffResponse?.staff ?? [];
+  const total = clinicStaffResponse?.total ?? staff.length;
 
   const handleRefresh = useCallback(() => {
     refetch();
@@ -105,17 +97,15 @@ const Staff = () => {
         onClearFilters={clearFilters}
       />
 
-      {/* Users Table */}
+      {/* Clinic Staff Table */}
       <Card className='admin-card'>
-        <UserTable
-          users={users}
+        <ClinicStaffTable
+          staff={staff}
           loading={loading || staffLoading}
           currentPage={currentPage}
           pageSize={pageSize}
           total={total}
-          selectedRowKeys={[]}
-          onRowSelectionChange={() => {}}
-          onTableChange={handleTableChange}
+          onTableChange={handleTableChange as any}
           onViewUser={showViewModal}
           onEditUser={currentUser?.role === 'admin' ? showModal : () => {}}
           onDeleteUser={currentUser?.role === 'admin' ? handleDeleteUser : () => {}}
