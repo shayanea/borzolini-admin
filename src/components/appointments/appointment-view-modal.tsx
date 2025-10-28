@@ -28,7 +28,7 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
   onCancel,
   onUpdate,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('components');
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState<Partial<Appointment>>({});
   const [saving, setSaving] = useState(false);
