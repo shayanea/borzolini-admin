@@ -69,7 +69,9 @@
     "noData": "No se encontraron usuarios",
     "veterinarians": "Veterinarios",
     "manageVeterinarians": "Administrar veterinarios de la clínica",
-    "manageUsers": "Administrar usuarios y miembros del personal de la clínica"
+    "manageUsers": "Administrar usuarios y miembros del personal de la clínica",
+    "clinicStaff": "Personal de la Clínica",
+    "manageClinicStaff": "Ver y administrar los empleados de su clínica"
   },
   "pets": {
     "title": "Mascotas",
