@@ -8,6 +8,7 @@ import {
   VeterinarianSelection,
 } from '@/components/calendar';
 
+import { LoadingState } from '@/components/common';
 import { useCalendar } from '@/hooks/calendar';
 
 const CalendarPage = () => {
@@ -112,9 +113,7 @@ const CalendarPage = () => {
 
       {/* Calendar Grid */}
       {loading ? (
-        <div className='flex justify-center items-center py-12'>
-          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary-navy'></div>
-        </div>
+        <LoadingState message='Loading calendar...' />
       ) : (
         <CalendarGrid
           timeSlots={timeSlots}
