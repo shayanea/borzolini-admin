@@ -16,6 +16,7 @@ import {
 } from '@ant-design/icons';
 
 import React from 'react';
+import { SoonBadge } from '@/components/shared/soon-badge';
 import { UserRole } from '../types';
 
 // Menu item interface
@@ -106,11 +107,9 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
   {
     key: '/reports',
     label: (
-      <div className='relative'>
+      <div className='relative flex items-center gap-2'>
         <span>Reports</span>
-        <span className='absolute top-2 -right-0 text-xs bg-orange-100 text-orange-600 p-1 rounded-md'>
-          Soon
-        </span>
+        <SoonBadge />
       </div>
     ),
     icon: React.createElement(BarChartOutlined),
@@ -120,11 +119,9 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
   {
     key: '/reviews',
     label: (
-      <div className='relative'>
+      <div className='relative flex items-center gap-2'>
         <span>Reviews</span>
-        <span className='absolute top-2 -right-0 text-xs bg-orange-100 text-orange-600 p-1 rounded-md'>
-          Soon
-        </span>
+        <SoonBadge />
       </div>
     ),
     icon: React.createElement(StarOutlined),
@@ -141,11 +138,9 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
   {
     key: '/api-health',
     label: (
-      <div className='relative'>
+      <div className='relative flex items-center gap-2'>
         <span>API Health</span>
-        <span className='absolute top-2 -right-0 text-xs bg-orange-100 text-orange-600 p-1 rounded-md'>
-          Soon
-        </span>
+        <SoonBadge />
       </div>
     ),
     icon: React.createElement(MonitorOutlined),

@@ -25,7 +25,7 @@ const LanguageSwitcher: React.FC = () => {
     <Select
       value={i18n.language}
       onChange={handleLanguageChange}
-      style={{ width: 120 }}
+      style={{ width: 130 }}
       variant='borderless'
       suffixIcon={<Globe size={16} />}
     >

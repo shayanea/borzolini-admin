@@ -1,5 +1,4 @@
 import type { AppointmentPriority, AppointmentStatus, AppointmentType } from '@/types';
-import { DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import {
   Button,
   DatePicker,
@@ -16,12 +15,13 @@ import {
   TimePicker,
   message,
 } from 'antd';
+import { DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 
-import { useCalendarFormData } from '@/hooks/calendar/use-calendar-form-data';
-import type { UpdateAppointmentData } from '@/services/appointments.service';
 import type { AppointmentDetailsModalProps } from '@/types/calendar-modals';
+import type { UpdateAppointmentData } from '@/services/appointments.service';
 import dayjs from 'dayjs';
+import { useCalendarFormData } from '@/hooks/calendar/use-calendar-form-data';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -42,7 +42,7 @@ const AppointmentDetailsModal = ({
   const [isHomeVisit, setIsHomeVisit] = useState(false);
 
   // Use the new hook for form data
-  const { pets, clinics, services, loading: loadingData, error } = useCalendarFormData();
+  const { clinics, loading: loadingData, error } = useCalendarFormData();
 
   // Show error message if data loading fails
   useEffect(() => {
@@ -202,6 +202,9 @@ const AppointmentDetailsModal = ({
     { value: 'rescheduled', label: 'Rescheduled' },
     { value: 'waiting', label: 'Waiting' },
   ];
+
+  const pets: any = [];
+  const services: any = [];
 
   if (!appointment) return null;
 

@@ -32,7 +32,7 @@ export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
   const [isHomeVisit, setIsHomeVisit] = useState(false);
 
   // Use the new hook for form data
-  const { pets, clinics, services, loading: loadingData, error } = useCalendarFormData();
+  const { clinics, loading: loadingData, error } = useCalendarFormData();
 
   // Get appointment options from constants
   const appointmentTypes = getAppointmentTypeOptions();
@@ -127,10 +127,10 @@ export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
             <BasicInfoSection
               form={form}
               appointmentTypes={appointmentTypes}
-              pets={pets}
+              pets={[]}
               clinics={clinics}
               veterinarians={veterinarians}
-              services={services}
+              services={[]}
               loadingData={loadingData}
             />
           </div>

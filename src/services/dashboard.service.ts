@@ -8,27 +8,18 @@ export class DashboardService {
     try {
       // For clinic_admin users, use clinic-specific endpoint
       let url: string;
-      const params = new URLSearchParams();
 
       if (filters.clinicId) {
-        // Use clinic-specific endpoint for clinic admins
-        url = `/clinics/${filters.clinicId}/dashboard/stats`;
-
-        if (filters.dateRange) {
-          params.append('dateRange', JSON.stringify(filters.dateRange));
-        }
-
-        const queryString = params.toString();
-        if (queryString) {
-          url += `?${queryString}`;
-        }
+        // Correct clinic-specific stats endpoint (no query params supported)
+        url = `/dashboard/clinic/${filters.clinicId}`;
 
         console.log('🏥 DashboardService: Using clinic stats endpoint', {
           url,
           clinicId: filters.clinicId,
         });
       } else {
-        // Use general dashboard endpoint
+        // Use general dashboard endpoint with optional dateRange
+        const params = new URLSearchParams();
         if (filters.dateRange) {
           params.append('dateRange', JSON.stringify(filters.dateRange));
         }
@@ -149,20 +140,16 @@ export class DashboardService {
     try {
       // For clinic_admin users, use clinic-specific endpoint
       let url: string;
-      const params = new URLSearchParams();
 
       if (filters.clinicId) {
-        // Use clinic-specific endpoint for clinic admins
-        url = `/clinics/${filters.clinicId}/dashboard/charts`;
-
+        // Correct clinic-specific charts endpoint uses query parameter
+        const params = new URLSearchParams();
+        params.append('clinicId', filters.clinicId);
         if (filters.dateRange) {
           params.append('dateRange', JSON.stringify(filters.dateRange));
         }
-
         const queryString = params.toString();
-        if (queryString) {
-          url += `?${queryString}`;
-        }
+        url = `/dashboard/charts${queryString ? `?${queryString}` : ''}`;
 
         console.log('🏥 DashboardService: Using clinic charts endpoint', {
           url,
@@ -170,6 +157,7 @@ export class DashboardService {
         });
       } else {
         // Use general dashboard endpoint
+        const params = new URLSearchParams();
         if (filters.dateRange) {
           params.append('dateRange', JSON.stringify(filters.dateRange));
         }

@@ -1,4 +1,4 @@
-import { Button, Card, Col, Input, Row, Select, Segmented, Space, Tooltip } from 'antd';
+import { Button, Card, Col, Input, Row, Select } from 'antd';
 import { COMMON_BREEDS, PET_GENDERS, PET_SIZES, PET_SPECIES } from '@/constants/pets';
 import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 
@@ -38,9 +38,9 @@ const PetFilters = ({
 
   return (
     <Card className='admin-card admin-filters'>
-      {/* Primary controls */}
-      <Row gutter={[12, 12]} align='middle' className='mb-3'>
-        <Col xs={24} md={8}>
+      {/* First Row */}
+      <Row gutter={[16, 16]} className='mb-4'>
+        <Col xs={24} sm={12} md={6}>
           <Search
             placeholder={t('petManagement.searchPlaceholder')}
             allowClear
@@ -50,38 +50,23 @@ const PetFilters = ({
             className='w-full'
           />
         </Col>
-        <Col xs={24} md={8}>
-          <Space size='small' className='w-full' direction='horizontal'>
-            <Tooltip title={t('petManagement.species')}>
-              <Segmented
-                className='w-full'
-                options={petSpecies.map(s => ({ label: s.charAt(0).toUpperCase() + s.slice(1), value: s }))}
-                value={selectedSpecies}
-                onChange={val => onSpeciesFilter(val as string)}
-              />
-            </Tooltip>
-          </Space>
-        </Col>
-        <Col xs={24} md={8}>
-          <Space size='small' className='w-full' direction='horizontal'>
-            <Tooltip title={t('petManagement.gender')}>
-              <Segmented
-                className='w-full'
-                options={genders.map(g => ({ label: g.charAt(0).toUpperCase() + g.slice(1), value: g }))}
-                value={selectedGender}
-                onChange={val => onGenderFilter(val as string)}
-              />
-            </Tooltip>
-          </Space>
-        </Col>
-      </Row>
-
-      {/* Advanced controls */}
-      <Row gutter={[12, 12]} align='middle'>
-        <Col xs={24} md={6}>
+        <Col xs={24} sm={12} md={4}>
           <Select
-            showSearch
-            optionFilterProp='children'
+            placeholder={t('petManagement.species')}
+            allowClear
+            value={selectedSpecies}
+            onChange={onSpeciesFilter}
+            className='w-full'
+          >
+            {petSpecies.map(species => (
+              <Option key={species} value={species}>
+                {species.charAt(0).toUpperCase() + species.slice(1)}
+              </Option>
+            ))}
+          </Select>
+        </Col>
+        <Col xs={24} sm={12} md={4}>
+          <Select
             placeholder={t('petManagement.breed')}
             allowClear
             value={selectedBreed}
@@ -95,7 +80,22 @@ const PetFilters = ({
             ))}
           </Select>
         </Col>
-        <Col xs={24} md={6}>
+        <Col xs={24} sm={12} md={4}>
+          <Select
+            placeholder={t('petManagement.gender')}
+            allowClear
+            value={selectedGender}
+            onChange={onGenderFilter}
+            className='w-full'
+          >
+            {genders.map(gender => (
+              <Option key={gender} value={gender}>
+                {gender.charAt(0).toUpperCase() + gender.slice(1)}
+              </Option>
+            ))}
+          </Select>
+        </Col>
+        <Col xs={24} sm={12} md={4}>
           <Select
             placeholder={t('petManagement.size')}
             allowClear
@@ -110,7 +110,11 @@ const PetFilters = ({
             ))}
           </Select>
         </Col>
-        <Col xs={24} md={6}>
+      </Row>
+
+      {/* Second Row */}
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={12} md={4}>
           <Select
             placeholder={t('userManagement.status')}
             allowClear
@@ -122,12 +126,10 @@ const PetFilters = ({
             <Option value={false}>{t('userManagement.inactive')}</Option>
           </Select>
         </Col>
-        <Col xs={24} md={6}>
-          <div className='flex md:justify-end'>
-            <Button icon={<FilterOutlined />} onClick={onClearFilters}>
-              {t('petManagement.clearFilters')}
-            </Button>
-          </div>
+        <Col xs={24} sm={12} md={4}>
+          <Button icon={<FilterOutlined />} onClick={onClearFilters} className='w-full'>
+            {t('petManagement.clearFilters')}
+          </Button>
         </Col>
       </Row>
     </Card>

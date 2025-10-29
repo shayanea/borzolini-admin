@@ -46,7 +46,8 @@
     "approved": "Approved",
     "rejected": "Rejected",
     "draft": "Draft",
-    "published": "Published"
+    "published": "Published",
+    "soon": "Soon"
   },
   "table": {
     "noData": "No data available",
