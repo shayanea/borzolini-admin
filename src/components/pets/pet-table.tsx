@@ -64,13 +64,13 @@ const PetTable = ({
       key: 'species_details',
       render: (pet: Pet) => (
         <div className='space-y-1'>
-          <Tag color={getPetSpeciesColor(pet.species)}>
+          <Tag bordered={false} color={getPetSpeciesColor(pet.species)}>
             {pet.species.charAt(0).toUpperCase() + pet.species.slice(1)}
           </Tag>
           {pet.breed && <div className='text-sm text-text-light'>{pet.breed}</div>}
           <div className='flex gap-1'>
-            <Tag color={getPetGenderColor(pet.gender)}>{pet.gender}</Tag>
-            <Tag color={getPetSizeColor(pet.size)}>{pet.size}</Tag>
+            <Tag bordered={false} color={getPetGenderColor(pet.gender)}>{pet.gender}</Tag>
+            <Tag bordered={false} color={getPetSizeColor(pet.size)}>{pet.size}</Tag>
           </div>
         </div>
       ),
@@ -113,14 +113,14 @@ const PetTable = ({
             </div>
           )}
           <div className='text-xs'>
-            <Tag color={pet.is_spayed_neutered ? 'green' : 'orange'}>
+            <Tag bordered={false} color={pet.is_spayed_neutered ? 'green' : 'orange'}>
               {pet.is_spayed_neutered
                 ? t('petTable.spayedNeutered')
                 : t('petTable.notSpayedNeutered')}
             </Tag>
           </div>
           <div className='text-xs'>
-            <Tag color={pet.is_vaccinated ? 'green' : 'red'}>
+            <Tag bordered={false} color={pet.is_vaccinated ? 'green' : 'red'}>
               {pet.is_vaccinated ? t('petTable.vaccinated') : t('petTable.notVaccinated')}
             </Tag>
           </div>

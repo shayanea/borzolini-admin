@@ -91,7 +91,7 @@ const ClinicStaffTable = ({
       render: (_: ClinicStaff['role'], record) => {
         const role = (record.displayRole || record.role) as string;
         const color = roleColorMap[role] || 'default';
-        return <Tag color={color}>{role}</Tag>;
+        return <Tag bordered={false} color={color}>{role}</Tag>;
       },
     },
     {
@@ -101,7 +101,7 @@ const ClinicStaffTable = ({
       width: 200,
       onHeaderCell: () => ({ className: 'th-min', style: { minWidth: 160 } }),
       render: (value?: string) =>
-        value ? <Tag color='default'>{value}</Tag> : <Text type='secondary'>-</Text>,
+        value ? <Tag bordered={false} color='default'>{value}</Tag> : <Text type='secondary'>-</Text>,
     },
     {
       title: 'Experience',
@@ -111,7 +111,7 @@ const ClinicStaffTable = ({
       onHeaderCell: () => ({ className: 'th-min', style: { minWidth: 110 } }),
       render: (value?: number) =>
         typeof value === 'number' ? (
-          <Tag color='geekblue'>{value} yrs</Tag>
+          <Tag bordered={false} color='geekblue'>{value} yrs</Tag>
         ) : (
           <Text type='secondary'>-</Text>
         ),
@@ -130,13 +130,13 @@ const ClinicStaffTable = ({
         return (
           <Space size={[4, 4]} wrap>
             {visible.map(item => (
-              <Tag key={item} color='default'>
+              <Tag bordered={false} key={item} color='default'>
                 {item}
               </Tag>
             ))}
             {remaining > 0 && (
               <Tooltip title={list.join(', ')}>
-                <Tag>+{remaining} more</Tag>
+                <Tag bordered={false}>+{remaining} more</Tag>
               </Tooltip>
             )}
           </Space>

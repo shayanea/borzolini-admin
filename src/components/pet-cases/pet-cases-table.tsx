@@ -78,7 +78,9 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
       key: 'case_type',
       width: 180,
       render: (caseType: string) => (
-        <Tag color='blue'>{caseType.replace('_', ' ').toUpperCase()}</Tag>
+        <Tag bordered={false} color='blue'>
+          {caseType.replace('_', ' ').toUpperCase()}
+        </Tag>
       ),
     },
     {
@@ -87,7 +89,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
       key: 'status',
       width: 180,
       render: (status: string) => (
-        <Tag color={getStatusColor(status)}>{getStatusLabel(status)}</Tag>
+        <Tag bordered={false} color={getStatusColor(status)}>{getStatusLabel(status)}</Tag>
       ),
     },
     {
@@ -96,7 +98,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
       key: 'priority',
       width: 100,
       render: (priority: string) => (
-        <Tag color={getPriorityColor(priority)}>{getPriorityLabel(priority)}</Tag>
+        <Tag bordered={false} color={getPriorityColor(priority)}>{getPriorityLabel(priority)}</Tag>
       ),
     },
     {

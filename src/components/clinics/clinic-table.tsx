@@ -147,7 +147,7 @@ const ClinicTable = ({
       render: (_, record: Clinic) => (
         <div className='flex flex-wrap gap-1'>
           {record.services.length > 3 && (
-            <Tag color='default' className='text-xs'>
+            <Tag bordered={false} color='default' className='text-xs'>
               {t('clinicTable.moreServices', { count: record.services.length - 3 })}
             </Tag>
           )}

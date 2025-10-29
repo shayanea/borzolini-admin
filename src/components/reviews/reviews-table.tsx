@@ -151,7 +151,7 @@ const ReviewsTable = ({
       width: 150,
       render: (review: Review) => (
         <div className='space-y-1'>
-          <Tag color={getStatusColor(review)}>{getStatusText(review)}</Tag>
+          <Tag bordered={false} color={getStatusColor(review)}>{getStatusText(review)}</Tag>
           {review.response && (
             <div className='flex items-center space-x-1'>
               <MessageOutlined className='text-xs text-green-600' />

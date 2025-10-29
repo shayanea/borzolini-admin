@@ -98,14 +98,14 @@ const AppointmentsTable = ({
       render: (appointment: Appointment) => (
         <div className='space-y-1'>
           <div>
-            <Tag color='blue'>
+            <Tag bordered={false} color='blue'>
               {appointment.service?.name ||
                 formatAppointmentType(appointment.appointment_type) ||
                 'Unknown Service'}
             </Tag>
           </div>
           <div>
-            <Tag color={getAppointmentPriorityColor(appointment.priority)}>
+            <Tag bordered={false} color={getAppointmentPriorityColor(appointment.priority)}>
               {appointment.priority
                 ? appointment.priority.charAt(0).toUpperCase() + appointment.priority.slice(1)
                 : 'Normal'}
@@ -159,7 +159,7 @@ const AppointmentsTable = ({
                     : 'default'
             }
             text={
-              <Tag color={getAppointmentStatusColor(appointment.status)}>
+              <Tag bordered={false} color={getAppointmentStatusColor(appointment.status)}>
                 {appointment.status
                   ? appointment.status
                       .split('_')
@@ -171,7 +171,7 @@ const AppointmentsTable = ({
           />
           {appointment.status === 'completed' && (
             <div className='flex items-center justify-center space-x-1'>
-              {appointment.is_home_visit && <Tag color='blue'>Home Visit</Tag>}
+              {appointment.is_home_visit && <Tag bordered={false} color='blue'>Home Visit</Tag>}
               <Tooltip title='Review status will be shown here'>
                 <StarOutlined className='text-yellow-500 text-xs' />
               </Tooltip>
@@ -218,11 +218,11 @@ const AppointmentsTable = ({
           {appointment.pet && (
             <>
               <div className='flex gap-1'>
-                <Tag color={getPetSpeciesColor(appointment.pet.species)}>
+                <Tag bordered={false} color={getPetSpeciesColor(appointment.pet.species)}>
                   {appointment.pet.species.charAt(0).toUpperCase() +
                     appointment.pet.species.slice(1)}
                 </Tag>
-                <Tag color={getPetGenderColor(appointment.pet.gender)}>
+                <Tag bordered={false} color={getPetGenderColor(appointment.pet.gender)}>
                   {appointment.pet.gender}
                 </Tag>
               </div>
@@ -240,12 +240,12 @@ const AppointmentsTable = ({
                 {t('appointments.years')}
               </div>
               <div className='flex gap-1'>
-                <Tag color={appointment.pet.is_vaccinated ? 'green' : 'red'}>
+                <Tag bordered={false} color={appointment.pet.is_vaccinated ? 'green' : 'red'}>
                   {appointment.pet.is_vaccinated
                     ? t('appointments.vaccinated')
                     : t('appointments.notVaccinated')}
                 </Tag>
-                <Tag color={appointment.pet.is_spayed_neutered ? 'green' : 'orange'}>
+                <Tag bordered={false} color={appointment.pet.is_spayed_neutered ? 'green' : 'orange'}>
                   {appointment.pet.is_spayed_neutered
                     ? t('appointments.spayedNeutered')
                     : t('appointments.notSpayedNeutered')}

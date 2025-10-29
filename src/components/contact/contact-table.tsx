@@ -127,7 +127,7 @@ export const ContactTable = ({
       key: 'status',
       width: 120,
       render: (status: Contact['status']) => (
-        <Tag color={getStatusColor(status)} icon={getStatusIcon(status)}>
+        <Tag bordered={false} color={getStatusColor(status)} icon={getStatusIcon(status)}>
           {getStatusLabel(status)}
         </Tag>
       ),

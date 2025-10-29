@@ -57,7 +57,7 @@ const UserTable = ({
       title: t('userTable.role'),
       key: USER_TABLE_COLUMNS.ROLE,
       render: (user: User) => (
-        <Tag color={ROLE_COLORS[user.role] || 'default'}>
+        <Tag bordered={false} color={ROLE_COLORS[user.role] || 'default'}>
           {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
         </Tag>
       ),

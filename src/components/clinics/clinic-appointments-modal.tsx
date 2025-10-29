@@ -55,14 +55,14 @@ const ClinicAppointmentsModal = ({ visible, clinic, onClose }: ClinicAppointment
         title: 'Type',
         dataIndex: 'appointment_type',
         key: 'appointment_type',
-        render: (type: string) => <Tag color='blue'>{type}</Tag>,
+        render: (type: string) => <Tag bordered={false} color='blue'>{type}</Tag>,
       },
       {
         title: 'Status',
         dataIndex: 'status',
         key: 'status',
         render: (status: string) => (
-          <Tag color={status === 'completed' ? 'green' : status === 'cancelled' ? 'red' : 'gold'}>
+          <Tag bordered={false} color={status === 'completed' ? 'green' : status === 'cancelled' ? 'red' : 'gold'}>
             {status}
           </Tag>
         ),
@@ -72,7 +72,7 @@ const ClinicAppointmentsModal = ({ visible, clinic, onClose }: ClinicAppointment
         dataIndex: 'priority',
         key: 'priority',
         render: (priority: string) => (
-          <Tag color={priority === 'urgent' || priority === 'emergency' ? 'red' : 'default'}>
+          <Tag bordered={false} color={priority === 'urgent' || priority === 'emergency' ? 'red' : 'default'}>
             {priority}
           </Tag>
         ),
@@ -82,7 +82,7 @@ const ClinicAppointmentsModal = ({ visible, clinic, onClose }: ClinicAppointment
         dataIndex: 'is_telemedicine',
         key: 'is_telemedicine',
         render: (isTele: boolean) => (
-          <Tag color={isTele ? 'purple' : 'default'}>{isTele ? 'Yes' : 'No'}</Tag>
+          <Tag bordered={false} color={isTele ? 'purple' : 'default'}>{isTele ? 'Yes' : 'No'}</Tag>
         ),
       },
     ],
