@@ -112,6 +112,11 @@ export default {
       boxShadow: {
         'admin-card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
         'admin-sidebar': '2px 0 8px 0 rgba(0, 0, 0, 0.1)',
+        'admin-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        'soft': '0 2px 8px 0 rgba(0, 0, 0, 0.06)',
+        'soft-lg': '0 4px 16px 0 rgba(0, 0, 0, 0.08)',
+        'soft-xl': '0 8px 24px 0 rgba(0, 0, 0, 0.1)',
+        'gradient': '0 4px 20px rgba(102, 126, 234, 0.15)',
       },
     },
   },

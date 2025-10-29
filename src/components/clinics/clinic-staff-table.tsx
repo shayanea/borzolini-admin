@@ -1,9 +1,17 @@
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip, Typography } from 'antd';
+import { Avatar, Button, Space, Table, Tag, Tooltip } from 'antd';
+import {
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  TeamOutlined,
+} from '@ant-design/icons';
 import type { ClinicStaff, User } from '@/types';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import type { FilterValue, SorterResult } from 'antd/es/table/interface';
 
-const { Text } = Typography;
+import dayjs from 'dayjs';
 
 export interface ClinicStaffWithUser extends ClinicStaff {
   user?: User | null;
@@ -27,24 +35,26 @@ export interface ClinicStaffTableProps {
   onResolveEditUser?: (userId: string) => void;
 }
 
-const roleColorMap: Record<string, string> = {
-  veterinarian: 'green',
-  nurse: 'blue',
-  receptionist: 'purple',
-  technician: 'gold',
-  admin: 'red',
-  assistant: 'cyan',
+// Simplified role color mapping with solid colors
+const roleColorMap: Record<string, { bg: string; text: string; border: string }> = {
+  veterinarian: { bg: '#d1fae5', text: '#047857', border: '#a7f3d0' },
+  nurse: { bg: '#dbeafe', text: '#1e40af', border: '#93c5fd' },
+  receptionist: { bg: '#fef3c7', text: '#d97706', border: '#fcd34d' },
+  technician: { bg: '#e0e7ff', text: '#3730a3', border: '#c4b5fd' },
+  admin: { bg: '#fee2e2', text: '#dc2626', border: '#fca5a5' },
+  assistant: { bg: '#fef3c7', text: '#d97706', border: '#fcd34d' },
 };
 
-// Map common education keywords to Ant Design tag colors
-const getEducationTagColor = (value: string): string => {
+// Map common education keywords to solid color schemes
+const getEducationTagColor = (value: string): { bg: string; text: string; border: string } => {
   const v = value.toLowerCase();
-  if (/(dvm|bvsc|vmd)/.test(v)) return 'geekblue';
-  if (/(phd|doctorate)/.test(v)) return 'purple';
-  if (/(ms|msc|m\.sc)/.test(v)) return 'gold';
-  if (/(bs|bsc|b\.sc|ba)/.test(v)) return 'green';
-  if (/(board certified|diplomate|residency)/.test(v)) return 'volcano';
-  return 'default';
+  if (/(dvm|bvsc|vmd)/.test(v)) return { bg: '#d1fae5', text: '#047857', border: '#a7f3d0' };
+  if (/(phd|doctorate)/.test(v)) return { bg: '#ede9fe', text: '#7c3aed', border: '#d8b4fe' };
+  if (/(ms|msc|m\.sc)/.test(v)) return { bg: '#fef3c7', text: '#d97706', border: '#fcd34d' };
+  if (/(bs|bsc|b\.sc|ba)/.test(v)) return { bg: '#d1fae5', text: '#047857', border: '#a7f3d0' };
+  if (/(board certified|diplomate|residency)/.test(v))
+    return { bg: '#fee2e2', text: '#dc2626', border: '#fca5a5' };
+  return { bg: '#f1f5f9', text: '#475569', border: '#cbd5e1' };
 };
 
 const ClinicStaffTable = ({
@@ -64,8 +74,7 @@ const ClinicStaffTable = ({
     {
       title: 'Member',
       key: 'member',
-      width: 260,
-      onHeaderCell: () => ({ className: 'th-min', style: { minWidth: 220 } }),
+      width: 280,
       render: (_, record) => {
         const avatarUrl = record.user?.avatar || record.avatar || record.profilePhotoUrl;
         const firstName = record.user?.firstName || record.firstName || '';
@@ -77,17 +86,18 @@ const ClinicStaffTable = ({
         const email = record.user?.email || record.email;
 
         return (
-          <div className='flex items-center space-x-3'>
+          <div className='flex items-center space-x-3 p-2 rounded-lg bg-white border border-slate-100 hover:shadow-sm transition-shadow'>
             <Avatar
-              size={28}
+              size={36}
               src={avatarUrl}
-              className='bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center'
+              className='border-2 border-slate-200 shadow-sm'
+              style={{ backgroundColor: '#667eea' }}
             >
               {(firstName || '?').charAt(0).toUpperCase()} {lastName?.charAt(0).toUpperCase()}
             </Avatar>
-            <div>
-              <div className='font-medium'>{displayName}</div>
-              {email && <div className='text-sm text-text-light'>{email}</div>}
+            <div className='flex-1 min-w-0'>
+              <div className='font-semibold text-sm text-slate-800 truncate'>{displayName}</div>
+              {email && <div className='text-xs text-slate-600'>{email}</div>}
             </div>
           </div>
         );
@@ -97,14 +107,21 @@ const ClinicStaffTable = ({
       title: 'Staff Role',
       dataIndex: 'role',
       key: 'role',
-      width: 140,
-      onHeaderCell: () => ({ className: 'th-min', style: { minWidth: 120 } }),
+      width: 160,
       render: (_: ClinicStaff['role'], record) => {
         const role = (record.displayRole || record.role) as string;
-        const color = roleColorMap[role] || 'default';
+        const color = roleColorMap[role] || { bg: '#f1f5f9', text: '#475569', border: '#cbd5e1' };
+
         return (
-          <Tag bordered={false} color={color}>
-            {role}
+          <Tag
+            className='!border-0 !px-3 !py-1.5 !rounded-full font-medium shadow-sm'
+            style={{
+              backgroundColor: color.bg,
+              color: color.text,
+              border: `1px solid ${color.border}`,
+            }}
+          >
+            {role.charAt(0).toUpperCase() + role.slice(1)}
           </Tag>
         );
       },
@@ -113,30 +130,46 @@ const ClinicStaffTable = ({
       title: 'Specialization',
       dataIndex: 'specialization',
       key: 'specialization',
-      width: 200,
-      onHeaderCell: () => ({ className: 'th-min', style: { minWidth: 160 } }),
+      width: 220,
       render: (value?: string) =>
         value ? (
-          <Tag bordered={false} color='default'>
+          <Tag
+            className='!border-0 !px-3 !py-1.5 !rounded-full text-sm font-medium shadow-sm'
+            style={{
+              backgroundColor: '#dbeafe',
+              color: '#1e40af',
+              border: '1px solid #93c5fd',
+            }}
+          >
             {value}
           </Tag>
         ) : (
-          <Text type='secondary'>-</Text>
+          <div className='text-xs text-slate-500 bg-slate-50 px-2 py-1 rounded-md inline-block'>
+            No specialization
+          </div>
         ),
     },
     {
       title: 'Experience',
       dataIndex: 'experienceYears',
       key: 'experienceYears',
-      width: 140,
-      onHeaderCell: () => ({ className: 'th-min', style: { minWidth: 110 } }),
+      width: 160,
       render: (value?: number) =>
         typeof value === 'number' ? (
-          <Tag bordered={false} color='geekblue'>
+          <div
+            className='px-3 py-1.5 rounded-full font-bold text-sm shadow-sm flex items-center justify-center'
+            style={{
+              backgroundColor: '#fef3c7',
+              color: '#d97706',
+              border: '1px solid #fcd34d',
+            }}
+          >
             {value} yrs
-          </Tag>
+          </div>
         ) : (
-          <Text type='secondary'>-</Text>
+          <div className='text-xs text-slate-500 bg-slate-50 px-2 py-1 rounded-md inline-block'>
+            No data
+          </div>
         ),
       sorter: (a, b) => (a.experienceYears || 0) - (b.experienceYears || 0),
     },
@@ -144,39 +177,50 @@ const ClinicStaffTable = ({
       title: 'Education',
       dataIndex: 'education',
       key: 'education',
-      width: 320,
-      onHeaderCell: () => ({ className: 'th-min', style: { minWidth: 240 } }),
+      width: 340,
       render: (list?: string[]) => {
-        if (!Array.isArray(list) || list.length === 0) return <Text type='secondary'>-</Text>;
+        if (!Array.isArray(list) || list.length === 0) {
+          return (
+            <div className='text-xs text-slate-500 bg-slate-50 px-2 py-1 rounded-md inline-block'>
+              No education data
+            </div>
+          );
+        }
+
         const visible = list.slice(0, 2);
-        const remaining = list.length - visible.length;
+        const remaining = list.length - 2;
+
         return (
-          <Space size={[4, 4]} wrap>
-            {visible.map(item => (
-              <Tooltip key={item} title={item}>
-                <Tag bordered={false} color={getEducationTagColor(item)} className='text-xs'>
-                  <span className='max-w-[160px] truncate inline-block align-middle'>{item}</span>
+          <div className='flex flex-wrap gap-1.5'>
+            {visible.map((education, index) => {
+              const color = getEducationTagColor(education);
+              return (
+                <Tag
+                  key={index}
+                  className='!border-0 !px-3 !py-1 !rounded-full text-xs font-medium shadow-sm'
+                  style={{
+                    backgroundColor: color.bg,
+                    color: color.text,
+                    border: `1px solid ${color.border}`,
+                  }}
+                >
+                  {education}
                 </Tag>
-              </Tooltip>
-            ))}
+              );
+            })}
             {remaining > 0 && (
-              <Tooltip
-                title={
-                  <div className='space-y-1'>
-                    {list.map(it => (
-                      <div key={it} className='text-xs'>
-                        {it}
-                      </div>
-                    ))}
-                  </div>
-                }
+              <Tag
+                className='!border-0 !px-3 !py-1 !rounded-full text-xs font-medium shadow-sm'
+                style={{
+                  backgroundColor: '#f1f5f9',
+                  color: '#475569',
+                  border: '1px solid #cbd5e1',
+                }}
               >
-                <Tag bordered={false} className='text-xs'>
-                  +{remaining} more
-                </Tag>
-              </Tooltip>
+                +{remaining} more
+              </Tag>
             )}
-          </Space>
+          </div>
         );
       },
     },
@@ -184,29 +228,50 @@ const ClinicStaffTable = ({
       title: 'Status',
       dataIndex: 'isActive',
       key: 'isActive',
-      width: 120,
-      onHeaderCell: () => ({ className: 'th-min', style: { minWidth: 110 } }),
+      width: 140,
       render: (isActive: boolean) => (
-        <Badge status={isActive ? 'success' : 'error'} text={isActive ? 'Active' : 'Inactive'} />
+        <div
+          className={`px-3 py-1.5 rounded-full font-medium text-sm shadow-sm flex items-center justify-center ${
+            isActive
+              ? 'bg-green-100 text-green-800 border border-green-200'
+              : 'bg-slate-100 text-slate-600 border border-slate-200'
+          }`}
+        >
+          {isActive ? (
+            <>
+              <CheckCircleOutlined className='text-green-600 mr-1 text-xs' />
+              Active
+            </>
+          ) : (
+            <>
+              <ClockCircleOutlined className='text-slate-500 mr-1 text-xs' />
+              Inactive
+            </>
+          )}
+        </div>
       ),
     },
     {
       title: 'Hired / Joined',
       key: 'hireDate',
-      width: 160,
-      onHeaderCell: () => ({ className: 'th-min', style: { minWidth: 140 } }),
+      width: 180,
       render: (_: unknown, record) => {
         const hire = record.hireDate || record.joinedAt;
         const termination = record.terminationDate;
-        const formatDate = (v?: string | null) => {
-          if (!v) return null;
-          const d = new Date(v);
-          return isNaN(d.getTime()) ? 'Invalid Date' : d.toLocaleDateString();
-        };
+
         return (
-          <div className='space-y-0.5'>
-            <div>{formatDate(hire) || <Text type='secondary'>-</Text>}</div>
-            {termination && <Tag color='red'>{formatDate(termination)}</Tag>}
+          <div className='space-y-1 text-sm'>
+            <div className='font-medium text-slate-800'>
+              {hire ? dayjs(hire).format('MMM DD, YYYY') : '-'}
+            </div>
+            {termination && (
+              <div className='flex items-center gap-1 px-2 py-1 rounded-md bg-red-50 border border-red-200'>
+                <ClockCircleOutlined className='text-red-500 text-xs' />
+                <span className='text-xs font-medium text-red-700'>
+                  Terminated: {dayjs(termination).format('MMM DD, YYYY')}
+                </span>
+              </div>
+            )}
           </div>
         );
       },
@@ -222,37 +287,39 @@ const ClinicStaffTable = ({
     {
       title: 'Actions',
       key: 'actions',
-      width: 220,
-      onHeaderCell: () => ({ className: 'th-min', style: { minWidth: 180 } }),
+      width: 240,
       render: (_: unknown, record) => {
         const user = record.user;
+
         return (
-          <Space>
+          <Space size='middle' className='p-1'>
             <Tooltip title='View Details'>
               <Button
+                type='text'
+                icon={<EyeOutlined className='text-blue-500' />}
                 size='small'
+                className='hover:bg-blue-50 rounded-full p-2 transition-colors'
                 onClick={() => (user ? onViewUser(user) : onResolveViewUser?.(record.userId))}
-              >
-                View
-              </Button>
+              />
             </Tooltip>
             <Tooltip title='Edit User'>
               <Button
+                type='text'
+                icon={<EditOutlined className='text-green-500' />}
                 size='small'
+                className='hover:bg-green-50 rounded-full p-2 transition-colors'
                 onClick={() => (user ? onEditUser(user) : onResolveEditUser?.(record.userId))}
-              >
-                Edit
-              </Button>
+              />
             </Tooltip>
             <Tooltip title='Remove User'>
               <Button
+                type='text'
+                icon={<DeleteOutlined className='text-red-500' />}
                 size='small'
                 danger
-                disabled={user?.role === 'admin' || user?.role === 'clinic_admin'}
+                className='hover:bg-red-50 rounded-full p-2 transition-colors'
                 onClick={() => user && onDeleteUser(user.id)}
-              >
-                Remove
-              </Button>
+              />
             </Tooltip>
           </Space>
         );
@@ -261,23 +328,35 @@ const ClinicStaffTable = ({
   ];
 
   return (
-    <Table
-      columns={columns}
-      dataSource={staff}
-      rowKey={row => `${row.userId}-${row.id}`}
-      loading={loading}
-      scroll={{ x: 'max-content', y: 'calc(100vh - 400px)' }}
-      className='custom-scrollbar'
-      pagination={{
-        current: currentPage,
-        pageSize,
-        total,
-        showSizeChanger: true,
-        showQuickJumper: true,
-        position: ['bottomCenter'],
-      }}
-      onChange={onTableChange}
-    />
+    <div className='bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden'>
+      <Table
+        columns={columns}
+        dataSource={staff}
+        rowKey={row => `${row.userId}-${row.id}`}
+        loading={loading}
+        scroll={{ x: 'max-content', y: 'calc(100vh - 400px)' }}
+        className='custom-scrollbar'
+        pagination={{
+          current: currentPage,
+          pageSize,
+          total,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          position: ['bottomCenter'],
+        }}
+        onChange={onTableChange}
+        rowClassName='hover:bg-slate-50 transition-colors duration-200'
+        locale={{
+          emptyText: (
+            <div className='text-center py-12'>
+              <TeamOutlined className='text-5xl text-slate-300 mb-4' />
+              <div className='text-xl font-medium text-slate-500 mb-2'>No Staff Members</div>
+              <div className='text-slate-400'>No staff data available at the moment</div>
+            </div>
+          ),
+        }}
+      />
+    </div>
   );
 };
 
