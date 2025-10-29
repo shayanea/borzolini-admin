@@ -34,7 +34,7 @@ export const LoginForm = () => {
       className='min-h-screen flex items-center justify-center p-4 w-full bg-cover bg-center bg-no-repeat'
       style={{ backgroundImage: `url(${BG})` }}
     >
-      <Card className='w-1/3 shadow-2xl p-4 py-0 bg-white border border-gray-200 rounded-2xl backdrop-blur-sm'>
+      <Card className='w-1/3 shadow-2xl p-4 py-0 bg-white rounded-2xl'>
         <div className='text-center mb-8'>
           <div className='mb-4'>
             <div className='flex items-center justify-center mx-auto'>
