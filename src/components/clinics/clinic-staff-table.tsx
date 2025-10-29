@@ -36,6 +36,17 @@ const roleColorMap: Record<string, string> = {
   assistant: 'cyan',
 };
 
+// Map common education keywords to Ant Design tag colors
+const getEducationTagColor = (value: string): string => {
+  const v = value.toLowerCase();
+  if (/(dvm|bvsc|vmd)/.test(v)) return 'geekblue';
+  if (/(phd|doctorate)/.test(v)) return 'purple';
+  if (/(ms|msc|m\.sc)/.test(v)) return 'gold';
+  if (/(bs|bsc|b\.sc|ba)/.test(v)) return 'green';
+  if (/(board certified|diplomate|residency)/.test(v)) return 'volcano';
+  return 'default';
+};
+
 const ClinicStaffTable = ({
   staff,
   loading = false,
@@ -72,7 +83,7 @@ const ClinicStaffTable = ({
               src={avatarUrl}
               className='bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center'
             >
-              {(displayName || '?').charAt(0).toUpperCase()}
+              {(firstName || '?').charAt(0).toUpperCase()} {lastName?.charAt(0).toUpperCase()}
             </Avatar>
             <div>
               <div className='font-medium'>{displayName}</div>
@@ -91,7 +102,11 @@ const ClinicStaffTable = ({
       render: (_: ClinicStaff['role'], record) => {
         const role = (record.displayRole || record.role) as string;
         const color = roleColorMap[role] || 'default';
-        return <Tag bordered={false} color={color}>{role}</Tag>;
+        return (
+          <Tag bordered={false} color={color}>
+            {role}
+          </Tag>
+        );
       },
     },
     {
@@ -101,7 +116,13 @@ const ClinicStaffTable = ({
       width: 200,
       onHeaderCell: () => ({ className: 'th-min', style: { minWidth: 160 } }),
       render: (value?: string) =>
-        value ? <Tag bordered={false} color='default'>{value}</Tag> : <Text type='secondary'>-</Text>,
+        value ? (
+          <Tag bordered={false} color='default'>
+            {value}
+          </Tag>
+        ) : (
+          <Text type='secondary'>-</Text>
+        ),
     },
     {
       title: 'Experience',
@@ -111,7 +132,9 @@ const ClinicStaffTable = ({
       onHeaderCell: () => ({ className: 'th-min', style: { minWidth: 110 } }),
       render: (value?: number) =>
         typeof value === 'number' ? (
-          <Tag bordered={false} color='geekblue'>{value} yrs</Tag>
+          <Tag bordered={false} color='geekblue'>
+            {value} yrs
+          </Tag>
         ) : (
           <Text type='secondary'>-</Text>
         ),
@@ -130,13 +153,27 @@ const ClinicStaffTable = ({
         return (
           <Space size={[4, 4]} wrap>
             {visible.map(item => (
-              <Tag bordered={false} key={item} color='default'>
-                {item}
-              </Tag>
+              <Tooltip key={item} title={item}>
+                <Tag bordered={false} color={getEducationTagColor(item)} className='text-xs'>
+                  <span className='max-w-[160px] truncate inline-block align-middle'>{item}</span>
+                </Tag>
+              </Tooltip>
             ))}
             {remaining > 0 && (
-              <Tooltip title={list.join(', ')}>
-                <Tag bordered={false}>+{remaining} more</Tag>
+              <Tooltip
+                title={
+                  <div className='space-y-1'>
+                    {list.map(it => (
+                      <div key={it} className='text-xs'>
+                        {it}
+                      </div>
+                    ))}
+                  </div>
+                }
+              >
+                <Tag bordered={false} className='text-xs'>
+                  +{remaining} more
+                </Tag>
               </Tooltip>
             )}
           </Space>
