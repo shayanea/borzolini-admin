@@ -11,93 +11,25 @@ import {
 } from '../components/pet-cases';
 // Pet Cases Management Page
 import { Alert, Pagination } from 'antd';
-import { ErrorState, LoadingState, PageLayout } from '../components/common';
-import React, { useEffect } from 'react';
-import {
-  useAllPetCases,
-  usePetCases,
-  usePetCasesModals,
-  usePetCasesState,
-} from '../hooks/pet-cases';
+import { ErrorState, LoadingState } from '../components/common';
 
-import { User } from '@/types';
-import { useCurrentUser } from '../hooks/use-auth';
-import { useSearchParams } from 'react-router-dom';
+import React from 'react';
+import { usePetCasesPage } from '../hooks/pet-cases/use-pet-cases-page';
 
 const PetCasesPage: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const { data: user, isLoading: userLoading } = useCurrentUser() as {
-    data: User;
-    isLoading: boolean;
-  };
-  const urlClinicId = searchParams.get('clinicId');
-
-  // Get clinic ID from URL params or user profile
-  const clinicId: string | undefined =
-    urlClinicId || user?.clinicId || user?.clinic_id || user?.clinic?.id;
-
-  // Use custom hooks for state management
-  const state = usePetCasesState({ clinicId });
-  const modals = usePetCasesModals();
-
-  // Check if user is admin
-  const isAdmin = user?.role === 'admin';
-
-  // Determine if we should fetch all cases (admin without clinic ID) or clinic-specific cases
-  const shouldFetchAllCases = isAdmin && !clinicId;
-
-  // Default stats object to avoid repetition
-  const defaultStats = {
-    total: 0,
-    byStatus: {
-      open: 0,
-      in_progress: 0,
-      pending_consultation: 0,
-      pending_visit: 0,
-      under_observation: 0,
-      resolved: 0,
-      closed: 0,
-      escalated: 0,
-    },
-    byPriority: { low: 0, normal: 0, high: 0, urgent: 0, emergency: 0 },
-    byType: {
-      consultation: 0,
-      follow_up: 0,
-      emergency: 0,
-      preventive: 0,
-      chronic_condition: 0,
-      post_surgery: 0,
-      behavioral: 0,
-      nutritional: 0,
-    },
-    urgent: 0,
-    resolved: 0,
-    averageResolutionTime: 0,
-  };
-
-  // Use different hooks based on whether we're fetching all cases or clinic-specific cases
-  const clinicCasesResult = usePetCases(clinicId || '', state.filters, state.page, 10);
-  const allCasesResult = useAllPetCases(state.filters, state.page, 10, clinicId ? false : true);
-
-  // Select the appropriate result based on the condition
-  const result = shouldFetchAllCases ? allCasesResult : clinicCasesResult;
-
-  const { cases, total, page: currentPage, totalPages, isLoading, error, refetch } = result;
-
-  // Stats are only available when fetching clinic-specific cases
-  const stats = shouldFetchAllCases ? undefined : clinicCasesResult.stats;
-
-  useEffect(() => {
-    const isNotValid = !userLoading && !clinicId && !isAdmin;
-    if (isNotValid) {
-      console.error('No clinic ID provided and user is not admin');
-    }
-  }, [clinicId, userLoading, isAdmin]);
-
-  const handleRefresh = () => {
-    refetch();
-    state.handleRefresh();
-  };
+  const {
+    user,
+    userLoading,
+    clinicId,
+    isAdmin,
+    shouldFetchAllCases,
+    state,
+    modals,
+    result: { cases, total, currentPage, totalPages, isLoading, error },
+    stats,
+    defaultStats,
+    handleRefresh,
+  } = usePetCasesPage();
 
   // Show loading while fetching user data
   if (userLoading) {
@@ -117,7 +49,7 @@ const PetCasesPage: React.FC = () => {
   }
 
   return (
-    <PageLayout>
+    <div className='space-y-6'>
       {/* Advanced Statistics Overview */}
       <AdvancedStatsOverview stats={stats || defaultStats} loading={isLoading} />
 
@@ -209,7 +141,7 @@ const PetCasesPage: React.FC = () => {
         clinicId={modals.selectedCase?.clinic_id || clinicId || ''}
         editCase={modals.selectedCase}
       />
-    </PageLayout>
+    </div>
   );
 };
 

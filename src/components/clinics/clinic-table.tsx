@@ -1,20 +1,20 @@
-import { Badge, Button, Space, Table, Tag, Typography, Tooltip } from 'antd';
-import type { ColumnsType, TableProps } from 'antd/es/table';
+import { Button, Space, Table, Tag, Tooltip, Typography } from 'antd';
 import {
-  DeleteOutlined,
-  EditOutlined,
-  EyeOutlined,
-  MedicineBoxOutlined,
-  TeamOutlined,
-  StarFilled,
-  EnvironmentOutlined,
-  PhoneOutlined,
-  MailOutlined,
-  LinkOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  EnvironmentOutlined,
+  EyeOutlined,
   HeartOutlined,
+  LinkOutlined,
+  MailOutlined,
+  MedicineBoxOutlined,
+  PhoneOutlined,
+  StarFilled,
+  TeamOutlined,
 } from '@ant-design/icons';
+import type { ColumnsType, TableProps } from 'antd/es/table';
 
 import type { Clinic } from '@/types';
 import { ROUTES } from '@/constants/routes';
@@ -64,14 +64,14 @@ const ClinicTable = ({
       width: 250,
       render: (name: string, record: Clinic) => (
         <div className='flex items-center space-x-3 p-2 rounded-lg bg-white border border-slate-100 hover:shadow-sm transition-shadow'>
-          <div 
+          <div
             className='w-10 h-10 rounded-lg flex items-center justify-center text-white flex-shrink-0'
             style={{ backgroundColor: '#06b6d4' }}
           >
             <MedicineBoxOutlined className='text-lg' />
           </div>
           <div className='flex-1 min-w-0'>
-            <Link 
+            <Link
               className='font-semibold text-slate-800 hover:text-slate-900 block'
               href={`${ROUTES.CLINIC_VIEW}/${record.id}`}
             >
@@ -79,9 +79,7 @@ const ClinicTable = ({
                 {name}
               </Text>
             </Link>
-            <Text className='text-xs text-slate-500 block'>
-              ID: {record.id}
-            </Text>
+            <Text className='text-xs text-slate-500 block'>ID: {record.id}</Text>
           </div>
         </div>
       ),
@@ -101,7 +99,8 @@ const ClinicTable = ({
           <div className='flex items-center gap-2 text-xs text-slate-600'>
             <span className='text-slate-500'>•</span>
             <Text ellipsis={{ tooltip: `${record.city}, ${record.state || ''}` }}>
-              {record.city}{record.state && `, ${record.state}`}
+              {record.city}
+              {record.state && `, ${record.state}`}
             </Text>
           </div>
           {record.postal_code && (
@@ -126,7 +125,7 @@ const ClinicTable = ({
               <Text className='text-slate-700 font-medium'>{record.phone}</Text>
             </div>
           )}
-          
+
           {/* Email */}
           {record.email && (
             <div className='flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200'>
@@ -134,14 +133,14 @@ const ClinicTable = ({
               <Text className='text-slate-700 font-medium'>{record.email}</Text>
             </div>
           )}
-          
+
           {/* Website */}
           {record.website && (
             <div className='flex items-center gap-2 p-2 rounded-lg bg-blue-50 border border-blue-200'>
               <LinkOutlined className='text-blue-500' />
-              <Link 
-                href={record.website} 
-                target='_blank' 
+              <Link
+                href={record.website}
+                target='_blank'
                 className='text-blue-700 font-medium hover:text-blue-800'
               >
                 <Text ellipsis={{ tooltip: record.website }} className='text-sm'>
@@ -150,10 +149,14 @@ const ClinicTable = ({
               </Link>
             </div>
           )}
-          
+
           {/* Social Media */}
-          {(record.facebook_url || record.twitter_url || record.instagram_url || 
-            record.linkedin_url || record.youtube_url || record.tiktok_url) && (
+          {(record.facebook_url ||
+            record.twitter_url ||
+            record.instagram_url ||
+            record.linkedin_url ||
+            record.youtube_url ||
+            record.tiktok_url) && (
             <div className='p-2'>
               <SocialMediaLinks
                 facebook_url={record.facebook_url}
@@ -176,21 +179,22 @@ const ClinicTable = ({
       key: 'rating',
       sorter: true,
       width: 180,
-      render: (rating: number, record: Clinic) => (
+      render: (rating: number) => (
         <div className='flex items-center space-x-3'>
           {/* Rating Badge */}
-          <div className={`px-3 py-1.5 rounded-full font-bold text-sm shadow-sm flex items-center gap-1 ${
-            rating >= 4 ? 'bg-green-100 text-green-800 border border-green-200' :
-            rating >= 3 ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
-            'bg-red-100 text-red-800 border border-red-200'
-          }`}>
-            <StarFilled className={`text-xs ${rating >= 4 ? 'text-green-600' : rating >= 3 ? 'text-yellow-600' : 'text-red-600'}`} />
+          <div
+            className={`px-3 py-1.5 rounded-full font-bold text-sm shadow-sm flex items-center gap-1 ${
+              rating >= 4
+                ? 'bg-green-100 text-green-800 border border-green-200'
+                : rating >= 3
+                  ? 'bg-yellow-100 text-yellow-800 border border-yellow-200'
+                  : 'bg-red-100 text-red-800 border border-red-200'
+            }`}
+          >
+            <StarFilled
+              className={`text-xs ${rating >= 4 ? 'text-green-600' : rating >= 3 ? 'text-yellow-600' : 'text-red-600'}`}
+            />
             <span>{rating.toFixed(1)}</span>
-          </div>
-          
-          {/* Review Count */}
-          <div className='text-xs text-slate-600 bg-slate-50 px-2 py-1 rounded-md'>
-            ({record.totalReviews} {t('clinicTable.reviews')})
           </div>
         </div>
       ),
@@ -199,35 +203,19 @@ const ClinicTable = ({
       title: t('clinicTable.services'),
       key: 'services',
       width: 200,
-      render: (_, record: Clinic) => (
-        <div className='flex flex-wrap gap-1.5 max-w-[200px]'>
-          {record.services.slice(0, 3).map((service, index) => (
-            <Tag 
-              key={index}
-              className='!border-0 !px-2.5 !py-1 !rounded-full text-xs font-medium shadow-sm'
-              style={{
-                backgroundColor: '#dbeafe',
-                color: '#1e40af',
-                border: '1px solid #93c5fd',
-              }}
-            >
-              {service.name}
-            </Tag>
-          ))}
-          {record.services.length > 3 && (
-            <Tag 
-              className='!border-0 !px-2.5 !py-1 !rounded-full text-xs font-medium shadow-sm'
-              style={{
-                backgroundColor: '#f1f5f9',
-                color: '#475569',
-                border: '1px solid #cbd5e1',
-              }}
-            >
-              +{record.services.length - 3} more
-            </Tag>
-          )}
-        </div>
-      ),
+      render: (_, record: Clinic) =>
+        record.services.length > 3 && (
+          <Tag
+            className='!border-0 !px-2.5 !py-1 !rounded-full text-xs font-medium shadow-sm'
+            style={{
+              backgroundColor: '#f1f5f9',
+              color: '#475569',
+              border: '1px solid #cbd5e1',
+            }}
+          >
+            +{record.services.length - 3} more
+          </Tag>
+        ),
     },
     {
       title: t('clinicTable.status'),
@@ -236,11 +224,13 @@ const ClinicTable = ({
       width: 140,
       align: 'center',
       render: (isActive: boolean) => (
-        <div className={`px-3 py-1.5 rounded-full font-medium text-sm shadow-sm flex items-center justify-center ${
-          isActive 
-            ? 'bg-green-100 text-green-800 border border-green-200' 
-            : 'bg-slate-100 text-slate-600 border border-slate-200'
-        }`}>
+        <div
+          className={`px-3 py-1.5 rounded-full font-medium text-sm shadow-sm flex items-center justify-center ${
+            isActive
+              ? 'bg-green-100 text-green-800 border border-green-200'
+              : 'bg-slate-100 text-slate-600 border border-slate-200'
+          }`}
+        >
           {isActive ? (
             <>
               <CheckCircleOutlined className='text-green-600 mr-1 text-xs' />
@@ -274,7 +264,7 @@ const ClinicTable = ({
               title={t('clinicTable.viewDetails')}
             />
           </Tooltip>
-          
+
           {/* View Staff */}
           <Tooltip title={t('clinicTable.viewStaffVeterinarians')}>
             <Button
@@ -286,7 +276,7 @@ const ClinicTable = ({
               title={t('clinicTable.viewStaffVeterinarians')}
             />
           </Tooltip>
-          
+
           {/* View Pet Cases */}
           <Tooltip title={t('clinicTable.viewPetCases')}>
             <Button
@@ -298,7 +288,7 @@ const ClinicTable = ({
               title={t('clinicTable.viewPetCases')}
             />
           </Tooltip>
-          
+
           {/* Edit */}
           <Tooltip title={t('clinicTable.editClinic')}>
             <Button
@@ -310,7 +300,7 @@ const ClinicTable = ({
               title={t('clinicTable.editClinic')}
             />
           </Tooltip>
-          
+
           {/* Delete */}
           <Tooltip title={t('clinicTable.deleteClinic')}>
             <Button

@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Typography, Button } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { CalendarOutlined, TeamOutlined } from '@ant-design/icons';
 

@@ -6,7 +6,7 @@ import {
 } from '@/components/appointments';
 import { ExclamationCircleOutlined, LockOutlined } from '@ant-design/icons';
 import { Alert, Empty } from 'antd';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ErrorBoundary from '@/components/common/error-boundary';
@@ -73,6 +73,44 @@ const Appointments = () => {
     [handleEditAppointment]
   );
 
+  // Memoised statistics summary data to avoid recreation on every render
+  const summaryData = useMemo(() => {
+    if (!stats) return [] as Array<{ value: number; label: string; color: string }>;
+
+    return [
+      {
+        value: stats.total,
+        label: t('appointments.total'),
+        color: 'text-primary-navy',
+      },
+      {
+        value: stats.byStatus.pending,
+        label: t('appointments.pending'),
+        color: 'text-blue-600',
+      },
+      {
+        value: stats.byStatus.confirmed,
+        label: t('appointments.confirmed'),
+        color: 'text-green-600',
+      },
+      {
+        value: stats.byStatus.in_progress,
+        label: t('appointments.inProgress'),
+        color: 'text-orange-600',
+      },
+      {
+        value: stats.byStatus.completed,
+        label: t('appointments.completed'),
+        color: 'text-purple-600',
+      },
+      {
+        value: stats.byStatus.cancelled,
+        label: t('appointments.today'),
+        color: 'text-red-600',
+      },
+    ];
+  }, [stats, t]);
+
   // Show loading spinner for initial load
   if (loading) {
     return <LoadingSpinner fullScreen text={t('appointments.loading')} />;
@@ -123,30 +161,12 @@ const Appointments = () => {
         {/* Statistics Summary */}
         {stats && !statsLoading && (
           <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6'>
-            <div className='bg-white p-4 rounded-lg shadow border'>
-              <div className='text-2xl font-bold text-primary-navy'>{stats.total}</div>
-              <div className='text-sm text-gray-600'>{t('appointments.total')}</div>
-            </div>
-            <div className='bg-white p-4 rounded-lg shadow border'>
-              <div className='text-2xl font-bold text-blue-600'>{stats.byStatus.pending}</div>
-              <div className='text-sm text-gray-600'>{t('appointments.pending')}</div>
-            </div>
-            <div className='bg-white p-4 rounded-lg shadow border'>
-              <div className='text-2xl font-bold text-green-600'>{stats.byStatus.confirmed}</div>
-              <div className='text-sm text-gray-600'>{t('appointments.confirmed')}</div>
-            </div>
-            <div className='bg-white p-4 rounded-lg shadow border'>
-              <div className='text-2xl font-bold text-orange-600'>{stats.byStatus.in_progress}</div>
-              <div className='text-sm text-gray-600'>{t('appointments.inProgress')}</div>
-            </div>
-            <div className='bg-white p-4 rounded-lg shadow border'>
-              <div className='text-2xl font-bold text-purple-600'>{stats.byStatus.completed}</div>
-              <div className='text-sm text-gray-600'>{t('appointments.completed')}</div>
-            </div>
-            <div className='bg-white p-4 rounded-lg shadow border'>
-              <div className='text-2xl font-bold text-red-600'>{stats.byStatus.cancelled}</div>
-              <div className='text-sm text-gray-600'>{t('appointments.today')}</div>
-            </div>
+            {summaryData.map(({ value, label, color }) => (
+              <div key={label} className='bg-white p-4 rounded-lg shadow border'>
+                <div className={`text-2xl font-bold ${color}`}>{value}</div>
+                <div className='text-sm text-gray-600'>{label}</div>
+              </div>
+            ))}
           </div>
         )}
 

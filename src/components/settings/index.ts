@@ -4,3 +4,5 @@ export { default as GeneralSettings } from './general-settings';
 export { default as NotificationSettings } from './notification-settings';
 export { default as SecuritySettings } from './security-settings';
 export { default as SettingsHeader } from './settings-header';
+export { default as SettingsCategories } from './settings-categories';
+export { default as IntegrationSettings } from './integration-settings';
