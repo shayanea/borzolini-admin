@@ -12,8 +12,10 @@ import React, { useCallback, useState } from 'react';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
 import { usePetManagement } from '@/hooks';
+import { useTranslation } from 'react-i18next';
 
 const PetsPage: React.FC = () => {
+  const { t } = useTranslation('pages');
   const {
     pets,
     loading,
@@ -91,12 +93,12 @@ const PetsPage: React.FC = () => {
   const handleDeletePetConfirm = useCallback(
     (petId: string) => {
       Modal.confirm({
-        title: 'Are you sure you want to delete this pet?',
+        title: t('pets.deleteConfirm'),
         icon: <ExclamationCircleOutlined />,
-        content: 'This action cannot be undone.',
-        okText: 'Yes, Delete',
+        content: t('pets.deleteWarning'),
+        okText: t('pets.yesDelete'),
         okType: 'danger',
-        cancelText: 'Cancel',
+        cancelText: t('pets.cancel'),
         onOk: async () => {
           try {
             await handleDeletePet(petId);
@@ -106,7 +108,7 @@ const PetsPage: React.FC = () => {
         },
       });
     },
-    [handleDeletePet]
+    [handleDeletePet, t]
   );
 
   // Bulk actions
@@ -114,12 +116,12 @@ const PetsPage: React.FC = () => {
 
   const handleBulkDelete = useCallback(() => {
     Modal.confirm({
-      title: `Are you sure you want to delete ${localSelectedRowKeys.length} pets?`,
+      title: t('pets.deleteConfirmBulk', { count: localSelectedRowKeys.length }),
       icon: <ExclamationCircleOutlined />,
-      content: 'This action cannot be undone.',
-      okText: 'Yes, Delete All',
+      content: t('pets.deleteWarning'),
+      okText: t('pets.yesDeleteAll'),
       okType: 'danger',
-      cancelText: 'Cancel',
+      cancelText: t('pets.cancel'),
       onOk: async () => {
         try {
           await Promise.all(localSelectedRowKeys.map(id => handleDeletePet(id as string)));
@@ -129,7 +131,7 @@ const PetsPage: React.FC = () => {
         }
       },
     });
-  }, [localSelectedRowKeys, handleDeletePet]);
+  }, [localSelectedRowKeys, handleDeletePet, t]);
 
   return (
     <div className='space-y-6'>

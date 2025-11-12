@@ -1,0 +1,61 @@
+{
+  "common": {
+    "required": "Este campo es requerido",
+    "invalidEmail": "Por favor ingrese un correo electrónico válido",
+    "invalidUrl": "Por favor ingrese una URL válida",
+    "invalidPhone": "Por favor ingrese un número de teléfono válido",
+    "invalidPostalCode": "Por favor ingrese un código postal válido",
+    "positiveNumber": "Por favor ingrese un número positivo válido"
+  },
+  "user": {
+    "firstNameRequired": "Por favor ingrese el nombre",
+    "lastNameRequired": "Por favor ingrese el apellido",
+    "emailRequired": "Por favor ingrese el correo electrónico",
+    "passwordRequired": "Por favor ingrese la contraseña",
+    "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+    "roleRequired": "Por favor seleccione un rol"
+  },
+  "pet": {
+    "nameRequired": "Por favor ingrese el nombre de la mascota",
+    "nameMinLength": "El nombre de la mascota debe tener al menos 1 carácter",
+    "nameMaxLength": "El nombre de la mascota debe tener menos de 100 caracteres",
+    "speciesRequired": "Por favor seleccione la especie",
+    "genderRequired": "Por favor seleccione el género",
+    "sizeRequired": "Por favor seleccione el tamaño",
+    "dobRequired": "Por favor seleccione la fecha de nacimiento",
+    "breedMaxLength": "La raza debe tener menos de 100 caracteres",
+    "colorMaxLength": "El color debe tener menos de 100 caracteres",
+    "microchipMaxLength": "El número de microchip debe tener menos de 50 caracteres",
+    "emergencyContactRequired": "Por favor ingrese el nombre del contacto de emergencia",
+    "emergencyContactMaxLength": "El nombre del contacto de emergencia debe tener menos de 255 caracteres",
+    "emergencyPhoneRequired": "Por favor ingrese el teléfono de emergencia",
+    "emergencyPhoneMaxLength": "El teléfono de emergencia debe tener menos de 20 caracteres",
+    "photoUrlMaxLength": "La URL de la foto debe tener menos de 500 caracteres",
+    "weightInvalid": "El peso debe ser un número positivo válido"
+  },
+  "clinic": {
+    "nameRequired": "Por favor ingrese el nombre de la clínica",
+    "nameMinLength": "El nombre de la clínica debe tener al menos 2 caracteres",
+    "addressRequired": "Por favor ingrese la dirección",
+    "addressMinLength": "La dirección debe tener al menos 5 caracteres",
+    "cityRequired": "Por favor ingrese la ciudad",
+    "cityMinLength": "La ciudad debe tener al menos 2 caracteres",
+    "countryRequired": "Por favor ingrese el país",
+    "descriptionMaxLength": "La descripción no debe exceder 500 caracteres"
+  },
+  "appointment": {
+    "typeRequired": "Por favor seleccione el tipo de cita",
+    "petRequired": "Por favor seleccione una mascota",
+    "clinicRequired": "Por favor seleccione una clínica",
+    "dateRequired": "Por favor seleccione la fecha",
+    "timeRequired": "Por favor seleccione la hora",
+    "reasonRequired": "Por favor proporcione la razón de la visita",
+    "telemedicineLinkRequired": "Por favor proporcione el enlace de telemedicina",
+    "homeVisitAddressRequired": "Por favor proporcione la dirección de la visita a domicilio"
+  },
+  "case": {
+    "titleRequired": "Por favor ingrese el título del caso",
+    "typeRequired": "Por favor seleccione el tipo de caso",
+    "descriptionRequired": "Por favor ingrese la descripción del caso"
+  }
+}

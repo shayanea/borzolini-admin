@@ -6,19 +6,32 @@ export class DashboardService {
   // Get comprehensive dashboard statistics from centralized endpoint
   static async getDashboardStats(filters: DashboardFilters = {}): Promise<DashboardStats> {
     try {
-      // Use the new centralized dashboard endpoint
-      const params = new URLSearchParams();
-
-      if (filters.dateRange) {
-        params.append('dateRange', JSON.stringify(filters.dateRange));
-      }
+      // For clinic_admin users, use clinic-specific endpoint
+      let url: string;
 
       if (filters.clinicId) {
-        params.append('clinicId', filters.clinicId);
-      }
+        // Correct clinic-specific stats endpoint (no query params supported)
+        url = `/dashboard/clinic/${filters.clinicId}`;
 
-      const queryString = params.toString();
-      const url = `/dashboard/stats${queryString ? `?${queryString}` : ''}`;
+        console.log('🏥 DashboardService: Using clinic stats endpoint', {
+          url,
+          clinicId: filters.clinicId,
+        });
+      } else {
+        // Use general dashboard endpoint with optional dateRange
+        const params = new URLSearchParams();
+        if (filters.dateRange) {
+          params.append('dateRange', JSON.stringify(filters.dateRange));
+        }
+
+        const queryString = params.toString();
+        url = `/dashboard/stats${queryString ? `?${queryString}` : ''}`;
+
+        console.log('📊 DashboardService: Using general dashboard endpoint', {
+          url,
+          filters,
+        });
+      }
 
       const response = await apiService.get(url);
 
@@ -73,6 +86,7 @@ export class DashboardService {
       averageAppointmentDuration = 0,
       topPerformingClinics = [],
       recentActivity = [],
+      petCases = undefined,
     } = apiResponse || {};
 
     return {
@@ -93,6 +107,7 @@ export class DashboardService {
       averageAppointmentDuration,
       topPerformingClinics,
       recentActivity,
+      petCases,
     };
   }
 
@@ -116,25 +131,45 @@ export class DashboardService {
       averageAppointmentDuration: 0,
       topPerformingClinics: [],
       recentActivity: [],
+      petCases: undefined,
     };
   }
 
   // Get dashboard charts data from centralized endpoint
   static async getDashboardCharts(filters: DashboardFilters = {}) {
     try {
-      // Use the new centralized dashboard charts endpoint
-      const params = new URLSearchParams();
-
-      if (filters.dateRange) {
-        params.append('dateRange', JSON.stringify(filters.dateRange));
-      }
+      // For clinic_admin users, use clinic-specific endpoint
+      let url: string;
 
       if (filters.clinicId) {
+        // Correct clinic-specific charts endpoint uses query parameter
+        const params = new URLSearchParams();
         params.append('clinicId', filters.clinicId);
-      }
+        if (filters.dateRange) {
+          params.append('dateRange', JSON.stringify(filters.dateRange));
+        }
+        const queryString = params.toString();
+        url = `/dashboard/charts${queryString ? `?${queryString}` : ''}`;
 
-      const queryString = params.toString();
-      const url = `/dashboard/charts${queryString ? `?${queryString}` : ''}`;
+        console.log('🏥 DashboardService: Using clinic charts endpoint', {
+          url,
+          clinicId: filters.clinicId,
+        });
+      } else {
+        // Use general dashboard endpoint
+        const params = new URLSearchParams();
+        if (filters.dateRange) {
+          params.append('dateRange', JSON.stringify(filters.dateRange));
+        }
+
+        const queryString = params.toString();
+        url = `/dashboard/charts${queryString ? `?${queryString}` : ''}`;
+
+        console.log('📊 DashboardService: Using general charts endpoint', {
+          url,
+          filters,
+        });
+      }
 
       const response = await apiService.get(url);
 

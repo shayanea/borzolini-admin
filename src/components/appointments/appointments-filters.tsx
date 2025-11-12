@@ -6,8 +6,9 @@ import type {
   AppointmentsFiltersProps,
   AppointmentsFilters as AppointmentsFiltersType,
 } from '@/types';
-import { Button, Card, DatePicker, Input, Select, Space } from 'antd';
 import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Card, DatePicker, Input, Select, Space } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import { useState } from 'react';
 
@@ -20,6 +21,7 @@ const AppointmentsFilters = ({
   onFilters,
   onExport,
 }: AppointmentsFiltersProps) => {
+  const { t } = useTranslation('components');
   const [filters, setFilters] = useState({
     status: undefined,
     type: undefined,
@@ -59,7 +61,7 @@ const AppointmentsFilters = ({
         {/* Search Bar */}
         <div className='flex flex-col sm:flex-row items-center justify-between gap-3'>
           <Search
-            placeholder='Search appointments...'
+            placeholder={t('appointments.searchPlaceholder')}
             allowClear
             value={searchText}
             onSearch={onSearch}
@@ -68,9 +70,9 @@ const AppointmentsFilters = ({
           />
           <Space>
             <div className='relative'>
-              <Button onClick={onExport}>Export</Button>
+              <Button onClick={onExport}>{t('appointments.export')}</Button>
               <span className='absolute -top-4 -right-4 text-xs bg-orange-100 text-orange-600 p-1 rounded-md'>
-                Soon
+                {t('appointments.soon')}
               </span>
             </div>
           </Space>
@@ -79,9 +81,9 @@ const AppointmentsFilters = ({
         {/* Filters */}
         <div className='flex flex-wrap items-center gap-4'>
           <div className='flex items-center space-x-2'>
-            <span className='text-sm font-medium'>Status:</span>
+            <span className='text-sm font-medium'>{t('appointments.status')}:</span>
             <Select
-              placeholder='All Statuses'
+              placeholder={t('appointments.allStatuses')}
               className='w-40'
               value={filters.status}
               onChange={value => handleFilterChange('status', value)}
@@ -96,9 +98,9 @@ const AppointmentsFilters = ({
           </div>
 
           <div className='flex items-center space-x-2'>
-            <span className='text-sm font-medium'>Type:</span>
+            <span className='text-sm font-medium'>{t('appointments.type')}:</span>
             <Select
-              placeholder='All Types'
+              placeholder={t('appointments.allTypes')}
               className='w-40'
               value={filters.type}
               onChange={value => handleFilterChange('type', value)}
@@ -113,9 +115,9 @@ const AppointmentsFilters = ({
           </div>
 
           <div className='flex items-center space-x-2'>
-            <span className='text-sm font-medium'>Priority:</span>
+            <span className='text-sm font-medium'>{t('appointments.priority')}:</span>
             <Select
-              placeholder='All Priorities'
+              placeholder={t('appointments.allPriorities')}
               className='w-40'
               value={filters.priority}
               onChange={value => handleFilterChange('priority', value)}
@@ -130,7 +132,7 @@ const AppointmentsFilters = ({
           </div>
 
           <div className='flex items-center space-x-2'>
-            <span className='text-sm font-medium'>Date Range:</span>
+            <span className='text-sm font-medium'>{t('appointments.dateRange')}:</span>
             <RangePicker
               value={filters.dateRange}
               onChange={dates => {
@@ -144,13 +146,13 @@ const AppointmentsFilters = ({
                   handleFilterChange('dateRange', undefined);
                 }
               }}
-              placeholder={['Start Date', 'End Date']}
+              placeholder={[t('appointments.startDate'), t('appointments.endDate')]}
               className='w-full sm:w-auto'
             />
           </div>
 
           <Button icon={<FilterOutlined />} onClick={clearFilters} size='small'>
-            Clear Filters
+            {t('appointments.clearFilters')}
           </Button>
         </div>
       </div>

@@ -1,22 +1,18 @@
-import { Button, Card, Descriptions, Modal, Select, Tag, message } from 'antd';
+import {
+  AppointmentInfoCard,
+  ClinicStaffInfoCard,
+  MedicalInfoCard,
+  PetOwnerInfoCard,
+} from './appointment-view-sections';
+import { Button, Modal, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 
-import {
-  APPOINTMENT_PRIORITIES,
-  APPOINTMENT_STATUSES,
-  APPOINTMENT_TYPE_LABELS,
-} from '@/constants/appointments';
+import { APPOINTMENT_TYPE_LABELS } from '@/constants/appointments';
 import type { Appointment } from '@/types';
-import { SaveOutlined } from '@ant-design/icons';
-import dayjs from 'dayjs';
 import { AppointmentReviewsSection } from './appointment-reviews-section';
-import {
-  formatAppointmentType,
-  getAppointmentPriorityColor,
-  getAppointmentStatusColor,
-} from '@/utils/color-helpers';
-
-const { Option } = Select;
+import { SaveOutlined } from '@ant-design/icons';
+import { formatAppointmentType } from '@/utils/color-helpers';
+import { useTranslation } from 'react-i18next';
 
 export interface AppointmentViewModalProps {
   visible: boolean;
@@ -32,6 +28,7 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
   onCancel,
   onUpdate,
 }) => {
+  const { t } = useTranslation('components');
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState<Partial<Appointment>>({});
   const [saving, setSaving] = useState(false);
@@ -63,9 +60,9 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
       setSaving(true);
       await onUpdate(appointment.id, editedData);
       setIsEditing(false);
-      message.success('Appointment updated successfully');
+      message.success(t('modals.appointmentView.appointmentUpdatedSuccess'));
     } catch (error) {
-      message.error('Failed to update appointment');
+      message.error(t('modals.appointmentView.appointmentUpdateFailed'));
       console.error('Update error:', error);
     } finally {
       setSaving(false);
@@ -90,15 +87,22 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
   };
 
   const getFormattedType = (type: string) => {
-    if (!type) return 'Unknown';
-    return APPOINTMENT_TYPE_LABELS[type as keyof typeof APPOINTMENT_TYPE_LABELS] || formatAppointmentType(type);
+    if (!type) return t('modals.appointmentView.unknown');
+    return (
+      APPOINTMENT_TYPE_LABELS[type as keyof typeof APPOINTMENT_TYPE_LABELS] ||
+      formatAppointmentType(type)
+    );
+  };
+
+  const handleFieldChange = (field: string, value: any) => {
+    setEditedData(prev => ({ ...prev, [field]: value }));
   };
 
   if (!appointment) return null;
 
   return (
     <Modal
-      title='Appointment Details'
+      title={t('modals.appointmentView.title')}
       open={visible}
       onCancel={onCancel}
       footer={null}
@@ -107,269 +111,27 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
     >
       <div className='space-y-6'>
         {/* Pet & Owner Information */}
-        <Card title='Pet & Owner Information' size='small'>
-          <div className='flex items-center space-x-4 mb-4'>
-            <img
-              src={appointment.pet?.photo_url || '/default-pet.png'}
-              alt={appointment.pet?.name}
-              className='w-16 h-16 rounded-full object-cover'
-              onError={e => {
-                (e.target as HTMLImageElement).src = '/default-pet.png';
-              }}
-            />
-            <div>
-              <h3 className='text-lg font-semibold'>{appointment.pet?.name || 'Unknown Pet'}</h3>
-              <p className='text-gray-600'>
-                {appointment.pet?.breed} {appointment.pet?.species}
-              </p>
-              <p className='text-sm text-gray-500'>Owner ID: {appointment.owner_id}</p>
-            </div>
-          </div>
-
-          <Descriptions column={2} size='small'>
-            <Descriptions.Item label='Species'>
-              <Tag color='blue'>{appointment.pet?.species}</Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label='Gender'>
-              <Tag color={appointment.pet?.gender === 'male' ? 'blue' : 'pink'}>
-                {appointment.pet?.gender}
-              </Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label='Weight'>{appointment.pet?.weight} kg</Descriptions.Item>
-            <Descriptions.Item label='Age'>
-              {appointment.pet?.date_of_birth
-                ? Math.floor(
-                    (new Date().getTime() - new Date(appointment.pet.date_of_birth).getTime()) /
-                      (365.25 * 24 * 60 * 60 * 1000)
-                  )
-                : 'Unknown'}{' '}
-              years
-            </Descriptions.Item>
-            <Descriptions.Item label='Vaccination Status'>
-              <Tag color={appointment.pet?.is_vaccinated ? 'green' : 'red'}>
-                {appointment.pet?.is_vaccinated ? 'Vaccinated' : 'Not Vaccinated'}
-              </Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label='Spayed/Neutered'>
-              <Tag color={appointment.pet?.is_spayed_neutered ? 'green' : 'orange'}>
-                {appointment.pet?.is_spayed_neutered ? 'Yes' : 'No'}
-              </Tag>
-            </Descriptions.Item>
-          </Descriptions>
-        </Card>
+        <PetOwnerInfoCard appointment={appointment} />
 
         {/* Appointment Information */}
-        <Card title='Appointment Information' size='small'>
-          <Descriptions column={2} size='small'>
-            <Descriptions.Item label='Service'>
-              {appointment.service?.name || getFormattedType(appointment.appointment_type)}
-            </Descriptions.Item>
-            <Descriptions.Item label='Duration'>
-              {appointment.duration_minutes} minutes
-            </Descriptions.Item>
-            <Descriptions.Item label='Scheduled Date'>
-              {dayjs(appointment.scheduled_date).format('MMMM DD, YYYY')}
-            </Descriptions.Item>
-            <Descriptions.Item label='Scheduled Time'>
-              {dayjs(appointment.scheduled_date).format('h:mm A')}
-            </Descriptions.Item>
-            <Descriptions.Item label='Status'>
-              {isEditing ? (
-                <Select
-                  value={editedData.status}
-                  onChange={value => setEditedData(prev => ({ ...prev, status: value }))}
-                  style={{ width: 120 }}
-                >
-                  {Object.entries(APPOINTMENT_STATUSES).map(([_, value]) => (
-                    <Option key={value} value={value}>
-                      {value
-                        .split('_')
-                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                        .join(' ')}
-                    </Option>
-                  ))}
-                </Select>
-              ) : (
-                <Tag color={getAppointmentStatusColor(appointment.status)}>
-                  {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
-                </Tag>
-              )}
-            </Descriptions.Item>
-            <Descriptions.Item label='Priority'>
-              {isEditing ? (
-                <Select
-                  value={editedData.priority}
-                  onChange={value => setEditedData(prev => ({ ...prev, priority: value }))}
-                  style={{ width: 120 }}
-                >
-                  {Object.entries(APPOINTMENT_PRIORITIES).map(([_, value]) => (
-                    <Option key={value} value={value}>
-                      {value.charAt(0).toUpperCase() + value.slice(1)}
-                    </Option>
-                  ))}
-                </Select>
-              ) : (
-                <Tag color={getAppointmentPriorityColor(appointment.priority)}>
-                  {appointment.priority.charAt(0).toUpperCase() + appointment.priority.slice(1)}
-                </Tag>
-              )}
-            </Descriptions.Item>
-            {appointment.service?.price && (
-              <Descriptions.Item label='Service Price'>
-                ${appointment.service.price} {appointment.service.currency}
-              </Descriptions.Item>
-            )}
-            <Descriptions.Item label='Payment Status'>
-              <Tag color={appointment.payment_status === 'paid' ? 'green' : 'orange'}>
-                {appointment.payment_status
-                  ? appointment.payment_status.charAt(0).toUpperCase() +
-                    appointment.payment_status.slice(1)
-                  : 'Unknown'}
-              </Tag>
-            </Descriptions.Item>
-          </Descriptions>
-        </Card>
+        <AppointmentInfoCard
+          appointment={appointment}
+          isEditing={isEditing}
+          editedData={editedData}
+          onFieldChange={handleFieldChange}
+          getFormattedType={getFormattedType}
+        />
 
         {/* Clinic & Staff Information */}
-        <Card title='Clinic & Staff Information' size='small'>
-          <Descriptions column={2} size='small'>
-            <Descriptions.Item label='Clinic'>
-              {appointment.clinic?.name || 'Unknown Clinic'}
-            </Descriptions.Item>
-            <Descriptions.Item label='Location'>
-              {appointment.clinic?.city && appointment.clinic?.state
-                ? `${appointment.clinic.city}, ${appointment.clinic.state}`
-                : 'Not specified'}
-            </Descriptions.Item>
-            <Descriptions.Item label='Staff'>
-              {appointment.staff?.specialization || appointment.staff?.role || 'Unassigned'}
-            </Descriptions.Item>
-            <Descriptions.Item label='License Number'>
-              {appointment.staff?.license_number || 'Not available'}
-            </Descriptions.Item>
-            <Descriptions.Item label='Experience'>
-              {appointment.staff?.experience_years || 'Unknown'} years
-            </Descriptions.Item>
-            <Descriptions.Item label='Phone'>
-              {appointment.clinic?.phone || 'Not available'}
-            </Descriptions.Item>
-          </Descriptions>
-        </Card>
+        <ClinicStaffInfoCard appointment={appointment} />
 
         {/* Medical Information */}
-        <Card title='Medical Information' size='small'>
-          <div className='space-y-4'>
-            <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
-                Reason for Visit
-              </label>
-              {isEditing ? (
-                <textarea
-                  value={editedData.reason || ''}
-                  onChange={e => setEditedData(prev => ({ ...prev, reason: e.target.value }))}
-                  className='w-full p-2 border border-gray-300 rounded-md'
-                  rows={2}
-                  placeholder='Reason for visit'
-                />
-              ) : (
-                <p className='text-gray-900 bg-gray-50 p-2 rounded'>
-                  {appointment.reason || 'Not specified'}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>Symptoms</label>
-              {isEditing ? (
-                <textarea
-                  value={editedData.symptoms || ''}
-                  onChange={e => setEditedData(prev => ({ ...prev, symptoms: e.target.value }))}
-                  className='w-full p-2 border border-gray-300 rounded-md'
-                  rows={2}
-                  placeholder='Symptoms observed'
-                />
-              ) : (
-                <p className='text-gray-900 bg-gray-50 p-2 rounded'>
-                  {appointment.symptoms || 'Not specified'}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>Diagnosis</label>
-              {isEditing ? (
-                <textarea
-                  value={editedData.diagnosis || ''}
-                  onChange={e => setEditedData(prev => ({ ...prev, diagnosis: e.target.value }))}
-                  className='w-full p-2 border border-gray-300 rounded-md'
-                  rows={2}
-                  placeholder='Diagnosis'
-                />
-              ) : (
-                <p className='text-gray-900 bg-gray-50 p-2 rounded'>
-                  {appointment.diagnosis || 'Not specified'}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>Treatment Plan</label>
-              {isEditing ? (
-                <textarea
-                  value={editedData.treatment_plan || ''}
-                  onChange={e =>
-                    setEditedData(prev => ({ ...prev, treatment_plan: e.target.value }))
-                  }
-                  className='w-full p-2 border border-gray-300 rounded-md'
-                  rows={3}
-                  placeholder='Treatment plan'
-                />
-              ) : (
-                <p className='text-gray-900 bg-gray-50 p-2 rounded'>
-                  {appointment.treatment_plan || 'Not specified'}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>
-                Follow-up Instructions
-              </label>
-              {isEditing ? (
-                <textarea
-                  value={editedData.follow_up_instructions || ''}
-                  onChange={e =>
-                    setEditedData(prev => ({ ...prev, follow_up_instructions: e.target.value }))
-                  }
-                  className='w-full p-2 border border-gray-300 rounded-md'
-                  rows={2}
-                  placeholder='Follow-up instructions'
-                />
-              ) : (
-                <p className='text-gray-900 bg-gray-50 p-2 rounded'>
-                  {appointment.follow_up_instructions || 'Not specified'}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className='block text-sm font-medium text-gray-700 mb-1'>Notes</label>
-              {isEditing ? (
-                <textarea
-                  value={editedData.notes || ''}
-                  onChange={e => setEditedData(prev => ({ ...prev, notes: e.target.value }))}
-                  className='w-full p-2 border border-gray-300 rounded-md'
-                  rows={3}
-                  placeholder='Additional notes'
-                />
-              ) : (
-                <p className='text-gray-900 bg-gray-50 p-2 rounded'>
-                  {appointment.notes || 'No notes'}
-                </p>
-              )}
-            </div>
-          </div>
-        </Card>
+        <MedicalInfoCard
+          appointment={appointment}
+          isEditing={isEditing}
+          editedData={editedData}
+          onFieldChange={handleFieldChange}
+        />
 
         {/* Reviews Section - Only show for completed appointments */}
         {appointment.status === 'completed' && (
@@ -388,16 +150,16 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
         <div className='flex justify-end space-x-2 pt-4 border-t'>
           {!isEditing ? (
             <>
-              <Button onClick={onCancel}>Close</Button>
+              <Button onClick={onCancel}>{t('modals.appointmentView.close')}</Button>
               {onUpdate && (
                 <Button type='primary' onClick={handleEdit}>
-                  Edit Critical Fields
+                  {t('modals.appointmentView.editCriticalFields')}
                 </Button>
               )}
             </>
           ) : (
             <>
-              <Button onClick={handleCancel}>Cancel</Button>
+              <Button onClick={handleCancel}>{t('modals.appointmentView.cancel')}</Button>
               <Button
                 type='primary'
                 icon={<SaveOutlined />}
@@ -405,7 +167,7 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
                 loading={saving}
                 className='bg-primary-navy border-primary-navy'
               >
-                Save Changes
+                {t('modals.appointmentView.saveChanges')}
               </Button>
             </>
           )}

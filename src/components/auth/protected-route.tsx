@@ -3,8 +3,10 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import React, { useCallback } from 'react';
 
 import { AuthBackground } from '@/components/common';
+import BG from '@/ui/icons/auth-bg.svg';
 import { ROUTES } from '@/constants';
 import { useCurrentUser } from '@/hooks/use-auth';
+import { useTranslation } from 'react-i18next';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -12,6 +14,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
+  const { t } = useTranslation('components');
   const location = useLocation();
   const navigate = useNavigate();
   const { data: user, isLoading, error } = useCurrentUser();
@@ -28,12 +31,15 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   // Show loading while checking authentication
   if (isLoading) {
     return (
-      <AuthBackground variant='gradient'>
-        <div className='text-center'>
-          <Spin size='large' className='mb-4' />
-          <div className='text-white text-lg'>Validating authentication...</div>
+      <div
+        className='min-h-screen flex items-center justify-center p-4 w-full bg-cover bg-center bg-no-repeat'
+        style={{ backgroundImage: `url(${BG})` }}
+      >
+        <div className='text-center bg-white/50 backdrop-blur-sm p-8 rounded-lg'>
+          <Spin size='default' className='mb-4' />
+          <div className='text-black text-base'>{t('auth.validatingAuth')}</div>
         </div>
-      </AuthBackground>
+      </div>
     );
   }
 
@@ -45,17 +51,17 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   // Check role requirements if specified
   if (requiredRole && user.role !== requiredRole) {
     return (
-      <AuthBackground variant='gradient'>
+      <AuthBackground variant='default'>
         <Result
           status='403'
-          title='Access Denied'
-          subTitle="You don't have permission to access this page."
+          title={t('auth.accessDenied')}
+          subTitle={t('auth.noPermission')}
           extra={[
             <Button type='primary' key='dashboard' onClick={handleGoToDashboard}>
-              Go to Dashboard
+              {t('auth.goToDashboard')}
             </Button>,
             <Button key='logout' onClick={handleLogout}>
-              Logout
+              {t('header.logout')}
             </Button>,
           ]}
         />

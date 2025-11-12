@@ -6,7 +6,6 @@ import { VisitTypeSectionProps } from './types';
 const { TextArea } = Input;
 
 export const VisitTypeSection: FC<VisitTypeSectionProps> = ({
-  form,
   isTelemedicine,
   setIsTelemedicine,
   isHomeVisit,

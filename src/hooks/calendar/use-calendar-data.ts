@@ -1,23 +1,26 @@
+import type { CalendarFilters, Veterinarian } from '@/types/calendar';
+
+import type { User } from '@/types';
 import { calendarService } from '@/services/calendar.service';
-import type { CalendarFilters } from '@/types/calendar';
-import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
+import { useQuery } from '@tanstack/react-query';
+import { useClinicContext } from '@/hooks/use-clinic-context';
 
 export const useCalendarData = (
   currentDate: dayjs.Dayjs,
   selectedVeterinarians: string[],
   filters: CalendarFilters
 ) => {
-  // Query for veterinarians
+  const { clinicContext } = useClinicContext();
+  // Query for veterinarians (via users endpoint filtered by role)
   const {
     data: veterinarians = [],
     isLoading: vetsLoading,
     error: vetsError,
   } = useQuery({
-    queryKey: ['veterinarians'],
-    queryFn: async () => {
-      const vets = await calendarService.getVeterinarians();
-      return vets;
+    queryKey: ['clinic-staff', 'veterinarians'],
+    queryFn: async (): Promise<Veterinarian[]> => {
+      return await calendarService.getVeterinarians();
     },
     staleTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
@@ -30,13 +33,16 @@ export const useCalendarData = (
     error: calendarError,
     refetch: refetchCalendarData,
   } = useQuery({
-    queryKey: ['calendar-data', currentDate.format('YYYY-MM-DD'), selectedVeterinarians, filters],
+    queryKey: ['calendar-data', currentDate.format('YYYY-MM-DD'), selectedVeterinarians, filters, clinicContext?.clinicId],
     queryFn: async () => {
-      // Prepare filters with current veterinarian selection
+      // Prepare filters with current veterinarian selection and clinic context
       const currentFilters: CalendarFilters = {
         ...filters,
         veterinarianIds: selectedVeterinarians.length > 0 ? selectedVeterinarians : undefined,
+        clinicId: clinicContext?.clinicId, // Add clinic ID for clinic-specific filtering
       };
+
+      console.log('📅 CalendarData: Fetching calendar data with filters:', currentFilters);
 
       const data = await calendarService.getCalendarData(
         currentDate.format('YYYY-MM-DD'),

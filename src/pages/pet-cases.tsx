@@ -11,83 +11,33 @@ import {
 } from '../components/pet-cases';
 // Pet Cases Management Page
 import { Alert, Pagination } from 'antd';
-import React, { useEffect } from 'react';
-import { ErrorState, LoadingState, PageLayout } from '../components/common';
+import { ErrorState, LoadingState } from '../components/common';
 
-import { useSearchParams } from 'react-router-dom';
-import { usePetCases, usePetCasesModals, usePetCasesState } from '../hooks/pet-cases';
-import { useCurrentUser } from '../hooks/use-auth';
+import React from 'react';
+import { usePetCasesPage } from '../hooks/pet-cases/use-pet-cases-page';
 
 const PetCasesPage: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const { data: user, isLoading: userLoading } = useCurrentUser();
-  const urlClinicId = searchParams.get('clinicId');
-
-  // Use custom hooks for state management
-  const state = usePetCasesState();
-  const modals = usePetCasesModals();
-
-  // Get clinic ID from URL params or user profile
-  const clinicId = urlClinicId || user?.clinicId || user?.clinic_id || user?.clinic?.id;
-
-  // Default stats object to avoid repetition
-  const defaultStats = {
-    total: 0,
-    byStatus: {
-      open: 0,
-      in_progress: 0,
-      pending_consultation: 0,
-      pending_visit: 0,
-      under_observation: 0,
-      resolved: 0,
-      closed: 0,
-      escalated: 0,
-    },
-    byPriority: { low: 0, normal: 0, high: 0, urgent: 0, emergency: 0 },
-    byType: {
-      consultation: 0,
-      follow_up: 0,
-      emergency: 0,
-      preventive: 0,
-      chronic_condition: 0,
-      post_surgery: 0,
-      behavioral: 0,
-      nutritional: 0,
-    },
-    urgent: 0,
-    resolved: 0,
-    averageResolutionTime: 0,
-  };
-
   const {
-    cases,
-    total,
-    page: currentPage,
-    totalPages,
+    user,
+    userLoading,
+    clinicId,
+    isAdmin,
+    shouldFetchAllCases,
+    state,
+    modals,
+    result: { cases, total, currentPage, totalPages, isLoading, error },
     stats,
-    isLoading,
-    error,
-    refetch,
-  } = usePetCases(clinicId || '', state.filters, state.page, 10);
-
-  useEffect(() => {
-    if (!userLoading && !clinicId) {
-      console.error('No clinic ID provided');
-    }
-  }, [clinicId, userLoading]);
-
-  const handleRefresh = () => {
-    refetch();
-    state.handleRefresh();
-  };
+    defaultStats,
+    handleRefresh,
+  } = usePetCasesPage();
 
   // Show loading while fetching user data
   if (userLoading) {
     return <LoadingState message='Loading pet cases...' fullScreen />;
   }
 
-  // Show error if no clinic ID is available
-  if (!clinicId) {
+  // Show error if no clinic ID is available and user is not admin
+  if (!clinicId && !isAdmin) {
     return (
       <ErrorState
         title='Access Error'
@@ -99,7 +49,7 @@ const PetCasesPage: React.FC = () => {
   }
 
   return (
-    <PageLayout>
+    <div className='space-y-6'>
       {/* Advanced Statistics Overview */}
       <AdvancedStatsOverview stats={stats || defaultStats} loading={isLoading} />
 
@@ -118,10 +68,12 @@ const PetCasesPage: React.FC = () => {
         selectedCount={state.selectedRowKeys.length}
         stats={stats || defaultStats}
         loading={isLoading}
-        onCreateCase={state.handleCreateCase}
+        onCreateCase={modals.handleCreateCase}
         onExport={state.handleExport}
         onRefresh={handleRefresh}
         onViewStats={state.handleViewStats}
+        viewAllCases={shouldFetchAllCases}
+        clinicName={user?.clinic?.name}
       />
 
       {/* Filters */}
@@ -178,7 +130,7 @@ const PetCasesPage: React.FC = () => {
         visible={modals.viewModalVisible}
         onClose={modals.handleCloseViewModal}
         onEdit={modals.handleEditCase}
-        clinicId={clinicId}
+        clinicId={modals.selectedCase?.clinic_id || clinicId || ''}
       />
 
       {/* Edit Case Modal */}
@@ -186,10 +138,10 @@ const PetCasesPage: React.FC = () => {
         visible={modals.editModalVisible}
         onClose={modals.handleCloseEditModal}
         onSuccess={modals.handleEditSuccess}
-        clinicId={clinicId}
+        clinicId={modals.selectedCase?.clinic_id || clinicId || ''}
         editCase={modals.selectedCase}
       />
-    </PageLayout>
+    </div>
   );
 };
 

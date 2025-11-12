@@ -1,29 +1,37 @@
 import { Card, Col, Form, Input, Row } from 'antd';
-import { FC } from 'react';
+import { MIN_LENGTH_RULE, REQUIRED_RULE } from '@/constants/form-validation';
 
+import { FC } from 'react';
 import { PhoneField } from '@/components/shared';
-import { MIN_LENGTH_RULE, REQUIRED_RULE, VALIDATION_MESSAGES } from '@/constants/form-validation';
+import { useTranslation } from 'react-i18next';
+import { useValidationMessages } from '@/hooks/use-validation-messages';
 
 const { TextArea } = Input;
 
 const BasicInformationStep: FC = () => {
+  const { t } = useTranslation('components');
+  const validationMessages = useValidationMessages();
+
   return (
-    <Card title='Basic Information' className='mb-6'>
+    <Card title={t('forms.clinicForm.basicInfo')} className='mb-6'>
       <Row gutter={16}>
         <Col span={12}>
           <Form.Item
             name='name'
-            label='Clinic Name'
+            label={t('forms.clinicForm.clinicName')}
             rules={[
-              REQUIRED_RULE(VALIDATION_MESSAGES.CLINIC_NAME_REQUIRED),
-              MIN_LENGTH_RULE(2, VALIDATION_MESSAGES.CLINIC_NAME_MIN_LENGTH),
+              REQUIRED_RULE(validationMessages.CLINIC_NAME_REQUIRED),
+              MIN_LENGTH_RULE(2, validationMessages.CLINIC_NAME_MIN_LENGTH),
             ]}
           >
-            <Input placeholder='Enter clinic name' />
+            <Input placeholder={t('forms.clinicForm.clinicNamePlaceholder')} />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <PhoneField label='Phone Number' placeholder='Enter phone number' />
+          <PhoneField
+            label={t('forms.clinicForm.phoneNumber')}
+            placeholder={t('forms.clinicForm.phonePlaceholder')}
+          />
         </Col>
       </Row>
 
@@ -31,12 +39,12 @@ const BasicInformationStep: FC = () => {
         <Col span={24}>
           <Form.Item
             name='description'
-            label='Description'
-            rules={[{ max: 500, message: 'Description must not exceed 500 characters' }]}
+            label={t('forms.clinicForm.description')}
+            rules={[{ max: 500, message: t('forms.clinicForm.descriptionMaxLength') }]}
           >
             <TextArea
               rows={3}
-              placeholder='Enter clinic description (optional)'
+              placeholder={t('forms.clinicForm.descriptionPlaceholder')}
               maxLength={500}
               showCount
             />

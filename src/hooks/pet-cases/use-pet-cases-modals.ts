@@ -1,5 +1,6 @@
-import { ClinicPetCase } from '@/types/pet-cases';
 import { useCallback, useState } from 'react';
+
+import { ClinicPetCase } from '@/types/pet-cases';
 
 export const usePetCasesModals = () => {
   const [viewModalVisible, setViewModalVisible] = useState(false);
@@ -13,6 +14,11 @@ export const usePetCasesModals = () => {
 
   const handleEditCase = useCallback((caseData: ClinicPetCase) => {
     setSelectedCase(caseData);
+    setEditModalVisible(true);
+  }, []);
+
+  const handleCreateCase = useCallback(() => {
+    setSelectedCase(null);
     setEditModalVisible(true);
   }, []);
 
@@ -37,6 +43,7 @@ export const usePetCasesModals = () => {
     selectedCase,
     handleViewCase,
     handleEditCase,
+    handleCreateCase,
     handleCloseViewModal,
     handleCloseEditModal,
     handleEditSuccess,

@@ -59,7 +59,7 @@ export const EndpointHealthTable: React.FC<EndpointHealthTableProps> = ({
       key: 'status',
       width: 80,
       render: (_: any, record: EndpointStatus) => (
-        <Tag color={getStatusColor(record.status)} icon={getStatusIcon(record.status)}>
+        <Tag bordered={false} color={getStatusColor(record.status)} icon={getStatusIcon(record.status)}>
           {record.status.toUpperCase()}
         </Tag>
       ),
@@ -78,7 +78,7 @@ export const EndpointHealthTable: React.FC<EndpointHealthTableProps> = ({
       key: 'method',
       width: 80,
       render: (_: any, record: EndpointStatus) => (
-        <Tag color='blue' className='font-mono'>
+        <Tag bordered={false} color='blue' className='font-mono'>
           {record.method}
         </Tag>
       ),
@@ -108,7 +108,7 @@ export const EndpointHealthTable: React.FC<EndpointHealthTableProps> = ({
       width: 100,
       render: (_: any, record: EndpointStatus) =>
         record.statusCode ? (
-          <Tag
+          <Tag bordered={false}
             color={
               record.statusCode >= 200 && record.statusCode < 300
                 ? 'success'

@@ -1,13 +1,14 @@
 // Role-based route protection component
 import { Button, Result } from 'antd';
-import React, { useCallback } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import React, { useCallback } from 'react';
 
 import { AuthBackground } from '@/components/common';
 import { ROUTES } from '@/constants';
+import { UserRole } from '@/types';
 import { getAccessibleRoutes } from '@/constants/menu-permissions';
 import { useCurrentUser } from '@/hooks/use-auth';
-import { UserRole } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface RoleProtectedRouteProps {
   children: React.ReactNode;
@@ -20,6 +21,7 @@ const RoleProtectedRoute = ({
   requiredRole,
   fallbackRoute = ROUTES.APPOINTMENTS,
 }: RoleProtectedRouteProps) => {
+  const { t } = useTranslation('components');
   const location = useLocation();
   const navigate = useNavigate();
   const { data: user, isLoading, error } = useCurrentUser();
@@ -35,9 +37,9 @@ const RoleProtectedRoute = ({
   // Show loading while checking authentication
   if (isLoading) {
     return (
-      <AuthBackground variant='gradient'>
+      <AuthBackground variant='default'>
         <div className='text-center'>
-          <div className='text-white text-lg'>Validating access...</div>
+          <div className='text-white text-lg'>{t('auth.validatingAccess')}</div>
         </div>
       </AuthBackground>
     );
@@ -59,19 +61,42 @@ const RoleProtectedRoute = ({
   );
 
   // Check specific role requirement if specified
+  // clinic_admin should not have access to admin-only routes
   if (requiredRole && userRole !== requiredRole) {
+    // Special case: clinic_admin should be able to access some pages but not admin-specific ones
+    const isClinicAdminTryingToAccessAdminRoute =
+      userRole === 'clinic_admin' && requiredRole === 'admin';
+    if (isClinicAdminTryingToAccessAdminRoute) {
+      return (
+        <AuthBackground variant='default'>
+          <Result
+            status='403'
+            title={t('auth.accessDenied')}
+            subTitle={'You do not have permission to access this section'}
+            extra={[
+              <Button type='primary' key='dashboard' onClick={handleGoToDashboard}>
+                {t('auth.goToDashboard')}
+              </Button>,
+              <Button key='fallback' onClick={handleGoToFallback}>
+                {t('auth.goToFallback')}
+              </Button>,
+            ]}
+          />
+        </AuthBackground>
+      );
+    }
     return (
-      <AuthBackground variant='gradient'>
+      <AuthBackground variant='default'>
         <Result
           status='403'
-          title='Access Denied'
-          subTitle={`This page requires ${requiredRole} role. Your role: ${userRole}`}
+          title={t('auth.accessDenied')}
+          subTitle={t('auth.roleRequired', { role: requiredRole, userRole })}
           extra={[
             <Button type='primary' key='dashboard' onClick={handleGoToDashboard}>
-              Go to Dashboard
+              {t('auth.goToDashboard')}
             </Button>,
             <Button key='fallback' onClick={handleGoToFallback}>
-              Go to Fallback
+              {t('auth.goToFallback')}
             </Button>,
           ]}
         />
@@ -82,22 +107,24 @@ const RoleProtectedRoute = ({
   // Check if user has access to the current route based on their role
   if (!hasAccess) {
     // For non-admin users trying to access admin routes, redirect to appointments
-    if (userRole !== 'admin' && (currentPath === '/dashboard' || currentPath === '/settings')) {
+    const isNotValid =
+      userRole !== 'admin' && (currentPath === '/dashboard' || currentPath === '/settings');
+    if (isNotValid) {
       return <Navigate to={ROUTES.APPOINTMENTS} replace />;
     }
 
     return (
-      <AuthBackground variant='gradient'>
+      <AuthBackground variant='default'>
         <Result
           status='403'
-          title='Access Denied'
-          subTitle={`You don't have permission to access this page with your current role (${userRole}).`}
+          title={t('auth.accessDenied')}
+          subTitle={t('auth.noPermissionRole', { role: userRole })}
           extra={[
             <Button type='primary' key='dashboard' onClick={handleGoToDashboard}>
-              Go to Dashboard
+              {t('auth.goToDashboard')}
             </Button>,
             <Button key='fallback' onClick={handleGoToFallback}>
-              Go to Fallback
+              {t('auth.goToFallback')}
             </Button>,
           ]}
         />

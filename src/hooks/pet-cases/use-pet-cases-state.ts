@@ -1,7 +1,14 @@
-import { CaseFilters } from '@/types/pet-cases';
 import { useCallback, useState } from 'react';
 
-export const usePetCasesState = () => {
+import { CaseFilters } from '@/types/pet-cases';
+import { PetCasesService } from '@/services/pet-cases.service';
+import { message } from 'antd';
+
+interface UsePetCasesStateProps {
+  clinicId?: string;
+}
+
+export const usePetCasesState = ({ clinicId }: UsePetCasesStateProps = {}) => {
   const [filters, setFilters] = useState<CaseFilters>({});
   const [page, setPage] = useState(1);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
@@ -31,19 +38,39 @@ export const usePetCasesState = () => {
     setSelectedRowKeys([]);
   }, []);
 
-  const handleCreateCase = useCallback(() => {
-    // TODO: Implement create case modal
-    console.log('Create new case');
-  }, []);
+  const handleExport = useCallback(async () => {
+    if (!clinicId) {
+      message.error('Unable to export: Clinic ID not available');
+      return;
+    }
 
-  const handleExport = useCallback(() => {
-    // TODO: Implement export functionality
-    console.log('Export cases');
-  }, []);
+    try {
+      message.loading({ content: 'Exporting cases...', key: 'export' });
+      const blob = await PetCasesService.exportCases(clinicId, filters, 'csv');
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `pet-cases-export-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      message.success({ content: 'Cases exported successfully', key: 'export' });
+    } catch (error: any) {
+      console.error('Export error:', error);
+      message.error({ content: `Failed to export cases: ${error.message}`, key: 'export' });
+    }
+  }, [clinicId, filters]);
 
   const handleViewStats = useCallback(() => {
-    // TODO: Implement stats modal or redirect to stats page
-    console.log('View detailed statistics');
+    // Stats are already displayed on the page, this can scroll to stats section
+    const statsSection = document.getElementById('pet-cases-stats');
+    if (statsSection) {
+      statsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }, []);
 
   return {
@@ -55,7 +82,6 @@ export const usePetCasesState = () => {
     handleRefresh,
     handleSelectionChange,
     handleResetFilters,
-    handleCreateCase,
     handleExport,
     handleViewStats,
   };

@@ -88,21 +88,21 @@ const ClinicStaffModal = ({ visible, clinic, onClose }: ClinicStaffModalProps) =
         title: 'Role',
         dataIndex: 'role',
         key: 'role',
-        render: (role: ClinicStaff['role']) => <Tag color={roleColorMap[role]}>{role}</Tag>,
+        render: (role: ClinicStaff['role']) => <Tag bordered={false} color={roleColorMap[role]}>{role}</Tag>,
       },
       {
         title: 'Specialization',
         dataIndex: 'specialization',
         key: 'specialization',
         render: (value?: string) =>
-          value ? <Tag color='default'>{value}</Tag> : <Text type='secondary'>-</Text>,
+          value ? <Tag bordered={false} color='default'>{value}</Tag> : <Text type='secondary'>-</Text>,
       },
       {
         title: 'Status',
         dataIndex: 'isActive',
         key: 'isActive',
         render: (isActive: boolean) => (
-          <Tag color={isActive ? 'success' : 'default'}>{isActive ? 'Active' : 'Inactive'}</Tag>
+          <Tag bordered={false} color={isActive ? 'success' : 'default'}>{isActive ? 'Active' : 'Inactive'}</Tag>
         ),
       },
       {

@@ -7,10 +7,8 @@ import { SchedulingSectionProps } from './types';
 const { Option } = Select;
 
 export const SchedulingSection: FC<SchedulingSectionProps> = ({ 
-  form, 
   priorities, 
-  statuses, 
-  currentDate = dayjs() 
+  statuses
 }) => {
   return (
     <div className='space-y-4'>

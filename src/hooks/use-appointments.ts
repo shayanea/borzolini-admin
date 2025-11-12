@@ -1,3 +1,4 @@
+import { useClinicContext } from '@/hooks/use-clinic-context';
 import AppointmentsService, {
   type AppointmentStats,
   type CreateAppointmentData,
@@ -8,7 +9,7 @@ import type { Appointment, AppointmentStatus } from '@/types';
 import type { AppointmentsFilters } from '@/types/appointments';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 export interface UseAppointmentsReturn {
   appointments: Appointment[];
@@ -52,18 +53,31 @@ export const useAppointments = (): UseAppointmentsReturn => {
 
   // Get authentication state from the store
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+  const { clinicContext } = useClinicContext();
   const queryClient = useQueryClient();
+
+  // Automatically add clinicId filter for clinic_admin users
+  const effectiveFilters = useMemo(() => {
+    const effectiveFiltersWithClinic = { ...filters };
+
+    // If user is clinic_admin and has a clinicId, add it to filters
+    if (clinicContext?.shouldFilterByClinic && clinicContext?.clinicId && !filters.clinic_id) {
+      effectiveFiltersWithClinic.clinic_id = clinicContext.clinicId;
+    }
+
+    return effectiveFiltersWithClinic;
+  }, [filters, clinicContext]);
 
   // Convert filters to API format
   const getApiFilters = useCallback(() => {
-    const apiFilters: any = { ...filters };
-    if (filters.dateRange && filters.dateRange.length === 2) {
-      apiFilters.date_from = filters.dateRange[0];
-      apiFilters.date_to = filters.dateRange[1];
+    const apiFilters: any = { ...effectiveFilters };
+    if (effectiveFilters.dateRange && effectiveFilters.dateRange.length === 2) {
+      apiFilters.date_from = effectiveFilters.dateRange[0];
+      apiFilters.date_to = effectiveFilters.dateRange[1];
       delete apiFilters.dateRange;
     }
     return apiFilters;
-  }, [filters]);
+  }, [effectiveFilters]);
 
   // Query for appointments
   const {
@@ -72,7 +86,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
     error: queryError,
     refetch: refetchAppointments,
   } = useQuery({
-    queryKey: ['appointments', filters, pagination.current, pagination.pageSize],
+    queryKey: ['appointments', effectiveFilters, pagination.current, pagination.pageSize],
     queryFn: async () => {
       if (!isAuthenticated) return { appointments: [], total: 0 };
 

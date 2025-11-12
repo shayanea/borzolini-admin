@@ -5,7 +5,7 @@ import { AdditionalInfoSectionProps } from './types';
 
 const { TextArea } = Input;
 
-export const AdditionalInfoSection: FC<AdditionalInfoSectionProps> = ({ form }) => {
+export const AdditionalInfoSection: FC<AdditionalInfoSectionProps> = () => {
   return (
     <div className='space-y-4'>
       <Form.Item

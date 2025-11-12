@@ -1,4 +1,9 @@
 import { DEFAULT_SORT_FIELD, DEFAULT_SORT_ORDER } from '@/constants/user-management';
+import UsersService, {
+  CreateUserData,
+  UpdateUserData,
+  UsersQueryParams,
+} from '@/services/users.service';
 import type { PaginatedResponse, User, UserRole } from '@/types';
 import {
   QueryObserverResult,
@@ -7,11 +12,6 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import UsersService, {
-  CreateUserData,
-  UpdateUserData,
-  UsersQueryParams,
-} from '@/services/users.service';
 import { useCallback, useState } from 'react';
 
 import { message as antMessage } from 'antd';
@@ -247,6 +247,13 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   // Handle form submission
   const handleSubmit = useCallback(
     async (values: any) => {
+      // Convert dateOfBirth if it's a dayjs object
+      const dateOfBirth = values.dateOfBirth
+        ? typeof values.dateOfBirth === 'string'
+          ? values.dateOfBirth
+          : values.dateOfBirth.format('YYYY-MM-DD')
+        : undefined;
+
       if (editingUser) {
         // Update existing user
         const updateData: UpdateUserData = {
@@ -256,6 +263,9 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
           address: values.address,
           city: values.city,
           country: values.country,
+          postalCode: values.postalCode,
+          dateOfBirth: dateOfBirth,
+          avatar: values.avatar,
           role: values.role,
           isActive: values.isActive,
           isEmailVerified: values.isEmailVerified,

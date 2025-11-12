@@ -1,17 +1,19 @@
-import { Button, Space, Tag, Tooltip, Dropdown, Modal, Table } from 'antd';
-import { 
-  EditOutlined, 
-  DeleteOutlined, 
-  EyeOutlined, 
-  MoreOutlined,
-  MessageOutlined,
+import { Button, Dropdown, Modal, Space, Table, Tag, Tooltip } from 'antd';
+import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
-  ExclamationCircleOutlined
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+  EyeOutlined,
+  MessageOutlined,
+  MoreOutlined,
 } from '@ant-design/icons';
+
 import type { ColumnsType } from 'antd/es/table';
 import type { Contact } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface ContactTableProps {
   contacts: Contact[];
@@ -62,36 +64,53 @@ export const ContactTable = ({
   onUpdateStatus,
   onRespond,
 }: ContactTableProps) => {
+  const { t } = useTranslation('components');
+
+  const getStatusLabel = (status: Contact['status']) => {
+    switch (status) {
+      case 'pending':
+        return t('contactTable.pending');
+      case 'in_progress':
+        return t('contactTable.inProgress');
+      case 'resolved':
+        return t('contactTable.resolved');
+      case 'closed':
+        return t('contactTable.closed');
+      default:
+        return status;
+    }
+  };
+
   const handleStatusChange = (id: string, status: Contact['status']) => {
     Modal.confirm({
-      title: 'Update Status',
-      content: `Are you sure you want to change the status to ${status}?`,
+      title: t('contactTable.updateStatus'),
+      content: t('contactTable.confirmStatusChange', { status: getStatusLabel(status) }),
       onOk: () => onUpdateStatus(id, status),
     });
   };
 
   const columns: ColumnsType<Contact> = [
     {
-      title: 'Name',
+      title: t('contactTable.name'),
       dataIndex: 'name',
       key: 'name',
       width: 150,
       render: (text: string, record: Contact) => (
         <div>
-          <div className="font-medium">{text}</div>
-          <div className="text-sm text-gray-500">{record.email}</div>
+          <div className='font-medium'>{text}</div>
+          <div className='text-sm text-gray-500'>{record.email}</div>
         </div>
       ),
     },
     {
-      title: 'Subject',
+      title: t('contactTable.subject'),
       dataIndex: 'subject',
       key: 'subject',
       width: 200,
       ellipsis: true,
     },
     {
-      title: 'Message',
+      title: t('contactTable.message'),
       dataIndex: 'message',
       key: 'message',
       width: 300,
@@ -103,70 +122,62 @@ export const ContactTable = ({
       ),
     },
     {
-      title: 'Status',
+      title: t('contactTable.status'),
       dataIndex: 'status',
       key: 'status',
       width: 120,
       render: (status: Contact['status']) => (
-        <Tag color={getStatusColor(status)} icon={getStatusIcon(status)}>
-          {status.replace('_', ' ').toUpperCase()}
+        <Tag bordered={false} color={getStatusColor(status)} icon={getStatusIcon(status)}>
+          {getStatusLabel(status)}
         </Tag>
       ),
     },
     {
-      title: 'Date',
+      title: t('contactTable.date'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       width: 120,
       render: (date: string) => new Date(date).toLocaleDateString(),
     },
     {
-      title: 'Actions',
+      title: t('contactTable.actions'),
       key: 'actions',
       width: 120,
       render: (_, record: Contact) => (
-        <Space size="small">
-          <Tooltip title="View Details">
-            <Button
-              type="text"
-              icon={<EyeOutlined />}
-              onClick={() => onView(record)}
-            />
+        <Space size='small'>
+          <Tooltip title={t('contactTable.viewDetails')}>
+            <Button type='text' icon={<EyeOutlined />} onClick={() => onView(record)} />
           </Tooltip>
-          <Tooltip title="Respond">
-            <Button
-              type="text"
-              icon={<MessageOutlined />}
-              onClick={() => onRespond(record)}
-            />
+          <Tooltip title={t('contactTable.respond')}>
+            <Button type='text' icon={<MessageOutlined />} onClick={() => onRespond(record)} />
           </Tooltip>
           <Dropdown
             menu={{
               items: [
                 {
                   key: 'edit',
-                  label: 'Edit',
+                  label: t('contactTable.edit'),
                   icon: <EditOutlined />,
                   onClick: () => onEdit(record),
                 },
                 {
                   key: 'status-pending',
-                  label: 'Mark as Pending',
+                  label: t('contactTable.markAsPending'),
                   onClick: () => handleStatusChange(record.id, 'pending'),
                 },
                 {
                   key: 'status-in-progress',
-                  label: 'Mark as In Progress',
+                  label: t('contactTable.markAsInProgress'),
                   onClick: () => handleStatusChange(record.id, 'in_progress'),
                 },
                 {
                   key: 'status-resolved',
-                  label: 'Mark as Resolved',
+                  label: t('contactTable.markAsResolved'),
                   onClick: () => handleStatusChange(record.id, 'resolved'),
                 },
                 {
                   key: 'status-closed',
-                  label: 'Mark as Closed',
+                  label: t('contactTable.markAsClosed'),
                   onClick: () => handleStatusChange(record.id, 'closed'),
                 },
                 {
@@ -174,7 +185,7 @@ export const ContactTable = ({
                 },
                 {
                   key: 'delete',
-                  label: 'Delete',
+                  label: t('contactTable.delete'),
                   icon: <DeleteOutlined />,
                   danger: true,
                   onClick: () => onDelete(record.id),
@@ -183,7 +194,7 @@ export const ContactTable = ({
             }}
             trigger={['click']}
           >
-            <Button type="text" icon={<MoreOutlined />} />
+            <Button type='text' icon={<MoreOutlined />} />
           </Dropdown>
         </Space>
       ),
@@ -191,15 +202,15 @@ export const ContactTable = ({
   ];
 
   return (
-    <div className="contact-table">
+    <div className='contact-table'>
       <Table
         columns={columns}
         dataSource={contacts}
         loading={loading}
-        rowKey="id"
+        rowKey='id'
         pagination={false}
         scroll={{ x: 1000 }}
-        size="small"
+        size='small'
       />
     </div>
   );

@@ -9,6 +9,9 @@ export interface User {
   address?: string;
   city?: string;
   country?: string;
+  postalCode?: string;
+  dateOfBirth?: string;
+  avatar?: string;
   isEmailVerified?: boolean;
   isPhoneVerified?: boolean;
   profileCompletionPercentage?: number;
@@ -21,6 +24,17 @@ export interface User {
   verified?: boolean;
   profileCompletion?: number;
   timestamp?: string;
+
+  // Clinic context (for clinic_admin and staff users)
+  clinicId?: string;
+  clinic_id?: string;
+  clinic?: {
+    id: string;
+    name: string;
+    address?: string;
+    city?: string;
+    phone?: string;
+  };
 
   // Admin-specific properties (only present when accessed by admin)
   isAdminView?: boolean;
@@ -45,7 +59,7 @@ export interface AdminUserProperties {
   priority: 'low' | 'normal' | 'high' | 'urgent';
 }
 
-export type UserRole = 'admin' | 'veterinarian' | 'staff' | 'patient';
+export type UserRole = 'admin' | 'veterinarian' | 'staff' | 'patient' | 'clinic_admin';
 export type AccountStatus = 'active' | 'inactive' | 'suspended' | 'pending';
 
 // Authentication Types
@@ -305,6 +319,27 @@ export interface DashboardStats {
   averageAppointmentDuration: number;
   recentActivity: RecentActivityItem[];
   topPerformingClinics: TopPerformingClinic[];
+  // Pet Cases data
+  petCases?: {
+    total: number;
+    urgent: number;
+    resolved: number;
+    open: number;
+    inProgress: number;
+    byType: Record<string, number>;
+    recentCases: PetCaseSummary[];
+  };
+}
+
+export interface PetCaseSummary {
+  id: string;
+  case_number: string;
+  title: string;
+  status: string;
+  priority: string;
+  pet_name: string;
+  clinic_name: string;
+  created_at: string;
 }
 
 export interface RecentActivityItem {

@@ -1,11 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { CACHE_PRESETS } from '@/constants';
-import { useAuth } from '@/hooks/use-auth';
-import DashboardService from '@/services/dashboard.service';
 import type { DashboardFilters } from '@/types/dashboard';
+import DashboardService from '@/services/dashboard.service';
 import { message } from 'antd';
+import { useAuth } from '@/hooks/use-auth';
+import { useClinicContext } from '@/hooks/use-clinic-context';
 
 // Query keys for React Query
 const DASHBOARD_KEYS = {
@@ -16,8 +17,37 @@ const DASHBOARD_KEYS = {
 
 export const useDashboard = () => {
   const { isAuthenticated } = useAuth();
+  const { clinicContext } = useClinicContext();
   const queryClient = useQueryClient();
   const [filters, setFilters] = useState<DashboardFilters>({});
+
+  // Automatically add clinicId filter for clinic_admin users
+  const effectiveFilters = useMemo(() => {
+    const effectiveFiltersWithClinic = { ...filters };
+
+    // If user is clinic_admin and has a clinicId, add it to filters
+    const isClinicAdmin = clinicContext?.shouldFilterByClinic;
+    const hasClinicId = clinicContext?.clinicId;
+    const notAlreadyFiltered = !filters.clinicId;
+    const shouldAddClinicFilter = isClinicAdmin && hasClinicId && notAlreadyFiltered;
+
+    if (shouldAddClinicFilter) {
+      console.log('🔄 Dashboard: Adding clinicId filter for clinic_admin', {
+        clinicId: clinicContext.clinicId,
+        clinicName: clinicContext.clinicName,
+      });
+      effectiveFiltersWithClinic.clinicId = clinicContext.clinicId;
+    } else {
+      console.log('🔄 Dashboard: Not adding clinicId filter', {
+        isClinicAdmin,
+        hasClinicId,
+        notAlreadyFiltered,
+        clinicId: clinicContext?.clinicId,
+      });
+    }
+
+    return effectiveFiltersWithClinic;
+  }, [filters, clinicContext]);
 
   // Main dashboard stats query
   const {
@@ -26,9 +56,9 @@ export const useDashboard = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: DASHBOARD_KEYS.stats(filters),
+    queryKey: DASHBOARD_KEYS.stats(effectiveFilters),
     queryFn: async () => {
-      const result = await DashboardService.getDashboardStats(filters);
+      const result = await DashboardService.getDashboardStats(effectiveFilters);
       return result;
     },
     enabled: isAuthenticated,
@@ -49,9 +79,9 @@ export const useDashboard = () => {
     isLoading: chartsLoading,
     error: chartsError,
   } = useQuery({
-    queryKey: DASHBOARD_KEYS.charts(filters),
+    queryKey: DASHBOARD_KEYS.charts(effectiveFilters),
     queryFn: async () => {
-      const result = await DashboardService.getDashboardCharts(filters);
+      const result = await DashboardService.getDashboardCharts(effectiveFilters);
       return result;
     },
     enabled: isAuthenticated,
@@ -70,15 +100,15 @@ export const useDashboard = () => {
     mutationFn: async () => {
       // Refresh both stats and charts
       const [stats, charts] = await Promise.all([
-        DashboardService.getDashboardStats(filters),
-        DashboardService.getDashboardCharts(filters),
+        DashboardService.getDashboardStats(effectiveFilters),
+        DashboardService.getDashboardCharts(effectiveFilters),
       ]);
       return { stats, charts };
     },
     onSuccess: ({ stats, charts }) => {
       // Update the cache with new data
-      queryClient.setQueryData(DASHBOARD_KEYS.stats(filters), stats);
-      queryClient.setQueryData(DASHBOARD_KEYS.charts(filters), charts);
+      queryClient.setQueryData(DASHBOARD_KEYS.stats(effectiveFilters), stats);
+      queryClient.setQueryData(DASHBOARD_KEYS.charts(effectiveFilters), charts);
       message.success('Dashboard data refreshed successfully');
     },
     onError: (error: any) => {

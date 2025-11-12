@@ -22,6 +22,7 @@ export interface CalendarAppointment {
 export interface CalendarFilters {
   // Basic filters
   veterinarianIds?: string[];
+  clinicId?: string; // Added for clinic-specific filtering
   petTypes?: string[];
   status?: 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no-show';
   includeCancelled?: boolean;

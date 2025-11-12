@@ -61,10 +61,27 @@ export interface ClinicService {
 export interface ClinicStaff {
   id: string;
   userId: string;
+  // Backend may return broader roles (e.g., 'admin', 'assistant').
+  // Keep existing known roles but allow arbitrary strings via fallback field below.
   role: 'veterinarian' | 'nurse' | 'receptionist' | 'technician';
   specialization?: string;
   isActive: boolean;
   joinedAt: string;
+
+  // Optional enriched fields sometimes returned by the staff endpoint
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
+  profilePhotoUrl?: string;
+  // Some APIs use different role labels; keep as display-only without changing strict union above
+  displayRole?: string;
+  experienceYears?: number;
+  education?: string[];
+  certifications?: string[] | null;
+  bio?: string;
+  hireDate?: string;
+  terminationDate?: string | null;
 }
 
 export interface ClinicPhoto {

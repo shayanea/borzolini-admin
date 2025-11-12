@@ -1,6 +1,7 @@
 // Role-based menu permissions and configurations
 import {
   BarChartOutlined,
+  CalendarOutlined,
   DashboardOutlined,
   ExperimentOutlined,
   FileTextOutlined,
@@ -10,10 +11,12 @@ import {
   MonitorOutlined,
   SettingOutlined,
   StarOutlined,
+  TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 
 import React from 'react';
+import { SoonBadge } from '@/components/shared/soon-badge';
 import { UserRole } from '../types';
 
 // Menu item interface
@@ -46,6 +49,13 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     roles: ['admin', 'veterinarian', 'staff', 'patient'],
   },
   {
+    key: '/calendar',
+    label: 'Calendar',
+    icon: React.createElement(CalendarOutlined),
+    onClick: () => {},
+    roles: ['clinic_admin', 'staff'],
+  },
+  {
     key: '/clinics',
     label: 'Clinics',
     icon: React.createElement(MedicineBoxOutlined),
@@ -60,11 +70,18 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     roles: ['admin'],
   },
   {
+    key: '/patients',
+    label: 'Patients',
+    icon: React.createElement(UserOutlined),
+    onClick: () => {},
+    roles: ['clinic_admin', 'staff'],
+  },
+  {
     key: '/veterinarians',
     label: 'Veterinarians',
-    icon: React.createElement(ExperimentOutlined),
+    icon: React.createElement(TeamOutlined),
     onClick: () => {},
-    roles: ['admin'],
+    roles: [],
   },
   {
     key: '/pets',
@@ -78,36 +95,38 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     label: 'Pet Cases',
     icon: React.createElement(FileTextOutlined),
     onClick: () => {},
-    roles: ['admin', 'veterinarian', 'staff'],
-    hidden: true,
+    roles: ['veterinarian', 'staff'],
+  },
+  {
+    key: '/staff',
+    label: 'Staff',
+    icon: React.createElement(TeamOutlined),
+    onClick: () => {},
+    roles: ['clinic_admin'],
   },
   {
     key: '/reports',
     label: (
-      <div className='relative'>
+      <div className='relative flex items-center gap-2'>
         <span>Reports</span>
-        <span className='absolute top-2 -right-0 text-xs bg-orange-100 text-orange-600 p-1 rounded-md'>
-          Soon
-        </span>
+        <SoonBadge />
       </div>
     ),
     icon: React.createElement(BarChartOutlined),
     onClick: () => {},
-    roles: ['admin', 'veterinarian', 'staff'],
+    roles: ['admin'],
   },
   {
     key: '/reviews',
     label: (
-      <div className='relative'>
+      <div className='relative flex items-center gap-2'>
         <span>Reviews</span>
-        <span className='absolute top-2 -right-0 text-xs bg-orange-100 text-orange-600 p-1 rounded-md'>
-          Soon
-        </span>
+        <SoonBadge />
       </div>
     ),
     icon: React.createElement(StarOutlined),
     onClick: () => {},
-    roles: ['admin', 'veterinarian', 'staff', 'patient'],
+    roles: ['admin'],
   },
   {
     key: '/contacts',
@@ -119,11 +138,9 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
   {
     key: '/api-health',
     label: (
-      <div className='relative'>
+      <div className='relative flex items-center gap-2'>
         <span>API Health</span>
-        <span className='absolute top-2 -right-0 text-xs bg-orange-100 text-orange-600 p-1 rounded-md'>
-          Soon
-        </span>
+        <SoonBadge />
       </div>
     ),
     icon: React.createElement(MonitorOutlined),
@@ -156,6 +173,19 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
 // Role-based menu configurations
 export const MENU_ITEMS: Record<UserRole, MenuItemConfig[]> = {
   admin: ALL_MENU_ITEMS.filter(item => item.roles.includes('admin')),
+  // clinic_admin should only see pages related to their clinic (not admin pages like clinics, users, settings)
+  clinic_admin: ALL_MENU_ITEMS.filter(
+    item =>
+      item.roles.includes('veterinarian') ||
+      item.roles.includes('staff') ||
+      item.key === '/dashboard' ||
+      item.key === '/appointments' ||
+      item.key === '/calendar' ||
+      item.key === '/pets' ||
+      item.key === '/pet-cases' ||
+      item.key === '/staff' ||
+      item.key === '/profile'
+  ),
   veterinarian: ALL_MENU_ITEMS.filter(item => item.roles.includes('veterinarian')),
   staff: ALL_MENU_ITEMS.filter(item => item.roles.includes('staff')),
   patient: ALL_MENU_ITEMS.filter(item => item.roles.includes('patient')),

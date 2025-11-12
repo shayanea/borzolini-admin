@@ -9,6 +9,7 @@ import {
 import { Card } from 'antd';
 import { UserRole } from '@/types';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useUserManagement } from '@/hooks';
 
 interface UsersProps {
@@ -16,6 +17,7 @@ interface UsersProps {
 }
 
 const Users = ({ roleFilter }: UsersProps) => {
+  const { t } = useTranslation('pages');
   const {
     // State
     users,
@@ -69,11 +71,9 @@ const Users = ({ roleFilter }: UsersProps) => {
         onExportExcel={handleExportExcel}
         onAddUser={handleAddUser}
         loading={loading}
-        title={roleFilter === 'veterinarian' ? 'Veterinarians' : 'Users'}
+        title={roleFilter === 'veterinarian' ? t('users.veterinarians') : t('users.title')}
         subtitle={
-          roleFilter === 'veterinarian'
-            ? 'Manage clinic veterinarians'
-            : 'Manage clinic users and staff members'
+          roleFilter === 'veterinarian' ? t('users.manageVeterinarians') : t('users.manageUsers')
         }
         filters={{
           search: searchText,

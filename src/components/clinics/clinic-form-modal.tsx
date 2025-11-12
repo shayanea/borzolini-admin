@@ -1,13 +1,14 @@
-import { Form, Modal, Typography } from 'antd';
-import { useEffect } from 'react';
-
-import type { Clinic } from '@/types';
 import {
   BasicInfoSection,
   ContactInfoSection,
   LocationSection,
   StatusSection,
 } from './clinic-form-sections';
+import { Form, Modal, Typography } from 'antd';
+
+import type { Clinic } from '@/types';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const { Title } = Typography;
 
@@ -46,10 +47,11 @@ const ClinicFormModal = ({
   loading = false,
   editingClinic,
 }: ClinicFormModalProps) => {
+  const { t } = useTranslation('components');
   const [form] = Form.useForm<ClinicFormValues>();
 
   const isEditing = !!editingClinic;
-  const title = isEditing ? 'Edit Clinic' : 'Add New Clinic';
+  const title = isEditing ? t('modals.clinicForm.titleEdit') : t('modals.clinicForm.titleAdd');
 
   useEffect(() => {
     if (visible && editingClinic) {
@@ -104,8 +106,8 @@ const ClinicFormModal = ({
       confirmLoading={loading}
       width={800}
       destroyOnHidden
-      okText={isEditing ? 'Update' : 'Create'}
-      cancelText='Cancel'
+      okText={isEditing ? t('forms.common.update') : t('forms.common.create')}
+      cancelText={t('forms.common.cancel')}
     >
       <Form
         form={form}
