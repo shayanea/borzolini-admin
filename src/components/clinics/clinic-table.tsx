@@ -73,7 +73,7 @@ const ClinicTable = ({
           <div className='flex-1 min-w-0'>
             <Link
               className='font-semibold text-slate-800 hover:text-slate-900 block'
-              href={`${ROUTES.CLINIC_VIEW}/${record.id}`}
+              href={`${ROUTES.CLINICS}/${record.id}`}
             >
               <Text ellipsis={{ tooltip: name }} className='text-base'>
                 {name}

@@ -18,7 +18,7 @@ import {
 import { DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 
-import type { AppointmentDetailsModalProps } from '@/types/calendar-modals';
+import type { AppointmentDetailsModalProps, CalendarPet, Service } from '@/types/calendar-modals';
 import type { UpdateAppointmentData } from '@/services/appointments.service';
 import dayjs from 'dayjs';
 import { useCalendarFormData } from '@/hooks/calendar/use-calendar-form-data';
@@ -203,8 +203,8 @@ const AppointmentDetailsModal = ({
     { value: 'waiting', label: 'Waiting' },
   ];
 
-  const pets: any = [];
-  const services: any = [];
+  const pets: CalendarPet[] = [];
+  const services: Service[] = [];
 
   if (!appointment) return null;
 
@@ -272,7 +272,7 @@ const AppointmentDetailsModal = ({
                           .includes(input.toLowerCase())
                       }
                     >
-                      {pets.map(pet => (
+                      {pets.map((pet: CalendarPet) => (
                         <Option key={pet.id} value={pet.id}>
                           {pet.name} ({pet.type}) - {pet.ownerName}
                         </Option>
@@ -320,7 +320,7 @@ const AppointmentDetailsModal = ({
                           .includes(input.toLowerCase())
                       }
                     >
-                      {services.map(service => (
+                      {services.map((service: Service) => (
                         <Option key={service.id} value={service.id}>
                           {service.name} - ${service.price} ({service.duration}min)
                         </Option>

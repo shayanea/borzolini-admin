@@ -184,21 +184,21 @@ export const COMMON_BREEDS: Record<string, string[]> = {
 
 // Helper functions to convert constants to options for dropdowns
 export const getPetSpeciesOptions = () => {
-  return Object.entries(PET_SPECIES).map(([_, value]) => ({
+  return Object.entries(PET_SPECIES).map(([, value]) => ({
     value,
     label: value.charAt(0).toUpperCase() + value.slice(1).replace('_', ' '),
   }));
 };
 
 export const getPetGenderOptions = () => {
-  return Object.entries(PET_GENDERS).map(([_, value]) => ({
+  return Object.entries(PET_GENDERS).map(([, value]) => ({
     value,
     label: value.charAt(0).toUpperCase() + value.slice(1),
   }));
 };
 
 export const getPetSizeOptions = () => {
-  return Object.entries(PET_SIZES).map(([_, value]) => ({
+  return Object.entries(PET_SIZES).map(([, value]) => ({
     value,
     label: value.charAt(0).toUpperCase() + value.slice(1),
   }));

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PaginationProps } from 'antd';
 
 import { useCurrentUser } from '@/hooks/use-auth';
 import { usePetCasesState } from './use-pet-cases-state';

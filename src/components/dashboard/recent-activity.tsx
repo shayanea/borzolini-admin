@@ -5,7 +5,7 @@ import {
   HomeOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Card, Empty, List, Typography } from 'antd';
+import { Card, List, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import type { DashboardStats } from '@/types';

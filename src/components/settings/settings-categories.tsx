@@ -1,14 +1,10 @@
-import { Card, Col, Row, Button } from 'antd';
+import { Button, Card, Col, Row } from 'antd';
+import { CreditCardOutlined, GlobalOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
+
 import { useTranslation } from 'react-i18next';
-import {
-  GlobalOutlined,
-  UserOutlined,
-  CreditCardOutlined,
-  LockOutlined,
-} from '@ant-design/icons';
 
 interface SettingsCategory {
-  icon: JSX.Element;
+  icon: React.ReactNode;
   title: string;
   description: string;
   color: string;

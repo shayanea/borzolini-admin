@@ -1,16 +1,10 @@
-/**
- * Appointment Information Card for Appointment View Modal
- */
-
-import { Card, Descriptions, Select, Tag } from 'antd';
-import type { Appointment } from '@/types';
 import { APPOINTMENT_PRIORITIES, APPOINTMENT_STATUSES } from '@/constants/appointments';
-import {
-  getAppointmentPriorityColor,
-  getAppointmentStatusColor,
-} from '@/utils/color-helpers';
-import dayjs from 'dayjs';
+import { Card, Descriptions, Select, Tag } from 'antd';
+import { getAppointmentPriorityColor, getAppointmentStatusColor } from '@/utils/color-helpers';
+
+import type { Appointment } from '@/types';
 import { FC } from 'react';
+import dayjs from 'dayjs';
 
 const { Option } = Select;
 
@@ -51,7 +45,7 @@ export const AppointmentInfoCard: FC<AppointmentInfoCardProps> = ({
               onChange={value => onFieldChange('status', value)}
               style={{ width: 120 }}
             >
-              {Object.entries(APPOINTMENT_STATUSES).map(([_, value]) => (
+              {Object.entries(APPOINTMENT_STATUSES).map(([, value]) => (
                 <Option key={value} value={value}>
                   {value
                     .split('_')
@@ -73,7 +67,7 @@ export const AppointmentInfoCard: FC<AppointmentInfoCardProps> = ({
               onChange={value => onFieldChange('priority', value)}
               style={{ width: 120 }}
             >
-              {Object.entries(APPOINTMENT_PRIORITIES).map(([_, value]) => (
+              {Object.entries(APPOINTMENT_PRIORITIES).map(([, value]) => (
                 <Option key={value} value={value}>
                   {value.charAt(0).toUpperCase() + value.slice(1)}
                 </Option>
@@ -102,4 +96,3 @@ export const AppointmentInfoCard: FC<AppointmentInfoCardProps> = ({
     </Card>
   );
 };
-

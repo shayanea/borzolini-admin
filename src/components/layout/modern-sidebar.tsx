@@ -1,5 +1,6 @@
 import {
   BarChart,
+  BookOpen,
   Building2,
   CalendarDays,
   ChevronLeft,
@@ -8,6 +9,7 @@ import {
   FileText,
   FlaskConical,
   HeartPulse,
+  Home,
   LayoutDashboard,
   Mail,
   MessageSquare,
@@ -43,6 +45,9 @@ const iconMap: Record<string, any> = {
   '/api-health': Monitor,
   '/role-demo': FlaskConical,
   '/settings': SettingsIcon,
+  '/admin/resources': FileText,
+  '/admin/training': BookOpen,
+  '/admin/household-safety': Home,
 };
 
 interface ModernSidebarProps {

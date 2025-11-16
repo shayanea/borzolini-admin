@@ -12,6 +12,15 @@ export interface JWTPayload {
   [key: string]: any;
 }
 
+// Safe base64 decode that works in both browser and Node environments
+function base64Decode(input: string): string {
+  if (typeof window !== 'undefined' && typeof window.atob === 'function') {
+    return window.atob(input);
+  }
+  // Node.js / non-browser fallback
+  return Buffer.from(input, 'base64').toString('binary');
+}
+
 /**
  * Safely decode a JWT token payload without verification
  * Note: This is for reading expiration time only, not for authentication
@@ -35,8 +44,8 @@ export function decodeJWT(token: string): JWTPayload | null {
     // Add padding if needed for base64 decoding
     const paddedPayload = payload + '='.repeat((4 - (payload.length % 4)) % 4);
 
-    // Decode base64
-    const decodedPayload = atob(paddedPayload);
+    // Decode base64 (handles browser and Node)
+    const decodedPayload = base64Decode(paddedPayload);
 
     // Parse JSON
     const parsedPayload = JSON.parse(decodedPayload) as JWTPayload;

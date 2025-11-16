@@ -1,9 +1,19 @@
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
-import { DeleteOutlined, EditOutlined, EyeOutlined, PhoneOutlined } from '@ant-design/icons';
-import { ROLE_COLORS, TABLE_PAGE_SIZES, USER_TABLE_COLUMNS } from '@/constants';
+import { Avatar, Button, Space, Table, Tag, Tooltip } from 'antd';
+import {
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  CloseCircleOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  EnvironmentOutlined,
+  EyeOutlined,
+  PhoneOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { TABLE_PAGE_SIZES, USER_TABLE_COLUMNS } from '@/constants';
 import type { User, UserTableProps } from '@/types';
+
 import { useTranslation } from 'react-i18next';
-import { CheckCircleOutlined, ClockCircleOutlined, EnvironmentOutlined, UserOutlined } from '@ant-design/icons';
 
 const UserTable = ({
   users,
@@ -45,9 +55,7 @@ const UserTable = ({
             <div className='font-semibold text-sm text-slate-800 truncate'>
               {user.firstName} {user.lastName}
             </div>
-            <div className='text-xs text-slate-600'>
-              {user.email}
-            </div>
+            <div className='text-xs text-slate-600'>{user.email}</div>
             {user.phone && (
               <div className='text-xs text-slate-500 flex items-center gap-1'>
                 <PhoneOutlined className='text-slate-400' />
@@ -63,7 +71,6 @@ const UserTable = ({
       key: USER_TABLE_COLUMNS.ROLE,
       width: 160,
       render: (user: User) => {
-        const color = ROLE_COLORS[user.role] || 'default';
         const roleColors = {
           admin: { bg: '#fee2e2', text: '#dc2626', border: '#fca5a5' },
           veterinarian: { bg: '#d1fae5', text: '#047857', border: '#a7f3d0' },
@@ -71,11 +78,11 @@ const UserTable = ({
           patient: { bg: '#fef3c7', text: '#d97706', border: '#fcd34d' },
           default: { bg: '#f1f5f9', text: '#475569', border: '#cbd5e1' },
         };
-        
+
         const style = roleColors[user.role as keyof typeof roleColors] || roleColors.default;
-        
+
         return (
-          <Tag 
+          <Tag
             className='!border-0 !px-3 !py-1.5 !rounded-full font-medium shadow-sm'
             style={{
               backgroundColor: style.bg,
@@ -95,11 +102,13 @@ const UserTable = ({
       render: (user: User) => (
         <div className='space-y-2'>
           {/* Email Verification */}
-          <div className={`px-3 py-1.5 rounded-full font-medium text-sm shadow-sm flex items-center justify-center ${
-            user.isEmailVerified 
-              ? 'bg-green-100 text-green-800 border border-green-200' 
-              : 'bg-red-100 text-red-800 border border-red-200'
-          }`}>
+          <div
+            className={`px-3 py-1.5 rounded-full font-medium text-sm shadow-sm flex items-center justify-center ${
+              user.isEmailVerified
+                ? 'bg-green-100 text-green-800 border border-green-200'
+                : 'bg-red-100 text-red-800 border border-red-200'
+            }`}
+          >
             {user.isEmailVerified ? (
               <>
                 <CheckCircleOutlined className='text-green-600 mr-1 text-xs' />
@@ -112,13 +121,15 @@ const UserTable = ({
               </>
             )}
           </div>
-          
+
           {/* Account Status */}
-          <div className={`px-3 py-1.5 rounded-full font-medium text-sm shadow-sm flex items-center justify-center ${
-            user.isActive 
-              ? 'bg-green-100 text-green-800 border border-green-200' 
-              : 'bg-slate-100 text-slate-600 border border-slate-200'
-          }`}>
+          <div
+            className={`px-3 py-1.5 rounded-full font-medium text-sm shadow-sm flex items-center justify-center ${
+              user.isActive
+                ? 'bg-green-100 text-green-800 border border-green-200'
+                : 'bg-slate-100 text-slate-600 border border-slate-200'
+            }`}
+          >
             {user.isActive ? (
               <>
                 <CheckCircleOutlined className='text-green-600 mr-1 text-xs' />
@@ -143,7 +154,9 @@ const UserTable = ({
           {user.city && user.country ? (
             <div className='flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200'>
               <EnvironmentOutlined className='text-slate-500 text-xs' />
-              <span className='text-slate-700 font-medium'>{user.city}, {user.country}</span>
+              <span className='text-slate-700 font-medium'>
+                {user.city}, {user.country}
+              </span>
             </div>
           ) : (
             <div className='text-xs text-slate-500 bg-slate-50 px-2 py-1 rounded-md inline-block'>
@@ -157,7 +170,7 @@ const UserTable = ({
       title: t('userTable.actions'),
       key: USER_TABLE_COLUMNS.ACTIONS,
       width: 140,
-      align: 'center',
+      align: 'center' as const,
       render: (user: User) => {
         const { handleViewUser, handleEditUser, handleDeleteUser } = createActionHandlers(user);
 

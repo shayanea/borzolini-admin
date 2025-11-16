@@ -1,13 +1,13 @@
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
+import { Avatar, Button, Space, Table, Tag, Tooltip } from 'antd';
 import {
+  CheckCircleOutlined,
+  ClockCircleOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
+  HeartOutlined,
   PhoneOutlined,
   UserOutlined,
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  HeartOutlined,
 } from '@ant-design/icons';
 import type { Pet, PetTableProps } from '@/types';
 import { getPetGenderColor, getPetSizeColor, getPetSpeciesColor } from '@/utils/color-helpers';
@@ -65,9 +65,7 @@ const PetTable = ({
             style={{ backgroundColor: '#ec4899' }}
           />
           <div className='flex-1 min-w-0'>
-            <div className='font-semibold text-sm text-slate-800 truncate'>
-              {pet.name}
-            </div>
+            <div className='font-semibold text-sm text-slate-800 truncate'>{pet.name}</div>
             <div className='text-xs text-slate-600 flex items-center gap-1'>
               {pet.breed ? (
                 <>
@@ -92,38 +90,46 @@ const PetTable = ({
       width: 220,
       render: (pet: Pet) => (
         <div className='space-y-2'>
-          <Tag 
+          <Tag
             className='!border-0 !px-3 !py-1.5 !rounded-full font-medium shadow-sm'
             style={{
-              backgroundColor: getPetSpeciesColor(pet.species) === 'blue' ? '#dbeafe' :
-                             getPetSpeciesColor(pet.species) === 'green' ? '#d1fae5' :
-                             getPetSpeciesColor(pet.species) === 'orange' ? '#fef3c7' :
-                             '#f1f5f9',
-              color: getPetSpeciesColor(pet.species) === 'blue' ? '#1e40af' :
-                     getPetSpeciesColor(pet.species) === 'green' ? '#047857' :
-                     getPetSpeciesColor(pet.species) === 'orange' ? '#d97706' :
-                     '#475569',
-              border: getPetSpeciesColor(pet.species) === 'blue' ? '1px solid #93c5fd' :
-                      getPetSpeciesColor(pet.species) === 'green' ? '1px solid #a7f3d0' :
-                      getPetSpeciesColor(pet.species) === 'orange' ? '1px solid #fcd34d' :
-                      '1px solid #cbd5e1',
+              backgroundColor:
+                getPetSpeciesColor(pet.species) === 'blue'
+                  ? '#dbeafe'
+                  : getPetSpeciesColor(pet.species) === 'green'
+                    ? '#d1fae5'
+                    : getPetSpeciesColor(pet.species) === 'orange'
+                      ? '#fef3c7'
+                      : '#f1f5f9',
+              color:
+                getPetSpeciesColor(pet.species) === 'blue'
+                  ? '#1e40af'
+                  : getPetSpeciesColor(pet.species) === 'green'
+                    ? '#047857'
+                    : getPetSpeciesColor(pet.species) === 'orange'
+                      ? '#d97706'
+                      : '#475569',
+              border:
+                getPetSpeciesColor(pet.species) === 'blue'
+                  ? '1px solid #93c5fd'
+                  : getPetSpeciesColor(pet.species) === 'green'
+                    ? '1px solid #a7f3d0'
+                    : getPetSpeciesColor(pet.species) === 'orange'
+                      ? '1px solid #fcd34d'
+                      : '1px solid #cbd5e1',
             }}
           >
             {pet.species.charAt(0).toUpperCase() + pet.species.slice(1)}
           </Tag>
-          {pet.breed && (
-            <div className='text-sm text-slate-600 font-medium'>
-              {pet.breed}
-            </div>
-          )}
+          {pet.breed && <div className='text-sm text-slate-600 font-medium'>{pet.breed}</div>}
           <div className='flex gap-1'>
-            <Tag 
+            <Tag
               className='!border-0 !px-2.5 !py-1 !rounded-full shadow-sm'
               style={getPetTagStyle(getPetGenderColor(pet.gender))}
             >
               {pet.gender}
             </Tag>
-            <Tag 
+            <Tag
               className='!border-0 !px-2.5 !py-1 !rounded-full shadow-sm'
               style={getPetTagStyle(getPetSizeColor(pet.size))}
             >
@@ -142,9 +148,7 @@ const PetTable = ({
           <div className='font-medium text-slate-800'>
             {pet.owner.firstName} {pet.owner.lastName}
           </div>
-          <div className='text-xs text-slate-600'>
-            {pet.owner.email}
-          </div>
+          <div className='text-xs text-slate-600'>{pet.owner.email}</div>
           <div className='text-xs text-slate-500 flex items-center gap-1'>
             <PhoneOutlined className='text-slate-400' />
             {pet.owner.phone}
@@ -164,18 +168,22 @@ const PetTable = ({
           </div>
           {pet.color && (
             <div className='flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200'>
-              <span className='text-slate-600 font-medium min-w-[60px]'>{t('petTable.color')}:</span>
+              <span className='text-slate-600 font-medium min-w-[60px]'>
+                {t('petTable.color')}:
+              </span>
               <span className='text-slate-800'>{pet.color}</span>
             </div>
           )}
           {pet.microchip_number && (
             <div className='flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200'>
-              <span className='text-slate-600 font-medium min-w-[60px]'>{t('petTable.microchip')}:</span>
+              <span className='text-slate-600 font-medium min-w-[60px]'>
+                {t('petTable.microchip')}:
+              </span>
               <span className='text-slate-800 font-semibold'>{pet.microchip_number}</span>
             </div>
           )}
           <div className='flex gap-1'>
-            <Tag 
+            <Tag
               className='!border-0 !px-2.5 !py-1 !rounded-full font-medium shadow-sm'
               style={{
                 backgroundColor: pet.is_spayed_neutered ? '#d1fae5' : '#fef3c7',
@@ -187,7 +195,7 @@ const PetTable = ({
                 ? t('petTable.spayedNeutered')
                 : t('petTable.notSpayedNeutered')}
             </Tag>
-            <Tag 
+            <Tag
               className='!border-0 !px-2.5 !py-1 !rounded-full font-medium shadow-sm'
               style={{
                 backgroundColor: pet.is_vaccinated ? '#d1fae5' : '#fee2e2',
@@ -205,13 +213,15 @@ const PetTable = ({
       title: t('petTable.status'),
       key: 'status',
       width: 140,
-      align: 'center',
+      align: 'center' as const,
       render: (pet: Pet) => (
-        <div className={`px-3 py-1.5 rounded-full font-medium text-sm shadow-sm flex items-center justify-center ${
-          pet.is_active 
-            ? 'bg-green-100 text-green-800 border border-green-200' 
-            : 'bg-slate-100 text-slate-600 border border-slate-200'
-        }`}>
+        <div
+          className={`px-3 py-1.5 rounded-full font-medium text-sm shadow-sm flex items-center justify-center ${
+            pet.is_active
+              ? 'bg-green-100 text-green-800 border border-green-200'
+              : 'bg-slate-100 text-slate-600 border border-slate-200'
+          }`}
+        >
           {pet.is_active ? (
             <>
               <CheckCircleOutlined className='text-green-600 mr-1 text-xs' />
@@ -230,7 +240,7 @@ const PetTable = ({
       title: t('petTable.actions'),
       key: 'actions',
       width: 140,
-      align: 'center',
+      align: 'center' as const,
       render: (pet: Pet) => {
         const { handleViewPet, handleEditPet, handleDeletePet } = createActionHandlers(pet);
 

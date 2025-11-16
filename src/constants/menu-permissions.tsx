@@ -1,6 +1,7 @@
 // Role-based menu permissions and configurations
 import {
   BarChartOutlined,
+  BookOutlined,
   CalendarOutlined,
   DashboardOutlined,
   ExperimentOutlined,
@@ -9,6 +10,7 @@ import {
   MedicineBoxOutlined,
   MessageOutlined,
   MonitorOutlined,
+  SafetyOutlined,
   SettingOutlined,
   StarOutlined,
   TeamOutlined,
@@ -158,6 +160,27 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     key: '/settings',
     label: 'Settings',
     icon: React.createElement(SettingOutlined),
+    onClick: () => {},
+    roles: ['admin'],
+  },
+  {
+    key: '/admin/resources',
+    label: 'Resources',
+    icon: React.createElement(FileTextOutlined),
+    onClick: () => {},
+    roles: ['admin'],
+  },
+  {
+    key: '/admin/training',
+    label: 'Training',
+    icon: React.createElement(BookOutlined),
+    onClick: () => {},
+    roles: ['admin'],
+  },
+  {
+    key: '/admin/household-safety',
+    label: 'Household Safety',
+    icon: React.createElement(SafetyOutlined),
     onClick: () => {},
     roles: ['admin'],
   },

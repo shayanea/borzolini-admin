@@ -105,21 +105,21 @@ export const APPOINTMENT_TYPE_LABELS = {
 
 // Helper functions to convert constants to options for dropdowns
 export const getAppointmentTypeOptions = () => {
-  return Object.entries(APPOINTMENT_TYPES).map(([_, value]) => ({
+  return Object.entries(APPOINTMENT_TYPES).map(([, value]) => ({
     value,
     label: APPOINTMENT_TYPE_LABELS[value],
   }));
 };
 
 export const getAppointmentStatusOptions = () => {
-  return Object.entries(APPOINTMENT_STATUSES).map(([_, value]) => ({
+  return Object.entries(APPOINTMENT_STATUSES).map(([, value]) => ({
     value,
     label: APPOINTMENT_STATUS_LABELS[value],
   }));
 };
 
 export const getAppointmentPriorityOptions = () => {
-  return Object.entries(APPOINTMENT_PRIORITIES).map(([_, value]) => ({
+  return Object.entries(APPOINTMENT_PRIORITIES).map(([, value]) => ({
     value,
     label: APPOINTMENT_PRIORITY_LABELS[value],
   }));

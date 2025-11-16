@@ -42,21 +42,21 @@ export const CASE_STATUSES = {
 
 // Helper functions to convert constants to options for dropdowns
 export const getCaseTypeOptions = () => {
-  return Object.entries(CASE_TYPES).map(([_, value]) => ({
+  return Object.entries(CASE_TYPES).map(([, value]) => ({
     value,
     label: CASE_TYPE_LABELS[value],
   }));
 };
 
 export const getCasePriorityOptions = () => {
-  return Object.entries(CASE_PRIORITIES).map(([_, value]) => ({
+  return Object.entries(CASE_PRIORITIES).map(([, value]) => ({
     value,
     label: CASE_PRIORITY_LABELS[value],
   }));
 };
 
 export const getCaseStatusOptions = () => {
-  return Object.entries(CASE_STATUSES).map(([_, value]) => ({
+  return Object.entries(CASE_STATUSES).map(([, value]) => ({
     value,
     label: CASE_STATUS_LABELS[value],
   }));

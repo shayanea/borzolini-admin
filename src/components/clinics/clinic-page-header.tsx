@@ -1,5 +1,5 @@
 import { PlusOutlined, ReloadOutlined, MedicineBoxOutlined } from '@ant-design/icons';
-import { Button, Space, Typography } from 'antd';
+import { Button, Typography } from 'antd';
 import { ExportButton } from '@/components/common';
 
 const { Title, Text } = Typography;
@@ -105,7 +105,6 @@ const ClinicPageHeader = ({
             filters={filters}
             estimatedRecordCount={estimatedRecordCount}
             disabled={loading}
-            className='h-10 px-4 rounded-xl hover:bg-slate-50 transition-colors'
           />
 
           {/* Add Clinic Button */}

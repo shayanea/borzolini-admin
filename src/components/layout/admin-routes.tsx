@@ -6,14 +6,17 @@ import {
   Clinics,
   Contacts,
   Dashboard,
+  HouseholdSafety,
   PetCases,
   Pets,
   Profile,
   Reports,
+  Resources,
   Reviews,
   RoleDemo,
   Settings,
   Staff,
+  Training,
   Users,
 } from '@/pages';
 import { Route, Routes } from 'react-router-dom';
@@ -176,6 +179,30 @@ const AdminRoutes = () => {
         element={
           <RoleProtectedRoute requiredRole='admin'>
             <RoleDemo />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path='admin/resources'
+        element={
+          <RoleProtectedRoute requiredRole='admin'>
+            <Resources />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path='admin/training'
+        element={
+          <RoleProtectedRoute requiredRole='admin'>
+            <Training />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path='admin/household-safety'
+        element={
+          <RoleProtectedRoute requiredRole='admin'>
+            <HouseholdSafety />
           </RoleProtectedRoute>
         }
       />

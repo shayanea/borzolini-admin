@@ -1,4 +1,4 @@
-export const ROUTES: Record<string, string> = {
+export const ROUTES = {
   DASHBOARD: '/dashboard',
   APPOINTMENTS: '/appointments',
   CALENDAR: '/calendar',
@@ -20,4 +20,7 @@ export const ROUTES: Record<string, string> = {
   PET_CASES: '/pet-cases',
   REVIEWS: '/reviews',
   ROLE_DEMO: '/role-demo',
-};
+  RESOURCES: '/admin/resources',
+  TRAINING: '/admin/training',
+  HOUSEHOLD_SAFETY: '/admin/household-safety',
+} as const;

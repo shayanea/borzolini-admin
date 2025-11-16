@@ -1,6 +1,4 @@
 import type { CalendarFilters, Veterinarian } from '@/types/calendar';
-
-import type { User } from '@/types';
 import { calendarService } from '@/services/calendar.service';
 import dayjs from 'dayjs';
 import { useQuery } from '@tanstack/react-query';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, Col, Row, Typography, Button } from 'antd';
 import { BarChartOutlined, CalendarOutlined, DollarOutlined, UserOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';

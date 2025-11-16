@@ -2,11 +2,11 @@ import { LogoutOutlined, SettingOutlined, UserOutlined } from '@/ui';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { MenuProps } from 'antd';
 import { ROUTES } from '@/constants';
+import { UserRole } from '@/types';
 import { getMenuItemsForRole } from '@/constants/menu-permissions';
 import { useAuth } from '@/hooks/use-auth';
-import { UserRole } from '@/types';
-import { MenuProps } from 'antd';
 
 export const useAdminLayoutLogic = () => {
   const [collapsed, setCollapsed] = useState(true);
@@ -26,7 +26,9 @@ export const useAdminLayoutLogic = () => {
   useEffect(() => {
     if (user && userRole !== 'admin') {
       const currentPath = location.pathname;
-      if (currentPath === '/' || currentPath === '/dashboard' || currentPath === '/settings') {
+      const isNotValid =
+        currentPath === '/' || currentPath === '/dashboard' || currentPath === '/settings';
+      if (isNotValid) {
         navigate(ROUTES.APPOINTMENTS, { replace: true });
       }
     }

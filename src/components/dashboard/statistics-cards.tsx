@@ -23,7 +23,7 @@ interface StatCardProps {
   icon: React.ReactNode;
   title: string;
   value: string | number;
-  subtitle: string;
+  subtitle: React.ReactNode;
   gradient: string;
   iconBg: string;
   valueColor: string;
