@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import type { CreateResourceDto, UpdateResourceDto, Resource, ResourceType } from '../types/resources';
+import { useCallback, useState } from 'react';
+import { ResourceType, type CreateResourceDto, type Resource, type UpdateResourceDto } from '../types/resources';
 
 interface FormErrors {
   title?: string;

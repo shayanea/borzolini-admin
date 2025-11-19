@@ -1,35 +1,34 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  Button, 
-  Input, 
-  Select, 
-  Table,
-  Badge,
-  Card,
-  Modal,
-  Alert,
-  Tabs,
-  Spin,
-  Typography,
-  Space,
-  Pagination
-} from 'antd';
-import { EyeOutlined, SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { useHouseholdSafety } from '@/hooks/useHouseholdSafety';
-import type { 
-  SafetySearchResult, 
-  SafetySearchResponse,
-  SafetyLevel
+import { formatDate } from '@/lib/utils';
+import type {
+    SafetyLevel,
+    SafetySearchResponse,
+    SafetySearchResult
 } from '@/types/household-safety';
 import { SPECIES_OPTIONS } from '@/types/household-safety';
-import { formatDate } from '@/lib/utils';
+import { ExclamationCircleOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+    Alert,
+    Badge,
+    Button,
+    Card,
+    Input,
+    Modal,
+    Pagination,
+    Select,
+    Space,
+    Spin,
+    Table,
+    Tabs,
+    Typography
+} from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
 
-const { TabPane } = Tabs;
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 const HouseholdSafetyPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('search');
+  const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpecies, setSelectedSpecies] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,7 +51,7 @@ const HouseholdSafetyPage: React.FC = () => {
   const loadData = async () => {
     let data: SafetySearchResponse | null = null;
 
-    if (activeTab === 'search' && searchTerm.trim()) {
+    if (activeTab === 'all') {
       data = await searchSafetyItems(searchTerm.trim(), selectedSpecies, currentPage, pageSize);
     } else if (activeTab === 'foods') {
       data = await getFoods(selectedSpecies === 'all' ? undefined : selectedSpecies, currentPage, pageSize);
@@ -73,11 +72,8 @@ const HouseholdSafetyPage: React.FC = () => {
   }, [activeTab, searchTerm, selectedSpecies, currentPage]);
 
   const filteredResults = useMemo(() => {
-    if (activeTab !== 'search') return results;
-    return results.filter(item => 
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [results, searchTerm, activeTab]);
+    return results;
+  }, [results]);
 
   const getSafetyBadgeColor = (level?: SafetyLevel) => {
     if (!level) return 'default';
@@ -215,16 +211,16 @@ const HouseholdSafetyPage: React.FC = () => {
   // Extract tab content into items array
   const tabItems = [
     {
-      key: 'search',
-      label: '🔍 Search',
+      key: 'all',
+      label: 'All Items',
       children: (
         <div className="space-y-4">
-          <Title level={4}>Search Safety Information</Title>
+          <Title level={4}>All Safety Items</Title>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2">
-              <Text strong>Search for items</Text>
+              <Text strong>Search items</Text>
               <Input
-                placeholder="Search for foods, plants, or household items (e.g., chocolate, lilies, cleaning products)..."
+                placeholder="Search for foods, plants, or household items..."
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
@@ -384,8 +380,8 @@ const HouseholdSafetyPage: React.FC = () => {
       <Card>
         <div className="flex justify-between items-center mb-4">
           <Title level={4}>
-            {activeTab === 'search' 
-              ? `Search Results (${totalCount})` 
+            {activeTab === 'all' 
+              ? `All Items (${totalCount})` 
               : `${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Items (${totalCount})`
             }
           </Title>
@@ -402,22 +398,14 @@ const HouseholdSafetyPage: React.FC = () => {
           <div className="text-center py-12">
             <ExclamationCircleOutlined className="text-4xl text-gray-400 mb-4" />
             <Title level={4}>
-              {activeTab === 'search' && !searchTerm.trim() 
-                ? 'Enter a search term to begin' 
-                : 'No items found'
-              }
+              No items found
             </Title>
             <Text type="secondary" className="block mb-4">
-              {activeTab === 'search' 
-                ? 'Search for foods, plants, or household items to see safety information' 
+              {activeTab === 'all' 
+                ? 'No items found matching your criteria' 
                 : `No ${activeTab} items found for the selected filters`
               }
             </Text>
-            {activeTab === 'search' && (
-              <Button onClick={() => loadData()}>
-                Try a different search
-              </Button>
-            )}
           </div>
         ) : (
           <>
