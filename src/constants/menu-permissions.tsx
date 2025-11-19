@@ -117,6 +117,7 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     icon: React.createElement(BarChartOutlined),
     onClick: () => {},
     roles: ['admin'],
+    hidden: true,
   },
   {
     key: '/reviews',
@@ -129,6 +130,7 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     icon: React.createElement(StarOutlined),
     onClick: () => {},
     roles: ['admin'],
+    hidden: true,
   },
   {
     key: '/contacts',
@@ -148,6 +150,7 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     icon: React.createElement(MonitorOutlined),
     onClick: () => {},
     roles: ['admin'],
+    hidden: true,
   },
   {
     key: '/role-demo',
@@ -193,11 +196,14 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
   },
 ];
 
+const filterVisibleItems = (items: MenuItemConfig[]): MenuItemConfig[] => items.filter(item => !item.hidden);
+
 // Role-based menu configurations
 export const MENU_ITEMS: Record<UserRole, MenuItemConfig[]> = {
-  admin: ALL_MENU_ITEMS.filter(item => item.roles.includes('admin')),
+  admin: filterVisibleItems(ALL_MENU_ITEMS.filter(item => item.roles.includes('admin'))),
   // clinic_admin should only see pages related to their clinic (not admin pages like clinics, users, settings)
-  clinic_admin: ALL_MENU_ITEMS.filter(
+  clinic_admin: filterVisibleItems(
+    ALL_MENU_ITEMS.filter(
     item =>
       item.roles.includes('veterinarian') ||
       item.roles.includes('staff') ||
@@ -208,10 +214,11 @@ export const MENU_ITEMS: Record<UserRole, MenuItemConfig[]> = {
       item.key === '/pet-cases' ||
       item.key === '/staff' ||
       item.key === '/profile'
+    )
   ),
-  veterinarian: ALL_MENU_ITEMS.filter(item => item.roles.includes('veterinarian')),
-  staff: ALL_MENU_ITEMS.filter(item => item.roles.includes('staff')),
-  patient: ALL_MENU_ITEMS.filter(item => item.roles.includes('patient')),
+  veterinarian: filterVisibleItems(ALL_MENU_ITEMS.filter(item => item.roles.includes('veterinarian'))),
+  staff: filterVisibleItems(ALL_MENU_ITEMS.filter(item => item.roles.includes('staff'))),
+  patient: filterVisibleItems(ALL_MENU_ITEMS.filter(item => item.roles.includes('patient'))),
 };
 
 // Helper function to get menu items for a specific role
