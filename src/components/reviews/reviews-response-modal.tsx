@@ -161,4 +161,5 @@ const ReviewsResponseModal = ({
   );
 };
 
+export { ReviewsResponseModal };
 export default ReviewsResponseModal;

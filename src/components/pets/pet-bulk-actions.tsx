@@ -43,4 +43,5 @@ const PetBulkActions = ({
   );
 };
 
+export { PetBulkActions };
 export default PetBulkActions;

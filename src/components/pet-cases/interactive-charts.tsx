@@ -11,7 +11,6 @@ import {
   StopOutlined,
 } from '@ant-design/icons';
 
-import React from 'react';
 import { CaseStats } from '../../types/pet-cases';
 
 interface InteractiveChartsProps {
@@ -19,7 +18,7 @@ interface InteractiveChartsProps {
   loading?: boolean;
 }
 
-const InteractiveCharts: React.FC<InteractiveChartsProps> = ({ stats, loading = false }) => {
+function InteractiveCharts({ stats, loading = false }: InteractiveChartsProps) {
   const statusIcons = {
     open: <PlayCircleOutlined />,
     in_progress: <ClockCircleOutlined />,
@@ -204,6 +203,7 @@ const InteractiveCharts: React.FC<InteractiveChartsProps> = ({ stats, loading = 
       </Col>
     </Row>
   );
-};
+}
 
+export { InteractiveCharts };
 export default InteractiveCharts;

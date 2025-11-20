@@ -7,7 +7,6 @@ import {
   SearchOutlined,
 } from '@ant-design/icons';
 
-import React from 'react';
 
 interface SystemInfo {
   totalMemory?: number;
@@ -234,10 +233,10 @@ const renderElasticsearchInfo = (elasticsearch: ElasticsearchInfo) => (
   </div>
 );
 
-export const SystemMetricsCard: React.FC<SystemMetricsCardProps> = ({
+export function SystemMetricsCard({
   systemMetrics,
   isLoading,
-}) => {
+}: SystemMetricsCardProps) {
   const memoryUsage = systemMetrics?.system || {};
   const usedMemory = memoryUsage.totalMemory || 0;
   const totalMemory = memoryUsage.maxMemory || 1;
@@ -296,4 +295,4 @@ export const SystemMetricsCard: React.FC<SystemMetricsCardProps> = ({
       )}
     </Card>
   );
-};
+}

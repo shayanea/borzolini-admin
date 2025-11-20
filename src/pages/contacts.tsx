@@ -163,4 +163,5 @@ const Contacts = () => {
   );
 };
 
+export { Contacts };
 export default Contacts;

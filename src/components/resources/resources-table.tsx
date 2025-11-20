@@ -12,7 +12,6 @@ import {
 } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 
-import React from 'react';
 import type { Resource } from '@/types/resources';
 import { formatDate } from '@/lib/utils';
 
@@ -36,7 +35,7 @@ interface ResourcesTableProps {
   ) => 'blue' | 'green' | 'orange' | 'purple' | 'pink' | 'default';
 }
 
-export const ResourcesTable: React.FC<ResourcesTableProps> = ({
+export function ResourcesTable({
   resources,
   loading,
   totalCount,
@@ -50,7 +49,7 @@ export const ResourcesTable: React.FC<ResourcesTableProps> = ({
   onEdit,
   onDelete,
   getTypeColor,
-}) => {
+}: ResourcesTableProps) {
   const columns = [
     {
       title: (
@@ -153,4 +152,4 @@ export const ResourcesTable: React.FC<ResourcesTableProps> = ({
       )}
     </Card>
   );
-};
+}

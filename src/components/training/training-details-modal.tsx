@@ -1,5 +1,4 @@
 import { Modal } from 'antd';
-import React from 'react';
 import type { TrainingActivity } from '@/types/training';
 import {
   BasicInfoCard,
@@ -17,11 +16,11 @@ interface TrainingDetailsModalProps {
   onClose: () => void;
 }
 
-export const TrainingDetailsModal: React.FC<TrainingDetailsModalProps> = ({
+export function TrainingDetailsModal({
   activity,
   open,
   onClose,
-}) => {
+}: TrainingDetailsModalProps) {
   if (!activity) return null;
 
   return (
@@ -43,5 +42,5 @@ export const TrainingDetailsModal: React.FC<TrainingDetailsModalProps> = ({
       </div>
     </Modal>
   );
-};
+}
 

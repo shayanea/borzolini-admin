@@ -16,7 +16,7 @@ interface ResourcesFiltersProps {
   onClearFilters: () => void;
 }
 
-export const ResourcesFilters: React.FC<ResourcesFiltersProps> = ({
+export function ResourcesFilters({
   searchTerm,
   selectedType,
   selectedIsActive,
@@ -24,7 +24,7 @@ export const ResourcesFilters: React.FC<ResourcesFiltersProps> = ({
   onTypeChange,
   onIsActiveChange,
   onClearFilters,
-}) => {
+}: ResourcesFiltersProps) {
   return (
     <Card>
       <div className="flex justify-between items-center mb-4">
@@ -78,5 +78,5 @@ export const ResourcesFilters: React.FC<ResourcesFiltersProps> = ({
       </div>
     </Card>
   );
-};
+}
 

@@ -6,11 +6,10 @@ import { CacheStatusCard } from '@/components/api-health/cache-status-card';
 import { DatabaseHealthCard } from '@/components/api-health/database-health-card';
 import { EndpointHealthTable } from '@/components/api-health/endpoint-health-table';
 import { HealthStatusCard } from '@/components/api-health/health-status-card';
-import React from 'react';
 import { SystemMetricsCard } from '@/components/api-health/system-metrics-card';
 import { useApiHealth } from '@/hooks/use-api-health';
 
-const ApiHealthPage: React.FC = () => {
+function ApiHealthPage() {
   const {
     overallStatus,
     lastCheck,
@@ -139,6 +138,7 @@ const ApiHealthPage: React.FC = () => {
       )}
     </div>
   );
-};
+}
 
+export { ApiHealthPage };
 export default ApiHealthPage;

@@ -175,4 +175,5 @@ const ClinicStaffModal = ({ visible, clinic, onClose }: ClinicStaffModalProps) =
   );
 };
 
+export { ClinicStaffModal };
 export default ClinicStaffModal;

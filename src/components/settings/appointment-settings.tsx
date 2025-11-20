@@ -54,4 +54,5 @@ const AppointmentSettings = () => {
   );
 };
 
+export { AppointmentSettings };
 export default AppointmentSettings;

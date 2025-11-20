@@ -7,7 +7,7 @@ const { Title, Text } = Typography;
  * Demo component showing how to use the ExportButton
  * This can be used as a reference for implementing export functionality
  */
-export const ExportDemo: React.FC = () => {
+export function ExportDemo() {
   // Example export functions - these would typically come from your service layer
   const handleExportCSV = async (): Promise<Blob> => {
     // Simulate API call
@@ -103,6 +103,6 @@ export const ExportDemo: React.FC = () => {
       </Space>
     </Card>
   );
-};
+}
 
 export default ExportDemo;

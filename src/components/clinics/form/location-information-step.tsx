@@ -20,4 +20,5 @@ const LocationInformationStep: FC = () => {
   );
 };
 
+export { LocationInformationStep };
 export default LocationInformationStep;

@@ -323,4 +323,5 @@ const PetTable = ({
   );
 };
 
+export { PetTable };
 export default PetTable;

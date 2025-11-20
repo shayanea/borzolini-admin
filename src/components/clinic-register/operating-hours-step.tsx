@@ -1,11 +1,11 @@
-import { Col, Form, Input, Row, Switch, Typography, Alert } from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons';
+import { Alert, Col, Form, Input, Row, Switch, Typography } from 'antd';
 
 import { DAYS_OF_WEEK } from './constants';
 
 const { Title, Text } = Typography;
 
-export const OperatingHoursStep: React.FC = () => {
+export function OperatingHoursStep() {
   return (
     <div className='space-y-8'>
       {/* Section Header */}
@@ -149,4 +149,4 @@ export const OperatingHoursStep: React.FC = () => {
       </div>
     </div>
   );
-};
+}

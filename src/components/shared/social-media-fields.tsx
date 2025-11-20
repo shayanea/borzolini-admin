@@ -131,4 +131,5 @@ const SocialMediaFields: FC<SocialMediaFieldsProps> = ({ namePrefix }) => {
   );
 };
 
+export { SocialMediaFields };
 export default SocialMediaFields;

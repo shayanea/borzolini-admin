@@ -115,4 +115,5 @@ const TopPerformingClinics = ({ stats }: TopPerformingClinicsProps) => {
   );
 };
 
+export { TopPerformingClinics };
 export default TopPerformingClinics;

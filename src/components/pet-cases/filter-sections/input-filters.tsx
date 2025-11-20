@@ -1,11 +1,10 @@
 // Input Filters Component
 import { DatePicker, Form, Input } from 'antd';
 
-import React from 'react';
 
 const { RangePicker } = DatePicker;
 
-const InputFilters: React.FC = () => {
+function InputFilters() {
   return (
     <>
       {/* Date Range Filter */}
@@ -50,6 +49,7 @@ const InputFilters: React.FC = () => {
       </Form.Item>
     </>
   );
-};
+}
 
+export { InputFilters };
 export default InputFilters;

@@ -345,4 +345,5 @@ const ClinicTable = ({
   );
 };
 
+export { ClinicTable };
 export default ClinicTable;

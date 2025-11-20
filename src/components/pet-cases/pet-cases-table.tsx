@@ -25,14 +25,14 @@ interface PetCasesTableProps {
   onSelectionChange: (selectedRowKeys: string[]) => void;
 }
 
-const PetCasesTable: React.FC<PetCasesTableProps> = ({
+function PetCasesTable({
   cases,
   loading,
   onViewCase,
   onEditCase,
   selectedRowKeys,
   onSelectionChange,
-}) => {
+}: PetCasesTableProps) {
   const { t } = useTranslation('components');
   const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
 
@@ -395,6 +395,7 @@ const PetCasesTable: React.FC<PetCasesTableProps> = ({
       />
     </div>
   );
-};
+}
 
+export { PetCasesTable };
 export default PetCasesTable;

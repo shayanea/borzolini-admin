@@ -9,7 +9,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Button, Card, Form, Input, Modal, Select, Space, Timeline, message } from 'antd';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import dayjs from 'dayjs';
 import { useCaseTimeline } from '../../hooks/pet-cases/use-pet-cases';
@@ -30,7 +30,7 @@ interface AddEventFormData {
   metadata?: string;
 }
 
-const PetCaseTimeline: React.FC<PetCaseTimelineProps> = ({ caseId, clinicId }) => {
+function PetCaseTimeline({ caseId, clinicId }: PetCaseTimelineProps) {
   const { timeline, isLoading, addEvent, isAddingEvent } = useCaseTimeline(clinicId, caseId);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm<AddEventFormData>();
@@ -224,6 +224,7 @@ const PetCaseTimeline: React.FC<PetCaseTimelineProps> = ({ caseId, clinicId }) =
       </Modal>
     </Card>
   );
-};
+}
 
+export { PetCaseTimeline };
 export default PetCaseTimeline;

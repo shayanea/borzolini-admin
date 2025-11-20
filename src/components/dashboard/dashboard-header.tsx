@@ -69,4 +69,5 @@ const DashboardHeader = ({
   );
 };
 
+export { DashboardHeader };
 export default DashboardHeader;

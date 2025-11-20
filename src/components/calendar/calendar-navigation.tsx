@@ -27,4 +27,5 @@ const CalendarNavigation = ({
   );
 };
 
+export { CalendarNavigation };
 export default CalendarNavigation;

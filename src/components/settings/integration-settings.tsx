@@ -73,4 +73,5 @@ const IntegrationSettings = () => {
   );
 };
 
+export { IntegrationSettings };
 export default IntegrationSettings;

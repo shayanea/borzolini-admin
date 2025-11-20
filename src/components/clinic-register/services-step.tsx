@@ -1,10 +1,10 @@
-import { Form, Select, Typography, Tag, Space } from 'antd';
-import { MedicineBoxOutlined, HeartOutlined, StarOutlined } from '@ant-design/icons';
+import { HeartOutlined, MedicineBoxOutlined, StarOutlined } from '@ant-design/icons';
+import { Form, Select, Space, Tag, Typography } from 'antd';
 import { SERVICE_OPTIONS, SPECIALIZATION_OPTIONS } from './constants';
 
 const { Title, Text, Paragraph } = Typography;
 
-export const ServicesStep: React.FC = () => {
+export function ServicesStep() {
   return (
     <div className='space-y-8'>
       {/* Section Header */}
@@ -122,4 +122,4 @@ export const ServicesStep: React.FC = () => {
       </div>
     </div>
   );
-};
+}

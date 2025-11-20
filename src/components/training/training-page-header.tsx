@@ -1,6 +1,5 @@
 import { Button, Space, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import React from 'react';
 
 const { Title, Text } = Typography;
 
@@ -11,12 +10,12 @@ interface TrainingPageHeaderProps {
   loading: boolean;
 }
 
-export const TrainingPageHeader: React.FC<TrainingPageHeaderProps> = ({
+export function TrainingPageHeader({
   onCreate,
   selectedCount,
   onBulkDelete,
   loading,
-}) => {
+}: TrainingPageHeaderProps) {
   return (
     <div className='flex justify-between items-center'>
       <div>
@@ -35,5 +34,5 @@ export const TrainingPageHeader: React.FC<TrainingPageHeaderProps> = ({
       </Space>
     </div>
   );
-};
+}
 

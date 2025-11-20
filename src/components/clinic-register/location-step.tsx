@@ -1,9 +1,9 @@
-import { Alert, Col, Form, Input, Row, Typography } from 'antd';
 import { EnvironmentOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
+import { Alert, Col, Form, Input, Row, Typography } from 'antd';
 
 const { Title, Text } = Typography;
 
-export const LocationStep: React.FC = () => {
+export function LocationStep() {
   return (
     <div className='space-y-8'>
       {/* Section Header */}
@@ -151,4 +151,4 @@ export const LocationStep: React.FC = () => {
       </div>
     </div>
   );
-};
+}

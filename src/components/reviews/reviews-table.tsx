@@ -310,4 +310,5 @@ const ReviewsTable = ({
   );
 };
 
+export { ReviewsTable };
 export default ReviewsTable;

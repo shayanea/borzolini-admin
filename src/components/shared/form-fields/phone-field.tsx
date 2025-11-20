@@ -40,4 +40,5 @@ const PhoneField: FC<PhoneFieldProps> = ({
   );
 };
 
+export { PhoneField };
 export default PhoneField;

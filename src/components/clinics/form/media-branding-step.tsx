@@ -28,4 +28,5 @@ const MediaBrandingStep: FC = () => {
   );
 };
 
+export { MediaBrandingStep };
 export default MediaBrandingStep;

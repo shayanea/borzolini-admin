@@ -9,7 +9,7 @@ import {
 } from './pet-case-view-sections';
 // Pet Case View Modal Component
 import { Button, Divider, Modal, Space, Tabs } from 'antd';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import type { ClinicPetCase } from '../../types/pet-cases';
 import PetCaseTimeline from './pet-case-timeline';
@@ -24,13 +24,13 @@ interface PetCaseViewModalProps {
   clinicId: string;
 }
 
-const PetCaseViewModal: React.FC<PetCaseViewModalProps> = ({
+function PetCaseViewModal({
   caseData,
   visible,
   onClose,
   onEdit,
   clinicId,
-}) => {
+}: PetCaseViewModalProps) {
   const [activeTab, setActiveTab] = useState('details');
 
   if (!caseData) return null;
@@ -81,6 +81,7 @@ const PetCaseViewModal: React.FC<PetCaseViewModalProps> = ({
       </Tabs>
     </Modal>
   );
-};
+}
 
+export { PetCaseViewModal };
 export default PetCaseViewModal;

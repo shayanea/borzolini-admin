@@ -98,4 +98,5 @@ const ClinicForm = () => {
   );
 };
 
+export { ClinicForm };
 export default ClinicForm;

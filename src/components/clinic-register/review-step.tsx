@@ -1,20 +1,20 @@
-import { Alert, Typography, Divider, Tag, Space, Row, Col } from 'antd';
 import {
-  CheckCircleOutlined,
-  EnvironmentOutlined,
-  GlobalOutlined,
-  MailOutlined,
-  PhoneOutlined,
-  ShopOutlined,
-  ClockCircleOutlined,
-  MedicineBoxOutlined,
-  ShareAltOutlined,
-  StarOutlined,
-  SafetyOutlined,
+    CheckCircleOutlined,
+    ClockCircleOutlined,
+    EnvironmentOutlined,
+    GlobalOutlined,
+    MailOutlined,
+    MedicineBoxOutlined,
+    PhoneOutlined,
+    SafetyOutlined,
+    ShareAltOutlined,
+    ShopOutlined,
+    StarOutlined,
 } from '@ant-design/icons';
+import { Alert, Col, Divider, Row, Space, Tag, Typography } from 'antd';
 
-import type { ClinicRegistrationValues } from './types';
 import type { FormInstance } from 'antd';
+import type { ClinicRegistrationValues } from './types';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -38,12 +38,12 @@ const SOCIAL_MEDIA_PLATFORMS: SocialMediaLink[] = [
   { platform: 'TikTok', fieldName: 'tiktok_url', icon: '🎵', color: 'purple' },
 ];
 
-const InfoItem: React.FC<{
+function InfoItem({ icon, label, value, color = 'indigo' }: {
   icon: React.ReactNode;
   label: string;
   value: React.ReactNode;
   color?: string;
-}> = ({ icon, label, value, color = 'indigo' }) => {
+}) {
   if (!value) return null;
   return (
     <div className='flex items-start gap-3'>
@@ -58,9 +58,7 @@ const InfoItem: React.FC<{
   );
 };
 
-const SocialMediaSection: React.FC<{ form: FormInstance<ClinicRegistrationValues> }> = ({
-  form,
-}) => {
+function SocialMediaSection({ form }: { form: FormInstance<ClinicRegistrationValues> }) {
   const socialMediaLinks = SOCIAL_MEDIA_PLATFORMS.map(({ platform, fieldName, icon, color }) => ({
     platform,
     icon,
@@ -99,9 +97,7 @@ const SocialMediaSection: React.FC<{ form: FormInstance<ClinicRegistrationValues
   );
 };
 
-const OperatingHoursSection: React.FC<{ form: FormInstance<ClinicRegistrationValues> }> = ({
-  form,
-}) => {
+function OperatingHoursSection({ form }: { form: FormInstance<ClinicRegistrationValues> }) {
   const operatingHours = form.getFieldValue('operating_hours') || {};
   const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
   const dayLabels: Record<string, string> = {
@@ -141,7 +137,7 @@ const OperatingHoursSection: React.FC<{ form: FormInstance<ClinicRegistrationVal
   );
 };
 
-export const ReviewStep: React.FC<ReviewStepProps> = ({ form }) => {
+export function ReviewStep({ form }: ReviewStepProps) {
   const services = form.getFieldValue('services') || [];
   const specializations = form.getFieldValue('specializations') || [];
 
@@ -333,4 +329,4 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({ form }) => {
       />
     </div>
   );
-};
+}

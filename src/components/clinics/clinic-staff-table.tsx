@@ -360,4 +360,5 @@ const ClinicStaffTable = ({
   );
 };
 
+export { ClinicStaffTable };
 export default ClinicStaffTable;

@@ -1,32 +1,32 @@
 import {
-  APPOINTMENT_PRIORITIES,
-  getAppointmentPriorityOptions,
-  getAppointmentStatusOptions,
-  getAppointmentTypeOptions,
+    APPOINTMENT_PRIORITIES,
+    getAppointmentPriorityOptions,
+    getAppointmentStatusOptions,
+    getAppointmentTypeOptions,
 } from '@/constants/appointments';
-import {
-  ActionButtonsSection,
-  AdditionalInfoSection,
-  BasicInfoSection,
-  SchedulingSection,
-  VisitTypeSection,
-} from './appointment-form-sections';
 import { Form, Modal, message } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import {
+    ActionButtonsSection,
+    AdditionalInfoSection,
+    BasicInfoSection,
+    SchedulingSection,
+    VisitTypeSection,
+} from './appointment-form-sections';
 
-import type { AppointmentFormModalProps } from '@/types/calendar-modals';
-import type { CreateAppointmentData } from '@/services/appointments.service';
-import dayjs from 'dayjs';
 import { useCalendarFormData } from '@/hooks/calendar/use-calendar-form-data';
+import type { CreateAppointmentData } from '@/services/appointments.service';
+import type { AppointmentFormModalProps } from '@/types/calendar-modals';
+import dayjs from 'dayjs';
 
-export const AppointmentFormModal: React.FC<AppointmentFormModalProps> = ({
+export function AppointmentFormModal({
   visible,
   onCancel,
   onSubmit,
   loading = false,
   veterinarians,
   currentDate = dayjs(),
-}) => {
+}: AppointmentFormModalProps) {
   const [form] = Form.useForm();
   const [isTelemedicine, setIsTelemedicine] = useState(false);
   const [isHomeVisit, setIsHomeVisit] = useState(false);

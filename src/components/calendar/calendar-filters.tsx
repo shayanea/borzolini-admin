@@ -5,7 +5,7 @@ import {
   SearchOutlined,
   SortAscendingOutlined,
 } from '@ant-design/icons';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import type { CalendarFilters } from '@/types/calendar';
 import dayjs from 'dayjs';
@@ -61,14 +61,14 @@ interface CalendarFiltersComponentProps {
   loading?: boolean;
 }
 
-const CalendarFiltersComponent: React.FC<CalendarFiltersComponentProps> = ({
+function CalendarFiltersComponent({
   filters,
   onFiltersChange,
   onClearFilters,
   onSearch,
   searchText,
   loading = false,
-}) => {
+}: CalendarFiltersComponentProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleFilterChange = (key: keyof CalendarFilters, value: any) => {
@@ -278,6 +278,7 @@ const CalendarFiltersComponent: React.FC<CalendarFiltersComponentProps> = ({
       </div>
     </Card>
   );
-};
+}
 
+export { CalendarFiltersComponent };
 export default CalendarFiltersComponent;

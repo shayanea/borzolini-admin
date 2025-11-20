@@ -1,5 +1,4 @@
 import { Button, Card, Form, Space, Switch, Typography } from 'antd';
-import React from 'react';
 import type { TrainingFormSectionProps } from './types';
 
 const { Text } = Typography;
@@ -10,12 +9,12 @@ interface StatusSectionProps extends TrainingFormSectionProps {
   isEdit?: boolean;
 }
 
-export const StatusSection: React.FC<StatusSectionProps> = ({
+export function StatusSection({
   form,
   onCancel,
   isLoading,
   isEdit = false,
-}) => {
+}: StatusSectionProps) {
   return (
     <Card>
       <Form.Item>
@@ -38,5 +37,5 @@ export const StatusSection: React.FC<StatusSectionProps> = ({
       </Form.Item>
     </Card>
   );
-};
+}
 

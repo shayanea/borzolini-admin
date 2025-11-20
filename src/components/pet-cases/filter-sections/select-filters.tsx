@@ -6,7 +6,6 @@ import {
 // Select Filters Component
 import { Form, Select } from 'antd';
 
-import React from 'react';
 
 const { Option } = Select;
 
@@ -14,7 +13,7 @@ interface SelectFiltersProps {
   loading: boolean;
 }
 
-const SelectFilters: React.FC<SelectFiltersProps> = ({ loading }) => {
+function SelectFilters({ loading }: SelectFiltersProps) {
   return (
     <>
       {/* Status Filter */}
@@ -84,6 +83,7 @@ const SelectFilters: React.FC<SelectFiltersProps> = ({ loading }) => {
       </Form.Item>
     </>
   );
-};
+}
 
+export { SelectFilters };
 export default SelectFilters;

@@ -36,4 +36,5 @@ const EmergencyContactSection: FC<EmergencyContactSectionProps> = () => {
   );
 };
 
+export { EmergencyContactSection };
 export default EmergencyContactSection;

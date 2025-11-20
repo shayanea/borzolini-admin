@@ -1,6 +1,5 @@
 import { Badge, Card, Space, Typography } from 'antd';
 import { ClockCircleOutlined, ExperimentOutlined } from '@ant-design/icons';
-import React from 'react';
 import type { TrainingActivity } from '@/types/training';
 import { getDifficultyColor, getSpeciesIcon } from '../training-utils';
 
@@ -10,7 +9,7 @@ interface BasicInfoCardProps {
   activity: TrainingActivity;
 }
 
-export const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ activity }) => {
+export function BasicInfoCard({ activity }: BasicInfoCardProps) {
   return (
     <div className='flex items-start gap-4 p-4 bg-gray-50 rounded-lg'>
       <div className='text-4xl flex-shrink-0'>
@@ -42,5 +41,5 @@ export const BasicInfoCard: React.FC<BasicInfoCardProps> = ({ activity }) => {
       </div>
     </div>
   );
-};
+}
 

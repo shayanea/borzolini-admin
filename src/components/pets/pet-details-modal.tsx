@@ -49,4 +49,5 @@ const PetDetailsModal = ({ pet, isVisible, onClose }: PetDetailsModalProps) => {
   );
 };
 
+export { PetDetailsModal };
 export default PetDetailsModal;

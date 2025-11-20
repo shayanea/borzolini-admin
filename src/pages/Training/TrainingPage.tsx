@@ -13,7 +13,7 @@ import { useTraining, useTrainingForm } from '@/hooks/useTraining';
 
 const { TabPane } = Tabs;
 
-const TrainingPage: React.FC = () => {
+function TrainingPage() {
   const [selectedActivity, setSelectedActivity] = useState<TrainingActivity | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -343,6 +343,7 @@ const TrainingPage: React.FC = () => {
       />
     </div>
   );
-};
+}
 
+export { TrainingPage };
 export default TrainingPage;

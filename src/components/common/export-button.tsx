@@ -34,7 +34,7 @@ export interface ExportButtonProps {
   estimatedRecordCount?: number;
 }
 
-export const ExportButton: React.FC<ExportButtonProps> = ({
+export function ExportButton({
   entityType,
   exportCSV,
   exportExcel,
@@ -47,7 +47,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   showConfirmation = true,
   maxRecordsWithoutConfirmation = 1000,
   estimatedRecordCount = 0,
-}) => {
+}: ExportButtonProps) {
   const [isExporting, setIsExporting] = useState(false);
   const [exportFormat, setExportFormat] = useState<'csv' | 'xlsx' | null>(null);
 
@@ -161,6 +161,6 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
       </Modal>
     </>
   );
-};
+}
 
 export default ExportButton;

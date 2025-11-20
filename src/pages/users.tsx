@@ -131,4 +131,5 @@ const Users = ({ roleFilter }: UsersProps) => {
   );
 };
 
+export { Users };
 export default Users;

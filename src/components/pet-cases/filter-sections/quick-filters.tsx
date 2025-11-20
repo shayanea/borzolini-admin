@@ -1,9 +1,8 @@
 // Quick Filters Component
 import { Checkbox, Form } from 'antd';
 
-import React from 'react';
 
-const QuickFilters: React.FC = () => {
+function QuickFilters() {
   return (
     <Form.Item
       label={<span className='text-sm font-medium text-gray-700'>Quick Filters</span>}
@@ -19,6 +18,7 @@ const QuickFilters: React.FC = () => {
       </div>
     </Form.Item>
   );
-};
+}
 
+export { QuickFilters };
 export default QuickFilters;

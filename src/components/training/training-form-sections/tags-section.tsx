@@ -3,7 +3,7 @@ import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import React from 'react';
 import type { TrainingFormSectionProps } from './types';
 
-export const TagsSection: React.FC<TrainingFormSectionProps> = ({ form }) => {
+export function TagsSection({ form }: TrainingFormSectionProps) {
   return (
     <Card title='Tags & Organization'>
       <Form.Item
@@ -39,5 +39,5 @@ export const TagsSection: React.FC<TrainingFormSectionProps> = ({ form }) => {
       </Form.Item>
     </Card>
   );
-};
+}
 

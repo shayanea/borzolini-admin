@@ -1,41 +1,63 @@
-import { useState, useCallback } from 'react';
-import { api } from '../services/api/core';
-import type { 
-  TrainingActivity, 
-  TrainingAssignment, 
-  DailyTrainingStats,
-  CreateTrainingActivityDto, 
-  UpdateTrainingActivityDto,
-  CreateTrainingAssignmentDto,
+import { useCallback, useState } from 'react';
+
+import TrainingService from '@/services/training.service';
+
+import type {
+  ApiError,
   CompleteTrainingDto,
-  TrainingsResponse,
-  TrainingResponse,
-  TrainingStatsResponse,
+  CreateTrainingActivityDto,
+  CreateTrainingAssignmentDto,
+  DailyTrainingStats,
+  TrainingActivity,
+  TrainingAssignment,
   TrainingHistoryResponse,
-  ApiError
-} from '../types/training';
+  TrainingSearchParams,
+  TrainingsResponse,
+  UpdateTrainingActivityDto,
+} from '@/types/training';
+
+const normalizeError = (error: unknown, fallback: string): ApiError => {
+  if (error && typeof error === 'object') {
+    const errObj = error as Record<string, any>;
+    const message = typeof errObj.message === 'string' ? errObj.message : fallback;
+    const statusCode =
+      typeof errObj.statusCode === 'number'
+        ? errObj.statusCode
+        : typeof errObj.response?.status === 'number'
+          ? errObj.response.status
+          : 500;
+    return {
+      message,
+      statusCode,
+    };
+  }
+
+  return {
+    message: fallback,
+    statusCode: 500,
+  };
+};
 
 export const useTraining = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
 
   // Training Activities CRUD
-  const createTrainingActivity = useCallback(async (data: CreateTrainingActivityDto): Promise<TrainingActivity | null> => {
-    setLoading(true);
-    setError(null);
-    try {
-      // Note: API doesn't have create endpoint, this would need to be added
-      // For now, return null and log error
-      console.warn('Create training activity endpoint not available in API');
-      setError({ message: 'Create endpoint not available', statusCode: 501 });
-      return null;
-    } catch (err) {
-      setError(err as ApiError);
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const createTrainingActivity = useCallback(
+    async (data: CreateTrainingActivityDto): Promise<TrainingActivity | null> => {
+      setLoading(true);
+      setError(null);
+      try {
+        return await TrainingService.createActivity(data);
+      } catch (err) {
+        setError(normalizeError(err, 'Unable to create training activity'));
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   const getTrainingActivities = useCallback(async (
     page = 1, 
@@ -49,26 +71,16 @@ export const useTraining = () => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: limit.toString(),
-      });
-      
-      if (search) params.append('search', search);
-      if (species) params.append('species', species);
-      if (difficulty) params.append('difficulty', difficulty);
-      if (sortBy) params.append('sortBy', sortBy);
-      if (sortOrder) params.append('sortOrder', sortOrder);
+      const params: TrainingSearchParams = { page, limit };
+      if (search) params.q = search;
+      if (species) params.species = species;
+      if (difficulty) params.difficulty = difficulty as TrainingSearchParams['difficulty'];
+      if (sortBy) params.sortBy = sortBy;
+      if (sortOrder) params.sortOrder = sortOrder;
 
-      const response = await api.get<{ activities: TrainingActivity[]; total: number; page: number; totalPages: number }>(`/training/admin/activities?${params.toString()}`);
-      return {
-        data: response.data.activities,
-        total: response.data.total,
-        page: response.data.page,
-        limit,
-      };
+      return await TrainingService.getActivities(params);
     } catch (err) {
-      setError(err as ApiError);
+      setError(normalizeError(err, 'Unable to load training activities'));
       return null;
     } finally {
       setLoading(false);
@@ -79,20 +91,14 @@ export const useTraining = () => {
     setLoading(true);
     setError(null);
     try {
-      // Use search endpoint to find by ID or get from activities list
-      const activitiesResponse = await getTrainingActivities(1, 100);
-      if (activitiesResponse) {
-        const activity = activitiesResponse.data.find(a => a.id === id);
-        if (activity) return activity;
-      }
-      return null;
+      return await TrainingService.getActivity(id);
     } catch (err) {
-      setError(err as ApiError);
+      setError(normalizeError(err, 'Unable to fetch training activity'));
       return null;
     } finally {
       setLoading(false);
     }
-  }, [getTrainingActivities]);
+  }, []);
 
   const updateTrainingActivity = useCallback(async (
     id: string, 
@@ -101,12 +107,9 @@ export const useTraining = () => {
     setLoading(true);
     setError(null);
     try {
-      // Note: API doesn't have update endpoint, this would need to be added
-      console.warn('Update training activity endpoint not available in API');
-      setError({ message: 'Update endpoint not available', statusCode: 501 });
-      return null;
+      return await TrainingService.updateActivity(id, data);
     } catch (err) {
-      setError(err as ApiError);
+      setError(normalizeError(err, 'Unable to update training activity'));
       return null;
     } finally {
       setLoading(false);
@@ -117,12 +120,10 @@ export const useTraining = () => {
     setLoading(true);
     setError(null);
     try {
-      // Note: API doesn't have delete endpoint, this would need to be added
-      console.warn('Delete training activity endpoint not available in API');
-      setError({ message: 'Delete endpoint not available', statusCode: 501 });
-      return false;
+      await TrainingService.deleteActivity(id);
+      return true;
     } catch (err) {
-      setError(err as ApiError);
+      setError(normalizeError(err, 'Unable to delete training activity'));
       return false;
     } finally {
       setLoading(false);
@@ -133,16 +134,15 @@ export const useTraining = () => {
     setLoading(true);
     setError(null);
     try {
-      // Delete activities one by one since API doesn't have bulk delete
-      await Promise.all(ids.map(id => deleteTrainingActivity(id)));
+      await Promise.all(ids.map(id => TrainingService.deleteActivity(id)));
       return true;
     } catch (err) {
-      setError(err as ApiError);
+      setError(normalizeError(err, 'Unable to delete selected training activities'));
       return false;
     } finally {
       setLoading(false);
     }
-  }, [deleteTrainingActivity]);
+  }, []);
 
   // Training Assignments
   const createTrainingAssignment = useCallback(async (
@@ -151,10 +151,9 @@ export const useTraining = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.post<TrainingResponse>('/training/daily', data);
-      return response.data.data as unknown as TrainingAssignment;
+      return await TrainingService.createAssignment(data);
     } catch (err) {
-      setError(err as ApiError);
+      setError(normalizeError(err, 'Unable to create training assignment'));
       return null;
     } finally {
       setLoading(false);
@@ -168,10 +167,9 @@ export const useTraining = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.patch<TrainingResponse>(`/training/daily/${id}/complete`, data);
-      return response.data.data as unknown as TrainingAssignment;
+      return await TrainingService.completeAssignment(id, data);
     } catch (err) {
-      setError(err as ApiError);
+      setError(normalizeError(err, 'Unable to complete training assignment'));
       return null;
     } finally {
       setLoading(false);
@@ -179,25 +177,14 @@ export const useTraining = () => {
   }, []);
 
   const getTrainingAssignments = useCallback(async (
-    userId: string,
-    page = 1,
-    limit = 10,
-    status?: string
+    limit?: number
   ): Promise<TrainingHistoryResponse | null> => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: limit.toString(),
-      });
-
-      if (status) params.append('status', status);
-
-      const response = await api.get<TrainingHistoryResponse>(`/training/history/${userId}?${params.toString()}`);
-      return response.data;
+      return await TrainingService.getHistory(limit);
     } catch (err) {
-      setError(err as ApiError);
+      setError(normalizeError(err, 'Unable to load training history'));
       return null;
     } finally {
       setLoading(false);
@@ -205,14 +192,13 @@ export const useTraining = () => {
   }, []);
 
   // Training Statistics
-  const getTrainingStats = useCallback(async (userId: string): Promise<DailyTrainingStats | null> => {
+  const getTrainingStats = useCallback(async (): Promise<DailyTrainingStats | null> => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get<TrainingStatsResponse>(`/training/stats/${userId}`);
-      return response.data.data;
+      return await TrainingService.getStats();
     } catch (err) {
-      setError(err as ApiError);
+      setError(normalizeError(err, 'Unable to load training stats'));
       return null;
     } finally {
       setLoading(false);
@@ -230,20 +216,16 @@ export const useTraining = () => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({
+      return await TrainingService.searchActivities({
         q: query,
-        page: page.toString(),
-        limit: limit.toString(),
+        species,
+        tags,
+        difficulty: difficulty as TrainingSearchParams['difficulty'],
+        page,
+        limit,
       });
-
-      if (species) params.append('species', species);
-      if (tags) params.append('tags', tags);
-      if (difficulty) params.append('difficulty', difficulty);
-
-      const response = await api.get<TrainingsResponse>(`/training/search?${params.toString()}`);
-      return response.data;
     } catch (err) {
-      setError(err as ApiError);
+      setError(normalizeError(err, 'Unable to search training activities'));
       return null;
     } finally {
       setLoading(false);
@@ -258,16 +240,9 @@ export const useTraining = () => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({
-        species,
-        page: page.toString(),
-        limit: limit.toString(),
-      });
-
-      const response = await api.get<TrainingsResponse>(`/training/by-species?${params.toString()}`);
-      return response.data;
+      return await TrainingService.getActivitiesBySpecies(species, { page, limit });
     } catch (err) {
-      setError(err as ApiError);
+      setError(normalizeError(err, 'Unable to fetch species specific training activities'));
       return null;
     } finally {
       setLoading(false);

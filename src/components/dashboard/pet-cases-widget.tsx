@@ -12,7 +12,7 @@ interface PetCasesWidgetProps {
   loading?: boolean;
 }
 
-const PetCasesWidget: React.FC<PetCasesWidgetProps> = ({ stats, loading = false }) => {
+function PetCasesWidget({ stats, loading = false }: PetCasesWidgetProps) {
   const { t } = useTranslation('components');
   const navigate = useNavigate();
 
@@ -263,6 +263,7 @@ const PetCasesWidget: React.FC<PetCasesWidgetProps> = ({ stats, loading = false 
       )}
     </Card>
   );
-};
+}
 
+export { PetCasesWidget };
 export default PetCasesWidget;

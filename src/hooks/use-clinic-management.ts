@@ -1,10 +1,20 @@
-import { Modal, message as antMessage } from 'antd';
-import { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Modal, message as antMessage } from 'antd';
+import { useCallback } from 'react';
 
-import type { Clinic } from '@/types';
-import type { ClinicsQueryParams } from '@/types';
 import ClinicsService from '@/services/clinics.service';
+import type { Clinic, ClinicsQueryParams } from '@/types';
+import { useFilterManagement, type FilterValue } from './use-filter-management';
+import { useTableManagement } from './use-table-management';
+
+/**
+ * Clinic-specific filters
+ */
+interface ClinicFilters {
+  city: string | null;
+  isActive: boolean | null;
+  [key: string]: FilterValue;
+}
 
 interface UseClinicManagementReturn {
   // State
@@ -39,22 +49,44 @@ interface UseClinicManagementReturn {
   refetch: () => void;
 }
 
-export const useClinicManagement = (): UseClinicManagementReturn => {
-  // Basic state
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [searchText, setSearchText] = useState('');
-  const [selectedCity, setSelectedCity] = useState<string | null>(null);
-  const [selectedStatus, setSelectedStatus] = useState<boolean | null>(null);
-  const [sortBy, setSortBy] = useState<string>('name');
-  const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('ASC');
-
-  // Bulk operations
-  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
-
+/**
+ * Hook for managing clinic data with table, filters, and CRUD operations
+ * 
+ * @example
+ * ```tsx
+ * const clinicManagement = useClinicManagement();
+ * 
+ * <Table
+ *   dataSource={clinicManagement.clinics}
+ *   loading={clinicManagement.loading}
+ *   onChange={clinicManagement.handleTableChange}
+ *   pagination={{
+ *     current: clinicManagement.currentPage,
+ *     pageSize: clinicManagement.pageSize,
+ *     total: clinicManagement.total,
+ *   }}
+ * />
+ * ```
+ */
+export function useClinicManagement(): UseClinicManagementReturn {
   const queryClient = useQueryClient();
 
-  // Query for clinics
+  // Use reusable table management hook
+  const table = useTableManagement({
+    initialSortBy: 'name',
+    initialSortOrder: 'ASC',
+  });
+
+  // Use reusable filter management hook
+  const filterManager = useFilterManagement<ClinicFilters>({
+    initialFilters: {
+      city: null,
+      isActive: null,
+    },
+    resetToPage1: () => table.setCurrentPage(1),
+  });
+
+  // Query for clinics with optimized dependencies
   const {
     data: clinicsResponse,
     isLoading: loading,
@@ -62,23 +94,23 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
   } = useQuery({
     queryKey: [
       'clinics',
-      currentPage,
-      pageSize,
-      searchText,
-      selectedCity,
-      selectedStatus,
-      sortBy,
-      sortOrder,
+      table.currentPage,
+      table.pageSize,
+      filterManager.searchText,
+      filterManager.filters.city,
+      filterManager.filters.isActive,
+      table.sortBy,
+      table.sortOrder,
     ],
     queryFn: async () => {
       const params: ClinicsQueryParams = {
-        page: currentPage,
-        limit: pageSize,
-        search: searchText || undefined,
-        city: selectedCity || undefined,
-        isActive: selectedStatus !== null ? selectedStatus : undefined,
-        sortBy,
-        sortOrder,
+        page: table.currentPage,
+        limit: table.pageSize,
+        search: filterManager.searchText || undefined,
+        city: filterManager.filters.city || undefined,
+        isActive: filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
+        sortBy: table.sortBy,
+        sortOrder: table.sortOrder,
       };
 
       return await ClinicsService.getClinics(params);
@@ -87,8 +119,7 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
     gcTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  // Mutations
-
+  // Delete mutation
   const deleteClinicMutation = useMutation({
     mutationFn: ClinicsService.deleteClinic,
     onSuccess: () => {
@@ -100,12 +131,13 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
     },
   });
 
+  // Bulk delete mutation
   const bulkDeleteMutation = useMutation({
     mutationFn: ClinicsService.bulkDeleteClinics,
     onSuccess: () => {
       antMessage.success('Clinics deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['clinics'] });
-      setSelectedRowKeys([]);
+      table.clearSelection();
     },
     onError: (error: any) => {
       antMessage.error(error?.response?.data?.message || 'Failed to delete clinics');
@@ -116,46 +148,23 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
   const clinics = clinicsResponse?.clinics || [];
   const total = clinicsResponse?.total || 0;
 
-  // Handlers
-  const handleSearch = useCallback((value: string) => {
-    setSearchText(value);
-    setCurrentPage(1);
-  }, []);
-
-  const handleCityFilter = useCallback((value: string | null) => {
-    setSelectedCity(value);
-    setCurrentPage(1);
-  }, []);
-
-  const handleStatusFilter = useCallback((value: boolean | null) => {
-    setSelectedStatus(value);
-    setCurrentPage(1);
-  }, []);
-
-  const clearFilters = useCallback(() => {
-    setSearchText('');
-    setSelectedCity(null);
-    setSelectedStatus(null);
-    setCurrentPage(1);
-  }, []);
-
-  const handleTableChange = useCallback(
-    (pagination: any, _filters: any, sorter: any) => {
-      if (pagination.current !== currentPage) {
-        setCurrentPage(pagination.current);
-      }
-      if (pagination.pageSize !== pageSize) {
-        setPageSize(pagination.pageSize);
-        setCurrentPage(1);
-      }
-      if (sorter.field !== sortBy || sorter.order !== sortOrder) {
-        setSortBy(sorter.field || 'name');
-        setSortOrder(sorter.order === 'ascend' ? 'ASC' : 'DESC');
-      }
+  // City filter handler (maps to filter manager)
+  const handleCityFilter = useCallback(
+    (value: string | null) => {
+      filterManager.setFilter('city', value);
     },
-    [currentPage, pageSize, sortBy, sortOrder]
+    [filterManager]
   );
 
+  // Status filter handler (maps to filter manager)
+  const handleStatusFilter = useCallback(
+    (value: boolean | null) => {
+      filterManager.setFilter('isActive', value);
+    },
+    [filterManager]
+  );
+
+  // Delete handler with confirmation
   const handleDeleteClinic = useCallback(
     async (clinicId: string) => {
       Modal.confirm({
@@ -172,65 +181,77 @@ export const useClinicManagement = (): UseClinicManagementReturn => {
     [deleteClinicMutation]
   );
 
+  // Bulk delete handler with confirmation
   const handleBulkDelete = useCallback(async () => {
-    if (selectedRowKeys.length === 0) return;
+    if (table.selectedRowKeys.length === 0) return;
 
     Modal.confirm({
-      title: `Are you sure you want to delete ${selectedRowKeys.length} clinic(s)?`,
+      title: `Are you sure you want to delete ${table.selectedRowKeys.length} clinic(s)?`,
       content: 'This action cannot be undone.',
       okText: 'Yes',
       okType: 'danger',
       cancelText: 'No',
       onOk: async () => {
-        await bulkDeleteMutation.mutateAsync(selectedRowKeys);
+        await bulkDeleteMutation.mutateAsync(table.selectedRowKeys);
       },
     });
-  }, [selectedRowKeys, bulkDeleteMutation]);
+  }, [table.selectedRowKeys, bulkDeleteMutation]);
 
+  // Export handlers
   const handleExportCSV = useCallback(async () => {
     return await ClinicsService.exportClinicsToCSV({
-      search: searchText || undefined,
-      city: selectedCity || undefined,
-      isActive: selectedStatus !== null ? selectedStatus : undefined,
+      search: filterManager.searchText || undefined,
+      city: filterManager.filters.city || undefined,
+      isActive: filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
     });
-  }, [searchText, selectedCity, selectedStatus]);
+  }, [filterManager.searchText, filterManager.filters.city, filterManager.filters.isActive]);
 
   const handleExportExcel = useCallback(async () => {
     return await ClinicsService.exportClinicsToExcel({
-      search: searchText || undefined,
-      city: selectedCity || undefined,
-      isActive: selectedStatus !== null ? selectedStatus : undefined,
+      search: filterManager.searchText || undefined,
+      city: filterManager.filters.city || undefined,
+      isActive: filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
     });
-  }, [searchText, selectedCity, selectedStatus]);
+  }, [filterManager.searchText, filterManager.filters.city, filterManager.filters.isActive]);
 
   return {
-    // State
+    // State from table management
     clinics,
     loading,
     total,
-    currentPage,
-    pageSize,
-    searchText,
-    selectedCity,
-    selectedStatus,
-    sortBy,
-    sortOrder,
-    selectedRowKeys,
+    currentPage: table.currentPage,
+    pageSize: table.pageSize,
+    sortBy: table.sortBy,
+    sortOrder: table.sortOrder,
+    selectedRowKeys: table.selectedRowKeys,
     bulkLoading: bulkDeleteMutation.isPending,
 
-    // Actions
-    setCurrentPage,
-    setPageSize,
-    handleSearch,
+    // State from filter management
+    searchText: filterManager.searchText,
+    selectedCity: filterManager.filters.city,
+    selectedStatus: filterManager.filters.isActive,
+
+    // Actions from table management
+    setCurrentPage: table.setCurrentPage,
+    setPageSize: table.setPageSize,
+    handleTableChange: table.handleTableChange,
+    setSelectedRowKeys: table.setSelectedRowKeys,
+
+    // Actions from filter management
+    handleSearch: filterManager.handleSearch,
+    clearFilters: filterManager.clearAllFilters,
+
+    // Custom filter handlers
     handleCityFilter,
     handleStatusFilter,
-    clearFilters,
-    handleTableChange,
+
+    // CRUD operations
     handleDeleteClinic,
     handleBulkDelete,
     handleExportCSV,
     handleExportExcel,
-    setSelectedRowKeys,
+
+    // Utils
     refetch,
   };
-};
+}

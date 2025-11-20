@@ -45,4 +45,5 @@ const MedicalInfoSection: FC<MedicalInfoSectionProps> = () => {
   );
 };
 
+export { MedicalInfoSection };
 export default MedicalInfoSection;

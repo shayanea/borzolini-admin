@@ -36,4 +36,5 @@ const EmailField: FC<EmailFieldProps> = ({
   );
 };
 
+export { EmailField };
 export default EmailField;

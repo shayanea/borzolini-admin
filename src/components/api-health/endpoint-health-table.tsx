@@ -8,7 +8,6 @@ import {
 import { Button, Table, Tag, Tooltip } from 'antd';
 
 import { EndpointStatus } from '@/types/api-health';
-import React from 'react';
 
 interface EndpointHealthTableProps {
   endpointTests: EndpointStatus[];
@@ -48,11 +47,11 @@ const getResponseTimeColor = (responseTime: number) => {
   return 'error';
 };
 
-export const EndpointHealthTable: React.FC<EndpointHealthTableProps> = ({
+export function EndpointHealthTable({
   endpointTests,
   onRefresh,
   isLoading,
-}) => {
+}: EndpointHealthTableProps) {
   const columns = [
     {
       title: 'Status',
@@ -208,4 +207,4 @@ export const EndpointHealthTable: React.FC<EndpointHealthTableProps> = ({
       />
     </div>
   );
-};
+}

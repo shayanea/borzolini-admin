@@ -59,4 +59,5 @@ const GeneralSettings = () => {
   );
 };
 
+export { GeneralSettings };
 export default GeneralSettings;

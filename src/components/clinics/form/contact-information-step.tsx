@@ -37,4 +37,5 @@ const ContactInformationStep: FC = () => {
   );
 };
 
+export { ContactInformationStep };
 export default ContactInformationStep;

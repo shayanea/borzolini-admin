@@ -7,11 +7,11 @@ interface AuthBackgroundProps {
   variant?: 'default' | 'minimal' | 'pattern';
 }
 
-const AuthBackground: React.FC<AuthBackgroundProps> = ({
+function AuthBackground({
   children,
   className = '',
   variant = 'default',
-}) => {
+}: AuthBackgroundProps) {
   const getBackgroundClasses = () => {
     const baseClasses = 'min-h-screen flex items-center justify-center p-4';
 
@@ -47,6 +47,7 @@ const AuthBackground: React.FC<AuthBackgroundProps> = ({
       <div className='relative z-10 w-full max-w-md'>{children}</div>
     </div>
   );
-};
+}
 
+export { AuthBackground };
 export default AuthBackground;

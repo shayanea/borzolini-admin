@@ -1,14 +1,13 @@
 import AdminRoutes from './admin-routes';
 import ModernHeader from './modern-header';
 import ModernSidebar from './modern-sidebar';
-import React from 'react';
 import { useAuthStore } from '@/stores/auth.store';
 
 interface ModernAdminLayoutProps {
   onLogout?: () => void;
 }
 
-const ModernAdminLayout: React.FC<ModernAdminLayoutProps> = ({ onLogout }) => {
+function ModernAdminLayout({ onLogout }: ModernAdminLayoutProps) {
   const { user, logout } = useAuthStore();
 
   const handleLogout = (): void => {
@@ -41,6 +40,7 @@ const ModernAdminLayout: React.FC<ModernAdminLayoutProps> = ({ onLogout }) => {
       </div>
     </div>
   );
-};
+}
 
+export { ModernAdminLayout };
 export default ModernAdminLayout;

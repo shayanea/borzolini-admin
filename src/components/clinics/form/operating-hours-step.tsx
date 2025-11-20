@@ -15,4 +15,5 @@ const OperatingHoursStep: FC<OperatingHoursStepProps> = ({ daysOfWeek }) => {
   );
 };
 
+export { OperatingHoursStep };
 export default OperatingHoursStep;

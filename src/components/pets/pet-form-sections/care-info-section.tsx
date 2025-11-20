@@ -37,4 +37,5 @@ const CareInfoSection: FC<CareInfoSectionProps> = ({ allergyOptions, medicationO
   );
 };
 
+export { CareInfoSection };
 export default CareInfoSection;

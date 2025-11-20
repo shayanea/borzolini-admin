@@ -9,7 +9,6 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 
-import React from 'react';
 
 const { Text, Title } = Typography;
 
@@ -19,7 +18,7 @@ interface AdminUserCardProps {
   onDelete?: (user: User) => void;
 }
 
-export const AdminUserCard: React.FC<AdminUserCardProps> = ({ user, onEdit, onDelete }) => {
+export function AdminUserCard({ user, onEdit, onDelete }: AdminUserCardProps) {
   // Check if this is an admin view with enhanced properties
   const isAdminView = user.isAdminView;
   const adminProps = user.adminProperties;
@@ -190,6 +189,6 @@ export const AdminUserCard: React.FC<AdminUserCardProps> = ({ user, onEdit, onDe
       </div>
     </Card>
   );
-};
+}
 
 export default AdminUserCard;

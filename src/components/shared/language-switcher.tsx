@@ -14,7 +14,7 @@ const languages: Language[] = [
   { code: 'es-US', name: 'Español', flag: '🇲🇽' },
 ];
 
-const LanguageSwitcher: React.FC = () => {
+function LanguageSwitcher() {
   const { i18n } = useTranslation();
 
   const handleLanguageChange = (languageCode: string): void => {
@@ -39,6 +39,7 @@ const LanguageSwitcher: React.FC = () => {
       ))}
     </Select>
   );
-};
+}
 
+export { LanguageSwitcher };
 export default LanguageSwitcher;

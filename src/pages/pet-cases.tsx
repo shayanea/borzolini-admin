@@ -13,10 +13,9 @@ import {
 import { Alert, Pagination } from 'antd';
 import { ErrorState, LoadingState } from '../components/common';
 
-import React from 'react';
 import { usePetCasesPage } from '../hooks/pet-cases/use-pet-cases-page';
 
-const PetCasesPage: React.FC = () => {
+function PetCasesPage() {
   const {
     user,
     userLoading,
@@ -143,6 +142,7 @@ const PetCasesPage: React.FC = () => {
       />
     </div>
   );
-};
+}
 
+export { PetCasesPage };
 export default PetCasesPage;

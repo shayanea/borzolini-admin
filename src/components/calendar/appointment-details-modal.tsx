@@ -602,4 +602,5 @@ const AppointmentDetailsModal = ({
   );
 };
 
+export { AppointmentDetailsModal };
 export default AppointmentDetailsModal;

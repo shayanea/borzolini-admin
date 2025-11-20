@@ -210,4 +210,5 @@ const ReviewsFormModal = ({
   );
 };
 
+export { ReviewsFormModal };
 export default ReviewsFormModal;

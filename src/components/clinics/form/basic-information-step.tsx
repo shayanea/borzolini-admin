@@ -55,4 +55,5 @@ const BasicInformationStep: FC = () => {
   );
 };
 
+export { BasicInformationStep };
 export default BasicInformationStep;

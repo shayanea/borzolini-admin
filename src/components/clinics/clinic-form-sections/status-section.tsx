@@ -15,4 +15,5 @@ const StatusSection: FC<StatusSectionProps> = () => {
   );
 };
 
+export { StatusSection };
 export default StatusSection;

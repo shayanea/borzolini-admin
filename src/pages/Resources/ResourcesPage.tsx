@@ -15,7 +15,7 @@ import { useResources } from '@/hooks/useResources';
 
 const { Text } = Typography;
 
-const ResourcesPage: React.FC = () => {
+function ResourcesPage() {
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -279,6 +279,7 @@ const ResourcesPage: React.FC = () => {
       />
     </div>
   );
-};
+}
 
+export { ResourcesPage };
 export default ResourcesPage;

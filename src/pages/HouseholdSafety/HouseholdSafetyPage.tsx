@@ -22,12 +22,12 @@ import {
     Tabs,
     Typography
 } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-const HouseholdSafetyPage: React.FC = () => {
+function HouseholdSafetyPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpecies, setSelectedSpecies] = useState('all');
@@ -565,6 +565,7 @@ const HouseholdSafetyPage: React.FC = () => {
       </Modal>
     </div>
   );
-};
+}
 
+export { HouseholdSafetyPage };
 export default HouseholdSafetyPage;

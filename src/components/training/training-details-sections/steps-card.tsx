@@ -1,12 +1,11 @@
 import { Card } from 'antd';
-import React from 'react';
 import type { TrainingActivity } from '@/types/training';
 
 interface StepsCardProps {
   activity: TrainingActivity;
 }
 
-export const StepsCard: React.FC<StepsCardProps> = ({ activity }) => {
+export function StepsCard({ activity }: StepsCardProps) {
   return (
     <Card title={`Training Steps (${activity.steps.length})`}>
       <div className='space-y-4'>
@@ -38,5 +37,5 @@ export const StepsCard: React.FC<StepsCardProps> = ({ activity }) => {
       </div>
     </Card>
   );
-};
+}
 

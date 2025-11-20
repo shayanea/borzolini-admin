@@ -12,11 +12,11 @@ interface ModernHeaderProps {
   onLogout?: () => void;
 }
 
-const ModernHeader: React.FC<ModernHeaderProps> = ({
+function ModernHeader({
   userName = 'Dr. Sarah',
   userRole = 'Clinic Manager',
   onLogout,
-}) => {
+}: ModernHeaderProps) {
   const { t } = useTranslation(['components', 'common']);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -217,6 +217,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
       </div>
     </header>
   );
-};
+}
 
+export { ModernHeader };
 export default ModernHeader;

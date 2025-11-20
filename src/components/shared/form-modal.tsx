@@ -148,4 +148,5 @@ const FormModal: FC<FormModalProps> = ({
   );
 };
 
+export { FormModal };
 export default FormModal;

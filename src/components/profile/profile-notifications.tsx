@@ -33,10 +33,10 @@ interface NotificationSettings {
   quietHoursEnd: string;
 }
 
-export const ProfileNotifications: React.FC<ProfileNotificationsProps> = ({
+export function ProfileNotifications({
   user,
   onSuccess,
-}) => {
+}: ProfileNotificationsProps) {
   const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>({
     emailNotifications: true,
     smsNotifications: user.isPhoneVerified || false,
@@ -308,4 +308,4 @@ export const ProfileNotifications: React.FC<ProfileNotificationsProps> = ({
       </Card>
     </div>
   );
-};
+}

@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 
 const { Title, Text, Paragraph } = Typography;
 
-const ClinicRegister: React.FC = () => {
+function ClinicRegister() {
   const navigate = useNavigate();
   const [form] = Form.useForm<ClinicRegistrationValues>();
   const [currentStep, setCurrentStep] = useState(0);
@@ -223,6 +223,7 @@ const ClinicRegister: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
+export { ClinicRegister };
 export default ClinicRegister;

@@ -1,5 +1,4 @@
 import { Form, Modal } from 'antd';
-import React from 'react';
 import type { TrainingActivity } from '@/types/training';
 import { TRAINING_DIFFICULTY, TRAINING_SPECIES } from '@/types/training';
 import type { ReturnType } from 'react';
@@ -24,7 +23,7 @@ interface TrainingFormModalProps {
   activity?: TrainingActivity;
 }
 
-export const TrainingFormModal: React.FC<TrainingFormModalProps> = ({
+export function TrainingFormModal({
   open,
   onCancel,
   onSubmit,
@@ -32,7 +31,7 @@ export const TrainingFormModal: React.FC<TrainingFormModalProps> = ({
   isLoading,
   isEdit = false,
   activity,
-}) => {
+}: TrainingFormModalProps) {
   return (
     <Modal
       open={open}
@@ -89,5 +88,5 @@ export const TrainingFormModal: React.FC<TrainingFormModalProps> = ({
       </Form>
     </Modal>
   );
-};
+}
 

@@ -15,4 +15,5 @@ const StatusStep: FC = () => {
   );
 };
 
+export { StatusStep };
 export default StatusStep;

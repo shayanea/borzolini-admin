@@ -32,4 +32,5 @@ const SettingsHeader = ({ onResetDefaults, onSaveChanges }: SettingsHeaderProps)
   );
 };
 
+export { SettingsHeader };
 export default SettingsHeader;

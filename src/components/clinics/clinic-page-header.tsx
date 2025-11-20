@@ -127,4 +127,5 @@ const ClinicPageHeader = ({
   );
 };
 
+export { ClinicPageHeader };
 export default ClinicPageHeader;

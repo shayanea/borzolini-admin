@@ -92,4 +92,5 @@ const ClinicFilters = ({
   );
 };
 
+export { ClinicFilters };
 export default ClinicFilters;

@@ -68,4 +68,5 @@ const PetPageHeader = ({ onAddPet, onRefresh, loading = false }: PetPageHeaderPr
   );
 };
 
+export { PetPageHeader };
 export default PetPageHeader;

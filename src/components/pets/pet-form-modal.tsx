@@ -173,4 +173,5 @@ const PetFormModal = ({
   );
 };
 
+export { PetFormModal };
 export default PetFormModal;

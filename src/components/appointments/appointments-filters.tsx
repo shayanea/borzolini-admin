@@ -160,4 +160,5 @@ const AppointmentsFilters = ({
   );
 };
 
+export { AppointmentsFilters };
 export default AppointmentsFilters;

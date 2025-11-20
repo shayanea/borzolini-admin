@@ -57,4 +57,5 @@ const BasicInfoSection: FC<BasicInfoSectionProps> = () => {
   );
 };
 
+export { BasicInfoSection };
 export default BasicInfoSection;

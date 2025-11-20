@@ -83,4 +83,5 @@ const AccountInfoSection: FC<AccountInfoSectionProps> = ({ editingUser }) => {
   );
 };
 
+export { AccountInfoSection };
 export default AccountInfoSection;

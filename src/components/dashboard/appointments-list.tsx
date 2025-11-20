@@ -1,6 +1,5 @@
 import { Clock, MoreVertical, Phone } from 'lucide-react';
 
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface Appointment {
@@ -22,7 +21,7 @@ interface AppointmentsListProps {
   onCancel?: (id: string) => void;
 }
 
-const AppointmentsList: React.FC<AppointmentsListProps> = ({
+function AppointmentsList({
   appointments = [
     {
       id: '1',
@@ -60,7 +59,7 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({
   ],
   onViewDetails = () => {},
   onReschedule = () => {},
-}) => {
+}: AppointmentsListProps) {
   const { t } = useTranslation('components');
 
   const statusConfig = {
@@ -207,4 +206,5 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({
   );
 };
 
+export { AppointmentsList };
 export default AppointmentsList;

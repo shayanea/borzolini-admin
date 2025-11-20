@@ -1,5 +1,4 @@
 import { Spin } from 'antd';
-import React from 'react';
 
 interface LoadingStateProps {
   message?: string;
@@ -8,12 +7,12 @@ interface LoadingStateProps {
   fullScreen?: boolean;
 }
 
-const LoadingState: React.FC<LoadingStateProps> = ({
+function LoadingState({
   message = 'Loading...',
   size = 'large',
   className = '',
   fullScreen = false,
-}) => {
+}: LoadingStateProps) {
   const containerClass = fullScreen
     ? 'min-h-screen flex items-center justify-center'
     : 'flex justify-center items-center py-12';
@@ -26,6 +25,7 @@ const LoadingState: React.FC<LoadingStateProps> = ({
       </div>
     </div>
   );
-};
+}
 
+export { LoadingState };
 export default LoadingState;

@@ -1,12 +1,11 @@
 import { Badge, Card, Space } from 'antd';
-import React from 'react';
 import type { TrainingActivity } from '@/types/training';
 
 interface TagsCardProps {
   activity: TrainingActivity;
 }
 
-export const TagsCard: React.FC<TagsCardProps> = ({ activity }) => {
+export function TagsCard({ activity }: TagsCardProps) {
   if (activity.tags.length === 0) return null;
 
   return (
@@ -18,5 +17,5 @@ export const TagsCard: React.FC<TagsCardProps> = ({ activity }) => {
       </Space>
     </Card>
   );
-};
+}
 

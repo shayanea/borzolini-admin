@@ -22,11 +22,11 @@ interface ProfileFormData {
   country?: string;
 }
 
-export const ProfileInformation: React.FC<ProfileInformationProps> = ({
+export function ProfileInformation({
   user,
   onSuccess,
   onError,
-}) => {
+}: ProfileInformationProps) {
   const [form] = Form.useForm();
   const { updateUser } = useAuthActions();
   const [isEditing, setIsEditing] = useState(false);
@@ -261,4 +261,4 @@ export const ProfileInformation: React.FC<ProfileInformationProps> = ({
       )}
     </Card>
   );
-};
+}

@@ -1,16 +1,16 @@
-import { Col, Form, Input, Row, Typography, Alert } from 'antd';
 import {
-  FacebookOutlined,
-  TwitterOutlined,
-  InstagramOutlined,
-  LinkedinOutlined,
-  YoutubeOutlined,
-  ShareAltOutlined,
+    FacebookOutlined,
+    InstagramOutlined,
+    LinkedinOutlined,
+    ShareAltOutlined,
+    TwitterOutlined,
+    YoutubeOutlined,
 } from '@ant-design/icons';
+import { Alert, Col, Form, Input, Row, Typography } from 'antd';
 
 const { Text, Title } = Typography;
 
-export const SocialMediaStep: React.FC = () => {
+export function SocialMediaStep() {
   return (
     <div className='space-y-8'>
       {/* Section Header */}
@@ -212,4 +212,4 @@ export const SocialMediaStep: React.FC = () => {
       </div>
     </div>
   );
-};
+}

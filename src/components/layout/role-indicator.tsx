@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tag } from 'antd';
 // Role indicator component to show user's current role
 import { UserRole } from '@/types';
@@ -24,12 +23,13 @@ const ROLE_LABELS: Record<UserRole, string> = {
   patient: 'Patient',
 };
 
-const RoleIndicator: React.FC<RoleIndicatorProps> = ({ role, className = '' }) => {
+function RoleIndicator({ role, className = '' }: RoleIndicatorProps) {
   return (
     <Tag color={ROLE_COLORS[role]} className={`text-xs font-medium ${className}`}>
       {ROLE_LABELS[role]}
     </Tag>
   );
-};
+}
 
+export { RoleIndicator };
 export default RoleIndicator;

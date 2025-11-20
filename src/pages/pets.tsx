@@ -14,7 +14,7 @@ import { Modal } from 'antd';
 import { usePetManagement } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 
-const PetsPage: React.FC = () => {
+function PetsPage() {
   const { t } = useTranslation('pages');
   const {
     pets,
@@ -197,6 +197,7 @@ const PetsPage: React.FC = () => {
       />
     </div>
   );
-};
+}
 
+export { PetsPage };
 export default PetsPage;

@@ -211,4 +211,5 @@ const AddressFields: FC<AddressFieldsProps> = ({
   );
 };
 
+export { AddressFields };
 export default AddressFields;

@@ -1,8 +1,7 @@
 import { Card, Col, Form, Input, Row, Switch } from 'antd';
 
-import React from 'react';
 
-const NotificationSettings: React.FC = () => {
+function NotificationSettings() {
   return (
     <Card title='Notification Settings' className='admin-card mb-6'>
       <Row gutter={24}>
@@ -54,6 +53,7 @@ const NotificationSettings: React.FC = () => {
       </Row>
     </Card>
   );
-};
+}
 
+export { NotificationSettings };
 export default NotificationSettings;

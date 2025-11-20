@@ -14,12 +14,12 @@ export interface AppointmentReviewsSectionProps {
   onViewReview?: (reviewId: string) => void;
 }
 
-export const AppointmentReviewsSection: React.FC<AppointmentReviewsSectionProps> = ({
+export function AppointmentReviewsSection({
   appointmentId,
   // appointmentType,
   isHomeVisit,
   onViewReview,
-}) => {
+}: AppointmentReviewsSectionProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -173,4 +173,4 @@ export const AppointmentReviewsSection: React.FC<AppointmentReviewsSectionProps>
       )}
     </Card>
   );
-};
+}

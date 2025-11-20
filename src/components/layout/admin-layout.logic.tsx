@@ -9,7 +9,7 @@ import { getMenuItemsForRole } from '@/constants/menu-permissions';
 import { useAuth } from '@/hooks/use-auth';
 
 export const useAdminLayoutLogic = () => {
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();

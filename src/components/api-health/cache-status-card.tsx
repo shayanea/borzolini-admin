@@ -6,7 +6,6 @@ import {
   HddOutlined,
 } from '@ant-design/icons';
 
-import React from 'react';
 import { environment } from '@/config/environment';
 
 interface CacheStatusCardProps {
@@ -28,7 +27,7 @@ const getCacheHealthColor = (size: number, maxSize: number) => {
   return 'error';
 };
 
-export const CacheStatusCard: React.FC<CacheStatusCardProps> = ({ cacheStatus, isLoading }) => {
+export function CacheStatusCard({ cacheStatus, isLoading }: CacheStatusCardProps) {
   const cacheTypes = [
     {
       key: 'appointments',
@@ -179,4 +178,4 @@ export const CacheStatusCard: React.FC<CacheStatusCardProps> = ({ cacheStatus, i
       </div>
     </Card>
   );
-};
+}

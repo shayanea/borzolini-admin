@@ -79,4 +79,5 @@ const ClinicRegisterSuccess = () => {
   );
 };
 
+export { ClinicRegisterSuccess };
 export default ClinicRegisterSuccess;

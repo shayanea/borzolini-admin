@@ -6,7 +6,7 @@ import type { TrainingFormSectionProps } from './types';
 const { TextArea } = Input;
 const { Text } = Typography;
 
-export const StepsSection: React.FC<TrainingFormSectionProps> = ({ form }) => {
+export function StepsSection({ form }: TrainingFormSectionProps) {
   return (
     <Card
       title={
@@ -169,5 +169,5 @@ export const StepsSection: React.FC<TrainingFormSectionProps> = ({ form }) => {
       )}
     </Card>
   );
-};
+}
 

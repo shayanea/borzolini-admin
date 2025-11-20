@@ -247,4 +247,5 @@ const UserTable = ({
   );
 };
 
+export { UserTable };
 export default UserTable;

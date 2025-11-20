@@ -195,5 +195,6 @@ export const EmptyStateVariants = {
   ),
 };
 
+export { EmptyState };
 export default EmptyState;
 

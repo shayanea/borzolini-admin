@@ -74,4 +74,5 @@ const UserFilters = ({
   );
 };
 
+export { UserFilters };
 export default UserFilters;

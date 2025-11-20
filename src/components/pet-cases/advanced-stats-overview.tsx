@@ -11,17 +11,16 @@ import {
 import { Card, Col, Row, Statistic } from 'antd';
 
 import { CaseStats } from '../../types/pet-cases';
-import React from 'react';
 
 interface AdvancedStatsOverviewProps {
   stats: CaseStats;
   loading?: boolean;
 }
 
-const AdvancedStatsOverview: React.FC<AdvancedStatsOverviewProps> = ({
+function AdvancedStatsOverview({
   stats,
   loading = false,
-}) => {
+}: AdvancedStatsOverviewProps) {
   const resolutionRate = stats.total > 0 ? (stats.resolved / stats.total) * 100 : 0;
   const urgentRate = stats.total > 0 ? (stats.urgent / stats.total) * 100 : 0;
   const activeCases = stats.total - stats.resolved;
@@ -213,6 +212,7 @@ const AdvancedStatsOverview: React.FC<AdvancedStatsOverviewProps> = ({
       </Row>
     </div>
   );
-};
+}
 
+export { AdvancedStatsOverview };
 export default AdvancedStatsOverview;

@@ -110,6 +110,8 @@ export interface TrainingSearchParams {
   difficulty?: 'easy' | 'moderate' | 'advanced';
   page?: number;
   limit?: number;
+  sortBy?: string;
+  sortOrder?: 'ASC' | 'DESC';
 }
 
 export interface TrainingResponse {

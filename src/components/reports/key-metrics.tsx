@@ -28,4 +28,5 @@ const KeyMetrics = ({ metrics }: KeyMetricsProps) => {
   );
 };
 
+export { KeyMetrics };
 export default KeyMetrics;

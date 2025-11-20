@@ -6,7 +6,6 @@ import {
   ClockCircleOutlined,
 } from '@ant-design/icons';
 import { Card, Col, Progress, Row, Statistic } from 'antd';
-import React from 'react';
 import { CASE_PRIORITY_COLORS, CASE_STATUS_COLORS, CaseStats } from '../../types/pet-cases';
 
 interface PetCaseStatsCardProps {
@@ -14,7 +13,7 @@ interface PetCaseStatsCardProps {
   loading?: boolean;
 }
 
-const PetCaseStatsCard: React.FC<PetCaseStatsCardProps> = ({ stats, loading = false }) => {
+function PetCaseStatsCard({ stats, loading = false }: PetCaseStatsCardProps) {
   return (
     <Card loading={loading} className='mb-6'>
       <Row gutter={[16, 16]}>
@@ -129,6 +128,7 @@ const PetCaseStatsCard: React.FC<PetCaseStatsCardProps> = ({ stats, loading = fa
       </div>
     </Card>
   );
-};
+}
 
+export { PetCaseStatsCard };
 export default PetCaseStatsCard;

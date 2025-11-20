@@ -28,7 +28,7 @@ interface PrivacySettings {
   dataRetention: '30_days' | '90_days' | '1_year' | 'indefinite';
 }
 
-export const ProfilePrivacy: React.FC<ProfilePrivacyProps> = ({ user, onSuccess, onError }) => {
+export function ProfilePrivacy({ user, onSuccess, onError }: ProfilePrivacyProps) {
   const [privacySettings, setPrivacySettings] = useState<PrivacySettings>({
     profileVisibility: 'staff_only',
     showEmail: true,
@@ -428,4 +428,4 @@ export const ProfilePrivacy: React.FC<ProfilePrivacyProps> = ({ user, onSuccess,
       </Modal>
     </div>
   );
-};
+}

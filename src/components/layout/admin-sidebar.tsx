@@ -8,7 +8,7 @@ interface AdminSidebarProps {
   getSelectedKey: () => string;
 }
 
-const AdminSidebar: React.FC<AdminSidebarProps> = ({ collapsed, menuItems, getSelectedKey }) => {
+function AdminSidebar({ collapsed, menuItems, getSelectedKey }: AdminSidebarProps) {
   return (
     <div
       className='admin-sidebar fixed left-0 top-0 h-full z-50 m-4 rounded-xl shadow-lg'
@@ -54,6 +54,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ collapsed, menuItems, getSe
       />
     </div>
   );
-};
+}
 
+export { AdminSidebar };
 export default AdminSidebar;

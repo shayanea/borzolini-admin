@@ -100,4 +100,5 @@ const SettingsCategories = () => {
   );
 };
 
+export { SettingsCategories };
 export default SettingsCategories;

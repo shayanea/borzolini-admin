@@ -50,4 +50,5 @@ const PersonalInfoSection: FC<PersonalInfoSectionProps> = () => {
   );
 };
 
+export { PersonalInfoSection };
 export default PersonalInfoSection;

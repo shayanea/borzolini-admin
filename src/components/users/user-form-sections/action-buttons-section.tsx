@@ -23,4 +23,5 @@ const ActionButtonsSection: FC<ActionButtonsSectionProps> = ({
   );
 };
 
+export { ActionButtonsSection };
 export default ActionButtonsSection;

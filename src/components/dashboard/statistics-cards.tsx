@@ -202,4 +202,5 @@ const StatisticsCards = ({ stats }: StatisticsCardsProps) => {
   );
 };
 
+export { StatisticsCards };
 export default StatisticsCards;

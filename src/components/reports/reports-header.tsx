@@ -43,4 +43,5 @@ const ReportsHeader = ({
   );
 };
 
+export { ReportsHeader };
 export default ReportsHeader;

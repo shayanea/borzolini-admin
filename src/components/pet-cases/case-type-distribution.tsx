@@ -12,7 +12,6 @@ import {
 } from '@ant-design/icons';
 import { Card, Col, Row, Tooltip } from 'antd';
 
-import React from 'react';
 import { CaseStats } from '../../types/pet-cases';
 
 interface CaseTypeDistributionProps {
@@ -20,7 +19,7 @@ interface CaseTypeDistributionProps {
   loading?: boolean;
 }
 
-const CaseTypeDistribution: React.FC<CaseTypeDistributionProps> = ({ stats, loading = false }) => {
+function CaseTypeDistribution({ stats, loading = false }: CaseTypeDistributionProps) {
   const typeIcons = {
     consultation: <UserOutlined />,
     follow_up: <CalendarOutlined />,
@@ -195,6 +194,6 @@ const CaseTypeDistribution: React.FC<CaseTypeDistributionProps> = ({ stats, load
       )}
     </Card>
   );
-};
+}
 
 export default CaseTypeDistribution;

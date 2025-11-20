@@ -1,5 +1,4 @@
 import { Badge, Card, Typography } from 'antd';
-import React from 'react';
 import type { TrainingActivity } from '@/types/training';
 import { formatDate } from '@/lib/utils';
 
@@ -9,7 +8,7 @@ interface MetadataCardProps {
   activity: TrainingActivity;
 }
 
-export const MetadataCard: React.FC<MetadataCardProps> = ({ activity }) => {
+export function MetadataCard({ activity }: MetadataCardProps) {
   return (
     <Card title='Activity Information'>
       <div className='grid grid-cols-2 md:grid-cols-4 gap-4 text-sm'>
@@ -37,5 +36,5 @@ export const MetadataCard: React.FC<MetadataCardProps> = ({ activity }) => {
       </div>
     </Card>
   );
-};
+}
 

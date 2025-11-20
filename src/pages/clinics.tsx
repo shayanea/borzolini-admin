@@ -159,4 +159,5 @@ const Clinics = () => {
   );
 };
 
+export { Clinics };
 export default Clinics;

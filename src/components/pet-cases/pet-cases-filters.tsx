@@ -4,7 +4,6 @@ import { ClearOutlined, FilterOutlined } from '@ant-design/icons';
 import { InputFilters, QuickFilters, SelectFilters } from './filter-sections';
 
 import { CaseFilters } from '../../types/pet-cases';
-import React from 'react';
 import { useFilterFormLogic } from './filter-sections/filter-form-logic';
 
 interface PetCasesFiltersProps {
@@ -14,12 +13,12 @@ interface PetCasesFiltersProps {
   loading?: boolean;
 }
 
-const PetCasesFilters: React.FC<PetCasesFiltersProps> = ({
+function PetCasesFilters({
   filters,
   onFiltersChange,
   onReset,
   loading = false,
-}) => {
+}: PetCasesFiltersProps) {
   const { form, handleValuesChange, handleReset, initialValues } = useFilterFormLogic({
     filters,
     onFiltersChange,
@@ -65,6 +64,7 @@ const PetCasesFilters: React.FC<PetCasesFiltersProps> = ({
       </Form>
     </div>
   );
-};
+}
 
+export { PetCasesFilters };
 export default PetCasesFilters;

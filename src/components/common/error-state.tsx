@@ -1,5 +1,4 @@
 import { Alert, Button } from 'antd';
-import React from 'react';
 
 interface ErrorStateProps {
   title?: string;
@@ -12,7 +11,7 @@ interface ErrorStateProps {
   className?: string;
 }
 
-const ErrorState: React.FC<ErrorStateProps> = ({
+function ErrorState({
   title = 'Error',
   message,
   description,
@@ -21,7 +20,7 @@ const ErrorState: React.FC<ErrorStateProps> = ({
   showIcon = true,
   type = 'error',
   className = '',
-}) => {
+}: ErrorStateProps) {
   return (
     <div className={`space-y-6 ${className}`}>
       <Alert
@@ -39,6 +38,7 @@ const ErrorState: React.FC<ErrorStateProps> = ({
       />
     </div>
   );
-};
+}
 
+export { ErrorState };
 export default ErrorState;

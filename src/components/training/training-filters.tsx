@@ -17,7 +17,7 @@ interface TrainingFiltersProps {
   onClearFilters: () => void;
 }
 
-export const TrainingFilters: React.FC<TrainingFiltersProps> = ({
+export function TrainingFilters({
   searchTerm,
   selectedSpecies,
   selectedDifficulty,
@@ -27,7 +27,7 @@ export const TrainingFilters: React.FC<TrainingFiltersProps> = ({
   onDifficultyChange,
   onTagsChange,
   onClearFilters,
-}) => {
+}: TrainingFiltersProps) {
   return (
     <Card>
       <div className='flex justify-between items-center mb-4'>
@@ -91,5 +91,5 @@ export const TrainingFilters: React.FC<TrainingFiltersProps> = ({
       </div>
     </Card>
   );
-};
+}
 

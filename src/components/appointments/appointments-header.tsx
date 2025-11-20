@@ -67,4 +67,5 @@ const AppointmentsHeader = () => {
   );
 };
 
+export { AppointmentsHeader };
 export default AppointmentsHeader;

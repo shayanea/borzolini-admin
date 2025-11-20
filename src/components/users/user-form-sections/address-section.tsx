@@ -16,4 +16,5 @@ const AddressSection: FC<AddressSectionProps> = () => {
   );
 };
 
+export { AddressSection };
 export default AddressSection;

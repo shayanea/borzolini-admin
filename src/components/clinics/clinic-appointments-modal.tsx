@@ -135,4 +135,5 @@ const ClinicAppointmentsModal = ({ visible, clinic, onClose }: ClinicAppointment
   );
 };
 
+export { ClinicAppointmentsModal };
 export default ClinicAppointmentsModal;

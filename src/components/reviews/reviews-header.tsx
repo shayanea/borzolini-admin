@@ -132,4 +132,5 @@ const ReviewsHeader = ({ stats, statsLoading, onNewReview, onExport }: ReviewsHe
   );
 };
 
+export { ReviewsHeader };
 export default ReviewsHeader;

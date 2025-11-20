@@ -9,7 +9,6 @@ import {
 } from '@ant-design/icons';
 
 import { CaseStats } from '../../types/pet-cases';
-import React from 'react';
 
 const { Title } = Typography;
 
@@ -26,7 +25,7 @@ interface PetCasesHeaderProps {
   clinicName?: string;
 }
 
-const PetCasesHeader: React.FC<PetCasesHeaderProps> = ({
+function PetCasesHeader({
   totalCases,
   selectedCount,
   stats,
@@ -37,7 +36,7 @@ const PetCasesHeader: React.FC<PetCasesHeaderProps> = ({
   onViewStats,
   viewAllCases = false,
   clinicName,
-}) => {
+}: PetCasesHeaderProps) {
   return (
     <div className='bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-6'>
       {/* Header Title */}
@@ -172,6 +171,7 @@ const PetCasesHeader: React.FC<PetCasesHeaderProps> = ({
       </Space>
     </div>
   );
-};
+}
 
+export { PetCasesHeader };
 export default PetCasesHeader;

@@ -1,7 +1,6 @@
 import { Card, Col, Form, Input, Row, Switch } from 'antd';
-import React from 'react';
 
-const SecuritySettings: React.FC = () => {
+function SecuritySettings() {
   return (
     <Card title='Security Settings' className='admin-card mb-6'>
       <Row gutter={24}>
@@ -29,6 +28,7 @@ const SecuritySettings: React.FC = () => {
       </Form.Item>
     </Card>
   );
-};
+}
 
+export { SecuritySettings };
 export default SecuritySettings;

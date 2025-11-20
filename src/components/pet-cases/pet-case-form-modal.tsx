@@ -6,7 +6,7 @@ import {
 } from './pet-case-form-sections';
 import { CreatePetCaseRequest, UpdatePetCaseRequest } from '../../types/pet-cases';
 import { Divider, Form, Modal } from 'antd';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { HeartOutlined } from '@ant-design/icons';
 import { useMessage } from '../../hooks/use-message';
@@ -21,13 +21,13 @@ interface PetCaseFormModalProps {
   editCase?: any; // ClinicPetCase
 }
 
-const PetCaseFormModal: React.FC<PetCaseFormModalProps> = ({
+function PetCaseFormModal({
   visible,
   onClose,
   onSuccess,
   clinicId,
   editCase,
-}) => {
+}: PetCaseFormModalProps) {
   const [form] = Form.useForm();
   const { t } = useTranslation('components');
   const { updateCase, isCreating, isUpdating } = usePetCases(clinicId);
@@ -146,6 +146,7 @@ const PetCaseFormModal: React.FC<PetCaseFormModalProps> = ({
       </Form>
     </Modal>
   );
-};
+}
 
+export { PetCaseFormModal };
 export default PetCaseFormModal;

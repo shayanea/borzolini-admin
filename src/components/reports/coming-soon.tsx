@@ -21,4 +21,5 @@ const ComingSoon = () => {
   );
 };
 
+export { ComingSoon };
 export default ComingSoon;

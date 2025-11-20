@@ -6,11 +6,11 @@ import { getSpeciesIcon } from '../training-utils';
 const { Option } = Select;
 const { TextArea } = Input;
 
-export const BasicInfoSection: React.FC<TrainingFormSectionProps> = ({
+export function BasicInfoSection({
   form,
   difficultyOptions,
   speciesOptions,
-}) => {
+}: TrainingFormSectionProps) {
   return (
     <Card title='Basic Information'>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
@@ -117,5 +117,5 @@ export const BasicInfoSection: React.FC<TrainingFormSectionProps> = ({
       </div>
     </Card>
   );
-};
+}
 

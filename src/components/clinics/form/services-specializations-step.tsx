@@ -36,4 +36,5 @@ const ServicesSpecializationsStep: FC<ServicesSpecializationsStepProps> = ({
   );
 };
 
+export { ServicesSpecializationsStep };
 export default ServicesSpecializationsStep;

@@ -6,7 +6,7 @@ import type { TrainingFormSectionProps } from './types';
 
 const { Text } = Typography;
 
-export const BenefitsSection: React.FC<TrainingFormSectionProps> = ({ form }) => {
+export function BenefitsSection({ form }: TrainingFormSectionProps) {
   return (
     <Card
       title='Benefits of This Training'
@@ -58,5 +58,5 @@ export const BenefitsSection: React.FC<TrainingFormSectionProps> = ({ form }) =>
       </Form.Item>
     </Card>
   );
-};
+}
 

@@ -1,6 +1,5 @@
 import { Button, Card, Space, Typography } from 'antd';
 
-import React from 'react';
 // Demo component to switch between different user roles for testing
 import { UserRole } from '@/types';
 
@@ -11,7 +10,7 @@ interface RoleSwitcherProps {
   onRoleChange: (role: UserRole) => void;
 }
 
-const RoleSwitcher: React.FC<RoleSwitcherProps> = ({ currentRole, onRoleChange }) => {
+function RoleSwitcher({ currentRole, onRoleChange }: RoleSwitcherProps) {
   const roles: { role: UserRole; label: string; color: string }[] = [
     { role: 'admin', label: 'Admin', color: 'red' },
     { role: 'veterinarian', label: 'Veterinarian', color: 'blue' },
@@ -44,6 +43,7 @@ const RoleSwitcher: React.FC<RoleSwitcherProps> = ({ currentRole, onRoleChange }
       </Space>
     </Card>
   );
-};
+}
 
+export { RoleSwitcher };
 export default RoleSwitcher;

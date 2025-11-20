@@ -9,11 +9,11 @@ interface PageLayoutProps {
   contentClassName?: string;
 }
 
-const PageLayout: React.FC<PageLayoutProps> = ({
+function PageLayout({
   children,
   className = 'min-h-screen',
   contentClassName = 'p-6',
-}) => {
+}: PageLayoutProps) {
   return (
     <Layout className={className}>
       <Content className={contentClassName}>
@@ -21,6 +21,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
       </Content>
     </Layout>
   );
-};
+}
 
+export { PageLayout };
 export default PageLayout;

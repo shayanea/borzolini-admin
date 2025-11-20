@@ -8,7 +8,6 @@ import {
   MoreOutlined,
 } from '@ant-design/icons';
 
-import React from 'react';
 import { useMessage } from '../../hooks/use-message';
 import { useTranslation } from 'react-i18next';
 
@@ -19,12 +18,12 @@ interface PetCaseBulkActionsProps {
   loading?: boolean;
 }
 
-const PetCaseBulkActions: React.FC<PetCaseBulkActionsProps> = ({
+function PetCaseBulkActions({
   selectedCaseIds,
   onBulkUpdate,
   onClearSelection,
   loading = false,
-}) => {
+}: PetCaseBulkActionsProps) {
   const { t } = useTranslation('components');
   const { success, error, warning, info } = useMessage();
   const handleBulkAction = (action: string) => {
@@ -113,6 +112,7 @@ const PetCaseBulkActions: React.FC<PetCaseBulkActionsProps> = ({
       </Space>
     </div>
   );
-};
+}
 
+export { PetCaseBulkActions };
 export default PetCaseBulkActions;

@@ -134,4 +134,5 @@ const ClinicFormModal = ({
   );
 };
 
+export { ClinicFormModal };
 export default ClinicFormModal;

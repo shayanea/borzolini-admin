@@ -12,14 +12,13 @@ import {
 } from '@ant-design/icons';
 
 import { CaseStats } from '../../types/pet-cases';
-import React from 'react';
 
 interface PerformanceMetricsProps {
   stats: CaseStats;
   loading?: boolean;
 }
 
-const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ stats, loading = false }) => {
+function PerformanceMetrics({ stats, loading = false }: PerformanceMetricsProps) {
   const resolutionRate = stats.total > 0 ? (stats.resolved / stats.total) * 100 : 0;
   const urgentRate = stats.total > 0 ? (stats.urgent / stats.total) * 100 : 0;
   const activeCases = stats.total - stats.resolved;
@@ -280,6 +279,7 @@ const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ stats, loading 
       </Card>
     </div>
   );
-};
+}
 
+export { PerformanceMetrics };
 export default PerformanceMetrics;

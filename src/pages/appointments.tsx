@@ -204,4 +204,5 @@ const Appointments = () => {
   );
 };
 
+export { Appointments };
 export default Appointments;

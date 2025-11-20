@@ -144,4 +144,5 @@ const RecentActivity = ({ stats }: RecentActivityProps) => {
   );
 };
 
+export { RecentActivity };
 export default RecentActivity;

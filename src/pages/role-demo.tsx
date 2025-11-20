@@ -1,5 +1,5 @@
 import { Alert, Card, Space, Typography } from 'antd';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { getAccessibleRoutes, getMenuItemsForRole } from '@/constants/menu-permissions';
 
 // Demo page to test role-based menu filtering
@@ -8,7 +8,7 @@ import { UserRole } from '@/types';
 
 const { Title, Text, Paragraph } = Typography;
 
-const RoleDemo: React.FC = () => {
+function RoleDemo() {
   const [currentRole, setCurrentRole] = useState<UserRole>('admin');
 
   const handleRoleChange = (role: UserRole) => {
@@ -84,6 +84,7 @@ const RoleDemo: React.FC = () => {
       </Space>
     </div>
   );
-};
+}
 
+export { RoleDemo };
 export default RoleDemo;

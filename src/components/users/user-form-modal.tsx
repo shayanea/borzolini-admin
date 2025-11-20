@@ -103,4 +103,5 @@ const UserFormModal = ({
   );
 };
 
+export { UserFormModal };
 export default UserFormModal;

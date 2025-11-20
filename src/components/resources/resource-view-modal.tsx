@@ -1,5 +1,4 @@
 import { Badge, Modal, Typography } from 'antd';
-import React from 'react';
 import type { Resource } from '@/types/resources';
 import { formatDate } from '@/lib/utils';
 
@@ -12,12 +11,12 @@ interface ResourceViewModalProps {
   getTypeColor: (type: string) => 'blue' | 'green' | 'orange' | 'purple' | 'pink' | 'default';
 }
 
-export const ResourceViewModal: React.FC<ResourceViewModalProps> = ({
+export function ResourceViewModal({
   resource,
   open,
   onClose,
   getTypeColor,
-}) => {
+}: ResourceViewModalProps) {
   if (!resource) return null;
 
   return (
@@ -84,5 +83,5 @@ export const ResourceViewModal: React.FC<ResourceViewModalProps> = ({
       </div>
     </Modal>
   );
-};
+}
 

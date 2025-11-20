@@ -19,7 +19,7 @@ import {
   Stethoscope,
   Users,
 } from 'lucide-react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Tooltip } from 'antd';
@@ -54,9 +54,9 @@ interface ModernSidebarProps {
   collapsed?: boolean;
 }
 
-const ModernSidebar: React.FC<ModernSidebarProps> = () => {
+function ModernSidebar({ collapsed = false }: ModernSidebarProps) {
   const { user } = useAuthStore();
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(collapsed);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -227,6 +227,7 @@ const ModernSidebar: React.FC<ModernSidebarProps> = () => {
       </div>
     </aside>
   );
-};
+}
 
+export { ModernSidebar };
 export default ModernSidebar;

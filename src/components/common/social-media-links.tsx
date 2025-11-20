@@ -107,5 +107,6 @@ const SocialMediaLinks: FC<SocialMediaLinksProps> = ({
   );
 };
 
+export { SocialMediaLinks };
 export default SocialMediaLinks;
 

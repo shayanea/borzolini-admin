@@ -115,4 +115,5 @@ calendarCache.startCleanupInterval();
 reviewsCache.startCleanupInterval();
 lookupsCache.startCleanupInterval();
 
+export { CacheService };
 export default CacheService;

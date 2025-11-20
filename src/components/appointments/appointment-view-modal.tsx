@@ -5,7 +5,7 @@ import {
   PetOwnerInfoCard,
 } from './appointment-view-sections';
 import { Button, Modal, message } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { APPOINTMENT_TYPE_LABELS } from '@/constants/appointments';
 import type { Appointment } from '@/types';
@@ -22,12 +22,12 @@ export interface AppointmentViewModalProps {
   loading?: boolean;
 }
 
-export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
+export function AppointmentViewModal({
   visible,
   appointment,
   onCancel,
   onUpdate,
-}) => {
+}: AppointmentViewModalProps) {
   const { t } = useTranslation('components');
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState<Partial<Appointment>>({});
@@ -175,6 +175,6 @@ export const AppointmentViewModal: React.FC<AppointmentViewModalProps> = ({
       </div>
     </Modal>
   );
-};
+}
 
 export default AppointmentViewModal;

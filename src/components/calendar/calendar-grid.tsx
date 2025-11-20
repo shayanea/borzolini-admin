@@ -98,4 +98,5 @@ const CalendarGrid = ({
   );
 };
 
+export { CalendarGrid };
 export default CalendarGrid;

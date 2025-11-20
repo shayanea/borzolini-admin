@@ -17,7 +17,7 @@ interface ChangePasswordData {
   confirmPassword: string;
 }
 
-export const ProfileSecurity: React.FC<ProfileSecurityProps> = ({ user, onSuccess, onError }) => {
+export function ProfileSecurity({ user, onSuccess, onError }: ProfileSecurityProps) {
   const [passwordForm] = Form.useForm();
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -305,4 +305,4 @@ export const ProfileSecurity: React.FC<ProfileSecurityProps> = ({ user, onSucces
       </Card>
     </div>
   );
-};
+}

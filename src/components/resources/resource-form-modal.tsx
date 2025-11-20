@@ -1,5 +1,4 @@
 import { Modal } from 'antd';
-import React from 'react';
 import type { ReturnType } from 'react';
 import type { useResourceForm } from '@/hooks/useResourceForm';
 import type { Resource } from '@/types/resources';
@@ -15,7 +14,7 @@ interface ResourceFormModalProps {
   resource?: Resource | null;
 }
 
-export const ResourceFormModal: React.FC<ResourceFormModalProps> = ({
+export function ResourceFormModal({
   open,
   onCancel,
   onSubmit,
@@ -23,7 +22,7 @@ export const ResourceFormModal: React.FC<ResourceFormModalProps> = ({
   isLoading,
   isEdit = false,
   resource,
-}) => {
+}: ResourceFormModalProps) {
   return (
     <Modal
       open={open}
@@ -41,5 +40,5 @@ export const ResourceFormModal: React.FC<ResourceFormModalProps> = ({
       />
     </Modal>
   );
-};
+}
 

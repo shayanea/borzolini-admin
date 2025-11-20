@@ -33,4 +33,5 @@ const ReportCategories = ({ categories }: ReportCategoriesProps) => {
   );
 };
 
+export { ReportCategories };
 export default ReportCategories;

@@ -131,4 +131,5 @@ const UserPageHeader = ({
   );
 };
 
+export { UserPageHeader };
 export default UserPageHeader;

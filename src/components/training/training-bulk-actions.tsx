@@ -1,5 +1,4 @@
 import { Button, Popconfirm } from 'antd';
-import React from 'react';
 
 interface TrainingBulkActionsProps {
   selectedCount: number;
@@ -7,11 +6,11 @@ interface TrainingBulkActionsProps {
   loading: boolean;
 }
 
-export const TrainingBulkActions: React.FC<TrainingBulkActionsProps> = ({
+export function TrainingBulkActions({
   selectedCount,
   onBulkDelete,
   loading,
-}) => {
+}: TrainingBulkActionsProps) {
   if (selectedCount === 0) return null;
 
   return (
@@ -27,5 +26,5 @@ export const TrainingBulkActions: React.FC<TrainingBulkActionsProps> = ({
       </Button>
     </Popconfirm>
   );
-};
+}
 

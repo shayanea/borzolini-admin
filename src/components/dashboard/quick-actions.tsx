@@ -122,4 +122,5 @@ const QuickActions = () => {
   );
 };
 
+export { QuickActions };
 export default QuickActions;

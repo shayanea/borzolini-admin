@@ -148,4 +148,5 @@ const CalendarPage = () => {
   );
 };
 
+export { CalendarPage };
 export default CalendarPage;

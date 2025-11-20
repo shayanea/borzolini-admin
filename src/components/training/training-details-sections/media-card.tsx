@@ -1,6 +1,5 @@
 import { Button, Card, Space, Typography } from 'antd';
 import { PlayCircleOutlined } from '@ant-design/icons';
-import React from 'react';
 import type { TrainingActivity } from '@/types/training';
 
 const { Text } = Typography;
@@ -9,7 +8,7 @@ interface MediaCardProps {
   activity: TrainingActivity;
 }
 
-export const MediaCard: React.FC<MediaCardProps> = ({ activity }) => {
+export function MediaCard({ activity }: MediaCardProps) {
   if (!activity.videoUrl && !activity.thumbnailUrl) return null;
 
   return (
@@ -51,5 +50,5 @@ export const MediaCard: React.FC<MediaCardProps> = ({ activity }) => {
       </div>
     </Card>
   );
-};
+}
 

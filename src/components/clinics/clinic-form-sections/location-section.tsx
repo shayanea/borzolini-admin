@@ -7,4 +7,5 @@ const LocationSection: FC<LocationSectionProps> = () => {
   return <AddressFields required={true} showPostalCode={true} useTextArea={false} />;
 };
 
+export { LocationSection };
 export default LocationSection;

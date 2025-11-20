@@ -26,4 +26,5 @@ const ContactInfoSection: FC<ContactInfoSectionProps> = () => {
   );
 };
 
+export { ContactInfoSection };
 export default ContactInfoSection;

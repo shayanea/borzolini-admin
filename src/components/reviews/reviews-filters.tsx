@@ -156,4 +156,5 @@ const ReviewsFilters = ({
   );
 };
 
+export { ReviewsFilters };
 export default ReviewsFilters;

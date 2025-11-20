@@ -1,10 +1,10 @@
-import { Col, Form, Input, Row, Typography } from 'antd';
 import { GlobalOutlined, MailOutlined, PhoneOutlined, ShopOutlined } from '@ant-design/icons';
+import { Col, Form, Input, Row, Typography } from 'antd';
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
 
-export const BasicInformationStep: React.FC = () => {
+export function BasicInformationStep() {
   return (
     <div className='space-y-8'>
       {/* Section Header */}
@@ -132,4 +132,4 @@ export const BasicInformationStep: React.FC = () => {
       </div>
     </div>
   );
-};
+}

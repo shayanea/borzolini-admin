@@ -136,4 +136,5 @@ const PetFilters = ({
   );
 };
 
+export { PetFilters };
 export default PetFilters;

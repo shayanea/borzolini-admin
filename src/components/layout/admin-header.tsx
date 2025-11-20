@@ -9,12 +9,12 @@ interface AdminHeaderProps {
   collapsed: boolean;
 }
 
-const AdminHeader: React.FC<AdminHeaderProps> = ({
+function AdminHeader({
   handleToggleCollapsed,
   userMenuItems,
   user,
   collapsed,
-}) => {
+}: AdminHeaderProps) {
   return (
     <div className='admin-header px-6'>
       <div className='flex items-center justify-between w-full max-w-full min-w-0'>
@@ -60,6 +60,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
       </div>
     </div>
   );
-};
+}
 
+export { AdminHeader };
 export default AdminHeader;

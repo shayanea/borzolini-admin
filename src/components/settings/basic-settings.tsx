@@ -35,4 +35,5 @@ const BasicSettings = () => {
   );
 };
 
+export { BasicSettings };
 export default BasicSettings;

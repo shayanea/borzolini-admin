@@ -218,4 +218,5 @@ const AdminRoutes = () => {
   );
 };
 
+export { AdminRoutes };
 export default AdminRoutes;

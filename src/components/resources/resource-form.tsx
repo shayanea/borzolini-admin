@@ -1,5 +1,4 @@
 import { Button, Form, Input, Select, Space, Switch, Typography } from 'antd';
-import React from 'react';
 import type { ReturnType } from 'react';
 import type { useResourceForm } from '@/hooks/useResourceForm';
 import type { Resource, ResourceType } from '@/types/resources';
@@ -16,13 +15,13 @@ interface ResourceFormProps {
   onCancel: () => void;
 }
 
-export const ResourceForm: React.FC<ResourceFormProps> = ({
+export function ResourceForm({
   form,
   onSubmit,
   isLoading,
   resource,
   onCancel
-}) => {
+}: ResourceFormProps) {
   const isEdit = !!resource;
 
   return (
@@ -104,5 +103,5 @@ export const ResourceForm: React.FC<ResourceFormProps> = ({
       </Form.Item>
     </Form>
   );
-};
+}
 

@@ -45,4 +45,5 @@ const VeterinarianSelection = ({
   );
 };
 
+export { VeterinarianSelection };
 export default VeterinarianSelection;

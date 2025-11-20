@@ -41,4 +41,5 @@ const ClinicBulkActions = ({
   );
 };
 
+export { ClinicBulkActions };
 export default ClinicBulkActions;

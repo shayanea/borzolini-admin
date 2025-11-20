@@ -6,7 +6,7 @@ import type { TrainingFormSectionProps } from './types';
 
 const { Text } = Typography;
 
-export const PrerequisitesSection: React.FC<TrainingFormSectionProps> = ({ form }) => {
+export function PrerequisitesSection({ form }: TrainingFormSectionProps) {
   return (
     <Card
       title='Prerequisites (Optional)'
@@ -50,5 +50,5 @@ export const PrerequisitesSection: React.FC<TrainingFormSectionProps> = ({ form 
       </Form.Item>
     </Card>
   );
-};
+}
 

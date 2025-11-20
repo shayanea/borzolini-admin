@@ -31,4 +31,5 @@ const CalendarHeader = ({ onFilters, onNewAppointment }: CalendarHeaderProps) =>
   );
 };
 
+export { CalendarHeader };
 export default CalendarHeader;

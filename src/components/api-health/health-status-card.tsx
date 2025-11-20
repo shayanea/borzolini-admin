@@ -7,7 +7,6 @@ import {
 } from '@ant-design/icons';
 
 import { HealthStatus } from '@/types/api-health';
-import React from 'react';
 
 interface HealthStatusCardProps {
   overallStatus: HealthStatus;
@@ -52,11 +51,11 @@ const getStatusConfig = (status: HealthStatus) => {
   }
 };
 
-export const HealthStatusCard: React.FC<HealthStatusCardProps> = ({
+export function HealthStatusCard({
   overallStatus,
   lastCheck,
   isLoading,
-}) => {
+}: HealthStatusCardProps) {
   const statusConfig = getStatusConfig(overallStatus);
   const lastCheckDate = lastCheck ? new Date(lastCheck) : null;
 
@@ -124,4 +123,4 @@ export const HealthStatusCard: React.FC<HealthStatusCardProps> = ({
       )}
     </Card>
   );
-};
+}

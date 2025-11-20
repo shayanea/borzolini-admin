@@ -161,4 +161,5 @@ const OperatingHoursFields: FC<OperatingHoursFieldsProps> = ({ daysOfWeek, nameP
   );
 };
 
+export { OperatingHoursFields };
 export default OperatingHoursFields;

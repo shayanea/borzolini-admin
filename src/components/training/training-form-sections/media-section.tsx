@@ -3,7 +3,7 @@ import { PlayCircleOutlined } from '@ant-design/icons';
 import React from 'react';
 import type { TrainingFormSectionProps } from './types';
 
-export const MediaSection: React.FC<TrainingFormSectionProps> = ({ form }) => {
+export function MediaSection({ form }: TrainingFormSectionProps) {
   return (
     <Card title='Media & Resources'>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
@@ -52,5 +52,5 @@ export const MediaSection: React.FC<TrainingFormSectionProps> = ({ form }) => {
       </div>
     </Card>
   );
-};
+}
 

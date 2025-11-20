@@ -19,4 +19,5 @@ const ActionButtonsSection: FC<ActionButtonsSectionProps> = ({ onCancel, loading
   );
 };
 
+export { ActionButtonsSection };
 export default ActionButtonsSection;

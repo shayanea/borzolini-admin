@@ -20,4 +20,5 @@ const PhotoStatusSection: FC<PhotoStatusSectionProps> = () => {
   );
 };
 
+export { PhotoStatusSection };
 export default PhotoStatusSection;

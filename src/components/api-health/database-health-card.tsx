@@ -7,7 +7,6 @@ import {
 import { Card, Col, Progress, Row, Space, Statistic, Tag, Tooltip } from 'antd';
 
 import { HealthCheck } from '@/types/api-health';
-import React from 'react';
 
 interface DatabaseHealthCardProps {
   databaseHealth: HealthCheck;
@@ -41,11 +40,11 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export const DatabaseHealthCard: React.FC<DatabaseHealthCardProps> = ({
+export function DatabaseHealthCard({
   databaseHealth,
   isLoading,
   title = 'Database Health',
-}) => {
+}: DatabaseHealthCardProps) {
   const isHealthy = databaseHealth?.status === 'healthy';
   const responseTime = databaseHealth?.responseTime || 0;
   const lastChecked = databaseHealth?.lastChecked ? new Date(databaseHealth.lastChecked) : null;
@@ -157,4 +156,4 @@ export const DatabaseHealthCard: React.FC<DatabaseHealthCardProps> = ({
       )}
     </Card>
   );
-};
+}

@@ -1,12 +1,11 @@
 import { Card } from 'antd';
-import React from 'react';
 import type { TrainingActivity } from '@/types/training';
 
 interface BenefitsCardProps {
   activity: TrainingActivity;
 }
 
-export const BenefitsCard: React.FC<BenefitsCardProps> = ({ activity }) => {
+export function BenefitsCard({ activity }: BenefitsCardProps) {
   if (activity.benefits.length === 0) return null;
 
   return (
@@ -23,5 +22,5 @@ export const BenefitsCard: React.FC<BenefitsCardProps> = ({ activity }) => {
       </div>
     </Card>
   );
-};
+}
 

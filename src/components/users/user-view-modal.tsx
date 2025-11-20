@@ -51,4 +51,5 @@ const UserViewModal = ({
   );
 };
 
+export { UserViewModal };
 export default UserViewModal;

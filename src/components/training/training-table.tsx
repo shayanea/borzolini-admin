@@ -5,7 +5,6 @@ import {
   EditOutlined,
   EyeOutlined,
 } from '@ant-design/icons';
-import React from 'react';
 import type { TrainingActivity } from '@/types/training';
 import { formatDate } from '@/lib/utils';
 import { getDifficultyColor, getSpeciesIcon } from './training-utils';
@@ -27,7 +26,7 @@ interface TrainingTableProps {
   onDelete: (id: string) => void;
 }
 
-export const TrainingTable: React.FC<TrainingTableProps> = ({
+export function TrainingTable({
   activities,
   loading,
   totalCount,
@@ -40,7 +39,7 @@ export const TrainingTable: React.FC<TrainingTableProps> = ({
   onView,
   onEdit,
   onDelete,
-}) => {
+}: TrainingTableProps) {
   const columns = [
     {
       title: (
@@ -194,5 +193,5 @@ export const TrainingTable: React.FC<TrainingTableProps> = ({
       )}
     </Card>
   );
-};
+}
 

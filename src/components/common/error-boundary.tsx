@@ -1,6 +1,6 @@
+import { HomeOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Button, Result } from 'antd';
 import { Component, ErrorInfo, ReactNode } from 'react';
-import { HomeOutlined, ReloadOutlined } from '@ant-design/icons';
 
 import { ROUTES } from '@/constants';
 
@@ -30,6 +30,16 @@ class ErrorBoundary extends Component<Props, State> {
       error,
       errorInfo,
     });
+
+    // Log error to console in development
+    if (import.meta.env.VITE_NODE_ENV === 'development') {
+      console.error('Error Boundary caught error:', error, errorInfo);
+    }
+
+    // TODO: Replace with centralized logger when implemented
+    // logger.error('React Error Boundary caught error', error, {
+    //   componentStack: errorInfo.componentStack,
+    // });
 
     // In production, you might want to log to an error reporting service
     // logErrorToService(error, errorInfo);
@@ -90,4 +100,6 @@ class ErrorBoundary extends Component<Props, State> {
   }
 }
 
+export { ErrorBoundary };
 export default ErrorBoundary;
+
