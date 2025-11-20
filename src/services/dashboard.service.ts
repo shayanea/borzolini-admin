@@ -33,11 +33,11 @@ export class DashboardService {
         });
       }
 
-      const response = await apiService.get(url);
+      const response = await apiService.get<{ data?: any } | any>(url);
 
       // Handle different possible response formats
-      let dashboardData;
-      if (response.data) {
+      let dashboardData: any;
+      if (typeof response === 'object' && response !== null && 'data' in response && response.data) {
         dashboardData = response.data;
       } else if (response && typeof response === 'object') {
         // Direct response format
@@ -171,11 +171,11 @@ export class DashboardService {
         });
       }
 
-      const response = await apiService.get(url);
+      const response = await apiService.get<{ data?: any } | any>(url);
 
       // Handle different possible response formats
-      let chartsData;
-      if (response.data) {
+      let chartsData: any;
+      if (typeof response === 'object' && response !== null && 'data' in response && response.data) {
         chartsData = response.data;
       } else if (response && typeof response === 'object') {
         // Direct response format

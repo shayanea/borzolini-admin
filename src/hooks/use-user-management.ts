@@ -1,20 +1,31 @@
 import { DEFAULT_SORT_FIELD, DEFAULT_SORT_ORDER } from '@/constants/user-management';
 import UsersService, {
-  CreateUserData,
-  UpdateUserData,
-  UsersQueryParams,
+	CreateUserData,
+	UpdateUserData,
+	UsersQueryParams,
 } from '@/services/users.service';
 import type { PaginatedResponse, User, UserRole } from '@/types';
 import {
-  QueryObserverResult,
-  RefetchOptions,
-  useMutation,
-  useQuery,
-  useQueryClient,
+	QueryObserverResult,
+	RefetchOptions,
+	useMutation,
+	useQuery,
+	useQueryClient,
 } from '@tanstack/react-query';
-import { useCallback, useState } from 'react';
-
 import { message as antMessage } from 'antd';
+import { useCallback, useState } from 'react';
+import { FilterValue, useFilterManagement } from './use-filter-management';
+import { useTableManagement } from './use-table-management';
+
+/**
+ * User-specific filters
+ */
+interface UserFilters {
+  [key: string]: FilterValue;
+  role: UserRole | null;
+  isActive: boolean | null;
+  dateRange: [string, string] | null;
+}
 
 interface UseUserManagementReturn {
   // State
@@ -61,24 +72,35 @@ interface UseUserManagementReturn {
   ) => Promise<QueryObserverResult<PaginatedResponse<User>, Error>>;
 }
 
-export const useUserManagement = (roleFilter?: UserRole): UseUserManagementReturn => {
-  // Basic state
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [searchText, setSearchText] = useState('');
-  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
-  const [selectedIsActive, setSelectedIsActive] = useState<boolean | null>(null);
-  const [dateRange, setDateRange] = useState<[string, string] | null>(null);
-  const [sortBy, setSortBy] = useState<string>(DEFAULT_SORT_FIELD);
-  const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>(DEFAULT_SORT_ORDER);
+/**
+ * Hook for managing user data with table, filters, modals, and CRUD operations
+ * 
+ * @param roleFilter - Optional role filter to apply by default
+ */
+export function useUserManagement(roleFilter?: UserRole): UseUserManagementReturn {
+  const queryClient = useQueryClient();
 
-  // Modal states
+  // Use reusable table management hook
+  const table = useTableManagement({
+    initialSortBy: DEFAULT_SORT_FIELD,
+    initialSortOrder: DEFAULT_SORT_ORDER,
+  });
+
+  // Use reusable filter management hook
+  const filterManager = useFilterManagement<UserFilters>({
+    initialFilters: {
+      role: null,
+      isActive: null,
+      dateRange: null,
+    },
+    resetToPage1: () => table.setCurrentPage(1),
+  });
+
+  // Modal states (not part of shared hooks as they're feature-specific)
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
   const [viewingUser, setViewingUser] = useState<User | null>(null);
-
-  const queryClient = useQueryClient();
 
   // Query for users
   const {
@@ -88,26 +110,26 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   } = useQuery({
     queryKey: [
       'users',
-      currentPage,
-      pageSize,
-      searchText,
+      table.currentPage,
+      table.pageSize,
+      filterManager.searchText,
       roleFilter,
-      selectedRole,
-      selectedIsActive,
-      dateRange,
-      sortBy,
-      sortOrder,
+      filterManager.filters.role,
+      filterManager.filters.isActive,
+      filterManager.filters.dateRange,
+      table.sortBy,
+      table.sortOrder,
     ],
     queryFn: async () => {
       const params: UsersQueryParams = {
-        page: currentPage,
-        limit: pageSize,
-        search: searchText || undefined,
-        role: roleFilter || selectedRole || undefined,
-        isActive: selectedIsActive !== null ? selectedIsActive : undefined,
-        dateRange: dateRange || undefined,
-        sortBy,
-        sortOrder,
+        page: table.currentPage,
+        limit: table.pageSize,
+        search: filterManager.searchText || undefined,
+        role: roleFilter || filterManager.filters.role || undefined,
+        isActive: filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
+        dateRange: filterManager.filters.dateRange || undefined,
+        sortBy: table.sortBy,
+        sortOrder: table.sortOrder,
       };
 
       return await UsersService.getUsers(params);
@@ -124,7 +146,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
       queryClient.invalidateQueries({ queryKey: ['users'] });
       hideModal();
     },
-    onError: error => {
+    onError: (error) => {
       console.error('Error creating user:', error);
       antMessage.error('Failed to create user');
       throw error;
@@ -139,7 +161,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
       queryClient.invalidateQueries({ queryKey: ['users'] });
       hideModal();
     },
-    onError: error => {
+    onError: (error) => {
       console.error('Error updating user:', error);
       antMessage.error('Failed to update user');
       throw error;
@@ -152,7 +174,7 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
       antMessage.success('User deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },
-    onError: error => {
+    onError: (error) => {
       console.error('Error deleting user:', error);
       antMessage.error('Failed to delete user');
       throw error;
@@ -163,82 +185,48 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
   const users = usersResponse?.data || [];
   const total = usersResponse?.total || 0;
 
-  // Handle search
-  const handleSearch = useCallback((value: string) => {
-    setSearchText(value);
-    setCurrentPage(1);
-  }, []);
-
-  // Handle role filter
-  const handleRoleFilter = useCallback((value: UserRole | null) => {
-    setSelectedRole(value);
-    setCurrentPage(1);
-  }, []);
-
-  // Handle isActive filter
-  const handleIsActiveFilter = useCallback((value: boolean | null) => {
-    setSelectedIsActive(value);
-    setCurrentPage(1);
-  }, []);
-
-  // Handle date range filter
-  const handleDateRangeChange = useCallback((dates: any) => {
-    if (dates) {
-      setDateRange([dates[0].toISOString(), dates[1].toISOString()]);
-    } else {
-      setDateRange(null);
-    }
-    setCurrentPage(1);
-  }, []);
-
-  // Clear all filters
-  const clearFilters = useCallback(() => {
-    setSearchText('');
-    setSelectedRole(null);
-    setSelectedIsActive(null);
-    setDateRange(null);
-    setSortBy(DEFAULT_SORT_FIELD);
-    setSortOrder(DEFAULT_SORT_ORDER);
-    setCurrentPage(1);
-  }, []);
-
-  // Handle table change (pagination, sorting)
-  const handleTableChange = useCallback(
-    (pagination: any, _filters: any, sorter: any) => {
-      if (pagination.current !== currentPage) {
-        setCurrentPage(pagination.current);
-      }
-      if (pagination.pageSize !== pageSize) {
-        setPageSize(pagination.pageSize);
-        setCurrentPage(1);
-      }
-      if (sorter.field && sorter.order) {
-        setSortBy(sorter.field);
-        setSortOrder(sorter.order === 'ascend' ? 'ASC' : 'DESC');
-      }
+  // Custom filter handlers (map to filter manager)
+  const handleRoleFilter = useCallback(
+    (value: UserRole | null) => {
+      filterManager.setFilter('role', value);
     },
-    [currentPage, pageSize]
+    [filterManager]
   );
 
-  // Show modal for creating/editing user
+  const handleIsActiveFilter = useCallback(
+    (value: boolean | null) => {
+      filterManager.setFilter('isActive', value);
+    },
+    [filterManager]
+  );
+
+  const handleDateRangeChange = useCallback(
+    (dates: any) => {
+      if (dates) {
+        filterManager.setFilter('dateRange', [dates[0].toISOString(), dates[1].toISOString()]);
+      } else {
+        filterManager.setFilter('dateRange', null);
+      }
+    },
+    [filterManager]
+  );
+
+  // Modal handlers
   const showModal = useCallback((user?: User) => {
     setEditingUser(user || null);
     setIsModalVisible(true);
   }, []);
 
-  // Hide modal
   const hideModal = useCallback(() => {
     setIsModalVisible(false);
     setEditingUser(null);
   }, []);
 
-  // Show view modal
   const showViewModal = useCallback((user: User) => {
     setViewingUser(user);
     setIsViewModalVisible(true);
   }, []);
 
-  // Hide view modal
   const hideViewModal = useCallback(() => {
     setIsViewModalVisible(false);
     setViewingUser(null);
@@ -300,70 +288,81 @@ export const useUserManagement = (roleFilter?: UserRole): UseUserManagementRetur
     [deleteUserMutation]
   );
 
-  // Handle export to CSV
+  // Export handlers
   const handleExportCSV = useCallback(async () => {
     const params: UsersQueryParams = {
-      search: searchText || undefined,
-      role: selectedRole || undefined,
-      isActive: selectedIsActive !== null ? selectedIsActive : undefined,
-      dateRange: dateRange || undefined,
+      search: filterManager.searchText || undefined,
+      role: filterManager.filters.role || undefined,
+      isActive: filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
+      dateRange: filterManager.filters.dateRange || undefined,
     };
 
     return await UsersService.exportUsersToCSV(params);
-  }, [searchText, selectedRole, selectedIsActive, dateRange]);
+  }, [filterManager.searchText, filterManager.filters]);
 
-  // Handle export to Excel
   const handleExportExcel = useCallback(async () => {
     const params: UsersQueryParams = {
-      search: searchText || undefined,
-      role: selectedRole || undefined,
-      isActive: selectedIsActive !== null ? selectedIsActive : undefined,
-      dateRange: dateRange || undefined,
+      search: filterManager.searchText || undefined,
+      role: filterManager.filters.role || undefined,
+      isActive: filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
+      dateRange: filterManager.filters.dateRange || undefined,
     };
 
     return await UsersService.exportUsersToExcel(params);
-  }, [searchText, selectedRole, selectedIsActive, dateRange]);
+  }, [filterManager.searchText, filterManager.filters]);
 
   return {
-    // State
+    // State from query
     users,
     loading,
     total,
-    currentPage,
-    pageSize,
-    searchText,
-    selectedRole,
-    selectedIsActive,
-    dateRange,
-    sortBy,
-    sortOrder,
 
+    // State from table management
+    currentPage: table.currentPage,
+    pageSize: table.pageSize,
+    sortBy: table.sortBy,
+    sortOrder: table.sortOrder,
+
+    // State from filter management
+    searchText: filterManager.searchText,
+    selectedRole: filterManager.filters.role,
+    selectedIsActive: filterManager.filters.isActive,
+    dateRange: filterManager.filters.dateRange,
+
+    // Modal state
     isModalVisible,
     editingUser,
     modalLoading: createUserMutation.isPending || updateUserMutation.isPending,
     isViewModalVisible,
     viewingUser,
 
-    // Actions
-    setCurrentPage,
-    setPageSize,
-    handleSearch,
+    // Actions from table management
+    setCurrentPage: table.setCurrentPage,
+    setPageSize: table.setPageSize,
+    handleTableChange: table.handleTableChange,
+
+    // Actions from filter management
+    handleSearch: filterManager.handleSearch,
+    clearFilters: filterManager.clearAllFilters,
+
+    // Custom filter handlers
     handleRoleFilter,
     handleIsActiveFilter,
     handleDateRangeChange,
-    clearFilters,
-    handleTableChange,
+
+    // Modal actions
     showModal,
     hideModal,
     showViewModal,
     hideViewModal,
+
+    // CRUD operations
     handleSubmit,
     handleDeleteUser,
-
     handleExportCSV,
     handleExportExcel,
 
     // Utils
     refetch,
   };
-};
+}

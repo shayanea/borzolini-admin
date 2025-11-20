@@ -1,9 +1,9 @@
 import { buildQueryParams, createExportUrl, fetchExportBlob } from './api/utils';
 
-import { ApiCache } from './api/cache';
 import { AxiosRequestConfig } from 'axios';
-import { apiService } from './api/index';
+import { ApiCache } from './api/cache';
 import { handleBusinessError } from './api/error-handler';
+import { apiService } from './api/index';
 
 // Generic response types
 export interface PaginatedResponse<T> {
@@ -26,8 +26,88 @@ export interface BulkOperationResponse {
   errors?: Array<{ id: string; error: string }>;
 }
 
+// Response normalization interface
+interface ResponseNormalizer<T> {
+  normalize(response: any): PaginatedResponse<T>;
+}
+
+// Response normalizer implementation
+class StandardResponseNormalizer<T> implements ResponseNormalizer<T> {
+  // Known entity field names for different endpoints
+  private static readonly ENTITY_FIELDS = [
+    'data',
+    'clinics',
+    'users',
+    'appointments',
+    'reviews',
+    'contacts',
+    'services',
+    'pets',
+    'cases',
+  ] as const;
+
+  normalize(response: any): PaginatedResponse<T> {
+    // Validate response
+    if (!response || typeof response !== 'object') {
+      throw new Error('Invalid response format: expected paginated response object');
+    }
+
+    let data: T[] | null = null;
+    let total = 0;
+    let page = 1;
+    let limit = 10;
+
+    // Check standard format first (response.data)
+    if (Array.isArray(response.data)) {
+      data = response.data;
+      total = response.total || 0;
+      page = response.page || 1;
+      limit = response.limit || 10;
+    }
+    // Check for entity-specific fields (clinics, users, etc.)
+    else {
+      for (const field of StandardResponseNormalizer.ENTITY_FIELDS) {
+        if (Array.isArray(response[field])) {
+          data = response[field];
+          total = response.total || 0;
+          // Some endpoints use 'pages' instead of 'page'
+          page = response.page || response.pages || 1;
+          limit = response.limit || 10;
+          break;
+        }
+      }
+    }
+
+    // Handle generic array response (no wrapper)
+    if (!data && Array.isArray(response)) {
+      data = response;
+      total = response.length;
+      page = 1;
+      limit = response.length;
+    }
+
+    // If we still don't have data, throw error
+    if (!data) {
+      console.warn('Unknown API response format:', response);
+      throw new Error(`Invalid response format: expected array data but got ${typeof response}`);
+    }
+
+    // Calculate total pages
+    const totalPages = response.totalPages || Math.ceil(total / limit);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages,
+    };
+  }
+}
+
 // Query parameters interface
 export interface BaseQueryParams {
+  [key: string]: string | number | boolean | string[] | [string, string] | null | undefined;
   page?: number;
   limit?: number;
   search?: string;
@@ -96,111 +176,9 @@ export abstract class BaseService<T, TCreate, TUpdate = Partial<TCreate>> {
 
       const response = await apiService.get<any>(url);
 
-      // Validate that the response has the correct structure
-      if (!response || typeof response !== 'object') {
-        throw new Error(`Invalid response format: expected paginated response object`);
-      }
-
-      // Handle different API response formats
-      let data: T[];
-      let total: number;
-      let page: number;
-      let limit: number;
-      let totalPages: number;
-
-      // Check if response follows the standard PaginatedResponse format
-      if (Array.isArray(response.data)) {
-        data = response.data;
-        total = response.total || 0;
-        page = response.page || 1;
-        limit = response.limit || 10;
-        totalPages = response.totalPages || Math.ceil(total / limit);
-      }
-      // Handle clinics endpoint format
-      else if (Array.isArray(response.clinics)) {
-        data = response.clinics;
-        total = response.total || 0;
-        page = response.pages || response.page || 1;
-        limit = response.limit || 10;
-        totalPages = response.totalPages || Math.ceil(total / limit);
-      }
-      // Handle users endpoint format
-      else if (Array.isArray(response.users)) {
-        data = response.users;
-        total = response.total || 0;
-        page = response.pages || response.page || 1;
-        limit = response.limit || 10;
-        totalPages = response.totalPages || Math.ceil(total / limit);
-      }
-      // Handle appointments endpoint format
-      else if (Array.isArray(response.appointments)) {
-        data = response.appointments;
-        total = response.total || 0;
-        page = response.pages || response.page || 1;
-        limit = response.limit || 10;
-        totalPages = response.totalPages || Math.ceil(total / limit);
-      }
-      // Handle reviews endpoint format
-      else if (Array.isArray(response.reviews)) {
-        data = response.reviews;
-        total = response.total || 0;
-        page = response.pages || response.page || 1;
-        limit = response.limit || 10;
-        totalPages = response.totalPages || Math.ceil(total / limit);
-      }
-      // Handle contacts endpoint format
-      else if (Array.isArray(response.contacts)) {
-        data = response.contacts;
-        total = response.total || 0;
-        page = response.pages || response.page || 1;
-        limit = response.limit || 10;
-        totalPages = response.totalPages || Math.ceil(total / limit);
-      }
-      // Handle services endpoint format
-      else if (Array.isArray(response.services)) {
-        data = response.services;
-        total = response.total || 0;
-        page = response.pages || response.page || 1;
-        limit = response.limit || 10;
-        totalPages = response.totalPages || Math.ceil(total / limit);
-      }
-      // Handle pets endpoint format
-      else if (Array.isArray(response.pets)) {
-        data = response.pets;
-        total = response.total || 0;
-        page = response.pages || response.page || 1;
-        limit = response.limit || 10;
-        totalPages = response.totalPages || Math.ceil(total / limit);
-      }
-      // Handle cases endpoint format
-      else if (Array.isArray(response.cases)) {
-        data = response.cases;
-        total = response.total || 0;
-        page = response.pages || response.page || 1;
-        limit = response.limit || 10;
-        totalPages = response.totalPages || Math.ceil(total / limit);
-      }
-      // Handle generic array response
-      else if (Array.isArray(response)) {
-        data = response;
-        total = response.length;
-        page = 1;
-        limit = response.length;
-        totalPages = 1;
-      }
-      // Fallback for unknown formats
-      else {
-        console.warn('Unknown API response format:', response);
-        throw new Error(`Invalid response format: expected array data but got ${typeof response}`);
-      }
-
-      return {
-        data,
-        total,
-        page,
-        limit,
-        totalPages,
-      };
+      // Use the ResponseNormalizer to standardize the response
+      const normalizer = new StandardResponseNormalizer<T>();
+      return normalizer.normalize(response);
     } catch (error: any) {
       return handleBusinessError(error, `fetch ${this.getEntityName()}`);
     }

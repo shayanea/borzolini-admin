@@ -1,12 +1,12 @@
 import {
-  AddTimelineEventRequest,
-  CaseFilters,
-  CaseStats,
-  ClinicPetCase,
-  CreatePetCaseRequest,
-  PetCasesResponse,
-  TimelineEvent,
-  UpdatePetCaseRequest,
+    AddTimelineEventRequest,
+    CaseFilters,
+    CaseStats,
+    ClinicPetCase,
+    CreatePetCaseRequest,
+    PetCasesResponse,
+    TimelineEvent,
+    UpdatePetCaseRequest,
 } from '../types/pet-cases';
 
 import { apiService } from './api/index';
@@ -182,7 +182,7 @@ export class PetCasesService {
     if (filters.date_from) params.append('date_from', filters.date_from);
     if (filters.date_to) params.append('date_to', filters.date_to);
 
-    const response = await apiService.get(
+    const response = await apiService.get<Blob>(
       `${this.BASE_URL}/${clinicId}/cases/export/${format}?${params.toString()}`,
       { responseType: 'blob' }
     );

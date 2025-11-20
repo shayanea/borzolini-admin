@@ -1,8 +1,16 @@
 import { message } from 'antd';
+import { AxiosError } from 'axios';
 
 // Centralized error handling for all HTTP status codes
-export const handleApiError = (error: any): Promise<never> => {
-  const { response } = error;
+export const handleApiError = (error: unknown): Promise<never> => {
+  // Type guard for AxiosError
+  if (!(error instanceof Error)) {
+    message.error('An unexpected error occurred.');
+    return Promise.reject(error);
+  }
+
+  const axiosError = error as AxiosError<{ message?: string | string[] }>;
+  const { response } = axiosError;
 
   if (response) {
     const { status, data } = response;
@@ -61,11 +69,11 @@ export const handleApiError = (error: any): Promise<never> => {
           message.error(`Request failed with status ${status}. Please try again.`);
         }
     }
-  } else if (error.request) {
+  } else if (axiosError.request) {
     // Network errors
-    if (error.code === 'ERR_NETWORK') {
+    if (axiosError.code === 'ERR_NETWORK') {
       message.error('Network error. Please check your connection and try again.');
-    } else if (error.code === 'ECONNABORTED') {
+    } else if (axiosError.code === 'ECONNABORTED') {
       message.error('Request timeout. Please try again.');
     } else {
       message.error('Network error. Please check your connection and try again.');
@@ -83,16 +91,21 @@ export const handleApiError = (error: any): Promise<never> => {
 };
 
 // Business logic error handling helper
-export const handleBusinessError = (error: any, context: string): Promise<never> => {
+export const handleBusinessError = (error: unknown, context: string): Promise<never> => {
   console.error(`Failed to ${context}:`, error);
 
+  // Type guard for AxiosError
+  const isAxiosError = (err: unknown): err is AxiosError => {
+    return err instanceof Error && ('response' in err || 'request' in err);
+  };
+
   // If it's already an API error, let the interceptor handle it
-  if (error.response || error.request) {
+  if (isAxiosError(error)) {
     return Promise.reject(error);
   }
 
   // For business logic errors, show message and re-throw
-  if (error.message) {
+  if (error instanceof Error && error.message) {
     message.error(error.message);
   }
 

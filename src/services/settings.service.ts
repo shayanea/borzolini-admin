@@ -67,7 +67,7 @@ export class SettingsService {
 
   // Export settings
   static async exportSettings(): Promise<Blob> {
-    const response = await apiService.get('/settings/export', {
+    const response = await apiService.get<Blob>('/settings/export', {
       responseType: 'blob',
     });
     return response;

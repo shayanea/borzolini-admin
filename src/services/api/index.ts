@@ -6,13 +6,13 @@ export { handleApiError, handleBusinessError } from './error-handler';
 
 // Utilities
 export {
-  buildQueryParams,
-  createCacheKey,
-  createExportUrl,
-  fetchExportBlob,
-  RETRY_ATTEMPTS,
-  RETRY_DELAY,
-  retryRequest,
+    buildQueryParams,
+    createCacheKey,
+    createExportUrl,
+    fetchExportBlob,
+    RETRY_ATTEMPTS,
+    RETRY_DELAY,
+    retryRequest
 } from './utils';
 
 // Interceptors and auth
@@ -23,18 +23,19 @@ export { ApiCache } from './cache';
 
 // Legacy API service object for backward compatibility
 import { environment } from '@/config/environment';
+import { AxiosRequestConfig } from 'axios';
 import { ApiCache } from './cache';
 import { api } from './core';
 import { buildQueryParams, createCacheKey } from './utils';
 
 // Cache-aware request methods
-const createCacheKeyFromUrl = (url: string, config?: any): string => {
+const createCacheKeyFromUrl = (url: string, config?: AxiosRequestConfig): string => {
   return createCacheKey(url, config?.params);
 };
 
 export const apiService = {
   // Generic request methods
-  get: async <T = any>(url: string, config?: any): Promise<T> => {
+  get: async <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
     const cacheKey = createCacheKeyFromUrl(url, config);
 
     // Check cache first
@@ -66,7 +67,7 @@ export const apiService = {
       }
 
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
       // Return cached data on error if available
       if (environment.features.enableOfflineMode) {
         const cachedData = ApiCache.get(cacheKey);
@@ -79,20 +80,20 @@ export const apiService = {
     }
   },
 
-  post: <T = any>(url: string, data?: any, config?: any): Promise<T> =>
+  post: <T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> =>
     api.post(url, data, config).then(response => response.data),
 
-  put: <T = any>(url: string, data?: any, config?: any): Promise<T> =>
+  put: <T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> =>
     api.put(url, data, config).then(response => response.data),
 
-  patch: <T = any>(url: string, data?: any, config?: any): Promise<T> =>
+  patch: <T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> =>
     api.patch(url, data, config).then(response => response.data),
 
-  delete: <T = any>(url: string, config?: any): Promise<T> =>
+  delete: <T>(url: string, config?: AxiosRequestConfig): Promise<T> =>
     api.delete(url, config).then(response => response.data),
 
   // File upload
-  upload: <T = any>(url: string, formData: FormData, config?: any): Promise<T> =>
+  upload: <T>(url: string, formData: FormData, config?: AxiosRequestConfig): Promise<T> =>
     api
       .post(url, formData, {
         ...config,

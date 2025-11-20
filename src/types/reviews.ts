@@ -83,6 +83,7 @@ export interface UpdateReviewResponseData {
 }
 
 export interface ReviewsFilters {
+  [key: string]: string | number | boolean | string[] | [Date | null, Date | null] | [string, string] | undefined | null;
   page?: number;
   limit?: number;
   clinicId?: string;
