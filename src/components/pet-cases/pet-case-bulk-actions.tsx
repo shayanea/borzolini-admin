@@ -8,7 +8,7 @@ import {
   MoreOutlined,
 } from '@ant-design/icons';
 
-import { useMessage } from '../../hooks/use-message';
+import { useMessage } from '../../hooks/common/use-message';
 import { useTranslation } from 'react-i18next';
 
 interface PetCaseBulkActionsProps {

@@ -8,12 +8,12 @@ import {
   PetCasesFilters,
   PetCasesHeader,
   PetCasesTable,
-} from '../components/pet-cases';
+} from '../../components/pet-cases';
 // Pet Cases Management Page
 import { Alert, Pagination } from 'antd';
-import { ErrorState, LoadingState } from '../components/common';
+import { ErrorState, LoadingState } from '../../components/common';
 
-import { usePetCasesPage } from '../hooks/pet-cases/use-pet-cases-page';
+import { usePetCasesPage } from '../../hooks/pet-cases/use-pet-cases-page';
 
 function PetCasesPage() {
   const {

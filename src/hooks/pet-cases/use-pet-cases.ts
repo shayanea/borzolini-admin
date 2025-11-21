@@ -10,8 +10,8 @@ import {
 // Hook for Pet Cases Management
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { PetCasesService } from '../../services/pet-cases.service';
-import { useMessage } from '../use-message';
+import { PetCasesService } from '../../services/pet-cases/pet-cases.service';
+import { useMessage } from '../common/use-message';
 
 export const usePetCases = (
   clinicId: string,

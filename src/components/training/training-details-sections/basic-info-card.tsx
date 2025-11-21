@@ -1,4 +1,4 @@
-import { Badge, Card, Space, Typography } from 'antd';
+import { Badge, Space, Typography } from 'antd';
 import { ClockCircleOutlined, ExperimentOutlined } from '@ant-design/icons';
 import type { TrainingActivity } from '@/types/training';
 import { getDifficultyColor, getSpeciesIcon } from '../training-utils';

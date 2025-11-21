@@ -15,7 +15,7 @@ import {
   StarOutlined,
   TeamOutlined,
   UserOutlined,
-  ApartmentOutlined,
+  AppstoreOutlined,
 } from '@ant-design/icons';
 
 import React from 'react';
@@ -191,7 +191,7 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
   {
     key: '/admin/breeds',
     label: 'Breeds',
-    icon: React.createElement(ApartmentOutlined),
+    icon: React.createElement(AppstoreOutlined),
     onClick: () => {},
     roles: ['admin'],
   },

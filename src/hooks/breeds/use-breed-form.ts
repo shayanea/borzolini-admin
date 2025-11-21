@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { PetSpecies, PetSize, GroomingNeeds, ExerciseNeeds, type CreateBreedDto, type Breed, type UpdateBreedDto } from '../types/breeds';
+import { PetSpecies, PetSize, GroomingNeeds, ExerciseNeeds, type CreateBreedDto, type Breed, type UpdateBreedDto } from '../../types/breeds';
 
 interface FormErrors {
   name?: string;

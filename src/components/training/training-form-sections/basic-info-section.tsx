@@ -69,7 +69,7 @@ export function BasicInfoSection({
       >
         <TextArea
           value={form.formData.description}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+          onChange={(e) => {
             form.handleInputChange('description', e.target.value);
           }}
           placeholder='Describe what this training activity teaches and its benefits...'

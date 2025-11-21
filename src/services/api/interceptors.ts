@@ -1,7 +1,7 @@
 import { InternalAxiosRequestConfig } from 'axios';
-import { TokenService } from '../token.service';
+import { TokenService } from '../core/token.service';
 import { api } from './core';
-import { emitAuthUnauthorized } from '../event-emitter.service';
+import { emitAuthUnauthorized } from '../core/event-emitter.service';
 import { environment } from '@/config/environment';
 import { handleApiError } from './error-handler';
 import { retryRequest } from './utils';

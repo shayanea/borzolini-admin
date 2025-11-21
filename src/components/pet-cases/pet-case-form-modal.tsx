@@ -9,7 +9,7 @@ import { Divider, Form, Modal } from 'antd';
 import { useEffect } from 'react';
 
 import { HeartOutlined } from '@ant-design/icons';
-import { useMessage } from '../../hooks/use-message';
+import { useMessage } from '../../hooks/common/use-message';
 import { usePetCases } from '../../hooks/pet-cases';
 import { useTranslation } from 'react-i18next';
 

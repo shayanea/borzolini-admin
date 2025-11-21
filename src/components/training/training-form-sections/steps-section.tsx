@@ -104,7 +104,7 @@ export function StepsSection({ form }: TrainingFormSectionProps) {
             >
               <TextArea
                 value={step.description}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                onChange={(e) => {
                   form.updateStep(index, 'description', e.target.value);
                 }}
                 placeholder='Describe how to perform this step...'

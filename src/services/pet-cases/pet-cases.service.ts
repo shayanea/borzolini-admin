@@ -7,7 +7,7 @@ import {
     PetCasesResponse,
     TimelineEvent,
     UpdatePetCaseRequest,
-} from '../types/pet-cases';
+} from '../../types/pet-cases';
 
 import { apiService } from '../api/index';
 

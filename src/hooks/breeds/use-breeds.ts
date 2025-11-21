@@ -1,13 +1,13 @@
-import { useState, useCallback } from 'react';
-import { api } from '../services/api/core';
-import type { 
-  Breed, 
-  CreateBreedDto, 
-  UpdateBreedDto, 
+import type {
   AllBreedsResponse,
-  BreedResponse,
-  ApiError
-} from '../types/breeds';
+  ApiError,
+  Breed,
+  CreateBreedDto,
+  UpdateBreedDto,
+} from '@/types/breeds';
+import { useCallback, useState } from 'react';
+
+import { api } from '@/services/api/core';
 
 export const useBreeds = () => {
   const [loading, setLoading] = useState(false);
@@ -55,19 +55,22 @@ export const useBreeds = () => {
     }
   }, []);
 
-  const updateBreed = useCallback(async (id: string, data: UpdateBreedDto): Promise<Breed | null> => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await api.patch<Breed>(`/breeds/${id}`, data);
-      return response.data;
-    } catch (err) {
-      setError(err as ApiError);
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const updateBreed = useCallback(
+    async (id: string, data: UpdateBreedDto): Promise<Breed | null> => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await api.patch<Breed>(`/breeds/${id}`, data);
+        return response.data;
+      } catch (err) {
+        setError(err as ApiError);
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   const deleteBreed = useCallback(async (id: string): Promise<boolean> => {
     setLoading(true);
@@ -110,4 +113,3 @@ export const useBreeds = () => {
     clearError: () => setError(null),
   };
 };
-

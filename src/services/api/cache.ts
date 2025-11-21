@@ -1,4 +1,4 @@
-import { appointmentsCache, calendarCache, lookupsCache, usersCache } from '../cache.service';
+import { appointmentsCache, calendarCache, lookupsCache, usersCache } from '../core/cache.service';
 
 // Cache management utilities
 export class ApiCache {

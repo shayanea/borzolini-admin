@@ -10,7 +10,7 @@ import {
   Table,
   Typography,
 } from 'antd';
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined, LinkOutlined } from '@ant-design/icons';
 
 import type { Resource } from '@/types/resources';
 import { formatDate } from '@/lib/utils';
@@ -92,7 +92,18 @@ export function ResourcesTable({
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      render: (title: string) => <Text strong>{title}</Text>,
+      render: (title: string, record: Resource) => (
+        <Typography.Link
+          href={record.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          strong
+          className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+        >
+          {title}
+          <LinkOutlined className="text-xs" />
+        </Typography.Link>
+      ),
     },
     {
       title: 'Type',

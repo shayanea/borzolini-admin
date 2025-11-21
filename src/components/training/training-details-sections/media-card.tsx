@@ -1,4 +1,4 @@
-import { Button, Card, Space, Typography } from 'antd';
+import { Button, Card, Typography } from 'antd';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import type { TrainingActivity } from '@/types/training';
 

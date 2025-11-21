@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
 
-import { api } from '../services/api/core';
+import { api } from '../../services/api/core';
 import type {
   ApiError,
   SafetySearchResponse,
   SafetySearchResult,
-} from '../types/household-safety';
+} from '../../types/household-safety';
 
 interface RawSafetyRecord {
   id: string;

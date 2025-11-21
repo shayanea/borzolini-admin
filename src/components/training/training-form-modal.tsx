@@ -30,7 +30,6 @@ export function TrainingFormModal({
   form,
   isLoading,
   isEdit = false,
-  activity,
 }: TrainingFormModalProps) {
   return (
     <Modal

@@ -12,7 +12,7 @@ import {
 import React, { useState } from 'react';
 
 import { ClinicPetCase } from '../../types/pet-cases';
-import { PetCasesService } from '../../services/pet-cases.service';
+import { PetCasesService } from '../../services/pet-cases/pet-cases.service';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 

@@ -1,13 +1,12 @@
 import { useState, useCallback } from 'react';
-import { api } from '../services/api/core';
+import { api } from '@/services/api/core';
 import type { 
   Resource, 
   CreateResourceDto, 
   UpdateResourceDto, 
   ResourcesResponse,
-  ResourceResponse,
   ApiError
-} from '../types/resources';
+} from '@/types/resources';
 
 export const useResources = () => {
   const [loading, setLoading] = useState(false);

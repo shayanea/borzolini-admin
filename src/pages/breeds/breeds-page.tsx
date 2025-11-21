@@ -42,7 +42,6 @@ function BreedsPage() {
   const editForm = useBreedForm(selectedBreed || undefined);
 
   const [breeds, setBreeds] = useState<Breed[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const loadBreeds = async () => {
@@ -52,7 +51,6 @@ function BreedsPage() {
       // Flatten breeds from all species
       const allBreeds: Breed[] = result.breeds_by_species.flatMap(group => group.breeds);
       setBreeds(allBreeds);
-      setTotalCount(result.total_breeds);
     }
     setLoading(false);
   };

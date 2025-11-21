@@ -1,4 +1,4 @@
-import { Button, Card, Input, Select, Space, Typography } from 'antd';
+import { Button, Card, Input, Select, Typography } from 'antd';
 import React from 'react';
 import { TRAINING_DIFFICULTY, TRAINING_SPECIES } from '@/types/training';
 
@@ -9,7 +9,6 @@ interface TrainingFiltersProps {
   searchTerm: string;
   selectedSpecies: string[];
   selectedDifficulty: string;
-  selectedTags: string[];
   onSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSpeciesChange: (value: string) => void;
   onDifficultyChange: (value: string) => void;
@@ -21,7 +20,6 @@ export function TrainingFilters({
   searchTerm,
   selectedSpecies,
   selectedDifficulty,
-  selectedTags,
   onSearch,
   onSpeciesChange,
   onDifficultyChange,
