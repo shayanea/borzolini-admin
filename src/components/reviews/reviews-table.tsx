@@ -14,7 +14,7 @@ import {
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 
 import type { Review } from '@/types';
-import type { UpdateReviewData } from '@/services/reviews.service';
+import type { UpdateReviewData } from '@/services/reviews';
 import { useTranslation } from 'react-i18next';
 
 const { Paragraph } = Typography;

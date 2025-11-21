@@ -1,4 +1,4 @@
-import { AppointmentsService } from '@/services/appointments.service';
+import { AppointmentsService } from '@/services/appointments';
 import type { CalendarAppointment } from '@/types/calendar';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';

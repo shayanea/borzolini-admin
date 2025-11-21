@@ -1,6 +1,6 @@
-import { offAuthRedirect, onAuthRedirect } from '@/services/event-emitter.service';
+import { offAuthRedirect, onAuthRedirect } from '@/services/core';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
-import { ClinicRegister, ClinicRegisterSuccess } from './pages';
+import { ClinicRegister, ClinicRegisterSuccess } from '@/pages';
 
 import LoginForm from '@/components/auth/login-form';
 import ProtectedRoute from '@/components/auth/protected-route';

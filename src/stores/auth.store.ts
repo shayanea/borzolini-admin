@@ -1,8 +1,8 @@
 import type { LoadingState, User } from '@/types';
 
-import { AuthService } from '@/services/auth.service';
+import { AuthService } from '@/services/auth';
 import { create } from 'zustand';
-import { emitAuthRedirect } from '@/services/event-emitter.service';
+import { emitAuthRedirect } from '@/services/core';
 import { persist } from 'zustand/middleware';
 
 interface AuthState {

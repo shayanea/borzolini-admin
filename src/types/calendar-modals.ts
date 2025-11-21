@@ -1,7 +1,7 @@
 // Shared interfaces for calendar modals
 // Used by appointment-form-modal.tsx and appointment-details-modal.tsx
 
-import type { CreateAppointmentData, UpdateAppointmentData } from '@/services/appointments.service';
+import type { CreateAppointmentData, UpdateAppointmentData } from '@/services/appointments';
 
 import type { Appointment } from '@/types';
 import type { Dayjs } from 'dayjs';

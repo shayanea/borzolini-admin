@@ -2,7 +2,7 @@ import { Alert, Empty, Modal, Table, Tag, Typography } from 'antd';
 import type { Appointment, Clinic } from '@/types';
 import { useEffect, useMemo, useState } from 'react';
 
-import AppointmentsService from '@/services/appointments.service';
+import AppointmentsService from '@/services/appointments';
 import type { ColumnsType } from 'antd/es/table';
 
 interface ClinicAppointmentsModalProps {

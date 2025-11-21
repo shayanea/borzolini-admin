@@ -1,5 +1,5 @@
 import { CACHE_PRESETS } from '@/constants';
-import { calendarService } from '@/services/calendar.service';
+import { calendarService } from '@/services/calendar';
 import { useQuery } from '@tanstack/react-query';
 // Types are inferred from the service responses
 

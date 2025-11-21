@@ -7,7 +7,7 @@ import { AuthBackground } from '@/components/common';
 import { ROUTES } from '@/constants';
 import { UserRole } from '@/types';
 import { getAccessibleRoutes } from '@/constants/menu-permissions';
-import { useCurrentUser } from '@/hooks/use-auth';
+import { useCurrentUser } from '@/hooks/auth';
 import { useTranslation } from 'react-i18next';
 
 interface RoleProtectedRouteProps {

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
 import { CaseFilters } from '@/types/pet-cases';
-import { PetCasesService } from '@/services/pet-cases.service';
+import { PetCasesService } from '@/services/pet-cases';
 import { message } from 'antd';
 
 interface UsePetCasesStateProps {

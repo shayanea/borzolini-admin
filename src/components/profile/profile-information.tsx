@@ -2,7 +2,7 @@ import { EditOutlined, EnvironmentOutlined, PhoneOutlined, SaveOutlined, UserOut
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, Card, Col, Divider, Form, Input, Row } from 'antd';
 
-import { UsersService } from '@/services/users.service';
+import { UsersService } from '@/services/users';
 import { useAuthActions } from '@/stores/auth.store';
 import { User } from '@/types';
 import { useState } from 'react';

@@ -2,7 +2,7 @@ import { EyeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
 import { Button, Card, Empty, Rate, Tag, Typography } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 
-import { ReviewsService } from '@/services/reviews.service';
+import { ReviewsService } from '@/services/reviews';
 import type { Review } from '@/types';
 
 const { Text, Paragraph } = Typography;

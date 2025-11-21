@@ -19,7 +19,7 @@ import { DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 
 import type { AppointmentDetailsModalProps, CalendarPet, Service } from '@/types/calendar-modals';
-import type { UpdateAppointmentData } from '@/services/appointments.service';
+import type { UpdateAppointmentData } from '@/services/appointments';
 import dayjs from 'dayjs';
 import { useCalendarFormData } from '@/hooks/calendar/use-calendar-form-data';
 

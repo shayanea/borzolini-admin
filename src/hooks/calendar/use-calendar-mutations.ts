@@ -2,7 +2,7 @@ import {
   AppointmentsService,
   type CreateAppointmentData,
   type UpdateAppointmentData,
-} from '@/services/appointments.service';
+} from '@/services/appointments';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
 

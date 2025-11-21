@@ -1,4 +1,4 @@
-import { Modal } from 'antd';
+import { Modal, Typography } from 'antd';
 import type { TrainingActivity } from '@/types/training';
 import {
   BasicInfoCard,
@@ -9,6 +9,8 @@ import {
   TagsCard,
   MetadataCard,
 } from './training-details-sections';
+
+const { Text } = Typography;
 
 interface TrainingDetailsModalProps {
   activity: TrainingActivity | null;
@@ -23,6 +25,8 @@ export function TrainingDetailsModal({
 }: TrainingDetailsModalProps) {
   if (!activity) return null;
 
+  const thumbnailUrl = (activity as unknown as { thumbnailUrl?: string }).thumbnailUrl;
+
   return (
     <Modal
       open={open}
@@ -32,6 +36,22 @@ export function TrainingDetailsModal({
       width={1000}
     >
       <div className='space-y-6'>
+        {thumbnailUrl && (
+          <div>
+            <Text type="secondary" className="block mb-2">Activity Preview</Text>
+            <div className="mb-4">
+              <img
+                src={thumbnailUrl}
+                alt={activity.title}
+                className="max-w-full h-auto rounded-lg border object-cover"
+                style={{ maxHeight: '400px' }}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
+          </div>
+        )}
         <BasicInfoCard activity={activity} />
         <StepsCard activity={activity} />
         <BenefitsCard activity={activity} />

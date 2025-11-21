@@ -6,7 +6,7 @@ import { MenuProps } from 'antd';
 import { ROUTES } from '@/constants';
 import { UserRole } from '@/types';
 import { getMenuItemsForRole } from '@/constants/menu-permissions';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@/hooks/auth';
 
 export const useAdminLayoutLogic = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);

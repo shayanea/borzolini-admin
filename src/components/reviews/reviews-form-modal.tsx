@@ -2,7 +2,7 @@ import { Form, Input, Modal, Rate, Select, Switch, Space, Button } from 'antd';
 import { useEffect } from 'react';
 
 import type { Review } from '@/types';
-import type { CreateReviewData, UpdateReviewData } from '@/services/reviews.service';
+import type { CreateReviewData, UpdateReviewData } from '@/services/reviews';
 
 const { TextArea } = Input;
 const { Option } = Select;

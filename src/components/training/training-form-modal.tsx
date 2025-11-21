@@ -2,7 +2,7 @@ import { Form, Modal } from 'antd';
 import type { TrainingActivity } from '@/types/training';
 import { TRAINING_DIFFICULTY, TRAINING_SPECIES } from '@/types/training';
 import type { ReturnType } from 'react';
-import type { useTrainingForm } from '@/hooks/useTraining';
+import type { useTrainingForm } from '@/hooks/training';
 import {
   BasicInfoSection,
   MediaSection,

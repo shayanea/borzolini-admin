@@ -2,7 +2,7 @@ import { Col, Form, Input, Row } from 'antd';
 import { MIN_LENGTH_RULE, REQUIRED_RULE, createPostalCodeRule } from '@/constants/form-validation';
 
 import { FC } from 'react';
-import { useValidationMessages } from '@/hooks/use-validation-messages';
+import { useValidationMessages } from '@/hooks/common';
 
 const { TextArea } = Input;
 

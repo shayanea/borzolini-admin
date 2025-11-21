@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { useCurrentUser } from '@/hooks/use-auth';
+import { useCurrentUser } from '@/hooks/auth';
 import { usePetCasesState } from './use-pet-cases-state';
 import { usePetCasesModals } from './use-pet-cases-modals';
 import { usePetCases, useAllPetCases } from './use-pet-cases';

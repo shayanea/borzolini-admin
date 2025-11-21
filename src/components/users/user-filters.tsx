@@ -3,7 +3,7 @@ import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 
 import { USER_ROLES } from '@/constants/user-management';
 import type { UserFiltersProps } from '@/types/user-management';
-import { useCurrentUser } from '@/hooks/use-auth';
+import { useCurrentUser } from '@/hooks/auth';
 import { useTranslation } from 'react-i18next';
 
 const { Search } = Input;

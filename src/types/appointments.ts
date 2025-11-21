@@ -1,6 +1,6 @@
 import type { Appointment, AppointmentPriority, AppointmentStatus, AppointmentType } from './index';
 
-import type { UpdateAppointmentData } from '@/services/appointments.service';
+import type { UpdateAppointmentData } from '@/services/appointments';
 
 export interface AppointmentsHeaderProps {
   onNewAppointment: (data: any) => void;

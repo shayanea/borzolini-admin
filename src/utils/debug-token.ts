@@ -3,8 +3,8 @@
  * This can be used to test and debug authentication functionality
  */
 
-import { AuthService } from '@/services/auth.service';
-import { TokenService } from '@/services/token.service';
+import { AuthService } from '@/services/auth';
+import { TokenService } from '@/services/core';
 import { decodeJWT } from '@/utils/jwt.utils';
 import { environment } from '@/config/environment';
 

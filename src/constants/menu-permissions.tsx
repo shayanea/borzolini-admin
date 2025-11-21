@@ -15,6 +15,7 @@ import {
   StarOutlined,
   TeamOutlined,
   UserOutlined,
+  ApartmentOutlined,
 } from '@ant-design/icons';
 
 import React from 'react';
@@ -184,6 +185,13 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     key: '/admin/household-safety',
     label: 'Household Safety',
     icon: React.createElement(SafetyOutlined),
+    onClick: () => {},
+    roles: ['admin'],
+  },
+  {
+    key: '/admin/breeds',
+    label: 'Breeds',
+    icon: React.createElement(ApartmentOutlined),
     onClick: () => {},
     roles: ['admin'],
   },

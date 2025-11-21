@@ -3,7 +3,7 @@
  */
 
 import { EmptyStateVariants } from '@/components/common';
-import { PetsService } from '@/services/pets.service';
+import { PetsService } from '@/services/pets';
 import type { User } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { Badge, Card, Spin, Table, Tag, Typography } from 'antd';

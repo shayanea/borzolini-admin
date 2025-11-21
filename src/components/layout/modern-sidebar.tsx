@@ -18,6 +18,7 @@ import {
   Settings as SettingsIcon,
   Stethoscope,
   Users,
+  GitBranch,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -48,6 +49,7 @@ const iconMap: Record<string, any> = {
   '/admin/resources': FileText,
   '/admin/training': BookOpen,
   '/admin/household-safety': Home,
+  '/admin/breeds': GitBranch,
 };
 
 interface ModernSidebarProps {

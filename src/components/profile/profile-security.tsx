@@ -1,7 +1,7 @@
 import { Alert, Button, Card, Divider, Form, Input, Switch } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, SecurityScanOutlined } from '@/ui';
 
-import { AuthService } from '@/services/auth.service';
+import { AuthService } from '@/services/auth';
 import { User } from '@/types';
 import { useState } from 'react';
 

@@ -3,7 +3,7 @@ import { MessageOutlined } from '@ant-design/icons';
 import { useEffect } from 'react';
 
 import type { Review } from '@/types';
-import type { CreateReviewResponseData, UpdateReviewResponseData } from '@/services/reviews.service';
+import type { CreateReviewResponseData, UpdateReviewResponseData } from '@/services/reviews';
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph } = Typography;

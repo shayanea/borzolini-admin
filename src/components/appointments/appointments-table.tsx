@@ -19,7 +19,7 @@ import {
 } from '@/utils/color-helpers';
 
 import type { Appointment } from '@/types';
-import { AppointmentsDataService } from '@/services/appointments-data.service';
+import { AppointmentsDataService } from '@/services/appointments';
 import { TABLE_PAGE_SIZES } from '@/constants';
 import { useTranslation } from 'react-i18next';
 

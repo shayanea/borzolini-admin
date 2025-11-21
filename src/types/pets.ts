@@ -1,4 +1,4 @@
-import type { Pet, PetOwner, PetsQueryParams } from '@/services/pets.service';
+import type { Pet, PetOwner, PetsQueryParams } from '@/services/pets';
 
 // Re-export service types for convenience
 export type { Pet, PetOwner, PetsQueryParams };

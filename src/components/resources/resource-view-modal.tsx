@@ -32,6 +32,22 @@ export function ResourceViewModal({
           <Title level={4}>{resource.title}</Title>
           <Text type="secondary" className="block mt-1">{resource.description}</Text>
         </div>
+        {resource.cover && (
+          <div>
+            <Text type="secondary" className="block mb-2">Cover Image</Text>
+            <div className="mb-4">
+              <img
+                src={resource.cover}
+                alt={resource.title}
+                className="max-w-full h-auto rounded-lg border object-cover"
+                style={{ maxHeight: '400px' }}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
+          </div>
+        )}
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <Text type="secondary">Type</Text>
@@ -45,21 +61,6 @@ export function ResourceViewModal({
               <Badge color={resource.is_active ? 'success' : 'default'} text={resource.is_active ? 'Active' : 'Inactive'} />
             </div>
           </div>
-          {resource.cover && (
-            <div>
-              <Text type="secondary">Cover Image</Text>
-              <div>
-                <a 
-                  href={resource.cover} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  View Cover
-                </a>
-              </div>
-            </div>
-          )}
           <div>
             <Text type="secondary">Created</Text>
             <div>{formatDate(resource.created_at)}</div>

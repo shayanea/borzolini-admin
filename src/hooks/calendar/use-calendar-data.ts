@@ -1,8 +1,8 @@
 import type { CalendarFilters, Veterinarian } from '@/types/calendar';
-import { calendarService } from '@/services/calendar.service';
+import { calendarService } from '@/services/calendar';
 import dayjs from 'dayjs';
 import { useQuery } from '@tanstack/react-query';
-import { useClinicContext } from '@/hooks/use-clinic-context';
+import { useClinicContext } from '@/hooks/clinics';
 
 export const useCalendarData = (
   currentDate: dayjs.Dayjs,

@@ -5,7 +5,7 @@ import React, { useCallback } from 'react';
 import { AuthBackground } from '@/components/common';
 import BG from '@/ui/icons/auth-bg.svg';
 import { ROUTES } from '@/constants';
-import { useCurrentUser } from '@/hooks/use-auth';
+import { useCurrentUser } from '@/hooks/auth';
 import { useTranslation } from 'react-i18next';
 
 interface ProtectedRouteProps {

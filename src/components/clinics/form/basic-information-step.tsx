@@ -4,7 +4,7 @@ import { MIN_LENGTH_RULE, REQUIRED_RULE } from '@/constants/form-validation';
 import { FC } from 'react';
 import { PhoneField } from '@/components/shared';
 import { useTranslation } from 'react-i18next';
-import { useValidationMessages } from '@/hooks/use-validation-messages';
+import { useValidationMessages } from '@/hooks/common';
 
 const { TextArea } = Input;
 

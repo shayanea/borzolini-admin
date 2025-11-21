@@ -68,6 +68,27 @@ export function ResourcesTable({
       ),
     },
     {
+      title: 'Image',
+      key: 'cover',
+      width: 100,
+      render: (_: unknown, record: Resource) => (
+        record.cover ? (
+          <img
+            src={record.cover}
+            alt={record.title}
+            className="w-16 h-16 object-cover rounded border"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        ) : (
+          <div className="w-16 h-16 bg-gray-100 rounded border flex items-center justify-center">
+            <Text type="secondary" className="text-xs">No image</Text>
+          </div>
+        )
+      ),
+    },
+    {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',

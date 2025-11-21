@@ -2,7 +2,7 @@ import { Alert, Avatar, Empty, Modal, Table, Tag, Typography } from 'antd';
 import type { Clinic, ClinicStaff, User } from '@/types';
 import { useEffect, useMemo, useState } from 'react';
 
-import ClinicsService from '@/services/clinics.service';
+import ClinicsService from '@/services/clinics';
 import type { ColumnsType } from 'antd/es/table';
 
 interface ClinicStaffWithUser extends ClinicStaff {

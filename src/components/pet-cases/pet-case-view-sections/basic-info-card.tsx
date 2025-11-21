@@ -2,7 +2,7 @@
  * Basic Info Card for Pet Case View Modal
  */
 
-import { PetCasesService } from '@/services/pet-cases.service';
+import { PetCasesService } from '@/services/pet-cases';
 import type { ClinicPetCase } from '@/types/pet-cases';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import { Descriptions, Space, Tag } from 'antd';

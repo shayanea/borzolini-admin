@@ -4,7 +4,7 @@ import { BasicInfoSectionProps } from './types';
 import { FC } from 'react';
 import { createPositiveNumberRule } from '@/constants/form-validation';
 import { useTranslation } from 'react-i18next';
-import { useValidationMessages } from '@/hooks/use-validation-messages';
+import { useValidationMessages } from '@/hooks/common';
 
 const { Option } = Select;
 

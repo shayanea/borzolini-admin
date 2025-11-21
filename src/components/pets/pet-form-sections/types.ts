@@ -1,4 +1,4 @@
-import type { PetOwnerOption } from '@/hooks/use-pet-owners';
+import type { PetOwnerOption } from '@/hooks/pets';
 import { FormInstance } from 'antd';
 
 export interface PetFormSectionProps {

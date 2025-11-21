@@ -4,7 +4,7 @@ import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, UserOutlined } from '@a
 import BG from '@/ui/icons/auth-bg.svg';
 import type { LoginCredentials } from '@/types';
 import { useCallback } from 'react';
-import { useLogin } from '@/hooks/use-auth';
+import { useLogin } from '@/hooks/auth';
 import { useTranslation } from 'react-i18next';
 
 const { Title, Text } = Typography;

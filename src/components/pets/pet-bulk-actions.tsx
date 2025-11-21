@@ -2,7 +2,7 @@ import { Button, Space } from 'antd';
 
 import { DeleteOutlined } from '@ant-design/icons';
 import type { PetBulkActionsProps } from '@/types';
-import { useMessage } from '@/hooks/use-message';
+import { useMessage } from '@/hooks/common';
 
 const PetBulkActions = ({
   selectedRowKeys,

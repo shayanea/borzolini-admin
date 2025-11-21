@@ -23,4 +23,5 @@ export const ROUTES = {
   RESOURCES: '/admin/resources',
   TRAINING: '/admin/training',
   HOUSEHOLD_SAFETY: '/admin/household-safety',
+  BREEDS: '/admin/breeds',
 } as const;

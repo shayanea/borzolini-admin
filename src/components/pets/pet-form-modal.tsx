@@ -10,10 +10,10 @@ import { COMMON_BREEDS, PET_GENDERS, PET_SIZES, PET_SPECIES } from '@/constants/
 import { Form, Modal } from 'antd';
 import type { PetFormData, PetFormModalProps } from '@/types';
 import { useCallback, useEffect, useState } from 'react';
-import { useDistinctAllergies, useDistinctMedications } from '@/hooks/use-pet-lookups';
+import { useDistinctAllergies, useDistinctMedications } from '@/hooks/pets';
 
 import dayjs from 'dayjs';
-import { usePetOwners } from '@/hooks/use-pet-owners';
+import { usePetOwners } from '@/hooks/pets';
 import { useTranslation } from 'react-i18next';
 
 const PetFormModal = ({

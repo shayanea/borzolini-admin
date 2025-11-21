@@ -58,6 +58,28 @@ export function TrainingTable({
       ),
     },
     {
+      title: 'Image',
+      key: 'thumbnail',
+      width: 100,
+      render: (_: unknown, record: TrainingActivity) => {
+        const thumbnailUrl = (record as unknown as { thumbnailUrl?: string }).thumbnailUrl;
+        return thumbnailUrl ? (
+          <img
+            src={thumbnailUrl}
+            alt={record.title}
+            className="w-16 h-16 object-cover rounded border"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        ) : (
+          <div className="w-16 h-16 bg-gray-100 rounded border flex items-center justify-center">
+            <Text type="secondary" className="text-xs">No image</Text>
+          </div>
+        );
+      },
+    },
+    {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',

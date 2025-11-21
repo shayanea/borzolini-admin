@@ -15,7 +15,7 @@ import {
 } from './appointment-form-sections';
 
 import { useCalendarFormData } from '@/hooks/calendar/use-calendar-form-data';
-import type { CreateAppointmentData } from '@/services/appointments.service';
+import type { CreateAppointmentData } from '@/services/appointments';
 import type { AppointmentFormModalProps } from '@/types/calendar-modals';
 import dayjs from 'dayjs';
 
