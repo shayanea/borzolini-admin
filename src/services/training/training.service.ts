@@ -109,7 +109,36 @@ export class TrainingService extends BaseService<
 
   static async getActivity(id: string): Promise<TrainingActivity> {
     const service = new TrainingService();
-    return service.getById(id);
+    const endpoint = `${ADMIN_ACTIVITIES_ENDPOINT}/${id}`;
+    
+    console.log('Fetching training activity:', { id, endpoint });
+    
+    try {
+      const response = await service.getRequest<any>(endpoint);
+      
+      console.log('Training activity response:', response);
+      
+      // Handle different response formats
+      if (response?.data && typeof response.data === 'object') {
+        return response.data as TrainingActivity;
+      }
+      
+      if (response?.id) {
+        return response as TrainingActivity;
+      }
+      
+      throw new Error('Invalid training activity response format');
+    } catch (error: any) {
+      console.error('Error fetching training activity:', {
+        id,
+        endpoint,
+        error: error?.message,
+        status: error?.response?.status,
+        statusText: error?.response?.statusText,
+        data: error?.response?.data,
+      });
+      throw error;
+    }
   }
 
   static async createActivity(data: CreateTrainingActivityDto): Promise<TrainingActivity> {

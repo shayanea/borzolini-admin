@@ -174,21 +174,42 @@ function TrainingPage() {
 
   const handleViewActivity = useCallback(
     async (activity: TrainingActivity) => {
-      const activityData = await getTrainingActivity(activity.id);
-      setSelectedActivity(activityData || null);
-      setShowViewModal(true);
+      try {
+        // Use existing activity data first, then fetch fresh data in background
+        setSelectedActivity(activity);
+        setShowViewModal(true);
+        
+        // Fetch fresh data to ensure we have the latest
+        const activityData = await getTrainingActivity(activity.id);
+        if (activityData) {
+          setSelectedActivity(activityData);
+        }
+      } catch (err) {
+        console.error('Failed to fetch training activity:', err);
+        message.error('Failed to load training activity details');
+      }
     },
     [getTrainingActivity]
   );
 
   const handleEditActivity = useCallback(
     async (activity: TrainingActivity) => {
-      const activityData = await getTrainingActivity(activity.id);
-      setSelectedActivity(activityData || null);
-      if (activityData) {
-        editForm.resetForm(activityData);
+      try {
+        // Use existing activity data first, then fetch fresh data
+        setSelectedActivity(activity);
+        editForm.resetForm(activity);
+        
+        // Fetch fresh data to ensure we have the latest
+        const activityData = await getTrainingActivity(activity.id);
+        if (activityData) {
+          setSelectedActivity(activityData);
+          editForm.resetForm(activityData);
+        }
+        setShowEditModal(true);
+      } catch (err) {
+        console.error('Failed to fetch training activity:', err);
+        message.error('Failed to load training activity for editing');
       }
-      setShowEditModal(true);
     },
     [getTrainingActivity, editForm]
   );
