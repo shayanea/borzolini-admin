@@ -24,7 +24,7 @@ pnpm install
 Create `.env`:
 
 ```env
-VITE_API_URL=http://192.168.70.174:3001
+VITE_API_URL=https://borzolini-service.onrender.com
 ```
 
 Start dev server:
@@ -102,7 +102,7 @@ class MyService {
 }
 ```
 
-API docs: `http://192.168.70.174:3001/api/docs`
+API docs: `https://borzolini-service.onrender.com/api/docs`
 
 ## Environment Variables
 

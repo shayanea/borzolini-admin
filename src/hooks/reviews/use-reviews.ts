@@ -1,8 +1,8 @@
 import ReviewsService, {
-  type CreateReviewData,
-  type CreateReviewResponseData,
-  type UpdateReviewData,
-  type UpdateReviewResponseData,
+	type CreateReviewData,
+	type CreateReviewResponseData,
+	type UpdateReviewData,
+	type UpdateReviewResponseData,
 } from '@/services/reviews';
 import { useAuthStore } from '@/stores/auth.store';
 import type { Review, ReviewMetrics, ReviewStats } from '@/types';
@@ -70,7 +70,7 @@ export const useReviews = (): UseReviewsReturn => {
 
   // Convert filters to API format
   const getApiFilters = useCallback(() => {
-    const apiFilters: Record<string, unknown> = { ...filters };
+    const apiFilters: ReviewsFilters = { ...filters };
     if (filters.dateFrom) {
       apiFilters.date_from = filters.dateFrom;
     }

@@ -1,7 +1,6 @@
-import { Modal } from 'antd';
-import type { ReturnType } from 'react';
 import type { useBreedForm } from '@/hooks/breeds';
 import type { Breed } from '@/types/breeds';
+import { Modal } from 'antd';
 import { BreedForm } from './breed-form';
 
 interface BreedFormModalProps {

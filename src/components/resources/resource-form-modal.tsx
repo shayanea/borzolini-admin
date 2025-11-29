@@ -1,7 +1,6 @@
-import { Modal } from 'antd';
-import type { ReturnType } from 'react';
 import type { useResourceForm } from '@/hooks/resources';
 import type { Resource } from '@/types/resources';
+import { Modal } from 'antd';
 import { ResourceForm } from './resource-form';
 
 interface ResourceFormModalProps {

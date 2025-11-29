@@ -1,4 +1,3 @@
-import type { ReturnType } from 'react';
 import type { useTrainingForm } from '@/hooks/training';
 import type { TRAINING_DIFFICULTY, TRAINING_SPECIES } from '@/types/training';
 

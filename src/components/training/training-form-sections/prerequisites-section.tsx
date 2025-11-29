@@ -1,7 +1,6 @@
-import { Button, Card, Form, Input } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Input, Typography } from 'antd';
 import React from 'react';
-import { Typography } from 'antd';
 import type { TrainingFormSectionProps } from './types';
 
 const { Text } = Typography;
@@ -18,7 +17,7 @@ export function PrerequisitesSection({ form }: TrainingFormSectionProps) {
     >
       <Form.Item label='Prerequisites'>
         <div className='space-y-2'>
-          {(form.formData.prerequisites || []).map((prereq, index) => (
+          {(form.formData.prerequisites || []).map((prereq: string, index: number) => (
             <div key={index} className='flex gap-2 items-start'>
               <span className='text-lg mt-1'>📚</span>
               <Input

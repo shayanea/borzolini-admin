@@ -1,6 +1,6 @@
-import { Badge, Modal, Typography } from 'antd';
-import type { Breed } from '@/types/breeds';
 import { formatDate } from '@/lib/utils';
+import type { Breed } from '@/types/breeds';
+import { Badge, Modal, Typography } from 'antd';
 
 const { Title, Text } = Typography;
 
@@ -8,7 +8,7 @@ interface BreedViewModalProps {
   breed: Breed | null;
   open: boolean;
   onClose: () => void;
-  getSpeciesColor: (species: string) => 'blue' | 'green' | 'orange' | 'purple' | 'pink' | 'default';
+  getSpeciesColor: (species: string) => 'blue' | 'green' | 'orange' | 'purple' | 'pink' | 'cyan' | 'lime' | 'gold' | 'default';
 }
 
 export function BreedViewModal({

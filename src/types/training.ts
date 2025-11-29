@@ -1,27 +1,47 @@
 export interface TrainingActivity {
   id: string;
   title: string;
+	description: string;
   summary?: string | null;
-  content_markdown: string;
+  content_markdown?: string; // Made optional as it might be replaced by steps
   difficulty: 'easy' | 'moderate' | 'advanced';
+  
+  // Standardized camelCase properties matching DTO and frontend usage
+  durationMinutes: number;
+  species: string[];
+  tags: string[];
+  videoUrl?: string | null;
+  thumbnailUrl?: string | null;
+  steps: Array<{
+    id?: string;
+    title: string;
+    description: string;
+    order: number;
+    tips?: string[];
+  }>;
+  benefits: string[];
+  prerequisites?: string[];
+  isActive: boolean;
+
+  // Legacy/DB properties (kept for compatibility if needed, but made optional)
   avg_duration_minutes?: number | null;
+  video_url?: string | null;
   indoor?: boolean | null;
   equipment?: string[] | null;
-  tags: string[];
-  risks: string[];
-  enrichment: string[];
-  video_url?: string | null;
+  risks?: string[];
+  enrichment?: string[];
   source_primary?: string | null;
   source_name?: string | null;
   license?: string | null;
   terms_snapshot?: Record<string, unknown> | null;
-  created_at: Date;
-  updated_at: Date;
   by_species?: Array<{
     id: string;
     species: string;
     activity_id: string;
   }>;
+
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface TrainingAssignment {

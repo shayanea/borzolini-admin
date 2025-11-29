@@ -1,17 +1,16 @@
+import {
+	BreedFormModal,
+	BreedViewModal,
+	BreedsFilters,
+	BreedsPageHeader,
+	BreedsTable,
+} from '@/components/breeds';
 import { Button, Card, Typography, message } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  BreedFormModal,
-  BreedViewModal,
-  BreedsFilters,
-  BreedsPageHeader,
-  BreedsTable,
-} from '@/components/breeds';
 
-import { ReloadOutlined } from '@ant-design/icons';
+import { useBreedForm, useBreeds } from '@/hooks/breeds';
 import type { Breed } from '@/types/breeds';
-import { useBreedForm } from '@/hooks/breeds';
-import { useBreeds } from '@/hooks/breeds';
+import { ReloadOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -157,7 +156,7 @@ function BreedsPage() {
   }, []);
 
   const getSpeciesColor = useCallback((species: string) => {
-    const colorMap: Record<string, 'blue' | 'green' | 'orange' | 'purple' | 'pink' | 'default'> = {
+    const colorMap: Record<string, 'blue' | 'green' | 'orange' | 'purple' | 'pink' | 'cyan' | 'lime' | 'gold' | 'default'> = {
       dog: 'blue',
       cat: 'green',
       bird: 'orange',

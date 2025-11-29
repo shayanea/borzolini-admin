@@ -96,6 +96,48 @@ export const useBreedForm = (initialData?: Breed) => {
     }
   }, [formData, validateForm]);
 
+  const addHealthRisk = useCallback(() => {
+    setFormData((prev: CreateBreedDto | UpdateBreedDto) => ({
+      ...prev,
+      health_risks: [...(prev.health_risks || []), ''],
+    }));
+  }, []);
+
+  const updateHealthRisk = useCallback((index: number, value: string) => {
+    setFormData((prev: CreateBreedDto | UpdateBreedDto) => ({
+      ...prev,
+      health_risks: (prev.health_risks || []).map((risk, i) => i === index ? value : risk),
+    }));
+  }, []);
+
+  const deleteHealthRisk = useCallback((index: number) => {
+    setFormData((prev: CreateBreedDto | UpdateBreedDto) => ({
+      ...prev,
+      health_risks: (prev.health_risks || []).filter((_, i) => i !== index),
+    }));
+  }, []);
+
+  const addResource = useCallback(() => {
+    setFormData((prev: CreateBreedDto | UpdateBreedDto) => ({
+      ...prev,
+      resources: [...(prev.resources || []), ''],
+    }));
+  }, []);
+
+  const updateResource = useCallback((index: number, value: string) => {
+    setFormData((prev: CreateBreedDto | UpdateBreedDto) => ({
+      ...prev,
+      resources: (prev.resources || []).map((resource, i) => i === index ? value : resource),
+    }));
+  }, []);
+
+  const deleteResource = useCallback((index: number) => {
+    setFormData((prev: CreateBreedDto | UpdateBreedDto) => ({
+      ...prev,
+      resources: (prev.resources || []).filter((_, i) => i !== index),
+    }));
+  }, []);
+
   const resetForm = useCallback((data?: Breed) => {
     setFormData(
       data 
@@ -146,6 +188,12 @@ export const useBreedForm = (initialData?: Breed) => {
     errors,
     isSubmitting,
     handleInputChange,
+    addHealthRisk,
+    updateHealthRisk,
+    deleteHealthRisk,
+    addResource,
+    updateResource,
+    deleteResource,
     handleSubmit,
     resetForm,
     validateForm,

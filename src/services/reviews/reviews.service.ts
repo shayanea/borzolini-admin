@@ -1,15 +1,15 @@
 import type {
-  BulkReviewAction,
-  CreateReviewData,
-  CreateReviewResponseData,
-  Review,
-  ReviewMetrics,
-  ReviewModerationLog,
-  ReviewStats,
-  ReviewsFilters,
-  ReviewsResponse,
-  UpdateReviewData,
-  UpdateReviewResponseData,
+	BulkReviewAction,
+	CreateReviewData,
+	CreateReviewResponseData,
+	Review,
+	ReviewMetrics,
+	ReviewModerationLog,
+	ReviewStats,
+	ReviewsFilters,
+	ReviewsResponse,
+	UpdateReviewData,
+	UpdateReviewResponseData,
 } from '@/types';
 
 import { environment } from '@/config/environment';
@@ -18,11 +18,11 @@ import { reviewsCache } from '../core/cache.service';
 
 // Export types for use in other files
 export type {
-  BulkReviewAction,
-  CreateReviewData,
-  CreateReviewResponseData,
-  UpdateReviewData,
-  UpdateReviewResponseData,
+	BulkReviewAction,
+	CreateReviewData,
+	CreateReviewResponseData,
+	UpdateReviewData,
+	UpdateReviewResponseData
 };
 
 export class ReviewsService {
@@ -31,7 +31,9 @@ export class ReviewsService {
    */
   static async getAll(filters: ReviewsFilters = {}): Promise<ReviewsResponse> {
     try {
-      const params = apiService.buildQueryParams(filters);
+      // Exclude dateRange from filters as it's not a valid query param type
+      const { dateRange, ...queryFilters } = filters;
+      const params = apiService.buildQueryParams(queryFilters as import('../api/utils').QueryParams);
       const queryString = params.toString();
       const url = queryString ? `/reviews?${queryString}` : '/reviews';
 
@@ -83,7 +85,9 @@ export class ReviewsService {
         throw new Error('Clinic ID is required');
       }
 
-      const params = apiService.buildQueryParams({ ...filters, clinicId });
+      // Exclude dateRange from filters as it's not a valid query param type
+      const { dateRange, ...queryFilters } = filters;
+      const params = apiService.buildQueryParams({ ...queryFilters, clinicId } as import('../api/utils').QueryParams);
       const queryString = params.toString();
       const url = `/reviews/clinic/${clinicId}${queryString ? `?${queryString}` : ''}`;
 
@@ -109,7 +113,9 @@ export class ReviewsService {
         throw new Error('User ID is required');
       }
 
-      const params = apiService.buildQueryParams({ ...filters, userId });
+      // Exclude dateRange from filters as it's not a valid query param type
+      const { dateRange, ...queryFilters } = filters;
+      const params = apiService.buildQueryParams({ ...queryFilters, userId } as import('../api/utils').QueryParams);
       const queryString = params.toString();
       const url = `/reviews/user/${userId}${queryString ? `?${queryString}` : ''}`;
 

@@ -1,3 +1,4 @@
+import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import {
   Badge,
   Button,
@@ -10,10 +11,10 @@ import {
   Table,
   Typography,
 } from 'antd';
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 
-import type { Breed } from '@/types/breeds';
 import { formatDate } from '@/lib/utils';
+import type { Breed } from '@/types/breeds';
+import { getExerciseColor, getGroomingColor, getSpeciesIcon } from './breeds-utils';
 
 const { Text } = Typography;
 
@@ -32,7 +33,7 @@ interface BreedsTableProps {
   onDelete: (id: string) => void;
   getSpeciesColor: (
     species: string
-  ) => 'blue' | 'green' | 'orange' | 'purple' | 'pink' | 'default';
+  ) => 'blue' | 'green' | 'orange' | 'purple' | 'pink' | 'cyan' | 'lime' | 'gold' | 'default';
 }
 
 export function BreedsTable({
@@ -71,22 +72,31 @@ export function BreedsTable({
       title: 'Image',
       key: 'image_url',
       width: 100,
-      render: (_: unknown, record: Breed) => (
+      render: (_: unknown, record: Breed) =>
         record.image_url ? (
-          <img
-            src={record.image_url}
-            alt={record.name}
-            className="w-16 h-16 object-cover rounded border"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-          />
+          <a
+            href={record.image_url}
+            target='_blank'
+            rel='noopener noreferrer'
+            aria-label={`Open ${record.name} image`}
+            className='inline-flex'
+          >
+            <img
+              src={record.image_url}
+              alt={record.name}
+              className='w-16 h-16 object-cover rounded border'
+              onError={e => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          </a>
         ) : (
-          <div className="w-16 h-16 bg-gray-100 rounded border flex items-center justify-center">
-            <Text type="secondary" className="text-xs">No image</Text>
+          <div className='w-16 h-16 bg-gray-100 rounded border flex items-center justify-center'>
+            <Text type='secondary' className='text-xs'>
+              No image
+            </Text>
           </div>
-        )
-      ),
+        ),
     },
     {
       title: 'Name',
@@ -98,13 +108,49 @@ export function BreedsTable({
       title: 'Species',
       dataIndex: 'species',
       key: 'species',
-      render: (species: string) => <Badge color={getSpeciesColor(species)} text={species} />,
+      render: (species: string) => (
+        <Space>
+          <Badge color={getSpeciesColor(species)} text={`${getSpeciesIcon(species)} ${species}`} />
+        </Space>
+      ),
     },
     {
       title: 'Size',
       dataIndex: 'size_category',
       key: 'size_category',
-      render: (size?: string) => size ? <Text>{size}</Text> : <Text type="secondary">N/A</Text>,
+      render: (size?: string) => (size ? <Text>{size}</Text> : <Text type='secondary'>N/A</Text>),
+    },
+    {
+      title: 'Grooming',
+      dataIndex: 'grooming_needs',
+      key: 'grooming_needs',
+      render: (_: unknown, record: Breed) => {
+        const grooming = record.grooming_needs;
+        return grooming ? (
+          <Badge
+            color={getGroomingColor(grooming)}
+            text={grooming.charAt(0).toUpperCase() + grooming.slice(1)}
+          />
+        ) : (
+          <Text type='secondary'>N/A</Text>
+        );
+      },
+    },
+    {
+      title: 'Exercise',
+      dataIndex: 'exercise_needs',
+      key: 'exercise_needs',
+      render: (_: unknown, record: Breed) => {
+        const exercise = record.exercise_needs;
+        return exercise ? (
+          <Badge
+            color={getExerciseColor(exercise)}
+            text={exercise.charAt(0).toUpperCase() + exercise.slice(1)}
+          />
+        ) : (
+          <Text type='secondary'>N/A</Text>
+        );
+      },
     },
     {
       title: 'Status',
@@ -180,4 +226,3 @@ export function BreedsTable({
     </Card>
   );
 }
-

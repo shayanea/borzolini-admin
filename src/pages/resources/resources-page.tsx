@@ -1,17 +1,16 @@
+import {
+	ResourceFormModal,
+	ResourceViewModal,
+	ResourcesFilters,
+	ResourcesPageHeader,
+	ResourcesTable,
+} from '@/components/resources';
 import { Button, Card, Typography, message } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  ResourceFormModal,
-  ResourceViewModal,
-  ResourcesFilters,
-  ResourcesPageHeader,
-  ResourcesTable,
-} from '@/components/resources';
 
-import { ReloadOutlined } from '@ant-design/icons';
+import { useResourceForm, useResources } from '@/hooks/resources';
 import type { Resource } from '@/types/resources';
-import { useResourceForm } from '@/hooks/resources';
-import { useResources } from '@/hooks/resources';
+import { ReloadOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -68,7 +67,7 @@ function ResourcesPage() {
     return resources?.filter(
       resource =>
         resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        resource.description.toLowerCase().includes(searchTerm.toLowerCase())
+        resource?.description?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [resources, searchTerm]);
 

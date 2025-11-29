@@ -1,6 +1,6 @@
+import { TRAINING_DIFFICULTY, TRAINING_SPECIES } from '@/types/training';
 import { Button, Card, Input, Select, Typography } from 'antd';
 import React from 'react';
-import { TRAINING_DIFFICULTY, TRAINING_SPECIES } from '@/types/training';
 
 const { Option } = Select;
 const { Title, Text } = Typography;

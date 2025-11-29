@@ -1,15 +1,15 @@
-import { Alert, Button, Card, message } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import type { TrainingActivity, TrainingSearchParams } from '@/types/training';
 import {
-  TrainingDetailsModal,
-  TrainingFilters,
-  TrainingFormModal,
-  TrainingPageHeader,
-  TrainingTable,
+	TrainingDetailsModal,
+	TrainingFilters,
+	TrainingFormModal,
+	TrainingPageHeader,
+	TrainingTable,
 } from '@/components/training';
 import { useTraining, useTrainingForm } from '@/hooks/training';
+import type { TrainingActivity, TrainingSearchParams } from '@/types/training';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, message } from 'antd';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 function TrainingPage() {
   const [selectedActivity, setSelectedActivity] = useState<TrainingActivity | null>(null);
@@ -88,7 +88,7 @@ function TrainingPage() {
     return activities.filter(
       (activity: TrainingActivity) =>
         activity.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        activity.description.toLowerCase().includes(searchTerm.toLowerCase())
+        activity.description?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [activities, searchTerm]);
 
@@ -265,7 +265,6 @@ function TrainingPage() {
         searchTerm={searchTerm}
         selectedSpecies={selectedSpecies}
         selectedDifficulty={selectedDifficulty}
-        selectedTags={selectedTags}
         onSearch={handleSearch}
         onSpeciesChange={handleSpeciesChange}
         onDifficultyChange={handleDifficultyChange}

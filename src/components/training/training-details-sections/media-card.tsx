@@ -1,6 +1,6 @@
-import { Button, Card, Typography } from 'antd';
-import { PlayCircleOutlined } from '@ant-design/icons';
 import type { TrainingActivity } from '@/types/training';
+import { PlayCircleOutlined } from '@ant-design/icons';
+import { Button, Card, Typography } from 'antd';
 
 const { Text } = Typography;
 
@@ -9,41 +9,28 @@ interface MediaCardProps {
 }
 
 export function MediaCard({ activity }: MediaCardProps) {
-  if (!activity.videoUrl && !activity.thumbnailUrl) return null;
+  if (!activity.video_url) return null;
 
   return (
     <Card title='Media Resources'>
       <div className='space-y-4'>
-        {activity.videoUrl && (
+        {activity.video_url && (
           <div>
             <Text strong>Video Tutorial</Text>
             <div className='mt-2'>
               <Button
                 type='default'
                 icon={<PlayCircleOutlined />}
-                href={activity.videoUrl}
+                href={activity.video_url}
                 target='_blank'
                 rel='noopener noreferrer'
               >
                 Watch Video (
-                {activity.videoUrl.length > 50
-                  ? `${activity.videoUrl.substring(0, 50)}...`
-                  : activity.videoUrl}
+                {activity.video_url.length > 50
+                  ? `${activity.video_url.substring(0, 50)}...`
+                  : activity.video_url}
                 )
               </Button>
-            </div>
-          </div>
-        )}
-
-        {activity.thumbnailUrl && (
-          <div>
-            <Text strong>Activity Preview</Text>
-            <div className='mt-2'>
-              <img
-                src={activity.thumbnailUrl}
-                alt='Training preview'
-                className='max-w-md h-32 object-cover rounded-lg border'
-              />
             </div>
           </div>
         )}

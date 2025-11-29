@@ -19,6 +19,7 @@ export enum PetSize {
 }
 
 export enum GroomingNeeds {
+  NONE = 'none',
   LOW = 'low',
   MODERATE = 'moderate',
   HIGH = 'high',

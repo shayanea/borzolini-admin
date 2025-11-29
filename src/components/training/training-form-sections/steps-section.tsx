@@ -1,10 +1,14 @@
-import { Alert, Button, Card, Form, Input, Space, Typography } from 'antd';
 import { DeleteOutlined, DownOutlined, PlusOutlined, UpOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, Form, Input, Space, Typography } from 'antd';
 import React from 'react';
 import type { TrainingFormSectionProps } from './types';
 
 const { TextArea } = Input;
 const { Text } = Typography;
+
+import type { CreateTrainingActivityDto } from '@/types/training';
+
+type Step = CreateTrainingActivityDto['steps'][number];
 
 export function StepsSection({ form }: TrainingFormSectionProps) {
   return (
@@ -29,7 +33,7 @@ export function StepsSection({ form }: TrainingFormSectionProps) {
       )}
 
       <div className='space-y-3'>
-        {(form.formData.steps || []).map((step, index) => (
+        {(form.formData.steps || []).map((step: Step, index: number) => (
           <div
             key={'id' in step && step.id ? String(step.id) : `step-${index}`}
             className='border rounded-lg p-4 bg-card/50'
@@ -115,7 +119,7 @@ export function StepsSection({ form }: TrainingFormSectionProps) {
             {step.tips && step.tips.length > 0 && (
               <Form.Item label='Tips for Success'>
                 <div className='space-y-2'>
-                  {step.tips.map((tip, tipIndex) => (
+                  {step.tips.map((tip: string, tipIndex: number) => (
                     <div key={tipIndex} className='flex gap-2 items-start'>
                       <span className='text-lg mt-1'>💡</span>
                       <Input
@@ -133,7 +137,7 @@ export function StepsSection({ form }: TrainingFormSectionProps) {
                         size='small'
                         icon={<DeleteOutlined />}
                         onClick={() => {
-                          const newTips = step.tips!.filter((_, i) => i !== tipIndex);
+                          const newTips = step.tips!.filter((_: string, i: number) => i !== tipIndex);
                           form.updateStep(index, 'tips', newTips);
                         }}
                         danger

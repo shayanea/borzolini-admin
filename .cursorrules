@@ -2,7 +2,7 @@
 
 ## API Documentation & Types
 
-- **ALWAYS** use `http://192.168.70.174:3001/api/docs` as the primary source for API documentation, types, and schemas
+- **ALWAYS** use `https://borzolini-service.onrender.com/api/docs` as the primary source for API documentation, types, and schemas
 - **NEVER** make assumptions about API endpoints, request/response structures, or data types
 - **ALWAYS** reference the actual API documentation before implementing any API-related functionality
 - When in doubt about API structure, check the local docs first
@@ -100,7 +100,7 @@
 
 ## When Implementing New Features
 
-1. **First** check the API documentation at `http://192.168.70.174:3001/api/docs`
+1. **First** check the API documentation at `https://borzolini-service.onrender.com/api/docs`
 2. **Then** examine existing similar components for patterns
 3. **Use** the existing service layer and API infrastructure
 4. **Follow** the established TypeScript patterns
@@ -122,4 +122,4 @@
 - Use **proper TypeScript interfaces** for all data structures
 - Implement **type guards** when dealing with external data
 
-Remember: When in doubt about API structure, types, or endpoints, **ALWAYS** check `http://192.168.70.174:3001/api/docs` first!
+Remember: When in doubt about API structure, types, or endpoints, **ALWAYS** check `https://borzolini-service.onrender.com/api/docs` first!

@@ -1,6 +1,6 @@
-import { Badge, Space, Typography } from 'antd';
-import { ClockCircleOutlined, ExperimentOutlined } from '@ant-design/icons';
 import type { TrainingActivity } from '@/types/training';
+import { ClockCircleOutlined, ExperimentOutlined } from '@ant-design/icons';
+import { Badge, Space, Typography } from 'antd';
 import { getDifficultyColor, getSpeciesIcon } from '../training-utils';
 
 const { Title, Text } = Typography;
@@ -25,17 +25,13 @@ export function BasicInfoCard({ activity }: BasicInfoCardProps) {
           <Badge color={getDifficultyColor(activity.difficulty)} text={activity.difficulty} />
           <Space size='small'>
             <ClockCircleOutlined />
-            <span>{activity.durationMinutes} minutes</span>
+            <span>{activity.avg_duration_minutes} minutes</span>
           </Space>
-          <Badge
-            color={activity.isActive ? 'success' : 'default'}
-            text={activity.isActive ? 'Active' : 'Draft'}
-          />
         </Space>
 
         <Space size='small' wrap>
-          {activity.species.map(species => (
-            <Badge key={species} text={`${getSpeciesIcon(species)} ${species}`} />
+          {activity.by_species?.map(species => (
+            <Badge key={species.id} text={`${getSpeciesIcon(species.species)} ${species.species}`} />
           ))}
         </Space>
       </div>

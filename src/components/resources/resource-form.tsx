@@ -1,7 +1,6 @@
-import { Button, Form, Input, Select, Space, Switch, Typography } from 'antd';
-import type { ReturnType } from 'react';
 import type { useResourceForm } from '@/hooks/resources';
-import type { Resource, ResourceType } from '@/types/resources';
+import { Resource, ResourceType } from '@/types/resources';
+import { Button, Form, Input, Select, Space, Switch, Typography } from 'antd';
 
 const { Option } = Select;
 const { TextArea } = Input;

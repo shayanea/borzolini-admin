@@ -82,8 +82,8 @@ export interface UpdateReviewResponseData {
   responseText: string;
 }
 
-export interface ReviewsFilters {
-  [key: string]: string | number | boolean | string[] | [Date | null, Date | null] | [string, string] | undefined | null;
+// Base filters without index signature to allow dateRange
+interface ReviewsFiltersBase {
   page?: number;
   limit?: number;
   clinicId?: string;
@@ -97,10 +97,16 @@ export interface ReviewsFilters {
   tagSoon?: boolean;
   dateFrom?: string;
   dateTo?: string;
+  date_from?: string; // Snake case for API compatibility
+  date_to?: string; // Snake case for API compatibility
   search?: string;
   sortBy?: 'createdAt' | 'rating' | 'helpfulVotes' | 'updatedAt';
   sortOrder?: 'asc' | 'desc';
-  dateRange?: [Date | null, Date | null]; // For date picker component
+}
+
+// Full filters interface including dateRange for UI components
+export interface ReviewsFilters extends ReviewsFiltersBase {
+  dateRange?: [Date | null, Date | null]; // For date picker component (excluded from API calls)
 }
 
 export interface ReviewsResponse {
