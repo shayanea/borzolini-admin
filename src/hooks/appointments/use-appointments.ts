@@ -1,8 +1,9 @@
 import { useClinicContext } from '@/hooks/clinics';
+import { useFilterManagement } from '@/hooks/common/use-filter-management';
 import AppointmentsService, {
-  type AppointmentStats,
-  type CreateAppointmentData,
-  type UpdateAppointmentData,
+    type AppointmentStats,
+    type CreateAppointmentData,
+    type UpdateAppointmentData,
 } from '@/services/appointments';
 import { useAuthStore } from '@/stores/auth.store';
 import type { Appointment, AppointmentStatus } from '@/types';
@@ -43,12 +44,21 @@ export interface UseAppointmentsReturn {
 }
 
 export const useAppointments = (): UseAppointmentsReturn => {
-  const [searchText, setSearchText] = useState('');
-  const [filters, setFilters] = useState<AppointmentsFilters>({});
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
     total: 0,
+  });
+
+  // Use the shared filter management hook
+  const {
+    filters,
+    setFilters,
+    searchText,
+    handleSearch: onSearch,
+  } = useFilterManagement<AppointmentsFilters>({
+    initialFilters: {},
+    resetToPage1: () => setPagination(prev => ({ ...prev, current: 1 })),
   });
 
   // Get authentication state from the store
@@ -76,8 +86,12 @@ export const useAppointments = (): UseAppointmentsReturn => {
       apiFilters.date_to = effectiveFilters.dateRange[1];
       delete apiFilters.dateRange;
     }
+    // Include search text in filters if set
+    if (searchText) {
+      apiFilters.search = searchText;
+    }
     return apiFilters;
-  }, [effectiveFilters]);
+  }, [effectiveFilters, searchText]);
 
   // Query for appointments
   const {
@@ -86,7 +100,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
     error: queryError,
     refetch: refetchAppointments,
   } = useQuery({
-    queryKey: ['appointments', effectiveFilters, pagination.current, pagination.pageSize],
+    queryKey: ['appointments', effectiveFilters, searchText, pagination.current, pagination.pageSize],
     queryFn: async () => {
       if (!isAuthenticated) return { appointments: [], total: 0 };
 
@@ -221,21 +235,12 @@ export const useAppointments = (): UseAppointmentsReturn => {
   });
 
   const handleSearch = useCallback((value: string) => {
-    setSearchText(value);
-    setFilters(prev => ({
-      ...prev,
-      search: value,
-    }));
-    setPagination(prev => ({ ...prev, current: 1 }));
-  }, []);
+    onSearch(value);
+  }, [onSearch]);
 
   const handleFilters = useCallback((newFilters: Partial<AppointmentsFilters>) => {
-    setFilters(prev => ({
-      ...prev,
-      ...newFilters,
-    }));
-    setPagination(prev => ({ ...prev, current: 1 }));
-  }, []);
+    setFilters(newFilters);
+  }, [setFilters]);
 
   const handlePagination = useCallback((page: number, pageSize: number) => {
     setPagination(prev => ({

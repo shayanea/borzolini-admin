@@ -27,6 +27,7 @@ export interface AppointmentsFiltersProps {
 }
 
 export interface AppointmentsFilters {
+  [key: string]: any;
   search?: string;
   status?: AppointmentStatus;
   type?: AppointmentType;

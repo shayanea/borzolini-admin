@@ -5,11 +5,13 @@ import React, { useCallback, useState } from 'react';
 import { CACHE_PRESETS } from '@/constants';
 import { COMMON_BREEDS, PET_GENDERS, PET_SIZES, PET_SPECIES } from '@/constants/pets';
 import { useAuth } from '@/hooks/auth';
+import { useFilterManagement } from '@/hooks/common/use-filter-management';
 import { PetsService } from '@/services/pets';
 import { message } from 'antd';
 
 // Types for query parameters
 interface PetsFilters {
+  [key: string]: any;
   search?: string;
   species?: string | null;
   breed?: string | null;
@@ -43,34 +45,34 @@ export const usePetManagement = (): UsePetManagementReturn => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-  // Pet species, breeds, genders, and sizes based on API structure
+  // Use the shared filter management hook
+  const {
+    filters,
+    setFilter,
+    resetFilters,
+    searchText,
+    handleSearch: onSearch,
+  } = useFilterManagement<PetsFilters & { search: string }>({
+    initialFilters: {
+      search: '',
+      species: null,
+      breed: null,
+      gender: null,
+      size: null,
+      ownerName: '',
+      isActive: undefined,
+    },
+    resetToPage1: () => setCurrentPage(1),
+  });
+
   // Pet species, breeds, genders, and sizes from constants
   const petSpecies = Object.values(PET_SPECIES) as string[];
   
   // Flatten all breeds for the general list, or specific ones if needed
-  // For the hook we might want all available breeds or leave it empty/managed by species selection elsewhere
   const breeds = Object.values(COMMON_BREEDS).flat() as string[];
 
   const genders = Object.values(PET_GENDERS) as string[];
   const sizes = Object.values(PET_SIZES) as string[];
-
-  const [filters, setFilters] = useState<{
-    search: string;
-    species: string | null;
-    breed: string | null;
-    gender: string | null;
-    size: string | null;
-    ownerName: string;
-    isActive: boolean | undefined;
-  }>({
-    search: '',
-    species: null,
-    breed: null,
-    gender: null,
-    size: null,
-    ownerName: '',
-    isActive: undefined,
-  });
 
   // React Query for fetching pets
   const {
@@ -79,12 +81,12 @@ export const usePetManagement = (): UsePetManagementReturn => {
     error: queryError,
     refetch: fetchPets,
   } = useQuery({
-    queryKey: PETS_KEYS.list(filters, { currentPage, pageSize }),
+    queryKey: PETS_KEYS.list({ ...filters, search: searchText }, { currentPage, pageSize }),
     queryFn: async () => {
       const params = {
         page: currentPage,
         limit: pageSize,
-        search: filters.search || undefined,
+        search: searchText || undefined,
         species: filters.species || undefined,
         breed: filters.breed || undefined,
         gender: filters.gender || undefined,
@@ -133,8 +135,6 @@ export const usePetManagement = (): UsePetManagementReturn => {
     return Array.from(ownerMap.values());
   }, [pets]);
 
-  // Pet types are now static - no need to fetch from API
-
   // Table change handler
   const handleTableChange = useCallback((pagination: { current?: number; pageSize?: number }) => {
     if (pagination.current) setCurrentPage(pagination.current);
@@ -146,54 +146,14 @@ export const usePetManagement = (): UsePetManagementReturn => {
     setSelectedRowKeys(selectedRowKeys);
   }, []);
 
-  // Filter handlers
+  // Map generic filter handlers to specific ones for backward compatibility
   const handleSearch = useCallback((value: string) => {
-    setFilters(prev => ({ ...prev, search: value }));
-    setCurrentPage(1);
-  }, []);
-
-  const handleSpeciesFilter = useCallback((value: string | null) => {
-    setFilters(prev => ({ ...prev, species: value }));
-    setCurrentPage(1);
-  }, []);
-
-  const handleBreedFilter = useCallback((value: string | null) => {
-    setFilters(prev => ({ ...prev, breed: value }));
-    setCurrentPage(1);
-  }, []);
-
-  const handleGenderFilter = useCallback((value: string | null) => {
-    setFilters(prev => ({ ...prev, gender: value }));
-    setCurrentPage(1);
-  }, []);
-
-  const handleSizeFilter = useCallback((value: string | null) => {
-    setFilters(prev => ({ ...prev, size: value }));
-    setCurrentPage(1);
-  }, []);
-
-  const handleOwnerFilter = useCallback((value: string) => {
-    setFilters(prev => ({ ...prev, ownerName: value }));
-    setCurrentPage(1);
-  }, []);
-
-  const handleActiveFilter = useCallback((value: boolean | undefined) => {
-    setFilters(prev => ({ ...prev, isActive: value }));
-    setCurrentPage(1);
-  }, []);
+    onSearch(value);
+  }, [onSearch]);
 
   const handleClearFilters = useCallback(() => {
-    setFilters({
-      search: '',
-      species: null,
-      breed: null,
-      gender: null,
-      size: null,
-      ownerName: '',
-      isActive: undefined,
-    });
-    setCurrentPage(1);
-  }, []);
+    resetFilters();
+  }, [resetFilters]);
 
   // Mutations for CRUD operations
   const createPetMutation = useMutation({
@@ -285,7 +245,7 @@ export const usePetManagement = (): UsePetManagementReturn => {
     pageSize,
     total,
     selectedRowKeys,
-    filters,
+    filters: { ...filters, search: searchText }, // Merge search into filters for backward compatibility
     petSpecies,
     breeds,
     genders,
@@ -295,12 +255,7 @@ export const usePetManagement = (): UsePetManagementReturn => {
     handleTableChange,
     handleRowSelectionChange,
     handleSearch,
-    handleSpeciesFilter,
-    handleBreedFilter,
-    handleGenderFilter,
-    handleSizeFilter,
-    handleOwnerFilter,
-    handleActiveFilter,
+    setFilter,
     handleClearFilters,
     handleCreatePet,
     handleUpdatePet,

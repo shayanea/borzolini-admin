@@ -1,17 +1,17 @@
-import type { Pet, PetFormData } from '@/types';
 import {
-  PetBulkActions,
-  PetDetailsModal,
-  PetFilters,
-  PetFormModal,
-  PetPageHeader,
-  PetTable,
+    PetBulkActions,
+    PetDetailsModal,
+    PetFilters,
+    PetFormModal,
+    PetPageHeader,
+    PetTable,
 } from '@/components/pets';
+import type { Pet, PetFormData } from '@/types';
 import React, { useCallback, useState } from 'react';
 
+import { usePetManagement } from '@/hooks';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
-import { usePetManagement } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 
 function PetsPage() {
@@ -27,11 +27,7 @@ function PetsPage() {
     handleTableChange,
     handleRowSelectionChange,
     handleSearch,
-    handleSpeciesFilter,
-    handleBreedFilter,
-    handleGenderFilter,
-    handleSizeFilter,
-    handleActiveFilter,
+    setFilter,
     handleClearFilters,
     handleCreatePet,
     handleUpdatePet,
@@ -150,11 +146,11 @@ function PetsPage() {
         selectedSize={filters.size}
         isActiveFilter={filters.isActive}
         onSearch={handleSearch}
-        onSpeciesFilter={handleSpeciesFilter}
-        onBreedFilter={handleBreedFilter}
-        onGenderFilter={handleGenderFilter}
-        onSizeFilter={handleSizeFilter}
-        onActiveFilter={handleActiveFilter}
+        onSpeciesFilter={(val: string | null) => setFilter('species', val)}
+        onBreedFilter={(val: string | null) => setFilter('breed', val)}
+        onGenderFilter={(val: string | null) => setFilter('gender', val)}
+        onSizeFilter={(val: string | null) => setFilter('size', val)}
+        onActiveFilter={(val: boolean | undefined) => setFilter('isActive', val)}
         onClearFilters={handleClearFilters}
       />
 

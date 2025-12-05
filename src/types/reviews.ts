@@ -106,6 +106,7 @@ interface ReviewsFiltersBase {
 
 // Full filters interface including dateRange for UI components
 export interface ReviewsFilters extends ReviewsFiltersBase {
+  [key: string]: any;
   dateRange?: [Date | null, Date | null]; // For date picker component (excluded from API calls)
 }
 

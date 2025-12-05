@@ -1,3 +1,4 @@
+import { useFilterManagement } from '@/hooks/common/use-filter-management';
 import ReviewsService, {
     type CreateReviewData,
     type CreateReviewResponseData,
@@ -56,12 +57,21 @@ export interface UseReviewsReturn {
 }
 
 export const useReviews = (): UseReviewsReturn => {
-  const [searchText, setSearchText] = useState('');
-  const [filters, setFilters] = useState<ReviewsFilters>({});
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
     total: 0,
+  });
+
+  // Use the shared filter management hook
+  const {
+    filters,
+    setFilters,
+    searchText,
+    handleSearch: onSearch,
+  } = useFilterManagement<ReviewsFilters>({
+    initialFilters: {},
+    resetToPage1: () => setPagination(prev => ({ ...prev, current: 1 })),
   });
 
   // Get authentication state from the store
@@ -77,8 +87,12 @@ export const useReviews = (): UseReviewsReturn => {
     if (filters.dateTo) {
       apiFilters.date_to = filters.dateTo;
     }
+    // Include search text in filters if set
+    if (searchText) {
+      apiFilters.search = searchText;
+    }
     return apiFilters;
-  }, [filters]);
+  }, [filters, searchText]);
 
   // Query for reviews
   const {
@@ -87,7 +101,7 @@ export const useReviews = (): UseReviewsReturn => {
     error: queryError,
     refetch: refetchReviews,
   } = useQuery({
-    queryKey: ['reviews', filters, pagination.current, pagination.pageSize],
+    queryKey: ['reviews', filters, searchText, pagination.current, pagination.pageSize],
     queryFn: async () => {
       if (!isAuthenticated) return { reviews: [], total: 0, totalPages: 0 };
 
@@ -350,21 +364,12 @@ export const useReviews = (): UseReviewsReturn => {
   });
 
   const handleSearch = useCallback((value: string) => {
-    setSearchText(value);
-    setFilters(prev => ({
-      ...prev,
-      search: value,
-    }));
-    setPagination(prev => ({ ...prev, current: 1 }));
-  }, []);
+    onSearch(value);
+  }, [onSearch]);
 
   const handleFilters = useCallback((newFilters: Partial<ReviewsFilters>) => {
-    setFilters(prev => ({
-      ...prev,
-      ...newFilters,
-    }));
-    setPagination(prev => ({ ...prev, current: 1 }));
-  }, []);
+    setFilters(newFilters);
+  }, [setFilters]);
 
   const handlePagination = useCallback((page: number, pageSize: number) => {
     setPagination(prev => ({

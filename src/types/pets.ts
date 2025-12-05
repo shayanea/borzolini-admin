@@ -46,11 +46,11 @@ export interface PetTableProps {
 // Pet filters props
 export interface PetFiltersProps {
   searchText: string;
-  selectedSpecies: string | null;
-  selectedBreed: string | null;
-  selectedGender: string | null;
-  selectedSize: string | null;
-  isActiveFilter: boolean | undefined;
+  selectedSpecies?: string | null;
+  selectedBreed?: string | null;
+  selectedGender?: string | null;
+  selectedSize?: string | null;
+  isActiveFilter?: boolean;
   onSearch: (value: string) => void;
   onSpeciesFilter: (value: string | null) => void;
   onBreedFilter: (value: string | null) => void;
@@ -79,13 +79,14 @@ export interface UsePetManagementReturn {
   total: number;
   selectedRowKeys: React.Key[];
   filters: {
+    [key: string]: any;
     search: string;
-    species: string | null;
-    breed: string | null;
-    gender: string | null;
-    size: string | null;
-    ownerName: string;
-    isActive: boolean | undefined;
+    species?: string | null;
+    breed?: string | null;
+    gender?: string | null;
+    size?: string | null;
+    ownerName?: string;
+    isActive?: boolean;
   };
   petSpecies: string[];
   breeds: string[];
@@ -97,12 +98,7 @@ export interface UsePetManagementReturn {
   handleTableChange: (pagination: any, filters: any, sorter: any) => void;
   handleRowSelectionChange: (selectedRowKeys: React.Key[], selectedRows: Pet[]) => void;
   handleSearch: (value: string) => void;
-  handleSpeciesFilter: (value: string | null) => void;
-  handleBreedFilter: (value: string | null) => void;
-  handleGenderFilter: (value: string | null) => void;
-  handleSizeFilter: (value: string | null) => void;
-  handleOwnerFilter: (value: string) => void;
-  handleActiveFilter: (value: boolean | undefined) => void;
+  setFilter: (key: string, value: any) => void;
   handleClearFilters: () => void;
   handleCreatePet: (data: PetFormData) => Promise<void>;
   handleUpdatePet: (id: string, data: PetFormData) => Promise<void>;
