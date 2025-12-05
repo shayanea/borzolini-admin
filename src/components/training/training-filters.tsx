@@ -1,4 +1,4 @@
-import { TRAINING_DIFFICULTY, TRAINING_SPECIES } from '@/types/training';
+import { TRAINING_DIFFICULTY, TRAINING_SPECIES } from '@/constants/training';
 import { Button, Card, Input, Select, Typography } from 'antd';
 import React from 'react';
 

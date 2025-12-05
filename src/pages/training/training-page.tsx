@@ -5,8 +5,13 @@ import {
 	TrainingPageHeader,
 	TrainingTable,
 } from '@/components/training';
+import {
+	TRAINING_FILTER_DEFAULTS,
+	TRAINING_PAGINATION_DEFAULTS,
+	TRAINING_SORT_DEFAULTS,
+} from '@/constants/training';
 import { useTraining, useTrainingForm } from '@/hooks/training';
-import type { TrainingActivity, TrainingSearchParams } from '@/types/training';
+import type { TrainingActivity, TrainingDifficulty, TrainingSearchParams } from '@/types/training';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Alert, Button, Card, message } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -22,7 +27,7 @@ function TrainingPage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(10);
+  const [pageSize] = useState(TRAINING_PAGINATION_DEFAULTS.PAGE_SIZE);
 
   const {
     createTrainingActivity,
@@ -52,7 +57,7 @@ function TrainingPage() {
     if (searchTerm) params.q = searchTerm;
     if (selectedSpecies.length > 0) params.species = selectedSpecies.join(',');
     if (selectedDifficulty)
-      params.difficulty = selectedDifficulty as 'easy' | 'moderate' | 'advanced';
+      params.difficulty = selectedDifficulty as TrainingDifficulty;
     if (selectedTags.length > 0) params.tags = selectedTags.join(',');
 
     const result = await getTrainingActivities(
@@ -61,8 +66,8 @@ function TrainingPage() {
       params.q,
       params.species,
       params.difficulty,
-      'created_at',
-      'DESC'
+      TRAINING_SORT_DEFAULTS.FIELD,
+      TRAINING_SORT_DEFAULTS.ORDER
     );
 
     if (result) {
@@ -161,7 +166,7 @@ function TrainingPage() {
       .split(',')
       .map((t: string) => t.trim())
       .filter(Boolean);
-    setSelectedTags(tags.slice(0, 3));
+    setSelectedTags(tags.slice(0, TRAINING_FILTER_DEFAULTS.MAX_TAGS_SELECTION));
   }, []);
 
   const handleClearFilters = useCallback(() => {
@@ -194,21 +199,21 @@ function TrainingPage() {
 
   const handleEditActivity = useCallback(
     async (activity: TrainingActivity) => {
+      // Use existing activity data first
+      setSelectedActivity(activity);
+      editForm.resetForm(activity);
+      setShowEditModal(true);
+
       try {
-        // Use existing activity data first, then fetch fresh data
-        setSelectedActivity(activity);
-        editForm.resetForm(activity);
-        
         // Fetch fresh data to ensure we have the latest
         const activityData = await getTrainingActivity(activity.id);
         if (activityData) {
           setSelectedActivity(activityData);
           editForm.resetForm(activityData);
         }
-        setShowEditModal(true);
       } catch (err) {
         console.error('Failed to fetch training activity:', err);
-        message.error('Failed to load training activity for editing');
+        // and we don't want to disrupt the user flow if the fresh fetch fails.
       }
     },
     [getTrainingActivity, editForm]

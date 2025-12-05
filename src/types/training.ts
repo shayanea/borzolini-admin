@@ -169,22 +169,7 @@ export interface TrainingFormErrors {
   benefits?: string;
 }
 
-export const TRAINING_DIFFICULTY = [
-  { value: 'easy', label: 'Easy', color: 'bg-green-100 text-green-800' },
-  { value: 'moderate', label: 'Moderate', color: 'bg-yellow-100 text-yellow-800' },
-  { value: 'advanced', label: 'Advanced', color: 'bg-orange-100 text-orange-800' }
-] as const;
-
-export const TRAINING_SPECIES = [
-  { value: 'dog', label: 'Dogs' },
-  { value: 'cat', label: 'Cats' },
-  { value: 'puppy', label: 'Puppies' },
-  { value: 'kitten', label: 'Kittens' },
-  { value: 'small_dog', label: 'Small Dogs' },
-  { value: 'large_dog', label: 'Large Dogs' },
-  { value: 'senior_dog', label: 'Senior Dogs' },
-  { value: 'working_dog', label: 'Working Dogs' }
-] as const;
+import { TRAINING_DIFFICULTY, TRAINING_SPECIES } from '@/constants/training';
 
 export type TrainingDifficulty = typeof TRAINING_DIFFICULTY[number]['value'];
 export type TrainingSpecies = typeof TRAINING_SPECIES[number]['value'];

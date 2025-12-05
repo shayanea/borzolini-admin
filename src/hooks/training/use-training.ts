@@ -1,19 +1,20 @@
+import { TRAINING_DIFFICULTY, TRAINING_PAGINATION_DEFAULTS } from '@/constants/training';
 import { useCallback, useState } from 'react';
 
 import TrainingService from '@/services/training';
 
 import type {
-  ApiError,
-  CompleteTrainingDto,
-  CreateTrainingActivityDto,
-  CreateTrainingAssignmentDto,
-  DailyTrainingStats,
-  TrainingActivity,
-  TrainingAssignment,
-  TrainingHistoryResponse,
-  TrainingSearchParams,
-  TrainingsResponse,
-  UpdateTrainingActivityDto,
+    ApiError,
+    CompleteTrainingDto,
+    CreateTrainingActivityDto,
+    CreateTrainingAssignmentDto,
+    DailyTrainingStats,
+    TrainingActivity,
+    TrainingAssignment,
+    TrainingHistoryResponse,
+    TrainingSearchParams,
+    TrainingsResponse,
+    UpdateTrainingActivityDto,
 } from '@/types/training';
 
 const normalizeError = (error: unknown, fallback: string): ApiError => {
@@ -60,8 +61,8 @@ export const useTraining = () => {
   );
 
   const getTrainingActivities = useCallback(async (
-    page = 1, 
-    limit = 10, 
+    page = TRAINING_PAGINATION_DEFAULTS.PAGE, 
+    limit = TRAINING_PAGINATION_DEFAULTS.PAGE_SIZE, 
     search?: string, 
     species?: string, 
     difficulty?: string,
@@ -210,8 +211,8 @@ export const useTraining = () => {
     species?: string,
     tags?: string,
     difficulty?: string,
-    page = 1,
-    limit = 10
+    page = TRAINING_PAGINATION_DEFAULTS.PAGE,
+    limit = TRAINING_PAGINATION_DEFAULTS.PAGE_SIZE
   ): Promise<TrainingsResponse | null> => {
     setLoading(true);
     setError(null);
@@ -234,8 +235,8 @@ export const useTraining = () => {
 
   const getTrainingActivitiesBySpecies = useCallback(async (
     species: string,
-    page = 1,
-    limit = 10
+    page = TRAINING_PAGINATION_DEFAULTS.PAGE,
+    limit = TRAINING_PAGINATION_DEFAULTS.PAGE_SIZE
   ): Promise<TrainingsResponse | null> => {
     setLoading(true);
     setError(null);
@@ -297,7 +298,7 @@ export const useTrainingForm = (initialData?: TrainingActivity) => {
           title: '',
           description: '',
           species: [],
-          difficulty: 'easy' as const,
+          difficulty: TRAINING_DIFFICULTY[0].value,
           durationMinutes: 0,
           tags: [],
           videoUrl: '',

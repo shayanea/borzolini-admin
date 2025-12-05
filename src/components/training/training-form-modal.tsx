@@ -1,6 +1,6 @@
+import { TRAINING_DIFFICULTY, TRAINING_SPECIES } from '@/constants/training';
 import type { useTrainingForm } from '@/hooks/training';
 import type { TrainingActivity } from '@/types/training';
-import { TRAINING_DIFFICULTY, TRAINING_SPECIES } from '@/types/training';
 import { Form, Modal } from 'antd';
 import {
     BasicInfoSection,
