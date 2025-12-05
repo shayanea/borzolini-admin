@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useCallback, useState } from 'react';
 
 import { CACHE_PRESETS } from '@/constants';
+import { COMMON_BREEDS, PET_GENDERS, PET_SIZES, PET_SPECIES } from '@/constants/pets';
 import { useAuth } from '@/hooks/auth';
 import { PetsService } from '@/services/pets';
 import { message } from 'antd';
@@ -43,33 +44,15 @@ export const usePetManagement = (): UsePetManagementReturn => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   // Pet species, breeds, genders, and sizes based on API structure
-  const petSpecies: string[] = [
-    'dog',
-    'cat',
-    'bird',
-    'fish',
-    'rabbit',
-    'hamster',
-    'guinea_pig',
-    'reptile',
-    'other',
-  ];
+  // Pet species, breeds, genders, and sizes from constants
+  const petSpecies = Object.values(PET_SPECIES) as string[];
+  
+  // Flatten all breeds for the general list, or specific ones if needed
+  // For the hook we might want all available breeds or leave it empty/managed by species selection elsewhere
+  const breeds = Object.values(COMMON_BREEDS).flat() as string[];
 
-  // Common breeds based on the API examples
-  const breeds: string[] = [
-    'Ragdoll',
-    'Border Collie',
-    'Maine Coon',
-    'Cavalier King Charles Spaniel',
-    'German Shepherd',
-    'Persian',
-    'Labrador Retriever',
-    'Golden Retriever',
-    'Domestic Shorthair',
-  ];
-
-  const genders: string[] = ['male', 'female'];
-  const sizes: string[] = ['small', 'medium', 'large'];
+  const genders = Object.values(PET_GENDERS) as string[];
+  const sizes = Object.values(PET_SIZES) as string[];
 
   const [filters, setFilters] = useState<{
     search: string;
