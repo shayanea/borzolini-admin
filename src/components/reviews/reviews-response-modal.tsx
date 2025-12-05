@@ -1,9 +1,9 @@
-import { Form, Input, Modal, Button, Typography, Rate, Divider } from 'antd';
-import { MessageOutlined } from '@ant-design/icons';
+import { Divider, Form, Input, Rate, Typography } from 'antd';
 import { useEffect } from 'react';
 
-import type { Review } from '@/types';
+import { FormModal } from '@/components/shared/form-modal';
 import type { CreateReviewResponseData, UpdateReviewResponseData } from '@/services/reviews';
+import type { Review } from '@/types';
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph } = Typography;
@@ -36,64 +36,41 @@ const ReviewsResponseModal = ({
     }
   }, [visible, review, form]);
 
-  const handleSubmit = async () => {
-    try {
-      if (!review) return;
+  const handleFormSubmit = async (values: any) => {
+    if (!review) return;
 
-      const values = await form.validateFields();
-
-      if (hasResponse) {
-        const updateData: UpdateReviewResponseData = {
-          responseText: values.responseText,
-        };
-        await onSubmit(review.id, updateData);
-      } else {
-        const createData: CreateReviewResponseData = {
-          responseText: values.responseText,
-        };
-        await onSubmit(review.id, createData);
-      }
-
-      form.resetFields();
-    } catch (error) {
-      console.error('Response submission error:', error);
+    if (hasResponse) {
+      const updateData: UpdateReviewResponseData = {
+        responseText: values.responseText,
+      };
+      await onSubmit(review.id, updateData);
+    } else {
+      const createData: CreateReviewResponseData = {
+        responseText: values.responseText,
+      };
+      await onSubmit(review.id, createData);
     }
-  };
-
-  const handleCancel = () => {
-    form.resetFields();
-    onCancel();
   };
 
   if (!review) return null;
 
   return (
-    <Modal
-      title={
-        <div className='flex items-center space-x-2'>
-          <MessageOutlined />
-          <span>{hasResponse ? 'Edit Response' : 'Add Response'}</span>
-        </div>
-      }
-      open={visible}
-      onCancel={handleCancel}
+    <FormModal
+      visible={visible}
+      title={hasResponse ? 'Edit Response' : 'Add Response'}
+      form={form}
+      onCancel={onCancel}
+      onSubmit={handleFormSubmit}
+      loading={loading}
+      isEditMode={!!hasResponse}
       width={700}
-      footer={[
-        <Button key='cancel' onClick={handleCancel}>
-          Cancel
-        </Button>,
-        <Button
-          key='submit'
-          type='primary'
-          loading={loading}
-          onClick={handleSubmit}
-        >
-          {hasResponse ? 'Update Response' : 'Add Response'}
-        </Button>,
-      ]}
+      initialValues={{
+        responseText: review.response?.responseText || '',
+      }}
+      okText={hasResponse ? 'Update Response' : 'Add Response'}
     >
       <div className='space-y-6'>
-        {/* Original Review */}
+        {/* Original Review - Display Only */}
         <div className='bg-gray-50 p-4 rounded-lg'>
           <Title level={5} className='mb-3'>
             Original Review
@@ -124,30 +101,22 @@ const ReviewsResponseModal = ({
             {hasResponse ? 'Edit Response' : 'Your Response'}
           </Title>
 
-          <Form
-            form={form}
-            layout='vertical'
-            initialValues={{
-              responseText: review.response?.responseText || '',
-            }}
+          <Form.Item
+            label='Response Text'
+            name='responseText'
+            rules={[
+              { required: true, message: 'Please provide a response' },
+              { min: 10, message: 'Response must be at least 10 characters' },
+              { max: 2000, message: 'Response must be less than 2000 characters' },
+            ]}
           >
-            <Form.Item
-              label='Response Text'
-              name='responseText'
-              rules={[
-                { required: true, message: 'Please provide a response' },
-                { min: 10, message: 'Response must be at least 10 characters' },
-                { max: 2000, message: 'Response must be less than 2000 characters' },
-              ]}
-            >
-              <TextArea
-                placeholder='Enter your response to this review...'
-                rows={6}
-                showCount
-                maxLength={2000}
-              />
-            </Form.Item>
-          </Form>
+            <TextArea
+              placeholder='Enter your response to this review...'
+              rows={6}
+              showCount
+              maxLength={2000}
+            />
+          </Form.Item>
 
           {hasResponse && review.response && (
             <div className='mt-4 text-sm text-gray-600'>
@@ -157,7 +126,7 @@ const ReviewsResponseModal = ({
           )}
         </div>
       </div>
-    </Modal>
+    </FormModal>
   );
 };
 

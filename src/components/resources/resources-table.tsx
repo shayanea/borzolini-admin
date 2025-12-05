@@ -3,7 +3,6 @@ import {
   Button,
   Card,
   Checkbox,
-  Pagination,
   Popconfirm,
   Space,
   Spin,
@@ -21,10 +20,7 @@ interface ResourcesTableProps {
   resources: Resource[];
   loading: boolean;
   totalCount: number;
-  currentPage: number;
-  pageSize: number;
   selectedIds: string[];
-  onPageChange: (page: number) => void;
   onSelectAll: (checked: boolean) => void;
   onSelectRow: (id: string, checked: boolean) => void;
   onView: (resource: Resource) => void;
@@ -39,10 +35,7 @@ export function ResourcesTable({
   resources,
   loading,
   totalCount,
-  currentPage,
-  pageSize,
   selectedIds,
-  onPageChange,
   onSelectAll,
   onSelectRow,
   onView,
@@ -151,9 +144,6 @@ export function ResourcesTable({
     <Card>
       <div className='flex justify-between items-center mb-4'>
         <Typography.Title level={4}>Resources ({totalCount})</Typography.Title>
-        <Text type='secondary'>
-          Page {currentPage} of {Math.ceil(totalCount / pageSize)}
-        </Text>
       </div>
       {loading ? (
         <div className='flex items-center justify-center py-8'>
@@ -167,20 +157,7 @@ export function ResourcesTable({
           </Text>
         </div>
       ) : (
-        <>
-          <Table columns={columns} dataSource={resources} rowKey='id' pagination={false} />
-          {totalCount > pageSize && (
-            <div className='mt-4 flex justify-center'>
-              <Pagination
-                current={currentPage}
-                total={totalCount}
-                pageSize={pageSize}
-                onChange={onPageChange}
-                showSizeChanger={false}
-              />
-            </div>
-          )}
-        </>
+        <Table columns={columns} dataSource={resources} rowKey='id' pagination={false} />
       )}
     </Card>
   );

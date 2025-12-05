@@ -1,8 +1,9 @@
-import { Form, Input, Modal, Rate, Select, Switch, Space, Button } from 'antd';
+import { Form, Input, Rate, Select, Space, Switch } from 'antd';
 import { useEffect } from 'react';
 
-import type { Review } from '@/types';
+import { FormModal } from '@/components/shared/form-modal';
 import type { CreateReviewData, UpdateReviewData } from '@/services/reviews';
+import type { Review } from '@/types';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -48,40 +49,26 @@ const ReviewsFormModal = ({
     }
   }, [visible, review, form]);
 
-  const handleSubmit = async () => {
-    try {
-      const values = await form.validateFields();
-
-      if (isEditing && review) {
-        const updateData: UpdateReviewData = {
-          rating: values.rating,
-          comment: values.comment,
-          isPublished: values.isPublished,
-          isVerified: values.isVerified,
-        };
-        await onSubmit(updateData);
-      } else {
-        const createData: CreateReviewData = {
-          userId: values.userId,
-          clinicId: values.clinicId,
-          rating: values.rating,
-          comment: values.comment,
-          isPublished: values.isPublished,
-          isVerified: values.isVerified,
-        };
-        await onSubmit(createData);
-      }
-
-      form.resetFields();
-    } catch (error) {
-      // Form validation error or submission error
-      console.error('Form submission error:', error);
+  const handleFormSubmit = async (values: any) => {
+    if (isEditing && review) {
+      const updateData: UpdateReviewData = {
+        rating: values.rating,
+        comment: values.comment,
+        isPublished: values.isPublished,
+        isVerified: values.isVerified,
+      };
+      await onSubmit(updateData);
+    } else {
+      const createData: CreateReviewData = {
+        userId: values.userId,
+        clinicId: values.clinicId,
+        rating: values.rating,
+        comment: values.comment,
+        isPublished: values.isPublished,
+        isVerified: values.isVerified,
+      };
+      await onSubmit(createData);
     }
-  };
-
-  const handleCancel = () => {
-    form.resetFields();
-    onCancel();
   };
 
   const userOptions = users.map(user => (
@@ -97,116 +84,103 @@ const ReviewsFormModal = ({
   ));
 
   return (
-    <Modal
+    <FormModal
+      visible={visible}
       title={isEditing ? 'Edit Review' : 'Add New Review'}
-      open={visible}
-      onCancel={handleCancel}
+      form={form}
+      onCancel={onCancel}
+      onSubmit={handleFormSubmit}
+      loading={loading}
+      isEditMode={isEditing}
       width={600}
-      footer={[
-        <Button key='cancel' onClick={handleCancel}>
-          Cancel
-        </Button>,
-        <Button
-          key='submit'
-          type='primary'
-          loading={loading}
-          onClick={handleSubmit}
-        >
-          {isEditing ? 'Update Review' : 'Create Review'}
-        </Button>,
-      ]}
+      initialValues={{
+        rating: 5,
+        isPublished: false,
+        isVerified: false,
+      }}
+      okText={isEditing ? 'Update Review' : 'Create Review'}
     >
-      <Form
-        form={form}
-        layout='vertical'
-        initialValues={{
-          rating: 5,
-          isPublished: false,
-          isVerified: false,
-        }}
+      <Form.Item
+        label='User'
+        name='userId'
+        rules={[{ required: true, message: 'Please select a user' }]}
       >
-        <Form.Item
-          label='User'
-          name='userId'
-          rules={[{ required: true, message: 'Please select a user' }]}
+        <Select
+          placeholder='Select user'
+          showSearch
+          optionFilterProp='children'
+          loading={loading}
+          disabled={isEditing} // Can't change user when editing
         >
-          <Select
-            placeholder='Select user'
-            showSearch
-            optionFilterProp='children'
-            loading={loading}
-            disabled={isEditing} // Can't change user when editing
-          >
-            {userOptions}
-          </Select>
-        </Form.Item>
+          {userOptions}
+        </Select>
+      </Form.Item>
 
-        <Form.Item
-          label='Clinic'
-          name='clinicId'
-          rules={[{ required: true, message: 'Please select a clinic' }]}
+      <Form.Item
+        label='Clinic'
+        name='clinicId'
+        rules={[{ required: true, message: 'Please select a clinic' }]}
+      >
+        <Select
+          placeholder='Select clinic'
+          showSearch
+          optionFilterProp='children'
+          loading={loading}
+          disabled={isEditing} // Can't change clinic when editing
         >
-          <Select
-            placeholder='Select clinic'
-            showSearch
-            optionFilterProp='children'
-            loading={loading}
-            disabled={isEditing} // Can't change clinic when editing
-          >
-            {clinicOptions}
-          </Select>
-        </Form.Item>
+          {clinicOptions}
+        </Select>
+      </Form.Item>
 
-        <Form.Item
-          label='Rating'
-          name='rating'
-          rules={[{ required: true, message: 'Please provide a rating' }]}
-        >
-          <Rate allowHalf />
-        </Form.Item>
+      <Form.Item
+        label='Rating'
+        name='rating'
+        rules={[{ required: true, message: 'Please provide a rating' }]}
+      >
+        <Rate allowHalf />
+      </Form.Item>
 
+      <Form.Item
+        label='Comment'
+        name='comment'
+        rules={[
+          { required: true, message: 'Please provide a comment' },
+          { min: 10, message: 'Comment must be at least 10 characters' },
+          { max: 1000, message: 'Comment must be less than 1000 characters' },
+        ]}
+      >
+        <TextArea
+          placeholder='Enter review comment...'
+          rows={4}
+          showCount
+          maxLength={1000}
+        />
+      </Form.Item>
+
+      <Space direction='vertical' className='w-full'>
         <Form.Item
-          label='Comment'
-          name='comment'
-          rules={[
-            { required: true, message: 'Please provide a comment' },
-            { min: 10, message: 'Comment must be at least 10 characters' },
-            { max: 1000, message: 'Comment must be less than 1000 characters' },
-          ]}
+          label='Publish Review'
+          name='isPublished'
+          valuePropName='checked'
         >
-          <TextArea
-            placeholder='Enter review comment...'
-            rows={4}
-            showCount
-            maxLength={1000}
+          <Switch
+            checkedChildren='Published'
+            unCheckedChildren='Draft'
           />
         </Form.Item>
 
-        <Space direction='vertical' className='w-full'>
-          <Form.Item
-            label='Publish Review'
-            name='isPublished'
-            valuePropName='checked'
-          >
-            <Switch
-              checkedChildren='Published'
-              unCheckedChildren='Draft'
-            />
-          </Form.Item>
-
-          <Form.Item
-            label='Mark as Verified'
-            name='isVerified'
-            valuePropName='checked'
-          >
-            <Switch
-              checkedChildren='Verified'
-              unCheckedChildren='Unverified'
-            />
-          </Form.Item>
-        </Space>
-      </Form>
-    </Modal>
+        <Form.Item
+          label='Mark as Verified'
+          name='isVerified'
+          valuePropName='checked'
+        >
+          <Switch
+            checkedChildren='Verified'
+            unCheckedChildren='Unverified'
+          />
+        </Form.Item>
+      </Space>
+    </FormModal>
   );
 };
 

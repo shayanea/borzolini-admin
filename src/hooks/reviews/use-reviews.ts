@@ -1,8 +1,8 @@
 import ReviewsService, {
-	type CreateReviewData,
-	type CreateReviewResponseData,
-	type UpdateReviewData,
-	type UpdateReviewResponseData,
+    type CreateReviewData,
+    type CreateReviewResponseData,
+    type UpdateReviewData,
+    type UpdateReviewResponseData,
 } from '@/services/reviews';
 import { useAuthStore } from '@/stores/auth.store';
 import type { Review, ReviewMetrics, ReviewStats } from '@/types';
@@ -377,7 +377,7 @@ export const useReviews = (): UseReviewsReturn => {
   const handleExport = useCallback(async () => {
     try {
       const apiFilters = getApiFilters();
-      const blob = await ReviewsService.export(apiFilters, 'csv');
+      const blob = await ReviewsService.exportToCSV(apiFilters);
 
       // Create download link
       const url = window.URL.createObjectURL(blob);

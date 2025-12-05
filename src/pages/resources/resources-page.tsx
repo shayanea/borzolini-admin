@@ -23,8 +23,6 @@ function ResourcesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<string>('');
   const [selectedIsActive, setSelectedIsActive] = useState<boolean | undefined>(undefined);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(10);
 
   const {
     createResource,
@@ -47,8 +45,8 @@ function ResourcesPage() {
   const loadResources = async () => {
     setLoading(true);
     const result = await getResources(
-      currentPage,
-      pageSize,
+      undefined,
+      undefined,
       selectedType || undefined,
       selectedIsActive
     );
@@ -61,7 +59,7 @@ function ResourcesPage() {
 
   useEffect(() => {
     loadResources();
-  }, [currentPage, pageSize, selectedType, selectedIsActive]);
+  }, [selectedType, selectedIsActive]);
 
   const filteredResources = useMemo(() => {
     return resources?.filter(
@@ -120,24 +118,20 @@ function ResourcesPage() {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1);
   };
 
   const handleTypeChange = (value: string) => {
     setSelectedType(value);
-    setCurrentPage(1);
   };
 
   const handleIsActiveChange = (value: boolean | undefined) => {
     setSelectedIsActive(value);
-    setCurrentPage(1);
   };
 
   const handleClearFilters = useCallback(() => {
     setSearchTerm('');
     setSelectedType('');
     setSelectedIsActive(undefined);
-    setCurrentPage(1);
   }, []);
 
   const getTypeColor = useCallback((type: string) => {
@@ -229,10 +223,7 @@ function ResourcesPage() {
         resources={filteredResources}
         loading={loading}
         totalCount={totalCount}
-        currentPage={currentPage}
-        pageSize={pageSize}
         selectedIds={selectedIds}
-        onPageChange={setCurrentPage}
         onSelectAll={handleSelectAll}
         onSelectRow={handleSelectRow}
         onView={handleViewResource}

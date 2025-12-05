@@ -1,13 +1,14 @@
-import {
-  AccountInfoSection,
-  ActionButtonsSection,
-  AddressSection,
-  PersonalInfoSection,
-} from './user-form-sections';
-import { Form, Modal } from 'antd';
 import type { UserFormModalProps, UserFormValues } from '@/types/user-management';
+import { Form } from 'antd';
 import { useCallback, useEffect } from 'react';
+import {
+    AccountInfoSection,
+    ActionButtonsSection,
+    AddressSection,
+    PersonalInfoSection,
+} from './user-form-sections';
 
+import { FormModal } from '@/components/shared/form-modal';
 import { USER_ROLES } from '@/constants/user-management';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
@@ -53,53 +54,43 @@ const UserFormModal = ({
     [onSubmit]
   );
 
-  const handleCancel = useCallback(() => {
-    form.resetFields();
-    onCancel();
-  }, [form, onCancel]);
-
-  // Don't render the form if modal is not visible
-  if (!isVisible) {
-    return null;
-  }
-
   return (
-    <Modal
+    <FormModal
+      visible={isVisible}
       title={editingUser ? t('modals.userForm.titleEdit') : t('modals.userForm.titleCreate')}
-      open={isVisible}
-      onCancel={handleCancel}
-      footer={null}
+      form={form}
+      onCancel={onCancel}
+      onSubmit={handleSubmit}
+      loading={loading}
+      isEditMode={!!editingUser}
       width={600}
-      destroyOnHidden={true}
+      showFooter={false}
+      initialValues={{
+        role: USER_ROLES.PATIENT,
+        isActive: true,
+      }}
     >
-      <Form
-        form={form}
-        layout='vertical'
-        onFinish={handleSubmit}
-        initialValues={{
-          role: USER_ROLES.PATIENT,
-          isActive: true,
-        }}
-      >
-        {/* Personal Information */}
-        <PersonalInfoSection />
+      {/* Personal Information */}
+      <PersonalInfoSection />
 
-        {/* Account Information */}
-        <AccountInfoSection editingUser={editingUser} />
+      {/* Account Information */}
+      <AccountInfoSection editingUser={editingUser} />
 
-        {/* Address Information */}
-        <AddressSection />
+      {/* Address Information */}
+      <AddressSection />
 
-        {/* Action Buttons */}
-        <Form.Item className='mb-0'>
-          <ActionButtonsSection
-            onCancel={handleCancel}
-            loading={loading}
-            editingUser={editingUser}
-          />
-        </Form.Item>
-      </Form>
-    </Modal>
+      {/* Action Buttons */}
+      <Form.Item className='mb-0'>
+        <ActionButtonsSection
+          onCancel={() => {
+            form.resetFields();
+            onCancel();
+          }}
+          loading={loading}
+          editingUser={editingUser}
+        />
+      </Form.Item>
+    </FormModal>
   );
 };
 

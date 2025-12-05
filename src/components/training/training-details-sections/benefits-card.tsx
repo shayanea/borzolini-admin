@@ -6,12 +6,12 @@ interface BenefitsCardProps {
 }
 
 export function BenefitsCard({ activity }: BenefitsCardProps) {
-  if (activity.enrichment.length === 0) return null;
+  if (!activity.enrichment?.length) return null;
 
   return (
     <Card title='Benefits'>
       <div className='space-y-2'>
-        {activity.enrichment.map((benefit, index) => (
+        {activity.enrichment?.map((benefit, index) => (
           <div key={index} className='flex items-start gap-2'>
             <div className='flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mt-0.5'>
               <span className='text-xs font-medium text-green-800'>✅</span>

@@ -1,13 +1,21 @@
-import { Badge, Button, Card, Checkbox, Pagination, Popconfirm, Space, Spin, Table, Typography } from 'antd';
 import {
-  ClockCircleOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  EyeOutlined,
-} from '@ant-design/icons';
+  Badge,
+  Button,
+  Card,
+  Checkbox,
+  Pagination,
+  Popconfirm,
+  Space,
+  Spin,
+  Table,
+  Tag,
+  Typography,
+} from 'antd';
+import { ClockCircleOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { getDifficultyColor, getSpeciesIcon } from './training-utils';
+
 import type { TrainingActivity } from '@/types/training';
 import { formatDate } from '@/lib/utils';
-import { getDifficultyColor, getSpeciesIcon } from './training-utils';
 
 const { Text } = Typography;
 
@@ -67,14 +75,16 @@ export function TrainingTable({
           <img
             src={thumbnailUrl}
             alt={record.title}
-            className="w-16 h-16 object-cover rounded border"
-            onError={(e) => {
+            className='w-16 h-16 object-cover rounded border'
+            onError={e => {
               e.currentTarget.style.display = 'none';
             }}
           />
         ) : (
-          <div className="w-16 h-16 bg-gray-100 rounded border flex items-center justify-center">
-            <Text type="secondary" className="text-xs">No image</Text>
+          <div className='w-16 h-16 bg-gray-100 rounded border flex items-center justify-center'>
+            <Text type='secondary' className='text-xs'>
+              No image
+            </Text>
           </div>
         );
       },
@@ -87,18 +97,21 @@ export function TrainingTable({
     },
     {
       title: 'Species',
-      dataIndex: 'by_species',
       key: 'species',
-      render: (bySpecies?: Array<{ species: string }>) => {
-        if (!bySpecies || bySpecies.length === 0) {
-          return <Text type="secondary">No species</Text>;
+      render: (_: unknown, record: TrainingActivity) => {
+        // Access by_species from record (API returns it as by_species)
+        const by_species = (record as any).by_species;
+        if (!by_species || !Array.isArray(by_species) || by_species.length === 0) {
+          return <Text type='secondary'>No species</Text>;
         }
         return (
           <Space size='small' wrap>
-            {bySpecies.slice(0, 2).map((s, idx) => (
-              <Badge key={idx} text={`${getSpeciesIcon(s.species)} ${s.species}`} />
+            {by_species.slice(0, 2).map((s: any, idx: number) => (
+              <Tag key={s.id || idx} color='blue'>
+                {getSpeciesIcon(s.species)} {s.species}
+              </Tag>
             ))}
-            {bySpecies.length > 2 && <Badge text={`+${bySpecies.length - 2} more`} />}
+            {by_species.length > 2 && <Tag color='default'>+{by_species.length - 2} more</Tag>}
           </Space>
         );
       },
@@ -124,16 +137,24 @@ export function TrainingTable({
     },
     {
       title: 'Tags',
-      dataIndex: 'tags',
       key: 'tags',
-      render: (tags: string[]) => (
-        <Space size='small' wrap>
-          {tags.slice(0, 3).map(tag => (
-            <Badge key={tag} text={tag} />
-          ))}
-          {tags.length > 3 && <Badge text={`+${tags.length - 3}`} />}
-        </Space>
-      ),
+      render: (_: unknown, record: TrainingActivity) => {
+        // Access tags from record (API returns it as tags)
+        const tags = (record as any).tags;
+        if (!tags || !Array.isArray(tags) || tags.length === 0) {
+          return <Text type='secondary'>No tags</Text>;
+        }
+        return (
+          <Space size='small' wrap>
+            {tags.slice(0, 3).map((tag: string) => (
+              <Tag key={tag} color='default'>
+                {tag}
+              </Tag>
+            ))}
+            {tags.length > 3 && <Tag color='default'>+{tags.length - 3}</Tag>}
+          </Space>
+        );
+      },
     },
     {
       title: 'Created',
@@ -147,18 +168,8 @@ export function TrainingTable({
       width: 150,
       render: (_: unknown, record: TrainingActivity) => (
         <Space size='small'>
-          <Button
-            type='text'
-            icon={<EyeOutlined />}
-            size='small'
-            onClick={() => onView(record)}
-          />
-          <Button
-            type='text'
-            icon={<EditOutlined />}
-            size='small'
-            onClick={() => onEdit(record)}
-          />
+          <Button type='text' icon={<EyeOutlined />} size='small' onClick={() => onView(record)} />
+          <Button type='text' icon={<EditOutlined />} size='small' onClick={() => onEdit(record)} />
           <Popconfirm
             title='Delete training activity'
             description='Are you sure you want to delete this training activity?'
@@ -194,12 +205,7 @@ export function TrainingTable({
         </div>
       ) : (
         <>
-          <Table
-            columns={columns}
-            dataSource={activities}
-            rowKey='id'
-            pagination={false}
-          />
+          <Table columns={columns} dataSource={activities} rowKey='id' pagination={false} />
           {totalCount > pageSize && (
             <div className='mt-4 flex justify-center'>
               <Pagination
@@ -216,4 +222,3 @@ export function TrainingTable({
     </Card>
   );
 }
-

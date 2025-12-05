@@ -1,16 +1,15 @@
+import { Form } from 'antd';
 import {
-  BasicInfoSection,
-  ContactInfoSection,
-  LocationSection,
-  StatusSection,
+    BasicInfoSection,
+    ContactInfoSection,
+    LocationSection,
+    StatusSection,
 } from './clinic-form-sections';
-import { Form, Modal, Typography } from 'antd';
 
+import { FormModal } from '@/components/shared/form-modal';
 import type { Clinic } from '@/types';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-
-const { Title } = Typography;
 
 interface ClinicFormModalProps {
   visible: boolean;
@@ -83,54 +82,34 @@ const ClinicFormModal = ({
     }
   }, [visible, editingClinic, form]);
 
-  const handleSubmit = async () => {
-    try {
-      const values = await form.validateFields();
-      await onSubmit(values);
-    } catch (error) {
-      // Form validation errors are handled automatically
-    }
-  };
-
-  const handleCancel = () => {
-    form.resetFields();
-    onCancel();
-  };
-
   return (
-    <Modal
-      title={<Title level={4}>{title}</Title>}
-      open={visible}
-      onCancel={handleCancel}
-      onOk={handleSubmit}
-      confirmLoading={loading}
+    <FormModal
+      visible={visible}
+      title={title}
+      form={form}
+      onCancel={onCancel}
+      onSubmit={onSubmit}
+      loading={loading}
+      isEditMode={isEditing}
       width={800}
-      destroyOnHidden
-      okText={isEditing ? t('forms.common.update') : t('forms.common.create')}
-      cancelText={t('forms.common.cancel')}
+      initialValues={{
+        isActive: true,
+        country: 'United States',
+      }}
+      formClassName="mt-4"
     >
-      <Form
-        form={form}
-        layout='vertical'
-        className='mt-4'
-        initialValues={{
-          isActive: true,
-          country: 'United States',
-        }}
-      >
-        {/* Basic Information */}
-        <BasicInfoSection form={form} />
+      {/* Basic Information */}
+      <BasicInfoSection form={form} />
 
-        {/* Location Information */}
-        <LocationSection form={form} />
+      {/* Location Information */}
+      <LocationSection form={form} />
 
-        {/* Contact Information */}
-        <ContactInfoSection form={form} />
+      {/* Contact Information */}
+      <ContactInfoSection form={form} />
 
-        {/* Status */}
-        <StatusSection form={form} />
-      </Form>
-    </Modal>
+      {/* Status */}
+      <StatusSection form={form} />
+    </FormModal>
   );
 };
 

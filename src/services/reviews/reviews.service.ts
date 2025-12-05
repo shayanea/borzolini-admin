@@ -1,609 +1,311 @@
 import type {
-	BulkReviewAction,
-	CreateReviewData,
-	CreateReviewResponseData,
-	Review,
-	ReviewMetrics,
-	ReviewModerationLog,
-	ReviewStats,
-	ReviewsFilters,
-	ReviewsResponse,
-	UpdateReviewData,
-	UpdateReviewResponseData,
+    BulkReviewAction,
+    CreateReviewData,
+    CreateReviewResponseData,
+    Review,
+    ReviewMetrics,
+    ReviewModerationLog,
+    ReviewStats,
+    ReviewsFilters,
+    ReviewsResponse,
+    UpdateReviewData,
+    UpdateReviewResponseData,
 } from '@/types';
 
-import { environment } from '@/config/environment';
-import { apiService } from '../api/index';
-import { reviewsCache } from '../core/cache.service';
+import { BaseQueryParams, BaseService, ValidationHelper } from '../core/base.service';
 
 // Export types for use in other files
 export type {
-	BulkReviewAction,
-	CreateReviewData,
-	CreateReviewResponseData,
-	UpdateReviewData,
-	UpdateReviewResponseData
+    BulkReviewAction,
+    CreateReviewData,
+    CreateReviewResponseData,
+    UpdateReviewData,
+    UpdateReviewResponseData
 };
 
-export class ReviewsService {
+// Query params interface for reviews (extends base for API compatibility)
+export interface ReviewsQueryParams extends BaseQueryParams {
+  clinicId?: string;
+  userId?: string;
+  appointmentId?: string;
+  rating?: number;
+  isPublished?: boolean;
+  isVerified?: boolean;
+  flagged?: boolean;
+  requiresModeration?: boolean;
+  tagSoon?: boolean;
+  dateFrom?: string;
+  dateTo?: string;
+}
+
+export class ReviewsService extends BaseService<Review, CreateReviewData, UpdateReviewData> {
+  constructor() {
+    super('/reviews');
+  }
+
+  protected getEntityName(): string {
+    return 'review';
+  }
+
   /**
    * Get all reviews with optional filtering and pagination
    */
   static async getAll(filters: ReviewsFilters = {}): Promise<ReviewsResponse> {
-    try {
-      // Exclude dateRange from filters as it's not a valid query param type
-      const { dateRange, ...queryFilters } = filters;
-      const params = apiService.buildQueryParams(queryFilters as import('../api/utils').QueryParams);
-      const queryString = params.toString();
-      const url = queryString ? `/reviews?${queryString}` : '/reviews';
+    const service = new ReviewsService();
+    // Exclude dateRange from filters as it's not a valid query param type
+    const { dateRange, ...queryFilters } = filters;
+    const response = await service.getAll(queryFilters as ReviewsQueryParams);
 
-      const response = await apiService.get<ReviewsResponse>(url);
-
-      // Validate response data
-      if (!response.reviews || !Array.isArray(response.reviews)) {
-        throw new Error('Invalid response format: reviews array is missing');
-      }
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to fetch reviews:', error);
-      throw error;
-    }
+    return {
+      reviews: response.data,
+      total: response.total,
+      page: response.page,
+      limit: response.limit,
+      totalPages: response.totalPages,
+    };
   }
 
   /**
    * Get review by ID
    */
   static async getById(id: string): Promise<Review> {
-    try {
-      if (!id) {
-        throw new Error('Review ID is required');
-      }
-
-      const response = await apiService.get<Review>(`/reviews/${id}`);
-
-      if (!response.id) {
-        throw new Error('Invalid response format: review ID is missing');
-      }
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to fetch review:', error);
-      throw error;
-    }
+    const service = new ReviewsService();
+    return service.getById(id);
   }
 
   /**
    * Get reviews by clinic
    */
-  static async getByClinic(
-    clinicId: string,
-    filters: ReviewsFilters = {}
-  ): Promise<ReviewsResponse> {
-    try {
-      if (!clinicId) {
-        throw new Error('Clinic ID is required');
-      }
-
-      // Exclude dateRange from filters as it's not a valid query param type
-      const { dateRange, ...queryFilters } = filters;
-      const params = apiService.buildQueryParams({ ...queryFilters, clinicId } as import('../api/utils').QueryParams);
-      const queryString = params.toString();
-      const url = `/reviews/clinic/${clinicId}${queryString ? `?${queryString}` : ''}`;
-
-      const response = await apiService.get<ReviewsResponse>(url);
-
-      if (!response.reviews || !Array.isArray(response.reviews)) {
-        throw new Error('Invalid response format: reviews array is missing');
-      }
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to fetch clinic reviews:', error);
-      throw error;
-    }
+  static async getByClinic(clinicId: string, filters: ReviewsFilters = {}): Promise<ReviewsResponse> {
+    ValidationHelper.requireId(clinicId, 'Clinic');
+    const service = new ReviewsService();
+    const { dateRange, ...queryFilters } = filters;
+    const response = await service.getRequest<ReviewsResponse>(
+      `/reviews/clinic/${clinicId}`,
+      queryFilters
+    );
+    return response;
   }
 
   /**
    * Get reviews by user
    */
   static async getByUser(userId: string, filters: ReviewsFilters = {}): Promise<ReviewsResponse> {
-    try {
-      if (!userId) {
-        throw new Error('User ID is required');
-      }
-
-      // Exclude dateRange from filters as it's not a valid query param type
-      const { dateRange, ...queryFilters } = filters;
-      const params = apiService.buildQueryParams({ ...queryFilters, userId } as import('../api/utils').QueryParams);
-      const queryString = params.toString();
-      const url = `/reviews/user/${userId}${queryString ? `?${queryString}` : ''}`;
-
-      const response = await apiService.get<ReviewsResponse>(url);
-
-      if (!response.reviews || !Array.isArray(response.reviews)) {
-        throw new Error('Invalid response format: reviews array is missing');
-      }
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to fetch user reviews:', error);
-      throw error;
-    }
+    ValidationHelper.requireId(userId, 'User');
+    const service = new ReviewsService();
+    const { dateRange, ...queryFilters } = filters;
+    const response = await service.getRequest<ReviewsResponse>(
+      `/reviews/user/${userId}`,
+      queryFilters
+    );
+    return response;
   }
 
   /**
    * Get reviews by appointment
    */
   static async getByAppointment(appointmentId: string): Promise<Review[]> {
-    try {
-      if (!appointmentId) {
-        throw new Error('Appointment ID is required');
-      }
-
-      const response = await apiService.get<Review[]>(`/reviews/appointment/${appointmentId}`);
-
-      if (!Array.isArray(response)) {
-        throw new Error('Invalid response format: expected array of reviews');
-      }
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to fetch appointment reviews:', error);
-      throw error;
-    }
+    ValidationHelper.requireId(appointmentId, 'Appointment');
+    const service = new ReviewsService();
+    return service.getRequest<Review[]>(`/reviews/appointment/${appointmentId}`);
   }
 
   /**
    * Create new review
    */
   static async create(data: CreateReviewData): Promise<Review> {
-    try {
-      const isValid = data.userId && data.clinicId && data.rating && data.comment;
-      if (!isValid) {
-        throw new Error('User ID, Clinic ID, rating, and comment are required');
-      }
-
-      if (data.rating < 1 || data.rating > 5) {
-        throw new Error('Rating must be between 1 and 5');
-      }
-
-      const response = await apiService.post<Review>('/reviews', data);
-
-      // Clear cache to ensure fresh data
-      reviewsCache.clear();
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to create review:', error);
-      throw error;
+    const isValid = data.userId && data.clinicId && data.rating && data.comment;
+    if (!isValid) {
+      throw new Error('User ID, Clinic ID, rating, and comment are required');
     }
+    if (data.rating < 1 || data.rating > 5) {
+      throw new Error('Rating must be between 1 and 5');
+    }
+
+    const service = new ReviewsService();
+    return service.create(data);
   }
 
   /**
    * Update review
    */
   static async update(id: string, data: UpdateReviewData): Promise<Review> {
-    try {
-      if (!id) {
-        throw new Error('Review ID is required');
-      }
-
-      if (data.rating && (data.rating < 1 || data.rating > 5)) {
-        throw new Error('Rating must be between 1 and 5');
-      }
-
-      const response = await apiService.patch<Review>(`/reviews/${id}`, data);
-
-      if (!response.id) {
-        throw new Error('Invalid response format: review ID is missing');
-      }
-
-      // Clear cache to reflect changes
-      reviewsCache.clear();
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to update review:', error);
-      throw error;
+    if (data.rating && (data.rating < 1 || data.rating > 5)) {
+      throw new Error('Rating must be between 1 and 5');
     }
+
+    const service = new ReviewsService();
+    return service.update(id, data);
   }
 
   /**
    * Delete review
    */
   static async delete(id: string): Promise<void> {
-    try {
-      if (!id) {
-        throw new Error('Review ID is required');
-      }
-
-      await apiService.delete(`/reviews/${id}`);
-
-      // Clear cache to ensure fresh data
-      reviewsCache.clear();
-    } catch (error: unknown) {
-      console.error('Failed to delete review:', error);
-      throw error;
-    }
+    const service = new ReviewsService();
+    await service.delete(id);
   }
 
   /**
    * Publish review (admin action)
    */
   static async publish(id: string): Promise<Review> {
-    try {
-      if (!id) {
-        throw new Error('Review ID is required');
-      }
-
-      const response = await apiService.patch<Review>(`/reviews/${id}/publish`, {});
-
-      if (!response.id) {
-        throw new Error('Invalid response format: review ID is missing');
-      }
-
-      reviewsCache.clear();
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to publish review:', error);
-      throw error;
-    }
+    ValidationHelper.requireId(id, 'Review');
+    const service = new ReviewsService();
+    return service.patchRequest<Review>(`/reviews/${id}/publish`, {});
   }
 
   /**
    * Unpublish review (admin action)
    */
   static async unpublish(id: string): Promise<Review> {
-    try {
-      if (!id) {
-        throw new Error('Review ID is required');
-      }
-
-      const response = await apiService.patch<Review>(`/reviews/${id}/unpublish`, {});
-
-      if (!response.id) {
-        throw new Error('Invalid response format: review ID is missing');
-      }
-
-      reviewsCache.clear();
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to unpublish review:', error);
-      throw error;
-    }
+    ValidationHelper.requireId(id, 'Review');
+    const service = new ReviewsService();
+    return service.patchRequest<Review>(`/reviews/${id}/unpublish`, {});
   }
 
   /**
    * Flag review for moderation
    */
   static async flag(id: string, reason?: string): Promise<Review> {
-    try {
-      if (!id) {
-        throw new Error('Review ID is required');
-      }
-
-      const response = await apiService.patch<Review>(`/reviews/${id}/flag`, { reason });
-
-      if (!response.id) {
-        throw new Error('Invalid response format: review ID is missing');
-      }
-
-      reviewsCache.clear();
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to flag review:', error);
-      throw error;
-    }
+    ValidationHelper.requireId(id, 'Review');
+    const service = new ReviewsService();
+    return service.patchRequest<Review>(`/reviews/${id}/flag`, { reason });
   }
 
   /**
    * Unflag review
    */
   static async unflag(id: string): Promise<Review> {
-    try {
-      if (!id) {
-        throw new Error('Review ID is required');
-      }
-
-      const response = await apiService.patch<Review>(`/reviews/${id}/unflag`, {});
-
-      if (!response.id) {
-        throw new Error('Invalid response format: review ID is missing');
-      }
-
-      reviewsCache.clear();
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to unflag review:', error);
-      throw error;
-    }
+    ValidationHelper.requireId(id, 'Review');
+    const service = new ReviewsService();
+    return service.patchRequest<Review>(`/reviews/${id}/unflag`, {});
   }
 
   /**
    * Verify review (mark as legitimate)
    */
   static async verify(id: string): Promise<Review> {
-    try {
-      if (!id) {
-        throw new Error('Review ID is required');
-      }
-
-      const response = await apiService.patch<Review>(`/reviews/${id}/verify`, {});
-
-      if (!response.id) {
-        throw new Error('Invalid response format: review ID is missing');
-      }
-
-      reviewsCache.clear();
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to verify review:', error);
-      throw error;
-    }
+    ValidationHelper.requireId(id, 'Review');
+    const service = new ReviewsService();
+    return service.patchRequest<Review>(`/reviews/${id}/verify`, {});
   }
 
   /**
    * Add response to review
    */
   static async addResponse(id: string, data: CreateReviewResponseData): Promise<Review> {
-    try {
-      if (!id) {
-        throw new Error('Review ID is required');
-      }
-
-      if (!data.responseText?.trim()) {
-        throw new Error('Response text is required');
-      }
-
-      const response = await apiService.post<Review>(`/reviews/${id}/response`, data);
-
-      if (!response.id) {
-        throw new Error('Invalid response format: review ID is missing');
-      }
-
-      reviewsCache.clear();
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to add review response:', error);
-      throw error;
+    ValidationHelper.requireId(id, 'Review');
+    if (!data.responseText?.trim()) {
+      throw new Error('Response text is required');
     }
+    const service = new ReviewsService();
+    return service.postRequest<Review>(`/reviews/${id}/response`, data);
   }
 
   /**
    * Update review response
    */
   static async updateResponse(id: string, data: UpdateReviewResponseData): Promise<Review> {
-    try {
-      if (!id) {
-        throw new Error('Review ID is required');
-      }
-
-      if (!data.responseText?.trim()) {
-        throw new Error('Response text is required');
-      }
-
-      const response = await apiService.patch<Review>(`/reviews/${id}/response`, data);
-
-      if (!response.id) {
-        throw new Error('Invalid response format: review ID is missing');
-      }
-
-      reviewsCache.clear();
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to update review response:', error);
-      throw error;
+    ValidationHelper.requireId(id, 'Review');
+    if (!data.responseText?.trim()) {
+      throw new Error('Response text is required');
     }
+    const service = new ReviewsService();
+    return service.patchRequest<Review>(`/reviews/${id}/response`, data);
   }
 
   /**
    * Delete review response
    */
   static async deleteResponse(id: string): Promise<Review> {
-    try {
-      if (!id) {
-        throw new Error('Review ID is required');
-      }
-
-      const response = await apiService.delete<Review>(`/reviews/${id}/response`);
-
-      if (!response.id) {
-        throw new Error('Invalid response format: review ID is missing');
-      }
-
-      reviewsCache.clear();
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to delete review response:', error);
-      throw error;
-    }
+    ValidationHelper.requireId(id, 'Review');
+    const service = new ReviewsService();
+    return service.deleteRequest<Review>(`/reviews/${id}/response`);
   }
 
   /**
    * Vote on review helpfulness
    */
   static async vote(id: string, isHelpful: boolean): Promise<Review> {
-    try {
-      if (!id) {
-        throw new Error('Review ID is required');
-      }
-
-      const response = await apiService.post<Review>(`/reviews/${id}/vote`, { isHelpful });
-
-      if (!response.id) {
-        throw new Error('Invalid response format: review ID is missing');
-      }
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to vote on review:', error);
-      throw error;
-    }
+    ValidationHelper.requireId(id, 'Review');
+    const service = new ReviewsService();
+    return service.postRequest<Review>(`/reviews/${id}/vote`, { isHelpful });
   }
 
   /**
    * Get review statistics
    */
   static async getStats(clinicId?: string): Promise<ReviewStats> {
-    try {
-      const url = clinicId ? `/reviews/stats?clinicId=${clinicId}` : '/reviews/stats';
-      const response = await apiService.get<ReviewStats>(url);
-
-      // Validate response structure
-      if (typeof response.totalReviews !== 'number') {
-        throw new Error('Invalid response format: stats data is missing');
-      }
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to fetch review stats:', error);
-      throw error;
-    }
+    const service = new ReviewsService();
+    const params = clinicId ? { clinicId } : undefined;
+    return service.getRequest<ReviewStats>('/reviews/stats', params);
   }
 
   /**
    * Get review metrics for dashboard
    */
   static async getMetrics(clinicId?: string): Promise<ReviewMetrics[]> {
-    try {
-      const url = clinicId ? `/reviews/metrics?clinicId=${clinicId}` : '/reviews/metrics';
-      const response = await apiService.get<ReviewMetrics[]>(url);
-
-      if (!Array.isArray(response)) {
-        throw new Error('Invalid response format: expected array of metrics');
-      }
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to fetch review metrics:', error);
-      throw error;
-    }
+    const service = new ReviewsService();
+    const params = clinicId ? { clinicId } : undefined;
+    return service.getRequest<ReviewMetrics[]>('/reviews/metrics', params);
   }
 
   /**
    * Get moderation logs for a review
    */
   static async getModerationLogs(reviewId: string): Promise<ReviewModerationLog[]> {
-    try {
-      if (!reviewId) {
-        throw new Error('Review ID is required');
-      }
-
-      const response = await apiService.get<ReviewModerationLog[]>(
-        `/reviews/${reviewId}/moderation-logs`
-      );
-
-      if (!Array.isArray(response)) {
-        throw new Error('Invalid response format: expected array of moderation logs');
-      }
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to fetch moderation logs:', error);
-      throw error;
-    }
+    ValidationHelper.requireId(reviewId, 'Review');
+    const service = new ReviewsService();
+    return service.getRequest<ReviewModerationLog[]>(`/reviews/${reviewId}/moderation-logs`);
   }
 
   /**
    * Bulk actions on reviews
    */
   static async bulkAction(actionData: BulkReviewAction): Promise<Review[]> {
-    try {
-      if (!actionData.reviewIds?.length) {
-        throw new Error('At least one review ID is required');
-      }
-
-      if (!actionData.action) {
-        throw new Error('Action is required');
-      }
-
-      const response = await apiService.patch<Review[]>('/reviews/bulk-action', actionData);
-
-      if (!Array.isArray(response)) {
-        throw new Error('Invalid response format: expected array of reviews');
-      }
-
-      reviewsCache.clear();
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to perform bulk action on reviews:', error);
-      throw error;
+    ValidationHelper.validateArray(actionData.reviewIds, 'Review IDs');
+    ValidationHelper.validateMinLength(actionData.reviewIds, 1, 'Review IDs');
+    if (!actionData.action) {
+      throw new Error('Action is required');
     }
+
+    const service = new ReviewsService();
+    return service.patchRequest<Review[]>('/reviews/bulk-action', actionData);
   }
 
   /**
-   * Export reviews
+   * Export reviews to CSV
    */
-  static async export(
-    filters: ReviewsFilters = {},
-    format: 'csv' | 'excel' = 'csv'
-  ): Promise<Blob> {
-    try {
-      const params = new URLSearchParams();
+  static async exportToCSV(filters: ReviewsFilters = {}): Promise<Blob> {
+    const service = new ReviewsService();
+    const { dateRange, ...queryFilters } = filters;
+    return service.exportToCSV(queryFilters);
+  }
 
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
-          params.append(key, String(value));
-        }
-      });
-
-      params.append('format', format);
-
-      const response = await window.fetch(
-        `${environment.api.baseUrl}/reviews/export?${params.toString()}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Export failed');
-      }
-
-      return await response.blob();
-    } catch (error: unknown) {
-      console.error('Failed to export reviews:', error);
-      throw error;
-    }
+  /**
+   * Export reviews to Excel
+   */
+  static async exportToExcel(filters: ReviewsFilters = {}): Promise<Blob> {
+    const service = new ReviewsService();
+    const { dateRange, ...queryFilters } = filters;
+    return service.exportToExcel(queryFilters);
   }
 
   /**
    * Get pending reviews (requiring moderation)
    */
   static async getPendingReviews(): Promise<ReviewsResponse> {
-    try {
-      const response = await apiService.get<ReviewsResponse>('/reviews/pending');
-
-      if (!response.reviews || !Array.isArray(response.reviews)) {
-        throw new Error('Invalid response format: reviews array is missing');
-      }
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to fetch pending reviews:', error);
-      throw error;
-    }
+    const service = new ReviewsService();
+    return service.getRequest<ReviewsResponse>('/reviews/pending');
   }
 
   /**
    * Get flagged reviews
    */
   static async getFlaggedReviews(): Promise<ReviewsResponse> {
-    try {
-      const response = await apiService.get<ReviewsResponse>('/reviews/flagged');
-
-      if (!response.reviews || !Array.isArray(response.reviews)) {
-        throw new Error('Invalid response format: reviews array is missing');
-      }
-
-      return response;
-    } catch (error: unknown) {
-      console.error('Failed to fetch flagged reviews:', error);
-      throw error;
-    }
+    const service = new ReviewsService();
+    return service.getRequest<ReviewsResponse>('/reviews/flagged');
   }
 }
 

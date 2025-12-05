@@ -1,16 +1,15 @@
-import { Form, Modal } from 'antd';
+import type { useTrainingForm } from '@/hooks/training';
 import type { TrainingActivity } from '@/types/training';
 import { TRAINING_DIFFICULTY, TRAINING_SPECIES } from '@/types/training';
-import type { ReturnType } from 'react';
-import type { useTrainingForm } from '@/hooks/training';
+import { Form, Modal } from 'antd';
 import {
-  BasicInfoSection,
-  MediaSection,
-  TagsSection,
-  StepsSection,
-  BenefitsSection,
-  PrerequisitesSection,
-  StatusSection,
+    BasicInfoSection,
+    BenefitsSection,
+    MediaSection,
+    PrerequisitesSection,
+    StatusSection,
+    StepsSection,
+    TagsSection,
 } from './training-form-sections';
 
 interface TrainingFormModalProps {

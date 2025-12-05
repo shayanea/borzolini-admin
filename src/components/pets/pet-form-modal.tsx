@@ -1,19 +1,20 @@
-import {
-  ActionButtonsSection,
-  BasicInfoSection,
-  CareInfoSection,
-  EmergencyContactSection,
-  MedicalInfoSection,
-  PhotoStatusSection,
-} from './pet-form-sections';
 import { COMMON_BREEDS, PET_GENDERS, PET_SIZES, PET_SPECIES } from '@/constants/pets';
-import { Form, Modal } from 'antd';
-import type { PetFormData, PetFormModalProps } from '@/types';
-import { useCallback, useEffect, useState } from 'react';
 import { useDistinctAllergies, useDistinctMedications } from '@/hooks/pets';
+import type { PetFormData, PetFormModalProps } from '@/types';
+import { Form } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
+import {
+    ActionButtonsSection,
+    BasicInfoSection,
+    CareInfoSection,
+    EmergencyContactSection,
+    MedicalInfoSection,
+    PhotoStatusSection,
+} from './pet-form-sections';
 
-import dayjs from 'dayjs';
+import { FormModal } from '@/components/shared/form-modal';
 import { usePetOwners } from '@/hooks/pets';
+import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
 const PetFormModal = ({
@@ -111,65 +112,57 @@ const PetFormModal = ({
     form.setFieldsValue({ breed: undefined }); // Reset breed when species changes
   };
 
-  // Don't render the form if modal is not visible
-  if (!isVisible) {
-    return null;
-  }
-
   return (
-    <Modal
+    <FormModal
+      visible={isVisible}
       title={editingPet ? t('modals.petForm.titleEdit') : t('modals.petForm.titleAdd')}
-      open={isVisible}
+      form={form}
       onCancel={handleCancel}
-      footer={null}
+      onSubmit={handleSubmit}
+      loading={loading}
+      isEditMode={!!editingPet}
       width={700}
-      destroyOnHidden={true}
+      showFooter={false}
+      initialValues={{
+        is_spayed_neutered: false,
+        is_vaccinated: false,
+        allergies: [],
+        medications: [],
+      }}
     >
-      <Form
+      {/* Basic Information */}
+      <BasicInfoSection
         form={form}
-        layout='vertical'
-        onFinish={handleSubmit}
-        initialValues={{
-          is_spayed_neutered: false,
-          is_vaccinated: false,
-          allergies: [],
-          medications: [],
-        }}
-      >
-        {/* Basic Information */}
-        <BasicInfoSection
-          form={form}
-          petSpecies={petSpecies}
-          breeds={breeds}
-          genders={genders}
-          sizes={sizes}
-          selectedSpecies={selectedSpecies}
-          onSpeciesChange={handleSpeciesChange}
-          owners={owners}
-          loadingOwners={loadingOwners}
-        />
+        petSpecies={petSpecies}
+        breeds={breeds}
+        genders={genders}
+        sizes={sizes}
+        selectedSpecies={selectedSpecies}
+        onSpeciesChange={handleSpeciesChange}
+        owners={owners}
+        loadingOwners={loadingOwners}
+      />
 
-        {/* Medical Information */}
-        <MedicalInfoSection form={form} editingPet={editingPet} />
+      {/* Medical Information */}
+      <MedicalInfoSection form={form} editingPet={editingPet} />
 
-        {/* Care Information */}
-        <CareInfoSection
-          form={form}
-          allergyOptions={allergyOptions}
-          medicationOptions={medicationOptions}
-        />
+      {/* Care Information */}
+      <CareInfoSection
+        form={form}
+        allergyOptions={allergyOptions}
+        medicationOptions={medicationOptions}
+      />
 
-        {/* Emergency Contact */}
-        <EmergencyContactSection form={form} />
+      {/* Emergency Contact */}
+      <EmergencyContactSection form={form} />
 
-        {/* Photo and Status */}
-        <PhotoStatusSection form={form} />
+      {/* Photo and Status */}
+      <PhotoStatusSection form={form} />
 
-        <Form.Item className='mb-0'>
-          <ActionButtonsSection onCancel={handleCancel} loading={loading} editingPet={editingPet} />
-        </Form.Item>
-      </Form>
-    </Modal>
+      <Form.Item className='mb-0'>
+        <ActionButtonsSection onCancel={handleCancel} loading={loading} editingPet={editingPet} />
+      </Form.Item>
+    </FormModal>
   );
 };
 

@@ -1,17 +1,17 @@
 import { CASE_PRIORITIES, getCasePriorityOptions, getCaseTypeOptions } from '@/constants/pet-cases';
-import {
-  CaseActionButtonsSection,
-  CaseBasicInfoSection,
-  CaseDetailsSection,
-} from './pet-case-form-sections';
-import { CreatePetCaseRequest, UpdatePetCaseRequest } from '../../types/pet-cases';
-import { Divider, Form, Modal } from 'antd';
+import { Divider, Form } from 'antd';
 import { useEffect } from 'react';
+import { CreatePetCaseRequest, UpdatePetCaseRequest } from '../../types/pet-cases';
+import {
+    CaseActionButtonsSection,
+    CaseBasicInfoSection,
+    CaseDetailsSection,
+} from './pet-case-form-sections';
 
-import { HeartOutlined } from '@ant-design/icons';
+import { FormModal } from '@/components/shared/form-modal';
+import { useTranslation } from 'react-i18next';
 import { useMessage } from '../../hooks/common/use-message';
 import { usePetCases } from '../../hooks/pet-cases';
-import { useTranslation } from 'react-i18next';
 
 interface PetCaseFormModalProps {
   visible: boolean;
@@ -96,55 +96,47 @@ function PetCaseFormModal({
   };
 
   return (
-    <Modal
-      title={
-        <div className='flex items-center gap-2'>
-          <HeartOutlined />
-          {isEdit ? t('forms.petCaseForm.modalTitleEdit') : t('forms.petCaseForm.modalTitle')}
-        </div>
-      }
-      open={visible}
+    <FormModal
+      visible={visible}
+      title={isEdit ? t('forms.petCaseForm.modalTitleEdit') : t('forms.petCaseForm.modalTitle')}
+      form={form}
       onCancel={handleClose}
+      onSubmit={handleSubmit}
+      loading={isCreating || isUpdating}
+      isEditMode={isEdit}
       width={800}
-      footer={null}
-      destroyOnHidden
+      showFooter={false}
+      initialValues={{
+        priority: CASE_PRIORITIES.NORMAL,
+        case_type: 'consultation',
+      }}
     >
-      <Form
+      {/* Basic Information */}
+      <CaseBasicInfoSection
         form={form}
-        layout='vertical'
-        onFinish={handleSubmit}
-        initialValues={{
-          priority: CASE_PRIORITIES.NORMAL,
-          case_type: 'consultation',
-        }}
-      >
-        {/* Basic Information */}
-        <CaseBasicInfoSection
-          form={form}
-          caseTypeLabels={Object.fromEntries(
-            caseTypeOptions.map(option => [option.value, option.label])
-          )}
-          casePriorityLabels={Object.fromEntries(
-            casePriorityOptions.map(option => [option.value, option.label])
-          )}
-          isCreating={isCreating}
-          isUpdating={isUpdating}
-        />
+        caseTypeLabels={Object.fromEntries(
+          caseTypeOptions.map(option => [option.value, option.label])
+        )}
+        casePriorityLabels={Object.fromEntries(
+          casePriorityOptions.map(option => [option.value, option.label])
+        )}
+        isCreating={isCreating}
+        isUpdating={isUpdating}
+      />
 
-        {/* Case Details */}
-        <CaseDetailsSection form={form} isCreating={isCreating} isUpdating={isUpdating} />
+      {/* Case Details */}
+      <CaseDetailsSection form={form} isCreating={isCreating} isUpdating={isUpdating} />
 
-        <Divider />
+      <Divider />
 
-        {/* Action Buttons */}
-        <CaseActionButtonsSection
-          onClose={handleClose}
-          isCreating={isCreating}
-          isUpdating={isUpdating}
-          isEdit={isEdit}
-        />
-      </Form>
-    </Modal>
+      {/* Action Buttons */}
+      <CaseActionButtonsSection
+        onClose={handleClose}
+        isCreating={isCreating}
+        isUpdating={isUpdating}
+        isEdit={isEdit}
+      />
+    </FormModal>
   );
 }
 
