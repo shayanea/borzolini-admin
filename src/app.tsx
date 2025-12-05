@@ -1,8 +1,7 @@
+import { ClinicRegister, ClinicRegisterSuccess, LoginPage } from '@/pages';
 import { offAuthRedirect, onAuthRedirect } from '@/services/core';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
-import { ClinicRegister, ClinicRegisterSuccess } from '@/pages';
 
-import LoginForm from '@/components/auth/login-form';
 import ProtectedRoute from '@/components/auth/protected-route';
 import { ErrorBoundary } from '@/components/common/error-boundary';
 import ModernAdminLayout from '@/components/layout/modern-admin-layout';
@@ -28,7 +27,7 @@ const App = () => {
     <ErrorBoundary>
       <Routes>
         {/* Public routes */}
-        <Route path={ROUTES.LOGIN} element={<LoginForm />} />
+        <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.CLINIC_REGISTER} element={<ClinicRegister />} />
         <Route path={ROUTES.CLINIC_REGISTER_SUCCESS} element={<ClinicRegisterSuccess />} />
 

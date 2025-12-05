@@ -1,12 +1,15 @@
 export { default as ApiHealth } from './api-health/api-health-page';
 export { default as Appointments } from './appointments/appointments-page';
+export { default as LoginPage } from './auth/login-page';
+export { default as Breeds } from './breeds/breeds-page';
 export { default as Calendar } from './calendar/calendar-page';
 export { default as ClinicForm } from './clinic-form/clinic-form-page';
-export { default as ClinicRegister } from './clinic-register/clinic-register-page';
 export { default as ClinicRegisterSuccess } from './clinic-register-success/clinic-register-success-page';
+export { default as ClinicRegister } from './clinic-register/clinic-register-page';
 export { default as Clinics } from './clinics/clinics-page';
 export { default as Contacts } from './contacts/contacts-page';
 export { default as Dashboard } from './dashboard/dashboard-page';
+export { default as HouseholdSafety } from './household-safety/household-safety-page';
 export { default as PetCases } from './pet-cases/pet-cases-page';
 export { default as Pets } from './pets/pets-page';
 export { default as Profile } from './profile/profile-page';
@@ -17,6 +20,5 @@ export { default as RoleDemo } from './role-demo/role-demo-page';
 export { default as Settings } from './settings/settings-page';
 export { default as Staff } from './staff/staff-page';
 export { default as Training } from './training/training-page';
-export { default as HouseholdSafety } from './household-safety/household-safety-page';
-export { default as Breeds } from './breeds/breeds-page';
 export { default as Users } from './users/users-page';
+
