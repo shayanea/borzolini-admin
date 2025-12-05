@@ -180,6 +180,7 @@ export interface UpdatePetCaseRequest {
 }
 
 export interface CaseFilters {
+  [key: string]: any;
   status?: CaseStatus[];
   priority?: CasePriority[];
   case_type?: CaseType[];

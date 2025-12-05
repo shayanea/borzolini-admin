@@ -1,12 +1,13 @@
-import { useCallback, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useMemo } from 'react';
 
 import { CACHE_PRESETS } from '@/constants';
-import type { DashboardFilters } from '@/types/dashboard';
-import DashboardService from '@/services/dashboard';
-import { message } from 'antd';
 import { useAuth } from '@/hooks/auth';
 import { useClinicContext } from '@/hooks/clinics';
+import { useFilterManagement } from '@/hooks/common/use-filter-management';
+import DashboardService from '@/services/dashboard';
+import type { DashboardFilters } from '@/types/dashboard';
+import { message } from 'antd';
 
 // Query keys for React Query
 const DASHBOARD_KEYS = {
@@ -19,7 +20,10 @@ export const useDashboard = () => {
   const { isAuthenticated } = useAuth();
   const { clinicContext } = useClinicContext();
   const queryClient = useQueryClient();
-  const [filters, setFilters] = useState<DashboardFilters>({});
+  
+  const { filters, setFilter, clearAllFilters } = useFilterManagement<DashboardFilters>({
+    initialFilters: {}
+  });
 
   // Automatically add clinicId filter for clinic_admin users
   const effectiveFilters = useMemo(() => {
@@ -120,27 +124,20 @@ export const useDashboard = () => {
   // Handle date range change
   const handleDateRangeChange = useCallback(
     (dates: any) => {
-      const newFilters: DashboardFilters = { ...filters };
-
+      // Using setFilter which expects specific key
       if (dates && dates[0] && dates[1]) {
-        newFilters.dateRange = [dates[0].toISOString(), dates[1].toISOString()];
+        setFilter('dateRange', [dates[0].toISOString(), dates[1].toISOString()]);
       } else {
-        delete newFilters.dateRange;
+        setFilter('dateRange', undefined);
       }
-
-      setFilters(newFilters);
-
-      // React Query will automatically refetch with new filters
-      // due to the query key change
     },
-    [filters]
+    [setFilter]
   );
 
   // Handle clear filters
   const handleClearFilters = useCallback(() => {
-    setFilters({});
-    // React Query will automatically refetch with empty filters
-  }, []);
+    clearAllFilters();
+  }, [clearAllFilters]);
 
   // Handle manual refresh
   const handleRefresh = useCallback(() => {

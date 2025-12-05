@@ -20,6 +20,7 @@ export interface TopPerformingClinicsProps {
 }
 
 export interface DashboardFilters {
+  [key: string]: any;
   dateRange?: [string, string];
   clinicId?: string;
 }

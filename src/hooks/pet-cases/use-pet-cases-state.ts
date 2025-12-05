@@ -1,23 +1,28 @@
 import { useCallback, useState } from 'react';
 
-import { CaseFilters } from '@/types/pet-cases';
 import { PetCasesService } from '@/services/pet-cases';
+import { CaseFilters } from '@/types/pet-cases';
 import { message } from 'antd';
 
 interface UsePetCasesStateProps {
   clinicId?: string;
 }
 
+import { useFilterManagement } from '@/hooks/common/use-filter-management';
+
 export const usePetCasesState = ({ clinicId }: UsePetCasesStateProps = {}) => {
-  const [filters, setFilters] = useState<CaseFilters>({});
   const [page, setPage] = useState(1);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  
+  const { filters, setFilters, resetFilters } = useFilterManagement<CaseFilters>({
+    initialFilters: {},
+    resetToPage1: () => setPage(1),
+  });
 
   const handleFiltersChange = useCallback((newFilters: CaseFilters) => {
     setFilters(newFilters);
-    setPage(1); // Reset to first page when filters change
     setSelectedRowKeys([]); // Clear selection
-  }, []);
+  }, [setFilters]);
 
   const handlePageChange = useCallback((newPage: number) => {
     setPage(newPage);
@@ -33,10 +38,9 @@ export const usePetCasesState = ({ clinicId }: UsePetCasesStateProps = {}) => {
   }, []);
 
   const handleResetFilters = useCallback(() => {
-    setFilters({});
-    setPage(1);
+    resetFilters();
     setSelectedRowKeys([]);
-  }, []);
+  }, [resetFilters]);
 
   const handleExport = useCallback(async () => {
     if (!clinicId) {

@@ -20,6 +20,7 @@ export interface CalendarAppointment {
 
 // Enhanced calendar filters with advanced filtering options
 export interface CalendarFilters {
+  [key: string]: any;
   // Basic filters
   veterinarianIds?: string[];
   clinicId?: string; // Added for clinic-specific filtering
