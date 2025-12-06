@@ -1,3 +1,5 @@
+import type { TrainingActivity } from '@/types/training';
+import { ClockCircleOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import {
   Badge,
   Button,
@@ -11,10 +13,8 @@ import {
   Tag,
   Typography,
 } from 'antd';
-import { ClockCircleOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { getDifficultyColor, getSpeciesIcon } from './training-utils';
 
-import type { TrainingActivity } from '@/types/training';
 import { formatDate } from '@/lib/utils';
 
 const { Text } = Typography;
@@ -126,14 +126,17 @@ export function TrainingTable({
     },
     {
       title: 'Duration',
-      dataIndex: 'avg_duration_minutes',
+      dataIndex: 'durationMinutes',
       key: 'duration',
-      render: (minutes?: number | null) => (
-        <Space>
-          <ClockCircleOutlined />
-          <span>{minutes ? `${minutes} min` : 'N/A'}</span>
-        </Space>
-      ),
+      render: (_: unknown, record: TrainingActivity) => {
+        const minutes = record.durationMinutes || record.avg_duration_minutes;
+        return (
+          <Space>
+            <ClockCircleOutlined />
+            <span>{minutes ? `${minutes} min` : 'N/A'}</span>
+          </Space>
+        );
+      },
     },
     {
       title: 'Tags',

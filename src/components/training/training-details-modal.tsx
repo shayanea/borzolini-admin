@@ -1,13 +1,13 @@
-import { Modal, Typography } from 'antd';
 import type { TrainingActivity } from '@/types/training';
+import { Modal, Typography } from 'antd';
 import {
   BasicInfoCard,
-  StepsCard,
   BenefitsCard,
-  PrerequisitesCard,
   MediaCard,
-  TagsCard,
   MetadataCard,
+  PrerequisitesCard,
+  StepsCard,
+  TagsCard,
 } from './training-details-sections';
 
 const { Text } = Typography;
@@ -18,14 +18,12 @@ interface TrainingDetailsModalProps {
   onClose: () => void;
 }
 
-export function TrainingDetailsModal({
-  activity,
-  open,
-  onClose,
-}: TrainingDetailsModalProps) {
-  if (!activity) return null;
+export function TrainingDetailsModal({ activity, open, onClose }: TrainingDetailsModalProps) {
+  if (!activity) {
+    return null;
+  }
 
-  const thumbnailUrl = (activity as unknown as { thumbnailUrl?: string }).thumbnailUrl;
+  const thumbnailUrl = activity.thumbnailUrl;
 
   return (
     <Modal
@@ -38,14 +36,16 @@ export function TrainingDetailsModal({
       <div className='space-y-6'>
         {thumbnailUrl && (
           <div>
-            <Text type="secondary" className="block mb-2">Activity Preview</Text>
-            <div className="mb-4">
+            <Text type='secondary' className='block mb-2'>
+              Activity Preview
+            </Text>
+            <div className='mb-4'>
               <img
                 src={thumbnailUrl}
                 alt={activity.title}
-                className="max-w-full h-auto rounded-lg border object-cover"
+                className='max-w-full h-auto rounded-lg border object-cover'
                 style={{ maxHeight: '400px' }}
-                onError={(e) => {
+                onError={e => {
                   e.currentTarget.style.display = 'none';
                 }}
               />
@@ -63,4 +63,3 @@ export function TrainingDetailsModal({
     </Modal>
   );
 }
-

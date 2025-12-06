@@ -25,17 +25,23 @@ export function BasicInfoCard({ activity }: BasicInfoCardProps) {
           <Badge color={getDifficultyColor(activity.difficulty)} text={activity.difficulty} />
           <Space size='small'>
             <ClockCircleOutlined />
-            <span>{activity.avg_duration_minutes} minutes</span>
+            <span>{activity.durationMinutes || activity.avg_duration_minutes || 0} minutes</span>
           </Space>
         </Space>
 
         <Space size='small' wrap>
-          {activity.by_species?.map(species => (
-            <Badge key={species.id} text={`${getSpeciesIcon(species.species)} ${species.species}`} />
-          ))}
+          {activity.species && activity.species.length > 0
+            ? activity.species.map((species, index) => (
+                <Badge key={`species-${index}`} text={`${getSpeciesIcon(species)} ${species}`} />
+              ))
+            : activity.by_species?.map(species => (
+                <Badge
+                  key={species.id}
+                  text={`${getSpeciesIcon(species.species)} ${species.species}`}
+                />
+              ))}
         </Space>
       </div>
     </div>
   );
 }
-

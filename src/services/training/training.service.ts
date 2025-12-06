@@ -47,13 +47,73 @@ export class TrainingService extends BaseService<
     return 'training activity';
   }
 
+  /**
+   * Normalizes API response from snake_case to camelCase
+   */
+  private static normalizeActivity(activity: any): TrainingActivity {
+    if (!activity) {
+      throw new Error('Activity data is required');
+    }
+
+    // If already normalized, return as is
+    if (activity.durationMinutes !== undefined && activity.videoUrl !== undefined) {
+      return activity as TrainingActivity;
+    }
+
+    // Normalize snake_case to camelCase
+    const normalized: TrainingActivity = {
+      id: activity.id,
+      title: activity.title || '',
+      description: activity.description || '',
+      summary: activity.summary || activity.summary,
+      content_markdown: activity.content_markdown || activity.contentMarkdown,
+      difficulty: activity.difficulty || 'easy',
+      durationMinutes: activity.durationMinutes ?? activity.avg_duration_minutes ?? 0,
+      species: activity.species || [],
+      tags: activity.tags || [],
+      videoUrl: activity.videoUrl ?? activity.video_url ?? null,
+      thumbnailUrl: activity.thumbnailUrl ?? activity.thumbnail_url ?? null,
+      steps: activity.steps || [],
+      benefits: activity.benefits || [],
+      prerequisites: activity.prerequisites || [],
+      isActive: activity.isActive ?? activity.is_active ?? true,
+      // Legacy properties
+      avg_duration_minutes: activity.avg_duration_minutes ?? activity.durationMinutes,
+      video_url: activity.video_url ?? activity.videoUrl,
+      indoor: activity.indoor,
+      equipment: activity.equipment,
+      risks: activity.risks,
+      enrichment: activity.enrichment,
+      source_primary: activity.source_primary,
+      source_name: activity.source_name,
+      license: activity.license,
+      terms_snapshot: activity.terms_snapshot,
+      by_species: activity.by_species,
+      created_at:
+        activity.created_at || activity.createdAt
+          ? new Date(activity.created_at || activity.createdAt)
+          : new Date(),
+      updated_at:
+        activity.updated_at || activity.updatedAt
+          ? new Date(activity.updated_at || activity.updatedAt)
+          : new Date(),
+    };
+
+    // Ensure steps is always an array
+    if (!normalized.steps || !Array.isArray(normalized.steps)) {
+      normalized.steps = [];
+    }
+
+    return normalized;
+  }
+
   private static normalizeActivitiesResponse(response: any): TrainingActivitiesResponse {
     if (!response) {
       throw new Error('Training activities response is empty');
     }
 
-    const extract = (data: TrainingActivity[], meta?: Partial<TrainingActivitiesResponse>) => ({
-      data,
+    const extract = (data: any[], meta?: Partial<TrainingActivitiesResponse>) => ({
+      data: data.map(activity => this.normalizeActivity(activity)),
       total: meta?.total ?? data.length,
       page: meta?.page ?? 1,
       limit: meta?.limit ?? data.length ?? 10,
@@ -110,24 +170,22 @@ export class TrainingService extends BaseService<
   static async getActivity(id: string): Promise<TrainingActivity> {
     const service = new TrainingService();
     const endpoint = `${ADMIN_ACTIVITIES_ENDPOINT}/${id}`;
-    
-    console.log('Fetching training activity:', { id, endpoint });
-    
+
     try {
       const response = await service.getRequest<any>(endpoint);
-      
-      console.log('Training activity response:', response);
-      
+
       // Handle different response formats
+      let rawActivity: any;
       if (response?.data && typeof response.data === 'object') {
-        return response.data as TrainingActivity;
+        rawActivity = response.data;
+      } else if (response?.id) {
+        rawActivity = response;
+      } else {
+        throw new Error('Invalid training activity response format');
       }
-      
-      if (response?.id) {
-        return response as TrainingActivity;
-      }
-      
-      throw new Error('Invalid training activity response format');
+
+      // Normalize the activity data
+      return this.normalizeActivity(rawActivity);
     } catch (error: any) {
       console.error('Error fetching training activity:', {
         id,

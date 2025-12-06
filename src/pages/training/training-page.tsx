@@ -1,14 +1,14 @@
 import {
-	TrainingDetailsModal,
-	TrainingFilters,
-	TrainingFormModal,
-	TrainingPageHeader,
-	TrainingTable,
+  TrainingDetailsModal,
+  TrainingFilters,
+  TrainingFormModal,
+  TrainingPageHeader,
+  TrainingTable,
 } from '@/components/training';
 import {
-	TRAINING_FILTER_DEFAULTS,
-	TRAINING_PAGINATION_DEFAULTS,
-	TRAINING_SORT_DEFAULTS,
+  TRAINING_FILTER_DEFAULTS,
+  TRAINING_PAGINATION_DEFAULTS,
+  TRAINING_SORT_DEFAULTS,
 } from '@/constants/training';
 import { useTraining, useTrainingForm } from '@/hooks/training';
 import type { TrainingActivity, TrainingDifficulty, TrainingSearchParams } from '@/types/training';
@@ -41,11 +41,19 @@ function TrainingPage() {
   } = useTraining();
 
   const createForm = useTrainingForm();
-  const editForm = useTrainingForm(selectedActivity || undefined);
+  const editForm = useTrainingForm();
 
   const [activities, setActivities] = useState<TrainingActivity[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  // Sync editForm when selectedActivity changes and edit modal is open
+  useEffect(() => {
+    if (selectedActivity && showEditModal) {
+      editForm.resetForm(selectedActivity);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedActivity?.id, showEditModal]);
 
   const loadActivities = async () => {
     setLoading(true);
@@ -56,8 +64,7 @@ function TrainingPage() {
 
     if (searchTerm) params.q = searchTerm;
     if (selectedSpecies.length > 0) params.species = selectedSpecies.join(',');
-    if (selectedDifficulty)
-      params.difficulty = selectedDifficulty as TrainingDifficulty;
+    if (selectedDifficulty) params.difficulty = selectedDifficulty as TrainingDifficulty;
     if (selectedTags.length > 0) params.tags = selectedTags.join(',');
 
     const result = await getTrainingActivities(
@@ -80,14 +87,7 @@ function TrainingPage() {
   useEffect(() => {
     loadActivities();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    currentPage,
-    pageSize,
-    searchTerm,
-    selectedSpecies,
-    selectedDifficulty,
-    selectedTags,
-  ]);
+  }, [currentPage, pageSize, searchTerm, selectedSpecies, selectedDifficulty, selectedTags]);
 
   const filteredActivities = useMemo(() => {
     return activities.filter(
@@ -183,7 +183,7 @@ function TrainingPage() {
         // Use existing activity data first, then fetch fresh data in background
         setSelectedActivity(activity);
         setShowViewModal(true);
-        
+
         // Fetch fresh data to ensure we have the latest
         const activityData = await getTrainingActivity(activity.id);
         if (activityData) {
