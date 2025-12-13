@@ -1,7 +1,7 @@
-import { Button, Card, Input, Select, Typography } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import React from 'react';
 import { ResourceType } from '@/types/resources';
+import { SearchOutlined } from '@ant-design/icons';
+import { Button, Card, Input, Select, Typography } from 'antd';
+import React from 'react';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
@@ -60,6 +60,7 @@ export function ResourcesFilters({
             <Option value={ResourceType.VIDEO}>Video</Option>
             <Option value={ResourceType.DISCORD}>Discord</Option>
             <Option value={ResourceType.AUDIO}>Audio</Option>
+            <Option value={ResourceType.INSTAGRAM}>Instagram</Option>
           </Select>
         </div>
         <div className="flex-1">

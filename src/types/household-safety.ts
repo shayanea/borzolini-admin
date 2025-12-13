@@ -1,28 +1,34 @@
-export interface FoodItem {
+export interface SafetyBySpecies {
   id: string;
-  name: string;
-  description: string;
-  safetyLevel: 'safe' | 'caution' | 'dangerous' | 'unknown';
-  notes?: string;
-  createdAt: Date;
+  species: string;
+  safety: 'safe' | 'caution' | 'dangerous' | 'avoid' | 'unknown';
+  preparation?: string | null;
+  safeAmount?: string | null;
+  frequency?: string | null;
+  risks?: string[];
+  emergency: boolean;
+  treatmentInfo?: string | null;
+  citations?: string | null;
 }
 
-export interface PlantItem {
+export interface HouseholdSafetyItem {
   id: string;
-  name: string;
-  scientificName?: string;
-  toxicityLevel: 'non-toxic' | 'mild' | 'moderate' | 'severe';
-  symptoms?: string[];
-  createdAt: Date;
-}
-
-export interface HouseholdItem {
-  id: string;
-  name: string;
-  category: string;
-  hazardLevel: 'safe' | 'low' | 'medium' | 'high';
-  precautions?: string;
-  createdAt: Date;
+  canonical_name: string;
+  scientific_name?: string | null;
+  category?: string | null;
+  safety_overall: 'safe' | 'caution' | 'dangerous' | 'avoid' | 'unknown';
+  notes_markdown?: string | null;
+  last_reviewed_at?: string | null;
+  sourcePrimary?: string | null;
+  sourceName?: string | null;
+  license?: string | null;
+  terms_snapshot?: string | null;
+  hash?: string | null;
+  citations?: string | null;
+  toxicCompounds?: string | null;
+  created_at: string;
+  updated_at: string;
+  safety_by_species?: SafetyBySpecies[];
 }
 
 export interface SafetySearchResult {
@@ -39,6 +45,17 @@ export interface SafetySearchResult {
     notes?: string;
   }>;
   createdAt: Date;
+  // Extended fields from API
+  canonical_name?: string;
+  scientific_name?: string | null;
+  safety_overall?: string;
+  notes_markdown?: string | null;
+  safety_by_species?: SafetyBySpecies[];
+  citations?: string | null;
+  toxicCompounds?: string | null;
+  last_reviewed_at?: string | null;
+  sourceName?: string | null;
+  license?: string | null;
 }
 
 export interface SafetySearchResponse {
@@ -60,10 +77,22 @@ export const SPECIES_OPTIONS: SpeciesFilter[] = [
   { value: 'rabbit', label: 'Rabbits' },
   { value: 'small_mammal', label: 'Small Mammals' },
   { value: 'reptile', label: 'Reptiles' },
-  { value: 'all', label: 'All Species' }
+  { value: 'all', label: 'All Species' },
 ];
 
-export type SafetyLevel = 'safe' | 'caution' | 'dangerous' | 'unknown' | 'non-toxic' | 'mild' | 'moderate' | 'severe' | 'low' | 'medium' | 'high';
+export type SafetyLevel =
+  | 'safe'
+  | 'caution'
+  | 'dangerous'
+  | 'avoid'
+  | 'unknown'
+  | 'non-toxic'
+  | 'mild'
+  | 'moderate'
+  | 'severe'
+  | 'low'
+  | 'medium'
+  | 'high';
 
 export interface ApiError {
   message: string;

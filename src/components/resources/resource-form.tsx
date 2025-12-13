@@ -43,6 +43,7 @@ export function ResourceForm({
             <Option value={ResourceType.VIDEO}>Video</Option>
             <Option value={ResourceType.DISCORD}>Discord</Option>
             <Option value={ResourceType.AUDIO}>Audio</Option>
+            <Option value={ResourceType.INSTAGRAM}>Instagram</Option>
           </Select>
         </Form.Item>
       </div>

@@ -2,6 +2,7 @@ export enum ResourceType {
   VIDEO = 'video',
   DISCORD = 'discord',
   AUDIO = 'audio',
+  INSTAGRAM = 'instagram',
 }
 
 export interface Resource {

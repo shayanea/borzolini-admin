@@ -139,6 +139,7 @@ function ResourcesPage() {
       video: 'blue',
       discord: 'green',
       audio: 'orange',
+      instagram: 'pink',
     };
     return colorMap[type.toLowerCase()] || 'default';
   }, []);

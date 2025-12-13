@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { PetSpecies, PetSize, GroomingNeeds, ExerciseNeeds, type CreateBreedDto, type Breed, type UpdateBreedDto } from '../../types/breeds';
+import { ExerciseNeeds, GroomingNeeds, PetSize, PetSpecies, type Breed, type CreateBreedDto, type UpdateBreedDto } from '../../types/breeds';
 
 interface FormErrors {
   name?: string;
@@ -26,6 +26,8 @@ export const useBreedForm = (initialData?: Breed) => {
           resources: initialData.resources,
           grooming_needs: initialData.grooming_needs,
           exercise_needs: initialData.exercise_needs,
+          care_specifics: initialData.care_specifics,
+          average_vitals: initialData.average_vitals,
           is_active: initialData.is_active,
         }
       : {
@@ -45,6 +47,18 @@ export const useBreedForm = (initialData?: Breed) => {
           resources: [],
           grooming_needs: undefined,
           exercise_needs: undefined,
+          care_specifics: {
+            diet: '',
+            housing: '',
+            social_needs: '',
+            common_stressors: [],
+          },
+          average_vitals: {
+            temperature_f: { min: 0, max: 0 },
+            heart_rate_bpm: { min: 0, max: 0 },
+            respiratory_rate_rpm: { min: 0, max: 0 },
+            weight_kg: { min: 0, max: 0 },
+          },
           is_active: true,
         }
   );
@@ -131,6 +145,87 @@ export const useBreedForm = (initialData?: Breed) => {
     }));
   }, []);
 
+  const addCommonStressor = useCallback(() => {
+    setFormData((prev: CreateBreedDto | UpdateBreedDto) => {
+      const current = prev.care_specifics || { diet: '', housing: '', social_needs: '', common_stressors: [] };
+      return {
+        ...prev,
+        care_specifics: {
+          ...current,
+          common_stressors: [...(current.common_stressors || []), ''],
+        },
+      };
+    });
+  }, []);
+
+  const updateCommonStressor = useCallback((index: number, value: string) => {
+    setFormData((prev: CreateBreedDto | UpdateBreedDto) => {
+      const current = prev.care_specifics || { diet: '', housing: '', social_needs: '', common_stressors: [] };
+      return {
+        ...prev,
+        care_specifics: {
+          ...current,
+          common_stressors: (current.common_stressors || []).map((s, i) => i === index ? value : s),
+        },
+      };
+    });
+  }, []);
+
+  const deleteCommonStressor = useCallback((index: number) => {
+    setFormData((prev: CreateBreedDto | UpdateBreedDto) => {
+      const current = prev.care_specifics || { diet: '', housing: '', social_needs: '', common_stressors: [] };
+      return {
+        ...prev,
+        care_specifics: {
+          ...current,
+          common_stressors: (current.common_stressors || []).filter((_, i) => i !== index),
+        },
+      };
+    });
+  }, []);
+
+  const handleCareSpecificsChange = useCallback((field: keyof Omit<import('../../types/breeds').CareSpecifics, 'common_stressors'>, value: string) => {
+    setFormData((prev: CreateBreedDto | UpdateBreedDto) => {
+       const current = prev.care_specifics || { diet: '', housing: '', social_needs: '', common_stressors: [] };
+       return {
+         ...prev,
+         care_specifics: {
+           ...current,
+           [field]: value,
+         },
+       };
+    });
+  }, []);
+
+  const handleAverageVitalsChange = useCallback((
+    category: keyof import('../../types/breeds').AverageVitals,
+    field: 'min' | 'max',
+    value: number | undefined
+  ) => {
+    setFormData((prev: CreateBreedDto | UpdateBreedDto) => {
+      // Helper to ensure 'average_vitals' and the specific category exist
+      const currentVitals = prev.average_vitals || {
+        temperature_f: { min: 0, max: 0 },
+        heart_rate_bpm: { min: 0, max: 0 },
+        respiratory_rate_rpm: { min: 0, max: 0 },
+        weight_kg: { min: 0, max: 0 },
+      };
+      
+      const currentCategory = currentVitals[category] || { min: 0, max: 0 };
+
+      return {
+        ...prev,
+        average_vitals: {
+          ...currentVitals,
+          [category]: {
+            ...currentCategory,
+            [field]: value,
+          },
+        },
+      };
+    });
+  }, []);
+
   const deleteResource = useCallback((index: number) => {
     setFormData((prev: CreateBreedDto | UpdateBreedDto) => ({
       ...prev,
@@ -158,6 +253,8 @@ export const useBreedForm = (initialData?: Breed) => {
             resources: data.resources,
             grooming_needs: data.grooming_needs,
             exercise_needs: data.exercise_needs,
+            care_specifics: data.care_specifics,
+            average_vitals: data.average_vitals,
             is_active: data.is_active,
           }
         : {
@@ -177,6 +274,18 @@ export const useBreedForm = (initialData?: Breed) => {
             resources: [],
             grooming_needs: undefined,
             exercise_needs: undefined,
+            care_specifics: {
+              diet: '',
+              housing: '',
+              social_needs: '',
+              common_stressors: [],
+            },
+            average_vitals: {
+              temperature_f: { min: 0, max: 0 },
+              heart_rate_bpm: { min: 0, max: 0 },
+              respiratory_rate_rpm: { min: 0, max: 0 },
+              weight_kg: { min: 0, max: 0 },
+            },
             is_active: true,
           }
     );
@@ -197,6 +306,11 @@ export const useBreedForm = (initialData?: Breed) => {
     handleSubmit,
     resetForm,
     validateForm,
+    addCommonStressor,
+    updateCommonStressor,
+    deleteCommonStressor,
+    handleCareSpecificsChange,
+    handleAverageVitalsChange,
   };
 };
 

@@ -31,6 +31,25 @@ export enum ExerciseNeeds {
   HIGH = 'high',
 }
 
+export interface CareSpecifics {
+  diet: string;
+  housing: string;
+  social_needs: string;
+  common_stressors: string[];
+}
+
+export interface MinMax {
+  min: number;
+  max: number;
+}
+
+export interface AverageVitals {
+  temperature_f: MinMax;
+  heart_rate_bpm: MinMax;
+  respiratory_rate_rpm: MinMax;
+  weight_kg: MinMax;
+}
+
 export interface Breed {
   id: string;
   name: string;
@@ -49,6 +68,8 @@ export interface Breed {
   resources: string[];
   grooming_needs?: GroomingNeeds;
   exercise_needs?: ExerciseNeeds;
+  care_specifics?: CareSpecifics;
+  average_vitals?: AverageVitals;
   is_active: boolean;
   created_at: Date;
   updated_at: Date;
@@ -71,6 +92,8 @@ export interface CreateBreedDto {
   resources?: string[];
   grooming_needs?: GroomingNeeds;
   exercise_needs?: ExerciseNeeds;
+  care_specifics?: CareSpecifics;
+  average_vitals?: AverageVitals;
   is_active?: boolean;
 }
 
@@ -91,6 +114,8 @@ export interface UpdateBreedDto {
   resources?: string[];
   grooming_needs?: GroomingNeeds;
   exercise_needs?: ExerciseNeeds;
+  care_specifics?: CareSpecifics;
+  average_vitals?: AverageVitals;
   is_active?: boolean;
 }
 
