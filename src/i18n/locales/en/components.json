@@ -555,7 +555,27 @@
       "addPatient": "Add Patient",
       "registerPatient": "Register a new patient",
       "addClinic": "Add Clinic",
-      "registerClinic": "Register a new clinic"
+      "registerClinic": "Register a new clinic",
+      "acceptNext": "Accept Next Pending",
+      "noPendingTasks": "No pending appointments",
+      "confirmedSuccess": "Appointment confirmed successfully",
+      "noPending": "No pending appointments found",
+      "markComplete": "Mark Current Complete",
+      "noActiveAppointment": "No active appointment",
+      "completedSuccess": "Appointment marked as completed",
+      "noActive": "No active appointment found",
+      "error": "An error occurred",
+      "blockTime": "Block Time Slot",
+      "preventBookings": "Prevent new bookings",
+      "blockTimeInfo": "Redirecting to calendar to block time",
+      "sendSms": "Send SMS",
+      "communicatePatient": "Communicate with patient",
+      "sendSmsTitle": "Send SMS",
+      "sendSmsContent": "Select a patient to send SMS (Feature Mock)",
+      "viewSchedule": "View Today's Schedule",
+      "todayOverview": "See today's overview",
+      "emergency": "Emergency Walk-in",
+      "walkInReg": "Register walk-in patient"
     },
     "recentActivity": {
       "title": "Recent Activity",
@@ -617,5 +637,9 @@
       "deleteSuccess": "Case deleted successfully",
       "deleteFailed": "Failed to delete case"
     }
+  },
+  "common": {
+    "patient": "Patient",
+    "ok": "OK"
   }
 }

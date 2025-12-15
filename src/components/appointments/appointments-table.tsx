@@ -1,26 +1,26 @@
-import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 import {
-  CalendarOutlined,
-  ClockCircleOutlined,
-  DeleteOutlined,
-  EnvironmentOutlined,
-  EyeOutlined,
-  PhoneOutlined,
-  StarOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import {
-  formatAppointmentType,
-  getAppointmentPriorityColor,
-  getAppointmentStatusColor,
-  getPetGenderColor,
-  getPetSpeciesColor,
+    formatAppointmentType,
+    getAppointmentPriorityColor,
+    getAppointmentStatusColor,
+    getPetGenderColor,
+    getPetSpeciesColor,
 } from '@/utils/color-helpers';
+import {
+    CalendarOutlined,
+    ClockCircleOutlined,
+    DeleteOutlined,
+    EnvironmentOutlined,
+    EyeOutlined,
+    PhoneOutlined,
+    StarOutlined,
+    UserOutlined,
+} from '@ant-design/icons';
+import { Avatar, Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
+import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 
-import type { Appointment } from '@/types';
-import { AppointmentsDataService } from '@/services/appointments';
 import { TABLE_PAGE_SIZES } from '@/constants';
+import { AppointmentsDataService } from '@/services/appointments';
+import type { Appointment } from '@/types';
 import { useTranslation } from 'react-i18next';
 
 export interface AppointmentsHeaderProps {
@@ -38,6 +38,7 @@ export interface AppointmentsTableProps {
   onView: (appointment: Appointment) => void;
   onCancel: (id: string) => void;
   onPagination?: (page: number, pageSize: number) => void;
+  rowSelection?: any;
 }
 
 const AppointmentsTable = ({
@@ -47,6 +48,7 @@ const AppointmentsTable = ({
   onView,
   onCancel,
   onPagination,
+  rowSelection,
 }: AppointmentsTableProps) => {
   const { t } = useTranslation('components');
 
@@ -437,6 +439,7 @@ const AppointmentsTable = ({
   return (
     <div className='bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden'>
       <Table
+        rowSelection={rowSelection}
         columns={columns}
         dataSource={safeAppointments}
         rowKey={record => record?.id || Math.random().toString()}
