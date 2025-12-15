@@ -1,5 +1,6 @@
-import { Alert, Empty, Modal, Table, Tag, Typography } from 'antd';
+import { BaseModal } from '@/components/common';
 import type { Appointment, Clinic } from '@/types';
+import { Alert, Empty, Table, Tag, Typography } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 
 import AppointmentsService from '@/services/appointments';
@@ -90,7 +91,7 @@ const ClinicAppointmentsModal = ({ visible, clinic, onClose }: ClinicAppointment
   );
 
   return (
-    <Modal
+    <BaseModal
       title={
         <div className='flex items-start justify-between'>
           <div className='flex flex-col'>
@@ -131,7 +132,7 @@ const ClinicAppointmentsModal = ({ visible, clinic, onClose }: ClinicAppointment
           scroll={{ x: true }}
         />
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

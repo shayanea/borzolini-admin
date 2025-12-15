@@ -1,5 +1,6 @@
+import { BaseModal } from '@/components/common';
+import { Form, FormInstance, Typography } from 'antd';
 import { FC, ReactNode } from 'react';
-import { Form, FormInstance, Modal, Typography } from 'antd';
 
 import { useTranslation } from 'react-i18next';
 
@@ -122,11 +123,11 @@ const FormModal: FC<FormModalProps> = ({
   const defaultCancelText = cancelText ?? t('forms.common.cancel');
 
   return (
-    <Modal
+    <BaseModal
       title={<Title level={4}>{title}</Title>}
       open={visible}
       onCancel={handleCancel}
-      onOk={showFooter ? handleSubmit : undefined}
+      onOk={handleSubmit}
       confirmLoading={loading}
       width={width}
       destroyOnHidden={destroyOnHidden}
@@ -144,7 +145,7 @@ const FormModal: FC<FormModalProps> = ({
       >
         {children}
       </Form>
-    </Modal>
+    </BaseModal>
   );
 };
 

@@ -4,13 +4,13 @@
  */
 
 import {
-  APPOINTMENT_PRIORITY_COLORS,
-  APPOINTMENT_STATUS_COLORS,
+    APPOINTMENT_PRIORITY_COLORS,
+    APPOINTMENT_STATUS_COLORS,
 } from '@/constants/appointments';
 import {
-  PET_GENDER_COLORS,
-  PET_SIZE_COLORS,
-  PET_SPECIES_COLORS,
+    PET_GENDER_COLORS,
+    PET_SIZE_COLORS,
+    PET_SPECIES_COLORS,
 } from '@/constants/pets';
 
 /**
@@ -77,5 +77,40 @@ export const formatEnumLabel = (value: string): string => {
     .split('_')
     .map(word => capitalizeFirst(word))
     .join(' ');
+};
+
+/**
+ * Convert Hex color to RGBA
+ */
+export const hexToRgba = (hex: string, alpha: number): string => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  if (isNaN(r) || isNaN(g) || isNaN(b)) {
+    return `rgba(0, 0, 0, ${alpha})`;
+  }
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
+/**
+ * Get styles for dynamic tags/badges based on a base color
+ */
+export const getStylesForColor = (color: string) => {
+    // If color is a named color (legacy fallback), return null or default styles
+    if (!color.startsWith('#')) {
+        return {
+             backgroundColor: '#f3f4f6',
+             color: '#374151',
+             border: '1px solid #d1d5db'
+        }
+    }
+
+    return {
+        backgroundColor: hexToRgba(color, 0.15),
+        color: color,
+        border: `1px solid ${hexToRgba(color, 0.3)}`,
+    };
 };
 

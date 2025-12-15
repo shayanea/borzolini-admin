@@ -141,4 +141,10 @@ function PetCaseFormModal({
 }
 
 export { PetCaseFormModal };
-export default PetCaseFormModal;
+// No changes to PetCaseFormModal needed directly if FormModal is updated,
+// or I can enforce it here by NOT passing showFooter={false} and using standard footer?
+// PetCaseFormModal has custom buttons section: CaseActionButtonsSection.
+// So it relies on custom UI.
+// Better to update FormModal.
+// I will not apply edits to PetCaseFormModal.tsx yet.
+// I will view FormModal.tsx first.

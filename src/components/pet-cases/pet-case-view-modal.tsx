@@ -1,14 +1,15 @@
 import {
-  BasicInfoCard,
-  DiagnosisCard,
-  OwnerInfoCard,
-  PetInfoCard,
-  SymptomsCard,
-  VeterinarianInfoCard,
-  VitalSignsCard,
+    BasicInfoCard,
+    DiagnosisCard,
+    OwnerInfoCard,
+    PetInfoCard,
+    SymptomsCard,
+    VeterinarianInfoCard,
+    VitalSignsCard,
 } from './pet-case-view-sections';
 // Pet Case View Modal Component
-import { Button, Divider, Modal, Space, Tabs } from 'antd';
+import { BaseModal } from '@/components/common';
+import { Button, Divider, Space, Tabs } from 'antd';
 import { useState } from 'react';
 
 import type { ClinicPetCase } from '../../types/pet-cases';
@@ -36,7 +37,7 @@ function PetCaseViewModal({
   if (!caseData) return null;
 
   return (
-    <Modal
+    <BaseModal
       title={
         <div className='flex items-center justify-between'>
           <span>Case Details - {caseData.case_number}</span>
@@ -47,6 +48,7 @@ function PetCaseViewModal({
       }
       open={visible}
       onCancel={onClose}
+      onOk={onClose}
       width={1200}
       footer={[
         <Button key='close' onClick={onClose}>
@@ -79,7 +81,7 @@ function PetCaseViewModal({
           <PetCaseTimeline caseId={caseData.id} clinicId={clinicId} />
         </TabPane>
       </Tabs>
-    </Modal>
+    </BaseModal>
   );
 }
 

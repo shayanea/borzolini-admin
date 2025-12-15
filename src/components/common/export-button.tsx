@@ -1,6 +1,7 @@
+import { BaseModal } from '@/components/common';
 import { generateExportFilename, handleExport } from '@/utils/export.utils';
 import { DownloadOutlined, FileExcelOutlined, FileTextOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Modal, Space, Typography, message } from 'antd';
+import { Button, Dropdown, Space, Typography, message } from 'antd';
 
 import type { MenuProps } from 'antd';
 import { useState } from 'react';
@@ -124,7 +125,7 @@ export function ExportButton({
         </Button>
       </Dropdown>
 
-      <Modal
+      <BaseModal
         title='Confirm Export'
         open={!!exportFormat}
         onOk={handleConfirmExport}
@@ -158,7 +159,7 @@ export function ExportButton({
             </div>
           )}
         </Space>
-      </Modal>
+      </BaseModal>
     </>
   );
 }

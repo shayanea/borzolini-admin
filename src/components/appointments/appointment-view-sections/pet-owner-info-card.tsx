@@ -4,6 +4,7 @@
 
 import { Card, Descriptions, Tag } from 'antd';
 
+import PatientFlags from '@/components/patients/patient-flags';
 import type { Appointment } from '@/types';
 import { FC } from 'react';
 
@@ -28,6 +29,9 @@ export const PetOwnerInfoCard: FC<PetOwnerInfoCardProps> = ({ appointment }) => 
           <p className='text-gray-600'>
             {appointment.pet?.breed} {appointment.pet?.species}
           </p>
+          <div className='mt-1'>
+            <PatientFlags flags={appointment.pet?.flags} size='small' />
+          </div>
         </div>
       </div>
 

@@ -1,21 +1,22 @@
+import { BaseModal } from '@/components/common';
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Modal } from 'antd';
+import { Avatar } from 'antd';
 
 import type { PetDetailsModalProps } from '@/types';
 import {
-  PetBasicInfoCard,
-  PetCareInfoCard,
-  PetEmergencyContactCard,
-  PetMedicalInfoCard,
-  PetOwnerInfoCard,
-  PetTimestampsCard,
+    PetBasicInfoCard,
+    PetCareInfoCard,
+    PetEmergencyContactCard,
+    PetMedicalInfoCard,
+    PetOwnerInfoCard,
+    PetTimestampsCard,
 } from './pet-details-sections';
 
 const PetDetailsModal = ({ pet, isVisible, onClose }: PetDetailsModalProps) => {
   if (!pet) return null;
 
   return (
-    <Modal
+    <BaseModal
       title={
         <div className='flex items-center space-x-3'>
           <Avatar
@@ -34,6 +35,7 @@ const PetDetailsModal = ({ pet, isVisible, onClose }: PetDetailsModalProps) => {
       }
       open={isVisible}
       onCancel={onClose}
+      onOk={onClose}
       footer={null}
       width={800}
     >
@@ -45,7 +47,7 @@ const PetDetailsModal = ({ pet, isVisible, onClose }: PetDetailsModalProps) => {
         <PetOwnerInfoCard pet={pet} />
         <PetTimestampsCard pet={pet} />
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

@@ -1,6 +1,7 @@
-import { Badge, Modal, Typography } from 'antd';
-import type { Resource } from '@/types/resources';
+import { BaseModal } from '@/components/common';
 import { formatDate } from '@/lib/utils';
+import type { Resource } from '@/types/resources';
+import { Badge, Typography } from 'antd';
 
 const { Title, Text } = Typography;
 
@@ -20,9 +21,10 @@ export function ResourceViewModal({
   if (!resource) return null;
 
   return (
-    <Modal
+    <BaseModal
       open={open}
       onCancel={onClose}
+      onOk={onClose}
       title="Resource Details"
       footer={null}
       width={800}
@@ -82,7 +84,7 @@ export function ResourceViewModal({
           </div>
         )}
       </div>
-    </Modal>
+    </BaseModal>
   );
 }
 

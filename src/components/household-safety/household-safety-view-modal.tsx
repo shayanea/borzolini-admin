@@ -1,8 +1,9 @@
-import { Alert, Badge, Card, Modal, Tag, Typography } from 'antd';
+import { BaseModal } from '@/components/common';
 import type { SafetyLevel, SafetySearchResult } from '@/types/household-safety';
+import { Alert, Badge, Card, Tag, Typography } from 'antd';
 
-import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { formatDate } from '@/lib/utils';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
@@ -43,9 +44,10 @@ export function HouseholdSafetyViewModal({
     [];
 
   return (
-    <Modal
+    <BaseModal
       open={open}
       onCancel={onClose}
+      onOk={onClose}
       title={
         <div className='flex items-center gap-3'>
           <span className='text-2xl'>{getItemTypeIcon(item.type)}</span>
@@ -341,6 +343,6 @@ export function HouseholdSafetyViewModal({
           </div>
         </Card>
       </div>
-    </Modal>
+    </BaseModal>
   );
 }

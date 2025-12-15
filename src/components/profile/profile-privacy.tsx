@@ -1,5 +1,6 @@
-import { Alert, Button, Card, Modal, Progress, Select, Switch, Typography } from 'antd';
+import { BaseModal } from '@/components/common';
 import { DeleteOutlined, DownloadOutlined, EyeOutlined, LockOutlined, SafetyOutlined } from '@/ui';
+import { Alert, Button, Card, Progress, Select, Switch, Typography } from 'antd';
 
 import { User } from '@/types';
 import { useState } from 'react';
@@ -372,7 +373,7 @@ export function ProfilePrivacy({ user, onSuccess, onError }: ProfilePrivacyProps
       )}
 
       {/* Data Export Modal */}
-      <Modal
+      <BaseModal
         title='Export Your Data'
         open={isDataExportModalVisible}
         onOk={handleDataExport}
@@ -394,10 +395,10 @@ export function ProfilePrivacy({ user, onSuccess, onError }: ProfilePrivacyProps
             The export will be sent to your email address and may take a few minutes to process.
           </p>
         </div>
-      </Modal>
+      </BaseModal>
 
       {/* Delete Account Modal */}
-      <Modal
+      <BaseModal
         title='Delete Account'
         open={isDeleteAccountModalVisible}
         onOk={handleAccountDeletion}
@@ -425,7 +426,7 @@ export function ProfilePrivacy({ user, onSuccess, onError }: ProfilePrivacyProps
             You will receive a confirmation email before the deletion is processed.
           </p>
         </div>
-      </Modal>
+      </BaseModal>
     </div>
   );
 }

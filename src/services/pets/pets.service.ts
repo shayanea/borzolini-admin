@@ -76,6 +76,7 @@ export interface Pet {
   updated_at: string;
   owner_id: string;
   owner: PetOwner;
+  flags?: string[];
 }
 
 export interface CreatePetData {

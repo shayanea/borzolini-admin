@@ -1,13 +1,14 @@
+import { BaseModal } from '@/components/common';
 import type { TrainingActivity } from '@/types/training';
-import { Modal, Typography } from 'antd';
+import { Typography } from 'antd';
 import {
-  BasicInfoCard,
-  BenefitsCard,
-  MediaCard,
-  MetadataCard,
-  PrerequisitesCard,
-  StepsCard,
-  TagsCard,
+    BasicInfoCard,
+    BenefitsCard,
+    MediaCard,
+    MetadataCard,
+    PrerequisitesCard,
+    StepsCard,
+    TagsCard,
 } from './training-details-sections';
 
 const { Text } = Typography;
@@ -26,9 +27,10 @@ export function TrainingDetailsModal({ activity, open, onClose }: TrainingDetail
   const thumbnailUrl = activity.thumbnailUrl;
 
   return (
-    <Modal
+    <BaseModal
       open={open}
       onCancel={onClose}
+      onOk={onClose}
       title='Training Activity Details'
       footer={null}
       width={1000}
@@ -60,6 +62,6 @@ export function TrainingDetailsModal({ activity, open, onClose }: TrainingDetail
         <TagsCard activity={activity} />
         <MetadataCard activity={activity} />
       </div>
-    </Modal>
+    </BaseModal>
   );
 }

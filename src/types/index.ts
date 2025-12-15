@@ -200,6 +200,7 @@ export interface Appointment {
     created_at: string;
     updated_at: string;
     owner_id: string;
+    flags?: string[];
   };
   clinic?: {
     id: string;

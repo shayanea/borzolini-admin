@@ -1,10 +1,23 @@
-import { Activity, Bell, Calendar, LogOut, Search, Settings, TrendingUp, User } from 'lucide-react';
+import {
+	Activity,
+	Bell,
+	Calendar as CalendarIcon,
+	Check,
+	ChevronDown,
+	LogOut,
+	Search,
+	Settings,
+	TrendingUp,
+	User,
+} from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import { LanguageSwitcher } from '@/components/shared';
 import { ROUTES } from '@/constants';
-import { useNavigate } from 'react-router-dom';
+import { useClinicContext, useClinicStaff } from '@/hooks/clinics';
+import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 interface ModernHeaderProps {
   userName?: string;
@@ -20,9 +33,34 @@ function ModernHeader({
   const { t } = useTranslation(['components', 'common']);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showStaffMenu, setShowStaffMenu] = useState(false);
+  
+  // Context Navigation State
+  const { clinicContext } = useClinicContext();
+  const { data: staffData } = useClinicStaff({ enabled: !!clinicContext?.clinicId });
+  const [selectedStaffId, setSelectedStaffId] = useState<string>('all');
+  
   const navigate = useNavigate();
   const userMenuRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
+  const staffMenuRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Keyboard Shortcuts (Ctrl+F)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Focus Search: Ctrl+F or Cmd+F
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   // Close menus when clicking outside
   useEffect(() => {
@@ -32,6 +70,9 @@ function ModernHeader({
       }
       if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
         setShowNotifications(false);
+      }
+      if (staffMenuRef.current && !staffMenuRef.current.contains(event.target as Node)) {
+        setShowStaffMenu(false);
       }
     };
 
@@ -49,13 +90,19 @@ function ModernHeader({
     }
   };
 
+  const selectedStaffName = selectedStaffId === 'all' 
+    ? 'All Vets' 
+    : staffData?.data.find(s => s.id === selectedStaffId)?.user?.name || 
+      staffData?.data.find(s => s.id === selectedStaffId)?.user?.email || 
+      'Unknown Vet';
+
   const notifications = [
     {
       id: 1,
       type: 'appointment',
       message: 'New appointment scheduled',
       time: '2 min ago',
-      icon: Calendar,
+      icon: CalendarIcon,
     },
     {
       id: 2,
@@ -75,20 +122,75 @@ function ModernHeader({
 
   return (
     <header className='bg-white/80 backdrop-blur-lg border-b border-slate-200/50 shadow-sm sticky top-0 z-40'>
-      <div className='px-6 py-4'>
+      <div className='px-6 py-3'>
         <div className='flex items-center justify-between'>
-          {/* Left Side - Search and Quick Stats */}
+          {/* Left Side - Context Navigation & Search */}
           <div className='flex items-center gap-6 flex-1'>
+            {/* Context Switcher Widget */}
+            <div className='flex flex-col min-w-[200px] border-r border-slate-200 pr-6 mr-2'>
+              <div className='flex items-center justify-between text-xs text-slate-500 mb-1'>
+                <div className='flex items-center gap-1 font-medium hover:text-slate-800 cursor-pointer transition-colors'>
+                  <span>{clinicContext?.clinicName || 'Downtown Vet'}</span>
+                  <ChevronDown size={12} />
+                </div>
+                <span>{dayjs().format('Today: MMM D')}</span>
+              </div>
+              
+              <div className='relative' ref={staffMenuRef}>
+                <button 
+                  onClick={() => setShowStaffMenu(!showStaffMenu)}
+                  className='flex items-center justify-between w-full text-sm font-bold text-slate-800 hover:text-blue-600 transition-colors group'
+                >
+                  <span className='truncate'>Viewing: {selectedStaffName}</span>
+                  <ChevronDown size={14} className={`text-slate-400 group-hover:text-blue-500 transition-transform ${showStaffMenu ? 'rotate-180' : ''}`} />
+                </button>
+
+                {showStaffMenu && (
+                  <div className='absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-1 z-50 animate-in fade-in zoom-in-95 duration-100'>
+                    <div className='px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider'>
+                      Quick Switch
+                    </div>
+                    <button
+                      onClick={() => { setSelectedStaffId('all'); setShowStaffMenu(false); }}
+                      className={`w-full text-left px-4 py-2 text-sm flex items-center justify-between hover:bg-slate-50 transition-colors ${selectedStaffId === 'all' ? 'text-blue-600 bg-blue-50/50 font-medium' : 'text-slate-700'}`}
+                    >
+                      All Vets
+                      {selectedStaffId === 'all' && <Check size={14} />}
+                    </button>
+                    <div className='h-px bg-slate-100 my-1' />
+                    <div className='max-h-64 overflow-y-auto custom-scrollbar'>
+                      {staffData?.data.map((staff) => (
+                        <button
+                          key={staff.id}
+                          onClick={() => { setSelectedStaffId(staff.id); setShowStaffMenu(false); }}
+                          className={`w-full text-left px-4 py-2 text-sm flex items-center justify-between hover:bg-slate-50 transition-colors ${selectedStaffId === staff.id ? 'text-blue-600 bg-blue-50/50 font-medium' : 'text-slate-700'}`}
+                        >
+                          <span className='truncate'>{staff.user?.name || staff.user?.email || 'Unknown Staff'}</span>
+                          {selectedStaffId === staff.id && <Check size={14} />}
+                        </button>
+                      ))}
+                      {(!staffData?.data || staffData.data.length === 0) && (
+                        <div className='px-4 py-2 text-xs text-slate-400 italic'>
+                          No staff members found
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Search Bar */}
-            <div className='relative flex-1 max-w-md'>
+            <div className='relative flex-1 max-w-sm hidden md:block'>
               <Search
                 className='absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400'
-                size={18}
+                size={16}
               />
               <input
+                ref={searchInputRef}
                 type='text'
                 placeholder={t('components:header.searchPlaceholder')}
-                className='w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:border-primary-gradientFrom focus:outline-none focus:ring-2 focus:ring-blue-100 text-sm transition-all'
+                className='w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:border-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-50 text-sm transition-all'
               />
             </div>
           </div>
@@ -171,7 +273,7 @@ function ModernHeader({
                 <div className='w-9 h-9 rounded-xl bg-[#6ecefd] flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:shadow-xl transition-shadow'>
                   {userName.charAt(0)}
                 </div>
-                <div className='text-left hidden xl:block'>
+                <div className='text-left hidden 2xl:block'>
                   <p className='text-sm font-semibold text-slate-900 leading-tight'>{userName}</p>
                   <p className='text-xs text-slate-500 leading-tight'>{userRole}</p>
                 </div>

@@ -1,5 +1,6 @@
+import { BaseModal } from '@/components/common';
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Modal } from 'antd';
+import { Avatar, Button } from 'antd';
 
 import type { User } from '@/types';
 import { UserInfoCard, UserPetsCard } from './user-view-sections';
@@ -20,7 +21,7 @@ const UserViewModal = ({
   if (!user) return null;
 
   return (
-    <Modal
+    <BaseModal
       title={
         <div className='flex items-center space-x-3'>
           <Avatar
@@ -35,6 +36,7 @@ const UserViewModal = ({
       }
       open={isVisible}
       onCancel={onClose}
+      onOk={onClose}
       footer={[
         <Button key='close' onClick={onClose}>
           Close
@@ -47,7 +49,7 @@ const UserViewModal = ({
         <UserInfoCard user={user} />
         {!hidePetsSection && <UserPetsCard user={user} isVisible={isVisible} />}
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 

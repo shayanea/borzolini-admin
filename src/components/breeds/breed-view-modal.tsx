@@ -1,6 +1,7 @@
+import { BaseModal } from '@/components/common';
 import { formatDate } from '@/lib/utils';
 import type { Breed } from '@/types/breeds';
-import { Badge, Modal, Tag, Typography } from 'antd';
+import { Badge, Tag, Typography } from 'antd';
 
 const { Title, Text } = Typography;
 
@@ -20,9 +21,10 @@ export function BreedViewModal({
   if (!breed) return null;
 
   return (
-    <Modal
+    <BaseModal
       open={open}
       onCancel={onClose}
+      onOk={onClose}
       title={
         <div className="flex items-center gap-3">
           <span>Breed Details</span>
@@ -261,6 +263,6 @@ export function BreedViewModal({
           </div>
         )}
       </div>
-    </Modal>
+    </BaseModal>
   );
 }

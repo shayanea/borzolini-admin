@@ -1,18 +1,19 @@
-import {
-  AppointmentInfoCard,
-  ClinicStaffInfoCard,
-  MedicalInfoCard,
-  PetOwnerInfoCard,
-} from './appointment-view-sections';
-import { Button, Modal, message } from 'antd';
+import { BaseModal } from '@/components/common';
+import { Alert, Button, message } from 'antd';
 import { useEffect, useState } from 'react';
+import {
+	AppointmentInfoCard,
+	ClinicStaffInfoCard,
+	MedicalInfoCard,
+	PetOwnerInfoCard,
+} from './appointment-view-sections';
 
 import { APPOINTMENT_TYPE_LABELS } from '@/constants/appointments';
 import type { Appointment } from '@/types';
-import { AppointmentReviewsSection } from './appointment-reviews-section';
-import { SaveOutlined } from '@ant-design/icons';
 import { formatAppointmentType } from '@/utils/color-helpers';
+import { SaveOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import { AppointmentReviewsSection } from './appointment-reviews-section';
 
 export interface AppointmentViewModalProps {
   visible: boolean;
@@ -33,32 +34,55 @@ export function AppointmentViewModal({
   const [editedData, setEditedData] = useState<Partial<Appointment>>({});
   const [saving, setSaving] = useState(false);
 
+  // MOCK: Inject flags for demonstration purposes since backend doesn't support them yet
+  // We'll deterministically assign flags based on ID length or char code to be consistent
+  const getMockFlags = (id?: string) => {
+    if (!id) return [];
+    const flags: string[] = [];
+    if (id.charCodeAt(0) % 2 === 0) flags.push('payment_issue');
+    if (id.charCodeAt(id.length - 1) % 3 === 0) flags.push('aggressive');
+    if (id.length % 5 === 0) flags.push('sms_only');
+    return flags;
+  };
+
+  const displayAppointment = appointment
+    ? {
+        ...appointment,
+        pet: appointment.pet
+          ? {
+              ...appointment.pet,
+              flags: appointment.pet.flags || getMockFlags(appointment.pet.id),
+            }
+          : undefined,
+      }
+    : null;
+
   // Initialize edited data when appointment changes
   useEffect(() => {
-    if (appointment) {
+    if (displayAppointment) {
       setEditedData({
-        status: appointment.status,
-        priority: appointment.priority,
-        notes: appointment.notes,
-        reason: appointment.reason,
-        symptoms: appointment.symptoms,
-        diagnosis: appointment.diagnosis,
-        treatment_plan: appointment.treatment_plan,
-        follow_up_instructions: appointment.follow_up_instructions,
+        status: displayAppointment.status,
+        priority: displayAppointment.priority,
+        notes: displayAppointment.notes,
+        reason: displayAppointment.reason,
+        symptoms: displayAppointment.symptoms,
+        diagnosis: displayAppointment.diagnosis,
+        treatment_plan: displayAppointment.treatment_plan,
+        follow_up_instructions: displayAppointment.follow_up_instructions,
       });
     }
-  }, [appointment]);
+  }, [displayAppointment]);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSave = async () => {
-    if (!appointment || !onUpdate) return;
+    if (!displayAppointment || !onUpdate) return;
 
     try {
       setSaving(true);
-      await onUpdate(appointment.id, editedData);
+      await onUpdate(displayAppointment.id, editedData);
       setIsEditing(false);
       message.success(t('modals.appointmentView.appointmentUpdatedSuccess'));
     } catch (error) {
@@ -72,16 +96,16 @@ export function AppointmentViewModal({
   const handleCancel = () => {
     setIsEditing(false);
     // Reset edited data to original values
-    if (appointment) {
+    if (displayAppointment) {
       setEditedData({
-        status: appointment.status,
-        priority: appointment.priority,
-        notes: appointment.notes,
-        reason: appointment.reason,
-        symptoms: appointment.symptoms,
-        diagnosis: appointment.diagnosis,
-        treatment_plan: appointment.treatment_plan,
-        follow_up_instructions: appointment.follow_up_instructions,
+        status: displayAppointment.status,
+        priority: displayAppointment.priority,
+        notes: displayAppointment.notes,
+        reason: displayAppointment.reason,
+        symptoms: displayAppointment.symptoms,
+        diagnosis: displayAppointment.diagnosis,
+        treatment_plan: displayAppointment.treatment_plan,
+        follow_up_instructions: displayAppointment.follow_up_instructions,
       });
     }
   };
@@ -98,24 +122,38 @@ export function AppointmentViewModal({
     setEditedData(prev => ({ ...prev, [field]: value }));
   };
 
-  if (!appointment) return null;
+  if (!displayAppointment) return null;
+
+  const hasAggressiveFlag = displayAppointment.pet?.flags?.includes('aggressive');
 
   return (
-    <Modal
+    <BaseModal
       title={t('modals.appointmentView.title')}
       open={visible}
       onCancel={onCancel}
+      onOk={isEditing ? handleSave : onCancel}
       footer={null}
       width={900}
       destroyOnHidden
     >
       <div className='space-y-6'>
+        {/* Alerts for flagged patients */}
+        {hasAggressiveFlag && (
+          <Alert
+            message='⚠️ ALERT: Aggressive Pet'
+            description='This patient has been flagged as aggressive. Please handle with care and check safety protocols before proceeding.'
+            type='error'
+            showIcon
+            className='mb-4 border-red-200 bg-red-50'
+          />
+        )}
+
         {/* Pet & Owner Information */}
-        <PetOwnerInfoCard appointment={appointment} />
+        <PetOwnerInfoCard appointment={displayAppointment} />
 
         {/* Appointment Information */}
         <AppointmentInfoCard
-          appointment={appointment}
+          appointment={displayAppointment}
           isEditing={isEditing}
           editedData={editedData}
           onFieldChange={handleFieldChange}
@@ -123,22 +161,22 @@ export function AppointmentViewModal({
         />
 
         {/* Clinic & Staff Information */}
-        <ClinicStaffInfoCard appointment={appointment} />
+        <ClinicStaffInfoCard appointment={displayAppointment} />
 
         {/* Medical Information */}
         <MedicalInfoCard
-          appointment={appointment}
+          appointment={displayAppointment}
           isEditing={isEditing}
           editedData={editedData}
           onFieldChange={handleFieldChange}
         />
 
         {/* Reviews Section - Only show for completed appointments */}
-        {appointment.status === 'completed' && (
+        {displayAppointment.status === 'completed' && (
           <AppointmentReviewsSection
-            appointmentId={appointment.id}
-            appointmentType={appointment.appointment_type}
-            isHomeVisit={appointment.is_home_visit}
+            appointmentId={displayAppointment.id}
+            appointmentType={displayAppointment.appointment_type}
+            isHomeVisit={displayAppointment.is_home_visit}
             onViewReview={reviewId => {
               // You could implement a review details modal here
               console.log('View review:', reviewId);
@@ -173,7 +211,7 @@ export function AppointmentViewModal({
           )}
         </div>
       </div>
-    </Modal>
+    </BaseModal>
   );
 }
 
