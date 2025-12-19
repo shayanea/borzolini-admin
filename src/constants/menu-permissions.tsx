@@ -1,5 +1,6 @@
 // Role-based menu permissions and configurations
 import {
+  AppstoreOutlined,
   BarChartOutlined,
   BookOutlined,
   CalendarOutlined,
@@ -15,7 +16,6 @@ import {
   StarOutlined,
   TeamOutlined,
   UserOutlined,
-  AppstoreOutlined,
 } from '@ant-design/icons';
 
 import React from 'react';
@@ -84,7 +84,7 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
     label: 'Veterinarians',
     icon: React.createElement(TeamOutlined),
     onClick: () => {},
-    roles: [],
+    roles: ['admin'],
   },
   {
     key: '/pets',
@@ -204,7 +204,8 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
   },
 ];
 
-const filterVisibleItems = (items: MenuItemConfig[]): MenuItemConfig[] => items.filter(item => !item.hidden);
+const filterVisibleItems = (items: MenuItemConfig[]): MenuItemConfig[] =>
+  items.filter(item => !item.hidden);
 
 // Role-based menu configurations
 export const MENU_ITEMS: Record<UserRole, MenuItemConfig[]> = {
@@ -212,19 +213,21 @@ export const MENU_ITEMS: Record<UserRole, MenuItemConfig[]> = {
   // clinic_admin should only see pages related to their clinic (not admin pages like clinics, users, settings)
   clinic_admin: filterVisibleItems(
     ALL_MENU_ITEMS.filter(
-    item =>
-      item.roles.includes('veterinarian') ||
-      item.roles.includes('staff') ||
-      item.key === '/dashboard' ||
-      item.key === '/appointments' ||
-      item.key === '/calendar' ||
-      item.key === '/pets' ||
-      item.key === '/pet-cases' ||
-      item.key === '/staff' ||
-      item.key === '/profile'
+      item =>
+        item.roles.includes('veterinarian') ||
+        item.roles.includes('staff') ||
+        item.key === '/dashboard' ||
+        item.key === '/appointments' ||
+        item.key === '/calendar' ||
+        item.key === '/pets' ||
+        item.key === '/pet-cases' ||
+        item.key === '/staff' ||
+        item.key === '/profile'
     )
   ),
-  veterinarian: filterVisibleItems(ALL_MENU_ITEMS.filter(item => item.roles.includes('veterinarian'))),
+  veterinarian: filterVisibleItems(
+    ALL_MENU_ITEMS.filter(item => item.roles.includes('veterinarian'))
+  ),
   staff: filterVisibleItems(ALL_MENU_ITEMS.filter(item => item.roles.includes('staff'))),
   patient: filterVisibleItems(ALL_MENU_ITEMS.filter(item => item.roles.includes('patient'))),
 };
@@ -253,7 +256,34 @@ export const getAccessibleRoutes = (role: UserRole): string[] => {
       case '/clinics':
         subRoutes.push('/clinics/create', '/clinics/edit/');
         break;
-      // Add other routes with sub-routes as needed
+      case '/users':
+        subRoutes.push('/users/create', '/users/edit/');
+        break;
+      case '/veterinarians':
+        // Veterinarians page uses Users component, so it can access user edit routes
+        subRoutes.push('/users/create', '/users/edit/');
+        break;
+      case '/patients':
+        // Patients page uses Users component, so it can access user edit routes
+        subRoutes.push('/users/create', '/users/edit/');
+        break;
+      case '/staff':
+        // Staff page might have edit functionality
+        subRoutes.push('/staff/create', '/staff/edit/');
+        break;
+      // Admin sub-routes with prefix paths
+      case '/admin/resources':
+        subRoutes.push('/admin/resources/create', '/admin/resources/edit/');
+        break;
+      case '/admin/training':
+        subRoutes.push('/admin/training/create', '/admin/training/edit/');
+        break;
+      case '/admin/household-safety':
+        subRoutes.push('/admin/household-safety/create', '/admin/household-safety/edit/');
+        break;
+      case '/admin/breeds':
+        subRoutes.push('/admin/breeds/create', '/admin/breeds/edit/');
+        break;
       default:
         break;
     }

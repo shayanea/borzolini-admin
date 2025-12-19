@@ -11,6 +11,7 @@ export { default as Contacts } from './contacts/contacts-page';
 export { default as Dashboard } from './dashboard/dashboard-page';
 export { default as HouseholdSafety } from './household-safety/household-safety-page';
 export { default as PetCases } from './pet-cases/pet-cases-page';
+export { default as PetFormPage } from './pets/pet-form-page';
 export { default as Pets } from './pets/pets-page';
 export { default as Profile } from './profile/profile-page';
 export { default as Reports } from './reports/reports-page';
@@ -20,5 +21,5 @@ export { default as RoleDemo } from './role-demo/role-demo-page';
 export { default as Settings } from './settings/settings-page';
 export { default as Staff } from './staff/staff-page';
 export { default as Training } from './training/training-page';
+export { default as UserFormPage } from './users/user-form-page';
 export { default as Users } from './users/users-page';
-

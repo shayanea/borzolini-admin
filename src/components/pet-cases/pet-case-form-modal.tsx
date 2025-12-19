@@ -3,9 +3,9 @@ import { Divider, Form } from 'antd';
 import { useEffect } from 'react';
 import { CreatePetCaseRequest, UpdatePetCaseRequest } from '../../types/pet-cases';
 import {
-    CaseActionButtonsSection,
-    CaseBasicInfoSection,
-    CaseDetailsSection,
+  CaseActionButtonsSection,
+  CaseBasicInfoSection,
+  CaseDetailsSection,
 } from './pet-case-form-sections';
 
 import { FormModal } from '@/components/shared/form-modal';
@@ -141,6 +141,7 @@ function PetCaseFormModal({
 }
 
 export { PetCaseFormModal };
+export default PetCaseFormModal;
 // No changes to PetCaseFormModal needed directly if FormModal is updated,
 // or I can enforce it here by NOT passing showFooter={false} and using standard footer?
 // PetCaseFormModal has custom buttons section: CaseActionButtonsSection.

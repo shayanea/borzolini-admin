@@ -1,9 +1,9 @@
-import { ExerciseNeeds, GroomingNeeds, PetSize, PetSpecies } from '@/types/breeds';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Form, Input, InputNumber, Select, Space, Switch, Typography } from 'antd';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { ExerciseNeeds, GroomingNeeds, PetSize, PetSpecies } from '@/types/breeds';
 
-import type { useBreedForm } from '@/hooks/breeds';
 import type { Breed } from '@/types/breeds';
+import type { useBreedForm } from '@/hooks/breeds';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -256,11 +256,11 @@ export function BreedForm({ form, onSubmit, isLoading, breed, onCancel }: BreedF
       </Form.Item>
 
       <Typography.Title level={5}>Care Specifics</Typography.Title>
-      
+
       <Form.Item label='Diet'>
         <TextArea
           value={form.formData.care_specifics?.diet || ''}
-          onChange={(e) => form.handleCareSpecificsChange('diet', e.target.value)}
+          onChange={e => form.handleCareSpecificsChange('diet', e.target.value)}
           placeholder='Detailed diet information'
           rows={3}
         />
@@ -269,16 +269,16 @@ export function BreedForm({ form, onSubmit, isLoading, breed, onCancel }: BreedF
       <Form.Item label='Housing'>
         <TextArea
           value={form.formData.care_specifics?.housing || ''}
-          onChange={(e) => form.handleCareSpecificsChange('housing', e.target.value)}
+          onChange={e => form.handleCareSpecificsChange('housing', e.target.value)}
           placeholder='Housing requirements related to the breed'
           rows={3}
         />
       </Form.Item>
 
       <Form.Item label='Social Needs'>
-         <TextArea
+        <TextArea
           value={form.formData.care_specifics?.social_needs || ''}
-          onChange={(e) => form.handleCareSpecificsChange('social_needs', e.target.value)}
+          onChange={e => form.handleCareSpecificsChange('social_needs', e.target.value)}
           placeholder='Social interaction requirements'
           rows={3}
         />
@@ -288,7 +288,7 @@ export function BreedForm({ form, onSubmit, isLoading, breed, onCancel }: BreedF
         <div className='space-y-2'>
           {(form.formData.care_specifics?.common_stressors || []).map((stressor, index) => (
             <div key={index} className='flex gap-2 items-start'>
-               <span className='text-lg mt-1'>😟</span>
+              <span className='text-lg mt-1'>😟</span>
               <Input
                 value={stressor}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -306,52 +306,62 @@ export function BreedForm({ form, onSubmit, isLoading, breed, onCancel }: BreedF
               />
             </div>
           ))}
-          <Button type='default' size='small' icon={<PlusOutlined />} onClick={form.addCommonStressor}>
+          <Button
+            type='default'
+            size='small'
+            icon={<PlusOutlined />}
+            onClick={form.addCommonStressor}
+          >
             Add Stressor
           </Button>
         </div>
       </Form.Item>
 
+      <Typography.Title level={5} className='mt-8 mb-4'>
+        Average Vitals
+      </Typography.Title>
 
-      <Typography.Title level={5} className="mt-8 mb-4">Average Vitals</Typography.Title>
-      
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
         <div className='border p-4 rounded-lg bg-gray-50'>
-          <Typography.Text strong className="block mb-2">Temperature (°F)</Typography.Text>
+          <Typography.Text strong className='block mb-2'>
+            Temperature (°F)
+          </Typography.Text>
           <div className='flex gap-2 items-center'>
-            <Form.Item className='mb-0 flex-1' label="Min" labelCol={{span: 24}}>
+            <Form.Item className='mb-0 flex-1' label='Min' labelCol={{ span: 24 }}>
               <InputNumber
                 value={form.formData.average_vitals?.temperature_f?.min}
-                onChange={(val) => form.handleAverageVitalsChange('temperature_f', 'min', val || 0)}
+                onChange={val => form.handleAverageVitalsChange('temperature_f', 'min', val || 0)}
                 className='w-full'
               />
             </Form.Item>
-            <span className="mt-6">-</span>
-             <Form.Item className='mb-0 flex-1' label="Max" labelCol={{span: 24}}>
+            <span className='mt-6'>-</span>
+            <Form.Item className='mb-0 flex-1' label='Max' labelCol={{ span: 24 }}>
               <InputNumber
                 value={form.formData.average_vitals?.temperature_f?.max}
-                onChange={(val) => form.handleAverageVitalsChange('temperature_f', 'max', val || 0)}
-                 className='w-full'
+                onChange={val => form.handleAverageVitalsChange('temperature_f', 'max', val || 0)}
+                className='w-full'
               />
             </Form.Item>
           </div>
         </div>
 
         <div className='border p-4 rounded-lg bg-gray-50'>
-          <Typography.Text strong className="block mb-2">Heart Rate (BPM)</Typography.Text>
+          <Typography.Text strong className='block mb-2'>
+            Heart Rate (BPM)
+          </Typography.Text>
           <div className='flex gap-2 items-center'>
-             <Form.Item className='mb-0 flex-1' label="Min" labelCol={{span: 24}}>
+            <Form.Item className='mb-0 flex-1' label='Min' labelCol={{ span: 24 }}>
               <InputNumber
                 value={form.formData.average_vitals?.heart_rate_bpm?.min}
-                onChange={(val) => form.handleAverageVitalsChange('heart_rate_bpm', 'min', val || 0)}
+                onChange={val => form.handleAverageVitalsChange('heart_rate_bpm', 'min', val || 0)}
                 className='w-full'
               />
             </Form.Item>
-             <span className="mt-6">-</span>
-             <Form.Item className='mb-0 flex-1' label="Max" labelCol={{span: 24}}>
+            <span className='mt-6'>-</span>
+            <Form.Item className='mb-0 flex-1' label='Max' labelCol={{ span: 24 }}>
               <InputNumber
                 value={form.formData.average_vitals?.heart_rate_bpm?.max}
-                onChange={(val) => form.handleAverageVitalsChange('heart_rate_bpm', 'max', val || 0)}
+                onChange={val => form.handleAverageVitalsChange('heart_rate_bpm', 'max', val || 0)}
                 className='w-full'
               />
             </Form.Item>
@@ -359,20 +369,26 @@ export function BreedForm({ form, onSubmit, isLoading, breed, onCancel }: BreedF
         </div>
 
         <div className='border p-4 rounded-lg bg-gray-50'>
-          <Typography.Text strong className="block mb-2">Respiratory Rate (RPM)</Typography.Text>
-           <div className='flex gap-2 items-center'>
-             <Form.Item className='mb-0 flex-1' label="Min" labelCol={{span: 24}}>
+          <Typography.Text strong className='block mb-2'>
+            Respiratory Rate (RPM)
+          </Typography.Text>
+          <div className='flex gap-2 items-center'>
+            <Form.Item className='mb-0 flex-1' label='Min' labelCol={{ span: 24 }}>
               <InputNumber
                 value={form.formData.average_vitals?.respiratory_rate_rpm?.min}
-                onChange={(val) => form.handleAverageVitalsChange('respiratory_rate_rpm', 'min', val || 0)}
+                onChange={val =>
+                  form.handleAverageVitalsChange('respiratory_rate_rpm', 'min', val || 0)
+                }
                 className='w-full'
               />
             </Form.Item>
-             <span className="mt-6">-</span>
-             <Form.Item className='mb-0 flex-1' label="Max" labelCol={{span: 24}}>
+            <span className='mt-6'>-</span>
+            <Form.Item className='mb-0 flex-1' label='Max' labelCol={{ span: 24 }}>
               <InputNumber
                 value={form.formData.average_vitals?.respiratory_rate_rpm?.max}
-                onChange={(val) => form.handleAverageVitalsChange('respiratory_rate_rpm', 'max', val || 0)}
+                onChange={val =>
+                  form.handleAverageVitalsChange('respiratory_rate_rpm', 'max', val || 0)
+                }
                 className='w-full'
               />
             </Form.Item>
@@ -380,21 +396,23 @@ export function BreedForm({ form, onSubmit, isLoading, breed, onCancel }: BreedF
         </div>
 
         <div className='border p-4 rounded-lg bg-gray-50'>
-          <Typography.Text strong className="block mb-2">Weight (KG)</Typography.Text>
+          <Typography.Text strong className='block mb-2'>
+            Weight (KG)
+          </Typography.Text>
           <div className='flex gap-2 items-center'>
-             <Form.Item className='mb-0 flex-1' label="Min" labelCol={{span: 24}}>
+            <Form.Item className='mb-0 flex-1' label='Min' labelCol={{ span: 24 }}>
               <InputNumber
                 value={form.formData.average_vitals?.weight_kg?.min}
-                onChange={(val) => form.handleAverageVitalsChange('weight_kg', 'min', val || 0)}
+                onChange={val => form.handleAverageVitalsChange('weight_kg', 'min', val || 0)}
                 step={0.01}
                 className='w-full'
               />
             </Form.Item>
-             <span className="mt-6">-</span>
-            <Form.Item className='mb-0 flex-1' label="Max" labelCol={{span: 24}}>
+            <span className='mt-6'>-</span>
+            <Form.Item className='mb-0 flex-1' label='Max' labelCol={{ span: 24 }}>
               <InputNumber
                 value={form.formData.average_vitals?.weight_kg?.max}
-                onChange={(val) => form.handleAverageVitalsChange('weight_kg', 'max', val || 0)}
+                onChange={val => form.handleAverageVitalsChange('weight_kg', 'max', val || 0)}
                 step={0.01}
                 className='w-full'
               />

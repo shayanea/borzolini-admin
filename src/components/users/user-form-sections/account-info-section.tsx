@@ -48,6 +48,7 @@ const AccountInfoSection: FC<AccountInfoSectionProps> = ({ editingUser }) => {
               <Option value={USER_ROLES.VETERINARIAN}>{t('forms.userForm.veterinarian')}</Option>
               <Option value={USER_ROLES.STAFF}>{t('forms.userForm.staff')}</Option>
               <Option value={USER_ROLES.PATIENT}>{t('forms.userForm.patient')}</Option>
+              <Option value={USER_ROLES.CLINIC_ADMIN}>{t('forms.userForm.clinic_admin')}</Option>
             </Select>
           </Form.Item>
         </Col>

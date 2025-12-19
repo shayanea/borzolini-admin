@@ -119,6 +119,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
     enabled: isAuthenticated,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchInterval: 30000, // Auto-refresh every 30 seconds
   });
 
   // Query for appointment stats
@@ -135,6 +136,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
     enabled: isAuthenticated,
     staleTime: 2 * 60 * 1000, // 2 minutes
     gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: 30000, // Auto-refresh every 30 seconds
   });
 
   // Mutations

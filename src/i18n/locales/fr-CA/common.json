@@ -98,7 +98,10 @@
     "noData": "Aucune donnée disponible",
     "searchPlaceholder": "Rechercher...",
     "filterBy": "Filtrer par",
-    "sortBy": "Trier par"
+    "sortBy": "Trier par",
+    "back": "Retour",
+    "cancel": "Annuler",
+    "update": "Mettre à jour"
   },
   "navigation": {
     "dashboard": "Tableau de bord",
@@ -132,4 +135,3 @@
     "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter."
   }
 }
-

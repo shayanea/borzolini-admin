@@ -1,12 +1,16 @@
-import { ROUTES } from '@/constants';
-import { useAuthStore } from '@/stores/auth.store';
+/* eslint-env browser */
+
 import { Modal, Select } from 'antd';
-import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import AdminRoutes from './admin-routes';
 import ModernHeader from './modern-header';
 import ModernSidebar from './modern-sidebar';
+import { ROUTES } from '@/constants';
+import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { Search } from 'lucide-react';
+import { useAuthStore } from '@/stores/auth.store';
+import { useNavigate } from 'react-router-dom';
 
 interface ModernAdminLayoutProps {
   onLogout?: () => void;
@@ -19,7 +23,7 @@ function ModernAdminLayout({ onLogout }: ModernAdminLayoutProps) {
 
   // Global Keyboard Shortcuts
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: ReactKeyboardEvent) => {
       // New Appointment: Ctrl+N
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n') {
         e.preventDefault();
@@ -108,15 +112,22 @@ function ModernAdminLayout({ onLogout }: ModernAdminLayoutProps) {
             suffixIcon={null}
           />
           <div className='flex gap-2 ml-2'>
-             <kbd className="hidden sm:inline-block px-2 py-0.5 text-xs font-semibold text-slate-500 bg-slate-100 border border-slate-200 rounded-md">Esc</kbd>
+            <kbd className='hidden sm:inline-block px-2 py-0.5 text-xs font-semibold text-slate-500 bg-slate-100 border border-slate-200 rounded-md'>
+              Esc
+            </kbd>
           </div>
         </div>
         <div className='bg-slate-50 px-4 py-2 text-xs text-slate-500 flex justify-between'>
-            <span>Quick Navigation</span>
-            <div className='flex gap-3'>
-                <span><kbd className="font-sans">Ctrl</kbd> + <kbd className="font-sans">N</kbd> New Appointment</span>
-                <span><kbd className="font-sans">Ctrl</kbd> + <kbd className="font-sans">F</kbd> Search</span>
-            </div>
+          <span>Quick Navigation</span>
+          <div className='flex gap-3'>
+            <span>
+              <kbd className='font-sans'>Ctrl</kbd> + <kbd className='font-sans'>N</kbd> New
+              Appointment
+            </span>
+            <span>
+              <kbd className='font-sans'>Ctrl</kbd> + <kbd className='font-sans'>F</kbd> Search
+            </span>
+          </div>
         </div>
       </Modal>
     </div>

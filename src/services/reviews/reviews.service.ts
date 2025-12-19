@@ -1,26 +1,25 @@
-import type {
-    BulkReviewAction,
-    CreateReviewData,
-    CreateReviewResponseData,
-    Review,
-    ReviewMetrics,
-    ReviewModerationLog,
-    ReviewStats,
-    ReviewsFilters,
-    ReviewsResponse,
-    UpdateReviewData,
-    UpdateReviewResponseData,
-} from '@/types';
-
 import { BaseQueryParams, BaseService, ValidationHelper } from '../core/base.service';
+import type {
+  BulkReviewAction,
+  CreateReviewData,
+  CreateReviewResponseData,
+  Review,
+  ReviewMetrics,
+  ReviewModerationLog,
+  ReviewStats,
+  ReviewsFilters,
+  ReviewsResponse,
+  UpdateReviewData,
+  UpdateReviewResponseData,
+} from '@/types';
 
 // Export types for use in other files
 export type {
-    BulkReviewAction,
-    CreateReviewData,
-    CreateReviewResponseData,
-    UpdateReviewData,
-    UpdateReviewResponseData
+  BulkReviewAction,
+  CreateReviewData,
+  CreateReviewResponseData,
+  UpdateReviewData,
+  UpdateReviewResponseData,
 };
 
 // Query params interface for reviews (extends base for API compatibility)
@@ -53,7 +52,7 @@ export class ReviewsService extends BaseService<Review, CreateReviewData, Update
   static async getAll(filters: ReviewsFilters = {}): Promise<ReviewsResponse> {
     const service = new ReviewsService();
     // Exclude dateRange from filters as it's not a valid query param type
-    const { dateRange, ...queryFilters } = filters;
+    const { dateRange: _dateRange, ...queryFilters } = filters; // eslint-disable-line @typescript-eslint/no-unused-vars
     const response = await service.getAll(queryFilters as ReviewsQueryParams);
 
     return {
@@ -76,10 +75,13 @@ export class ReviewsService extends BaseService<Review, CreateReviewData, Update
   /**
    * Get reviews by clinic
    */
-  static async getByClinic(clinicId: string, filters: ReviewsFilters = {}): Promise<ReviewsResponse> {
+  static async getByClinic(
+    clinicId: string,
+    filters: ReviewsFilters = {}
+  ): Promise<ReviewsResponse> {
     ValidationHelper.requireId(clinicId, 'Clinic');
     const service = new ReviewsService();
-    const { dateRange, ...queryFilters } = filters;
+    const { dateRange: _dateRange, ...queryFilters } = filters; // eslint-disable-line @typescript-eslint/no-unused-vars
     const response = await service.getRequest<ReviewsResponse>(
       `/reviews/clinic/${clinicId}`,
       queryFilters
@@ -93,7 +95,7 @@ export class ReviewsService extends BaseService<Review, CreateReviewData, Update
   static async getByUser(userId: string, filters: ReviewsFilters = {}): Promise<ReviewsResponse> {
     ValidationHelper.requireId(userId, 'User');
     const service = new ReviewsService();
-    const { dateRange, ...queryFilters } = filters;
+    const { dateRange: _dateRange, ...queryFilters } = filters; // eslint-disable-line @typescript-eslint/no-unused-vars
     const response = await service.getRequest<ReviewsResponse>(
       `/reviews/user/${userId}`,
       queryFilters
@@ -279,7 +281,7 @@ export class ReviewsService extends BaseService<Review, CreateReviewData, Update
    */
   static async exportToCSV(filters: ReviewsFilters = {}): Promise<Blob> {
     const service = new ReviewsService();
-    const { dateRange, ...queryFilters } = filters;
+    const { dateRange: _dateRange, ...queryFilters } = filters; // eslint-disable-line @typescript-eslint/no-unused-vars
     return service.exportToCSV(queryFilters);
   }
 
@@ -288,7 +290,7 @@ export class ReviewsService extends BaseService<Review, CreateReviewData, Update
    */
   static async exportToExcel(filters: ReviewsFilters = {}): Promise<Blob> {
     const service = new ReviewsService();
-    const { dateRange, ...queryFilters } = filters;
+    const { dateRange: _dateRange, ...queryFilters } = filters; // eslint-disable-line @typescript-eslint/no-unused-vars
     return service.exportToExcel(queryFilters);
   }
 

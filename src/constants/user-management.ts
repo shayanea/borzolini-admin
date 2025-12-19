@@ -5,6 +5,7 @@ export const USER_ROLES = {
   VETERINARIAN: 'veterinarian',
   STAFF: 'staff',
   PATIENT: 'patient',
+  CLINIC_ADMIN: 'clinic_admin',
 } as const;
 
 export const TABLE_PAGE_SIZES = [10, 20, 50, 100] as const;

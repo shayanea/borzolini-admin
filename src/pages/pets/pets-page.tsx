@@ -1,21 +1,23 @@
 import {
-    PetBulkActions,
-    PetDetailsModal,
-    PetFilters,
-    PetFormModal,
-    PetPageHeader,
-    PetTable,
+  PetBulkActions,
+  PetDetailsModal,
+  PetFilters,
+  PetPageHeader,
+  PetTable,
 } from '@/components/pets';
-import type { Pet, PetFormData } from '@/types';
+import type { Pet } from '@/types';
 import React, { useCallback, useState } from 'react';
 
+import { ROUTES } from '@/constants';
 import { usePetManagement } from '@/hooks';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 function PetsPage() {
   const { t } = useTranslation('pages');
+  const navigate = useNavigate();
   const {
     pets,
     loading,
@@ -29,8 +31,6 @@ function PetsPage() {
     handleSearch,
     setFilter,
     handleClearFilters,
-    handleCreatePet,
-    handleUpdatePet,
     handleDeletePet,
   } = usePetManagement();
 
@@ -38,51 +38,23 @@ function PetsPage() {
   const [localSelectedRowKeys, setLocalSelectedRowKeys] = useState<React.Key[]>([]);
 
   // Modal states
-  const [isFormModalVisible, setIsFormModalVisible] = useState<boolean>(false);
   const [isDetailsModalVisible, setIsDetailsModalVisible] = useState<boolean>(false);
-  const [editingPet, setEditingPet] = useState<Pet | null>(null);
   const [viewingPet, setViewingPet] = useState<Pet | null>(null);
-  const [formLoading, setFormLoading] = useState<boolean>(false);
-
-  // Form modal handlers
-  const handleAddPet = useCallback(() => {
-    setEditingPet(null);
-    setIsFormModalVisible(true);
-  }, []);
-
-  const handleEditPet = useCallback((pet: Pet) => {
-    setEditingPet(pet);
-    setIsFormModalVisible(true);
-  }, []);
 
   const handleViewPet = useCallback((pet: Pet) => {
     setViewingPet(pet);
     setIsDetailsModalVisible(true);
   }, []);
 
-  const handleFormCancel = useCallback(() => {
-    setIsFormModalVisible(false);
-    setEditingPet(null);
-  }, []);
+  const handleAddPet = useCallback(() => {
+    navigate(ROUTES.PETS_CREATE);
+  }, [navigate]);
 
-  const handleFormSubmit = useCallback(
-    async (values: PetFormData) => {
-      setFormLoading(true);
-      try {
-        if (editingPet) {
-          await handleUpdatePet(editingPet.id, values);
-        } else {
-          await handleCreatePet(values);
-        }
-        setIsFormModalVisible(false);
-        setEditingPet(null);
-      } catch (error) {
-        // Error is already handled in the hook
-      } finally {
-        setFormLoading(false);
-      }
+  const handleEditPet = useCallback(
+    (pet: Pet) => {
+      navigate(`${ROUTES.PETS_EDIT}/${pet.id}`);
     },
-    [editingPet, handleCreatePet, handleUpdatePet]
+    [navigate]
   );
 
   // Delete confirmation
@@ -176,14 +148,6 @@ function PetsPage() {
           setLocalSelectedRowKeys(keys);
           handleRowSelectionChange(keys, rows);
         }}
-      />
-
-      <PetFormModal
-        isVisible={isFormModalVisible}
-        editingPet={editingPet}
-        loading={formLoading}
-        onCancel={handleFormCancel}
-        onSubmit={handleFormSubmit}
       />
 
       <PetDetailsModal

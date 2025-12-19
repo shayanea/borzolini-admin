@@ -1,23 +1,26 @@
+/* eslint-env browser */
+
 import {
-	Activity,
-	Bell,
-	Calendar as CalendarIcon,
-	Check,
-	ChevronDown,
-	LogOut,
-	Search,
-	Settings,
-	TrendingUp,
-	User,
+  Activity,
+  Bell,
+  Calendar as CalendarIcon,
+  Check,
+  ChevronDown,
+  LogOut,
+  Search,
+  Settings,
+  TrendingUp,
+  User,
 } from 'lucide-react';
+import { useClinicContext, useClinicStaff } from '@/hooks/clinics';
 import { useEffect, useRef, useState } from 'react';
 
 import { LanguageSwitcher } from '@/components/shared';
 import { ROUTES } from '@/constants';
-import { useClinicContext, useClinicStaff } from '@/hooks/clinics';
+import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import dayjs from 'dayjs';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface ModernHeaderProps {
   userName?: string;
@@ -34,12 +37,12 @@ function ModernHeader({
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showStaffMenu, setShowStaffMenu] = useState(false);
-  
+
   // Context Navigation State
   const { clinicContext } = useClinicContext();
   const { data: staffData } = useClinicStaff({ enabled: !!clinicContext?.clinicId });
   const [selectedStaffId, setSelectedStaffId] = useState<string>('all');
-  
+
   const navigate = useNavigate();
   const userMenuRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
@@ -48,7 +51,7 @@ function ModernHeader({
 
   // Keyboard Shortcuts (Ctrl+F)
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: ReactKeyboardEvent) => {
       // Focus Search: Ctrl+F or Cmd+F
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
         e.preventDefault();
@@ -90,11 +93,12 @@ function ModernHeader({
     }
   };
 
-  const selectedStaffName = selectedStaffId === 'all' 
-    ? 'All Vets' 
-    : staffData?.data.find(s => s.id === selectedStaffId)?.user?.name || 
-      staffData?.data.find(s => s.id === selectedStaffId)?.user?.email || 
-      'Unknown Vet';
+  const selectedStaffName =
+    selectedStaffId === 'all'
+      ? 'All Vets'
+      : staffData?.data.find(s => s.id === selectedStaffId)?.user?.name ||
+        staffData?.data.find(s => s.id === selectedStaffId)?.user?.email ||
+        'Unknown Vet';
 
   const notifications = [
     {
@@ -135,14 +139,17 @@ function ModernHeader({
                 </div>
                 <span>{dayjs().format('Today: MMM D')}</span>
               </div>
-              
+
               <div className='relative' ref={staffMenuRef}>
-                <button 
+                <button
                   onClick={() => setShowStaffMenu(!showStaffMenu)}
                   className='flex items-center justify-between w-full text-sm font-bold text-slate-800 hover:text-blue-600 transition-colors group'
                 >
                   <span className='truncate'>Viewing: {selectedStaffName}</span>
-                  <ChevronDown size={14} className={`text-slate-400 group-hover:text-blue-500 transition-transform ${showStaffMenu ? 'rotate-180' : ''}`} />
+                  <ChevronDown
+                    size={14}
+                    className={`text-slate-400 group-hover:text-blue-500 transition-transform ${showStaffMenu ? 'rotate-180' : ''}`}
+                  />
                 </button>
 
                 {showStaffMenu && (
@@ -151,7 +158,10 @@ function ModernHeader({
                       Quick Switch
                     </div>
                     <button
-                      onClick={() => { setSelectedStaffId('all'); setShowStaffMenu(false); }}
+                      onClick={() => {
+                        setSelectedStaffId('all');
+                        setShowStaffMenu(false);
+                      }}
                       className={`w-full text-left px-4 py-2 text-sm flex items-center justify-between hover:bg-slate-50 transition-colors ${selectedStaffId === 'all' ? 'text-blue-600 bg-blue-50/50 font-medium' : 'text-slate-700'}`}
                     >
                       All Vets
@@ -159,13 +169,18 @@ function ModernHeader({
                     </button>
                     <div className='h-px bg-slate-100 my-1' />
                     <div className='max-h-64 overflow-y-auto custom-scrollbar'>
-                      {staffData?.data.map((staff) => (
+                      {staffData?.data.map(staff => (
                         <button
                           key={staff.id}
-                          onClick={() => { setSelectedStaffId(staff.id); setShowStaffMenu(false); }}
+                          onClick={() => {
+                            setSelectedStaffId(staff.id);
+                            setShowStaffMenu(false);
+                          }}
                           className={`w-full text-left px-4 py-2 text-sm flex items-center justify-between hover:bg-slate-50 transition-colors ${selectedStaffId === staff.id ? 'text-blue-600 bg-blue-50/50 font-medium' : 'text-slate-700'}`}
                         >
-                          <span className='truncate'>{staff.user?.name || staff.user?.email || 'Unknown Staff'}</span>
+                          <span className='truncate'>
+                            {staff.user?.name || staff.user?.email || 'Unknown Staff'}
+                          </span>
                           {selectedStaffId === staff.id && <Check size={14} />}
                         </button>
                       ))}

@@ -98,7 +98,10 @@
     "noData": "No hay datos disponibles",
     "searchPlaceholder": "Buscar...",
     "filterBy": "Filtrar por",
-    "sortBy": "Ordenar por"
+    "sortBy": "Ordenar por",
+    "back": "Atrás",
+    "cancel": "Cancelar",
+    "update": "Actualizar"
   },
   "navigation": {
     "dashboard": "Panel de Control",

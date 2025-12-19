@@ -9,6 +9,7 @@ import {
   Dashboard,
   HouseholdSafety,
   PetCases,
+  PetFormPage,
   Pets,
   Profile,
   Reports,
@@ -18,12 +19,13 @@ import {
   Settings,
   Staff,
   Training,
+  UserFormPage,
   Users,
 } from '@/pages';
 import { Route, Routes } from 'react-router-dom';
 
-import RoleProtectedRoute from '../auth/role-protected-route';
 import { UserRole } from '@/types';
+import RoleProtectedRoute from '../auth/role-protected-route';
 
 const VETERINARIAN_ROLE_FILTER = 'veterinarian' as const;
 const PATIENT_ROLE_FILTER: UserRole = 'patient';
@@ -112,6 +114,22 @@ const AdminRoutes = () => {
         }
       />
       <Route
+        path='users/create'
+        element={
+          <RoleProtectedRoute requiredRole='admin'>
+            <UserFormPage />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path='users/edit/:id'
+        element={
+          <RoleProtectedRoute requiredRole='admin'>
+            <UserFormPage />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
         path='pet-cases'
         element={
           <RoleProtectedRoute>
@@ -124,6 +142,22 @@ const AdminRoutes = () => {
         element={
           <RoleProtectedRoute>
             <Pets />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path='pets/create'
+        element={
+          <RoleProtectedRoute>
+            <PetFormPage />
+          </RoleProtectedRoute>
+        }
+      />
+      <Route
+        path='pets/edit/:id'
+        element={
+          <RoleProtectedRoute>
+            <PetFormPage />
           </RoleProtectedRoute>
         }
       />

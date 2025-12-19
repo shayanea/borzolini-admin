@@ -1,22 +1,34 @@
 import {
-	formatAppointmentType,
-	getAppointmentPriorityColor,
-	getAppointmentStatusColor,
-	getPetGenderColor,
-	getPetSpeciesColor,
-	getStylesForColor,
+  formatAppointmentType,
+  getAppointmentPriorityColor,
+  getAppointmentStatusColor,
+  getPetGenderColor,
+  getPetSpeciesColor,
+  getStylesForColor,
 } from '@/utils/color-helpers';
 import {
-	CalendarOutlined,
-	ClockCircleOutlined,
-	DeleteOutlined,
-	EditOutlined,
-	EnvironmentOutlined,
-	EyeOutlined,
-	PhoneOutlined,
-	UserOutlined
+  CalendarOutlined,
+  ClockCircleOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  EnvironmentOutlined,
+  EyeOutlined,
+  PhoneOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Badge, Button, Input, Popover, Select, Space, Table, Tag, Tooltip, message } from 'antd';
+import {
+  Avatar,
+  Badge,
+  Button,
+  Input,
+  Popover,
+  Select,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+  message,
+} from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 
 import { TABLE_PAGE_SIZES } from '@/constants';
@@ -27,6 +39,64 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const { TextArea } = Input;
+
+interface NotesCellProps {
+  appointment: Appointment;
+  onSave: (id: string, notes: string) => Promise<void>;
+}
+
+const NotesCell = ({ appointment, onSave }: NotesCellProps) => {
+  const [noteTemp, setNoteTemp] = useState<string>(appointment.notes || '');
+  const [saving, setSaving] = useState<boolean>(false);
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      await onSave(appointment.id || '', noteTemp);
+      message.success('Notes updated successfully');
+    } catch {
+      message.error('Failed to update notes');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleReset = () => {
+    setNoteTemp(appointment.notes || '');
+  };
+
+  return (
+    <div onClick={e => e.stopPropagation()}>
+      <Popover
+        trigger='click'
+        title='Edit Notes'
+        content={
+          <div className='w-64'>
+            <TextArea
+              rows={4}
+              value={noteTemp}
+              onChange={e => setNoteTemp(e.target.value)}
+              className='mb-2'
+            />
+            <div className='flex justify-end gap-2'>
+              <Button size='small' onClick={handleReset}>
+                Reset
+              </Button>
+              <Button size='small' type='primary' loading={saving} onClick={handleSave}>
+                Save
+              </Button>
+            </div>
+          </div>
+        }
+      >
+        <Button
+          type='text'
+          icon={<EditOutlined className={appointment.notes ? 'text-blue-500' : 'text-gray-400'} />}
+        />
+      </Popover>
+    </div>
+  );
+};
 
 export interface AppointmentsHeaderProps {
   onNewAppointment: (data: any) => void;
@@ -62,14 +132,14 @@ const AppointmentsTable = ({
   const { data: staffData } = useClinicStaff({ enabled: !!clinicContext?.clinicId });
 
   const handleInlineUpdate = async (id: string, data: Partial<Appointment>) => {
-      if (onUpdate) {
-          try {
-              await onUpdate(id, data);
-              message.success(t('messages.updateSuccess', 'Updated successfully'));
-          } catch (error) {
-              message.error(t('messages.updateFailed', 'Update failed'));
-          }
+    if (onUpdate) {
+      try {
+        await onUpdate(id, data);
+        message.success(t('messages.updateSuccess', 'Updated successfully'));
+      } catch (error) {
+        message.error(t('messages.updateFailed', 'Update failed'));
       }
+    }
   };
 
   const createActionHandlers = (appointment: Appointment) => {
@@ -120,7 +190,7 @@ const AppointmentsTable = ({
       render: (appointment: Appointment) => (
         <div className='space-y-2' onClick={e => e.stopPropagation()}>
           <div>
-            <Tag 
+            <Tag
               className='!border-0 !px-3 !py-1.5 !rounded-full font-medium shadow-sm'
               style={{
                 backgroundColor: '#dbeafe',
@@ -135,18 +205,30 @@ const AppointmentsTable = ({
           </div>
           <div>
             {/* Inline Priority Edit */}
-             <Select
-                bordered={false}
-                defaultValue={appointment.priority}
-                onChange={(val) => handleInlineUpdate(appointment.id, { priority: val })}
-                className="w-full !p-0"
-                dropdownMatchSelectWidth={false}
-                options={[
-                    { value: 'low', label: <Badge color={getAppointmentPriorityColor('low')} text="Low" /> },
-                    { value: 'normal', label: <Badge color={getAppointmentPriorityColor('normal')} text="Normal" /> },
-                    { value: 'high', label: <Badge color={getAppointmentPriorityColor('high')} text="High" /> },
-                    { value: 'urgent', label: <Badge color={getAppointmentPriorityColor('urgent')} text="Urgent" /> },
-                ]}
+            <Select
+              variant='borderless'
+              defaultValue={appointment.priority}
+              onChange={val => handleInlineUpdate(appointment.id, { priority: val })}
+              className='w-full !p-0'
+              popupMatchSelectWidth={false}
+              options={[
+                {
+                  value: 'low',
+                  label: <Badge color={getAppointmentPriorityColor('low')} text='Low' />,
+                },
+                {
+                  value: 'normal',
+                  label: <Badge color={getAppointmentPriorityColor('normal')} text='Normal' />,
+                },
+                {
+                  value: 'high',
+                  label: <Badge color={getAppointmentPriorityColor('high')} text='High' />,
+                },
+                {
+                  value: 'urgent',
+                  label: <Badge color={getAppointmentPriorityColor('urgent')} text='Urgent' />,
+                },
+              ]}
             />
           </div>
           {appointment.service?.price && (
@@ -186,25 +268,63 @@ const AppointmentsTable = ({
       align: 'center',
       render: (appointment: Appointment) => (
         <div className='space-y-2' onClick={e => e.stopPropagation()}>
-            <Select
-                defaultValue={appointment.status}
-                onChange={(val) => handleInlineUpdate(appointment.id, { status: val })}
-                className="w-full"
-                bordered={false}
-                options={[
-                    { value: 'pending', label: <Tag style={getStylesForColor(getAppointmentStatusColor('pending'))}>Pending</Tag> },
-                    { value: 'confirmed', label: <Tag style={getStylesForColor(getAppointmentStatusColor('confirmed'))}>Confirmed</Tag> },
-                    { value: 'in_progress', label: <Tag style={getStylesForColor(getAppointmentStatusColor('in_progress'))}>In Progress</Tag> },
-                    { value: 'completed', label: <Tag style={getStylesForColor(getAppointmentStatusColor('completed'))}>Completed</Tag> },
-                    { value: 'cancelled', label: <Tag style={getStylesForColor(getAppointmentStatusColor('cancelled'))}>Cancelled</Tag> },
-                    { value: 'no_show', label: <Tag style={getStylesForColor(getAppointmentStatusColor('no_show'))}>No Show</Tag> },
-                ]}
-            />
-          
+          <Select
+            defaultValue={appointment.status}
+            onChange={val => handleInlineUpdate(appointment.id, { status: val })}
+            className='w-full'
+            variant='borderless'
+            options={[
+              {
+                value: 'pending',
+                label: (
+                  <Tag style={getStylesForColor(getAppointmentStatusColor('pending'))}>Pending</Tag>
+                ),
+              },
+              {
+                value: 'confirmed',
+                label: (
+                  <Tag style={getStylesForColor(getAppointmentStatusColor('confirmed'))}>
+                    Confirmed
+                  </Tag>
+                ),
+              },
+              {
+                value: 'in_progress',
+                label: (
+                  <Tag style={getStylesForColor(getAppointmentStatusColor('in_progress'))}>
+                    In Progress
+                  </Tag>
+                ),
+              },
+              {
+                value: 'completed',
+                label: (
+                  <Tag style={getStylesForColor(getAppointmentStatusColor('completed'))}>
+                    Completed
+                  </Tag>
+                ),
+              },
+              {
+                value: 'cancelled',
+                label: (
+                  <Tag style={getStylesForColor(getAppointmentStatusColor('cancelled'))}>
+                    Cancelled
+                  </Tag>
+                ),
+              },
+              {
+                value: 'no_show',
+                label: (
+                  <Tag style={getStylesForColor(getAppointmentStatusColor('no_show'))}>No Show</Tag>
+                ),
+              },
+            ]}
+          />
+
           {appointment.status === 'completed' && (
             <div className='flex items-center justify-center space-x-2'>
               {appointment.is_home_visit && (
-                <Tag 
+                <Tag
                   className='!border-0 !px-3 !py-1 !rounded-full shadow-sm'
                   style={{
                     backgroundColor: '#dbeafe',
@@ -237,21 +357,21 @@ const AppointmentsTable = ({
           </div>
           <div className='text-xs text-slate-500 mt-1'>
             {/* Inline Staff Assign */}
-             <div className="flex items-center gap-2">
-                 <span className="text-xs text-gray-400">Vet:</span>
-                 <Select
-                    placeholder="Assign Vet"
-                    bordered={false}
-                    size="small"
-                    className="min-w-[120px]"
-                    defaultValue={appointment.staff_id || (appointment.staff?.id)}
-                    onChange={(val) => handleInlineUpdate(appointment.id, { staff_id: val })}
-                    options={staffData?.data?.map(s => ({
-                        value: s.id,
-                        label: s.user ? `${s.user.firstName} ${s.user.lastName}` : 'Unknown'
-                    }))}
-                 />
-             </div>
+            <div className='flex items-center gap-2'>
+              <span className='text-xs text-gray-400'>Vet:</span>
+              <Select
+                placeholder='Assign Vet'
+                variant='borderless'
+                size='small'
+                className='min-w-[120px]'
+                defaultValue={appointment.staff_id || appointment.staff?.id}
+                onChange={val => handleInlineUpdate(appointment.id, { staff_id: val })}
+                options={staffData?.data?.map(s => ({
+                  value: s.id,
+                  label: s.user ? `${s.user.firstName} ${s.user.lastName}` : 'Unknown',
+                }))}
+              />
+            </div>
           </div>
         </div>
       ),
@@ -265,42 +385,61 @@ const AppointmentsTable = ({
           {appointment.pet && (
             <>
               <div className='flex gap-1'>
-                <Tag 
+                <Tag
                   className='!border-0 !px-2.5 !py-1 !rounded-full shadow-sm'
                   style={{
-                    backgroundColor: getPetSpeciesColor(appointment.pet.species) === 'blue' ? '#dbeafe' :
-                                   getPetSpeciesColor(appointment.pet.species) === 'green' ? '#d1fae5' :
-                                   '#f1f5f9',
-                    color: getPetSpeciesColor(appointment.pet.species) === 'blue' ? '#1e40af' :
-                           getPetSpeciesColor(appointment.pet.species) === 'green' ? '#047857' :
-                           '#475569',
-                    border: getPetSpeciesColor(appointment.pet.species) === 'blue' ? '1px solid #93c5fd' :
-                            getPetSpeciesColor(appointment.pet.species) === 'green' ? '1px solid #a7f3d0' :
-                            '1px solid #cbd5e1',
+                    backgroundColor:
+                      getPetSpeciesColor(appointment.pet.species) === 'blue'
+                        ? '#dbeafe'
+                        : getPetSpeciesColor(appointment.pet.species) === 'green'
+                          ? '#d1fae5'
+                          : '#f1f5f9',
+                    color:
+                      getPetSpeciesColor(appointment.pet.species) === 'blue'
+                        ? '#1e40af'
+                        : getPetSpeciesColor(appointment.pet.species) === 'green'
+                          ? '#047857'
+                          : '#475569',
+                    border:
+                      getPetSpeciesColor(appointment.pet.species) === 'blue'
+                        ? '1px solid #93c5fd'
+                        : getPetSpeciesColor(appointment.pet.species) === 'green'
+                          ? '1px solid #a7f3d0'
+                          : '1px solid #cbd5e1',
                   }}
                 >
                   {appointment.pet.species.charAt(0).toUpperCase() +
                     appointment.pet.species.slice(1)}
                 </Tag>
-                <Tag 
+                <Tag
                   className='!border-0 !px-2.5 !py-1 !rounded-full shadow-sm'
                   style={{
-                    backgroundColor: getPetGenderColor(appointment.pet.gender) === 'blue' ? '#dbeafe' :
-                                   getPetGenderColor(appointment.pet.gender) === 'pink' ? '#fde68a' :
-                                   '#f1f5f9',
-                    color: getPetGenderColor(appointment.pet.gender) === 'blue' ? '#1e40af' :
-                           getPetGenderColor(appointment.pet.gender) === 'pink' ? '#d97706' :
-                           '#475569',
-                    border: getPetGenderColor(appointment.pet.gender) === 'blue' ? '1px solid #93c5fd' :
-                            getPetGenderColor(appointment.pet.gender) === 'pink' ? '1px solid #fcd34d' :
-                            '1px solid #cbd5e1',
+                    backgroundColor:
+                      getPetGenderColor(appointment.pet.gender) === 'blue'
+                        ? '#dbeafe'
+                        : getPetGenderColor(appointment.pet.gender) === 'pink'
+                          ? '#fde68a'
+                          : '#f1f5f9',
+                    color:
+                      getPetGenderColor(appointment.pet.gender) === 'blue'
+                        ? '#1e40af'
+                        : getPetGenderColor(appointment.pet.gender) === 'pink'
+                          ? '#d97706'
+                          : '#475569',
+                    border:
+                      getPetGenderColor(appointment.pet.gender) === 'blue'
+                        ? '1px solid #93c5fd'
+                        : getPetGenderColor(appointment.pet.gender) === 'pink'
+                          ? '1px solid #fcd34d'
+                          : '1px solid #cbd5e1',
                   }}
                 >
                   {appointment.pet.gender}
                 </Tag>
               </div>
               <div className='text-xs text-slate-600'>
-                {t('appointments.weight')}: <span className='font-medium'>{appointment.pet.weight} kg</span>
+                {t('appointments.weight')}:{' '}
+                <span className='font-medium'>{appointment.pet.weight} kg</span>
               </div>
               <div className='text-xs text-slate-600'>
                 {t('appointments.age')}:{' '}
@@ -315,24 +454,28 @@ const AppointmentsTable = ({
                 </span>
               </div>
               <div className='flex gap-1'>
-                <Tag 
+                <Tag
                   className='!border-0 !px-2.5 !py-1 !rounded-full font-medium shadow-sm'
                   style={{
                     backgroundColor: appointment.pet.is_vaccinated ? '#d1fae5' : '#fee2e2',
                     color: appointment.pet.is_vaccinated ? '#047857' : '#dc2626',
-                    border: appointment.pet.is_vaccinated ? '1px solid #a7f3d0' : '1px solid #fca5a5',
+                    border: appointment.pet.is_vaccinated
+                      ? '1px solid #a7f3d0'
+                      : '1px solid #fca5a5',
                   }}
                 >
                   {appointment.pet.is_vaccinated
                     ? t('appointments.vaccinated')
                     : t('appointments.notVaccinated')}
                 </Tag>
-                <Tag 
+                <Tag
                   className='!border-0 !px-2.5 !py-1 !rounded-full font-medium shadow-sm'
                   style={{
                     backgroundColor: appointment.pet.is_spayed_neutered ? '#d1fae5' : '#fef3c7',
                     color: appointment.pet.is_spayed_neutered ? '#047857' : '#d97706',
-                    border: appointment.pet.is_spayed_neutered ? '1px solid #a7f3d0' : '1px solid #fcd34d',
+                    border: appointment.pet.is_spayed_neutered
+                      ? '1px solid #a7f3d0'
+                      : '1px solid #fcd34d',
                   }}
                 >
                   {appointment.pet.is_spayed_neutered
@@ -350,37 +493,12 @@ const AppointmentsTable = ({
       key: 'notes',
       width: 100,
       align: 'center',
-      render: (appointment: Appointment) => {
-          const [noteTemp, setNoteTemp] = useState(appointment.notes || '');
-
-          return (
-            <div onClick={e => e.stopPropagation()}>
-                <Popover
-                    trigger="click"
-                    title="Edit Notes"
-                    content={
-                        <div className="w-64">
-                            <TextArea 
-                                rows={4} 
-                                value={noteTemp} 
-                                onChange={e => setNoteTemp(e.target.value)}
-                                className="mb-2"
-                            />
-                            <div className="flex justify-end gap-2">
-                                <Button size="small" onClick={() => setNoteTemp(appointment.notes || '')}>Reset</Button>
-                                <Button size="small" type="primary" onClick={() => handleInlineUpdate(appointment.id, { notes: noteTemp })}>Save</Button>
-                            </div>
-                        </div>
-                    }
-                >
-                    <Button 
-                        type="text" 
-                        icon={<EditOutlined className={appointment.notes ? 'text-blue-500' : 'text-gray-400'} />} 
-                    />
-                </Popover>
-            </div>
-          );
-      },
+      render: (appointment: Appointment) => (
+        <NotesCell
+          appointment={appointment}
+          onSave={async (id, notes) => handleInlineUpdate(id, { notes })}
+        />
+      ),
     },
     {
       title: t('appointments.actions'),

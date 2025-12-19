@@ -1,20 +1,20 @@
 import {
-    ArrowRightOutlined,
-    CalendarOutlined,
-    CheckCircleOutlined,
-    ClockCircleOutlined,
-    MedicineBoxOutlined,
-    MessageOutlined,
-    StopOutlined,
+  ArrowRightOutlined,
+  CalendarOutlined,
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  MedicineBoxOutlined,
+  MessageOutlined,
+  StopOutlined,
 } from '@ant-design/icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card, Modal, Space, message } from 'antd';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import { ROUTES } from '@/constants';
 import { AppointmentsService } from '@/services/appointments';
 import { AppointmentStatus } from '@/types';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 interface ActionConfig {
   icon: React.ReactNode;
@@ -35,24 +35,26 @@ const QuickActions = () => {
   // Fetch next pending appointment
   const { data: nextPendingData, isLoading: isLoadingPending } = useQuery({
     queryKey: ['appointments', 'next-pending'],
-    queryFn: () => AppointmentsService.getAll({ 
-      status: 'pending', 
-      sort_by: 'scheduled_date', 
-      sort_order: 'asc', 
-      limit: 1 
-    }),
+    queryFn: () =>
+      AppointmentsService.getAll({
+        status: 'pending',
+        sort_by: 'scheduled_date',
+        sort_order: 'asc',
+        limit: 1,
+      }),
   });
   const nextPending = nextPendingData?.appointments?.[0];
 
   // Fetch current active appointment (in_progress)
-  // We prioritize 'in_progress'. If none, we could look for 'confirmed' overlapping now, 
+  // We prioritize 'in_progress'. If none, we could look for 'confirmed' overlapping now,
   // but for simplicity 'Mark Complete' usually implies it's already running.
   const { data: currentActiveData, isLoading: isLoadingActive } = useQuery({
     queryKey: ['appointments', 'current-active'],
-    queryFn: () => AppointmentsService.getAll({ 
-      status: 'in_progress', 
-      limit: 1 
-    }),
+    queryFn: () =>
+      AppointmentsService.getAll({
+        status: 'in_progress',
+        limit: 1,
+      }),
   });
   const currentActive = currentActiveData?.appointments?.[0];
 
@@ -62,8 +64,8 @@ const QuickActions = () => {
       AppointmentsService.updateStatus(id, status),
     onSuccess: (_, variables) => {
       const actionMap: Record<string, string> = {
-        'confirmed': t('dashboard.quickActions.confirmedSuccess'),
-        'completed': t('dashboard.quickActions.completedSuccess'),
+        confirmed: t('dashboard.quickActions.confirmedSuccess'),
+        completed: t('dashboard.quickActions.completedSuccess'),
       };
       message.success(actionMap[variables.status] || 'Status updated successfully');
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
@@ -109,14 +111,14 @@ const QuickActions = () => {
   };
 
   const handleEmergencyWalkIn = () => {
-    navigate(ROUTES.PETS, { state: { action: 'create', type: 'emergency' } });
+    navigate(ROUTES.PETS_CREATE, { state: { action: 'create', type: 'emergency' } });
   };
 
   const actions: ActionConfig[] = [
     {
       icon: <CheckCircleOutlined className='text-2xl' />,
       title: t('dashboard.quickActions.acceptNext'),
-      description: nextPending 
+      description: nextPending
         ? `${t('common.patient')}: ${nextPending.pet?.name || 'Unknown'}`
         : t('dashboard.quickActions.noPendingTasks'),
       gradient: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
@@ -128,7 +130,7 @@ const QuickActions = () => {
     {
       icon: <ClockCircleOutlined className='text-2xl' />,
       title: t('dashboard.quickActions.markComplete'),
-      description: currentActive 
+      description: currentActive
         ? `${t('common.patient')}: ${currentActive.pet?.name || 'Unknown'}`
         : t('dashboard.quickActions.noActiveAppointment'),
       gradient: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
@@ -172,7 +174,7 @@ const QuickActions = () => {
   ];
 
   return (
-    <Card 
+    <Card
       title={
         <span className='text-lg font-semibold text-slate-800'>
           {t('dashboard.quickActions.title')}
@@ -189,26 +191,26 @@ const QuickActions = () => {
           <div
             key={index}
             className={`group relative p-5 rounded-xl transition-all duration-300 overflow-hidden ${
-              action.disabled 
-                ? 'opacity-60 cursor-not-allowed bg-slate-50' 
+              action.disabled
+                ? 'opacity-60 cursor-not-allowed bg-slate-50'
                 : 'cursor-pointer hover:shadow-lg hover:-translate-y-0.5'
             }`}
             onClick={!action.disabled ? action.onClick : undefined}
             style={{
-              background: action.disabled 
-                ? '#f8fafc' 
+              background: action.disabled
+                ? '#f8fafc'
                 : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
               border: '1px solid rgba(226, 232, 240, 0.8)',
             }}
           >
             {/* Decorative gradient overlay on hover */}
             {!action.disabled && (
-              <div 
+              <div
                 className='absolute inset-0 opacity-0 group-hover:opacity-[0.05] transition-opacity duration-300'
                 style={{ background: action.gradient }}
               />
             )}
-            
+
             <div className='relative flex items-center justify-between'>
               <div className='flex items-center space-x-4'>
                 {/* Icon */}
@@ -216,28 +218,36 @@ const QuickActions = () => {
                   className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-md transition-all duration-300 text-white ${
                     !action.disabled ? 'group-hover:scale-110 group-hover:shadow-lg' : ''
                   }`}
-                  style={{ 
+                  style={{
                     backgroundColor: action.disabled ? '#cbd5e1' : action.iconColor,
                   }}
                 >
                   {action.icon}
                 </div>
-                
+
                 {/* Content */}
                 <div className='flex-1'>
-                  <div className={`font-semibold text-base mb-1 transition-colors ${
-                    action.disabled ? 'text-slate-400' : 'text-slate-800 group-hover:text-slate-900'
-                  }`}>
+                  <div
+                    className={`font-semibold text-base mb-1 transition-colors ${
+                      action.disabled
+                        ? 'text-slate-400'
+                        : 'text-slate-800 group-hover:text-slate-900'
+                    }`}
+                  >
                     {action.title}
                   </div>
-                  <div className={`text-sm transition-colors ${
-                    action.disabled ? 'text-slate-400' : 'text-slate-500 group-hover:text-slate-600'
-                  }`}>
+                  <div
+                    className={`text-sm transition-colors ${
+                      action.disabled
+                        ? 'text-slate-400'
+                        : 'text-slate-500 group-hover:text-slate-600'
+                    }`}
+                  >
                     {action.description}
                   </div>
                 </div>
               </div>
-              
+
               {/* Arrow indicator */}
               {!action.disabled && (
                 <div className='text-slate-400 group-hover:text-slate-600 group-hover:translate-x-1 transition-all duration-300'>

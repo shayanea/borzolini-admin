@@ -98,7 +98,10 @@
     "noData": "No data available",
     "searchPlaceholder": "Search...",
     "filterBy": "Filter by",
-    "sortBy": "Sort by"
+    "sortBy": "Sort by",
+    "back": "Back",
+    "cancel": "Cancel",
+    "update": "Update"
   },
   "navigation": {
     "dashboard": "Dashboard",
