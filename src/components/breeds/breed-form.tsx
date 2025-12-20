@@ -1,9 +1,9 @@
-import { Button, Form, Input, InputNumber, Select, Space, Switch, Typography } from 'antd';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { ExerciseNeeds, GroomingNeeds, PetSize, PetSpecies } from '@/types/breeds';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Form, Input, InputNumber, Select, Switch, Typography } from 'antd';
 
-import type { Breed } from '@/types/breeds';
 import type { useBreedForm } from '@/hooks/breeds';
+import type { Breed } from '@/types/breeds';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -421,8 +421,8 @@ export function BreedForm({ form, onSubmit, isLoading, breed, onCancel }: BreedF
         </div>
       </div>
 
-      <Form.Item>
-        <div className='flex items-center justify-between'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
+        <Form.Item label='Status'>
           <div className='flex items-center space-x-2'>
             <Switch
               checked={form.formData.is_active ?? true}
@@ -430,13 +430,25 @@ export function BreedForm({ form, onSubmit, isLoading, breed, onCancel }: BreedF
             />
             <Text>Active</Text>
           </div>
+        </Form.Item>
 
-          <Space>
-            <Button onClick={onCancel}>Cancel</Button>
-            <Button type='primary' htmlType='submit' loading={isLoading}>
-              {isEdit ? 'Update Breed' : 'Create Breed'}
-            </Button>
-          </Space>
+        <Form.Item label='Popular'>
+          <div className='flex items-center space-x-2'>
+            <Switch
+              checked={form.formData.is_popular ?? false}
+              onChange={checked => form.handleInputChange('is_popular', checked)}
+            />
+            <Text>Mark as Popular</Text>
+          </div>
+        </Form.Item>
+      </div>
+
+      <Form.Item className='mb-0'>
+        <div className='flex justify-end gap-3 pt-4 border-t'>
+          <Button onClick={onCancel}>Cancel</Button>
+          <Button type='primary' htmlType='submit' loading={isLoading}>
+            {isEdit ? 'Update Breed' : 'Create Breed'}
+          </Button>
         </div>
       </Form.Item>
     </Form>

@@ -1,5 +1,13 @@
 import { useCallback, useState } from 'react';
-import { ExerciseNeeds, GroomingNeeds, PetSize, PetSpecies, type Breed, type CreateBreedDto, type UpdateBreedDto } from '../../types/breeds';
+import {
+  ExerciseNeeds,
+  GroomingNeeds,
+  PetSize,
+  PetSpecies,
+  type Breed,
+  type CreateBreedDto,
+  type UpdateBreedDto,
+} from '../../types/breeds';
 
 interface FormErrors {
   name?: string;
@@ -8,7 +16,7 @@ interface FormErrors {
 
 export const useBreedForm = (initialData?: Breed) => {
   const [formData, setFormData] = useState<CreateBreedDto | UpdateBreedDto>(
-    initialData 
+    initialData
       ? {
           name: initialData.name,
           species: initialData.species,
@@ -29,6 +37,7 @@ export const useBreedForm = (initialData?: Breed) => {
           care_specifics: initialData.care_specifics,
           average_vitals: initialData.average_vitals,
           is_active: initialData.is_active,
+          is_popular: initialData.is_popular,
         }
       : {
           name: '',
@@ -60,6 +69,7 @@ export const useBreedForm = (initialData?: Breed) => {
             weight_kg: { min: 0, max: 0 },
           },
           is_active: true,
+          is_popular: false,
         }
   );
 
@@ -81,34 +91,52 @@ export const useBreedForm = (initialData?: Breed) => {
     return Object.keys(newErrors).length === 0;
   }, [formData]);
 
-  const handleInputChange = useCallback((field: keyof CreateBreedDto, value: string | string[] | number | boolean | PetSpecies | PetSize | GroomingNeeds | ExerciseNeeds | undefined) => {
-    setFormData((prev: CreateBreedDto | UpdateBreedDto) => ({
-      ...prev,
-      [field]: value,
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[field as keyof FormErrors]) {
-      setErrors((prev: FormErrors) => ({ ...prev, [field]: undefined }));
-    }
-  }, [errors]);
+  const handleInputChange = useCallback(
+    (
+      field: keyof CreateBreedDto,
+      value:
+        | string
+        | string[]
+        | number
+        | boolean
+        | PetSpecies
+        | PetSize
+        | GroomingNeeds
+        | ExerciseNeeds
+        | undefined
+    ) => {
+      setFormData((prev: CreateBreedDto | UpdateBreedDto) => ({
+        ...prev,
+        [field]: value,
+      }));
 
-  const handleSubmit = useCallback(async (onSubmit: (data: CreateBreedDto | UpdateBreedDto) => Promise<void>) => {
-    if (!validateForm()) {
-      return false;
-    }
+      // Clear error when user starts typing
+      if (errors[field as keyof FormErrors]) {
+        setErrors((prev: FormErrors) => ({ ...prev, [field]: undefined }));
+      }
+    },
+    [errors]
+  );
 
-    setIsSubmitting(true);
-    try {
-      await onSubmit(formData as CreateBreedDto | UpdateBreedDto);
-      return true;
-    } catch (error) {
-      console.error('Form submission error:', error);
-      return false;
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [formData, validateForm]);
+  const handleSubmit = useCallback(
+    async (onSubmit: (data: CreateBreedDto | UpdateBreedDto) => Promise<void>) => {
+      if (!validateForm()) {
+        return false;
+      }
+
+      setIsSubmitting(true);
+      try {
+        await onSubmit(formData as CreateBreedDto | UpdateBreedDto);
+        return true;
+      } catch (error) {
+        console.error('Form submission error:', error);
+        return false;
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [formData, validateForm]
+  );
 
   const addHealthRisk = useCallback(() => {
     setFormData((prev: CreateBreedDto | UpdateBreedDto) => ({
@@ -120,7 +148,7 @@ export const useBreedForm = (initialData?: Breed) => {
   const updateHealthRisk = useCallback((index: number, value: string) => {
     setFormData((prev: CreateBreedDto | UpdateBreedDto) => ({
       ...prev,
-      health_risks: (prev.health_risks || []).map((risk, i) => i === index ? value : risk),
+      health_risks: (prev.health_risks || []).map((risk, i) => (i === index ? value : risk)),
     }));
   }, []);
 
@@ -141,13 +169,18 @@ export const useBreedForm = (initialData?: Breed) => {
   const updateResource = useCallback((index: number, value: string) => {
     setFormData((prev: CreateBreedDto | UpdateBreedDto) => ({
       ...prev,
-      resources: (prev.resources || []).map((resource, i) => i === index ? value : resource),
+      resources: (prev.resources || []).map((resource, i) => (i === index ? value : resource)),
     }));
   }, []);
 
   const addCommonStressor = useCallback(() => {
     setFormData((prev: CreateBreedDto | UpdateBreedDto) => {
-      const current = prev.care_specifics || { diet: '', housing: '', social_needs: '', common_stressors: [] };
+      const current = prev.care_specifics || {
+        diet: '',
+        housing: '',
+        social_needs: '',
+        common_stressors: [],
+      };
       return {
         ...prev,
         care_specifics: {
@@ -160,12 +193,19 @@ export const useBreedForm = (initialData?: Breed) => {
 
   const updateCommonStressor = useCallback((index: number, value: string) => {
     setFormData((prev: CreateBreedDto | UpdateBreedDto) => {
-      const current = prev.care_specifics || { diet: '', housing: '', social_needs: '', common_stressors: [] };
+      const current = prev.care_specifics || {
+        diet: '',
+        housing: '',
+        social_needs: '',
+        common_stressors: [],
+      };
       return {
         ...prev,
         care_specifics: {
           ...current,
-          common_stressors: (current.common_stressors || []).map((s, i) => i === index ? value : s),
+          common_stressors: (current.common_stressors || []).map((s, i) =>
+            i === index ? value : s
+          ),
         },
       };
     });
@@ -173,7 +213,12 @@ export const useBreedForm = (initialData?: Breed) => {
 
   const deleteCommonStressor = useCallback((index: number) => {
     setFormData((prev: CreateBreedDto | UpdateBreedDto) => {
-      const current = prev.care_specifics || { diet: '', housing: '', social_needs: '', common_stressors: [] };
+      const current = prev.care_specifics || {
+        diet: '',
+        housing: '',
+        social_needs: '',
+        common_stressors: [],
+      };
       return {
         ...prev,
         care_specifics: {
@@ -184,47 +229,61 @@ export const useBreedForm = (initialData?: Breed) => {
     });
   }, []);
 
-  const handleCareSpecificsChange = useCallback((field: keyof Omit<import('../../types/breeds').CareSpecifics, 'common_stressors'>, value: string) => {
-    setFormData((prev: CreateBreedDto | UpdateBreedDto) => {
-       const current = prev.care_specifics || { diet: '', housing: '', social_needs: '', common_stressors: [] };
-       return {
-         ...prev,
-         care_specifics: {
-           ...current,
-           [field]: value,
-         },
-       };
-    });
-  }, []);
-
-  const handleAverageVitalsChange = useCallback((
-    category: keyof import('../../types/breeds').AverageVitals,
-    field: 'min' | 'max',
-    value: number | undefined
-  ) => {
-    setFormData((prev: CreateBreedDto | UpdateBreedDto) => {
-      // Helper to ensure 'average_vitals' and the specific category exist
-      const currentVitals = prev.average_vitals || {
-        temperature_f: { min: 0, max: 0 },
-        heart_rate_bpm: { min: 0, max: 0 },
-        respiratory_rate_rpm: { min: 0, max: 0 },
-        weight_kg: { min: 0, max: 0 },
-      };
-      
-      const currentCategory = currentVitals[category] || { min: 0, max: 0 };
-
-      return {
-        ...prev,
-        average_vitals: {
-          ...currentVitals,
-          [category]: {
-            ...currentCategory,
+  const handleCareSpecificsChange = useCallback(
+    (
+      field: keyof Omit<import('../../types/breeds').CareSpecifics, 'common_stressors'>,
+      value: string
+    ) => {
+      setFormData((prev: CreateBreedDto | UpdateBreedDto) => {
+        const current = prev.care_specifics || {
+          diet: '',
+          housing: '',
+          social_needs: '',
+          common_stressors: [],
+        };
+        return {
+          ...prev,
+          care_specifics: {
+            ...current,
             [field]: value,
           },
-        },
-      };
-    });
-  }, []);
+        };
+      });
+    },
+    []
+  );
+
+  const handleAverageVitalsChange = useCallback(
+    (
+      category: keyof import('../../types/breeds').AverageVitals,
+      field: 'min' | 'max',
+      value: number | undefined
+    ) => {
+      setFormData((prev: CreateBreedDto | UpdateBreedDto) => {
+        // Helper to ensure 'average_vitals' and the specific category exist
+        const currentVitals = prev.average_vitals || {
+          temperature_f: { min: 0, max: 0 },
+          heart_rate_bpm: { min: 0, max: 0 },
+          respiratory_rate_rpm: { min: 0, max: 0 },
+          weight_kg: { min: 0, max: 0 },
+        };
+
+        const currentCategory = currentVitals[category] || { min: 0, max: 0 };
+
+        return {
+          ...prev,
+          average_vitals: {
+            ...currentVitals,
+            [category]: {
+              ...currentCategory,
+              [field]: value,
+            },
+          },
+        };
+      });
+    },
+    []
+  );
 
   const deleteResource = useCallback((index: number) => {
     setFormData((prev: CreateBreedDto | UpdateBreedDto) => ({
@@ -235,7 +294,7 @@ export const useBreedForm = (initialData?: Breed) => {
 
   const resetForm = useCallback((data?: Breed) => {
     setFormData(
-      data 
+      data
         ? {
             name: data.name,
             species: data.species,
@@ -256,6 +315,7 @@ export const useBreedForm = (initialData?: Breed) => {
             care_specifics: data.care_specifics,
             average_vitals: data.average_vitals,
             is_active: data.is_active,
+            is_popular: data.is_popular,
           }
         : {
             name: '',
@@ -287,6 +347,7 @@ export const useBreedForm = (initialData?: Breed) => {
               weight_kg: { min: 0, max: 0 },
             },
             is_active: true,
+            is_popular: false,
           }
     );
     setErrors({});
@@ -313,4 +374,3 @@ export const useBreedForm = (initialData?: Breed) => {
     handleAverageVitalsChange,
   };
 };
-

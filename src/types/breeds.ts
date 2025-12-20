@@ -71,6 +71,7 @@ export interface Breed {
   care_specifics?: CareSpecifics;
   average_vitals?: AverageVitals;
   is_active: boolean;
+  is_popular?: boolean;
   created_at: Date;
   updated_at: Date;
 }
@@ -95,6 +96,7 @@ export interface CreateBreedDto {
   care_specifics?: CareSpecifics;
   average_vitals?: AverageVitals;
   is_active?: boolean;
+  is_popular?: boolean;
 }
 
 export interface UpdateBreedDto {
@@ -117,6 +119,7 @@ export interface UpdateBreedDto {
   care_specifics?: CareSpecifics;
   average_vitals?: AverageVitals;
   is_active?: boolean;
+  is_popular?: boolean;
 }
 
 export interface BreedResponse {
@@ -139,4 +142,3 @@ export interface ApiError {
   message: string;
   statusCode: number;
 }
-

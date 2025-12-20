@@ -161,6 +161,17 @@ export function BreedsTable({
       ),
     },
     {
+      title: 'Popular',
+      dataIndex: 'is_popular',
+      key: 'is_popular',
+      render: (isPopular?: boolean) => (
+        <Badge
+          color={isPopular ? 'gold' : 'default'}
+          text={isPopular ? 'Popular' : 'Not Popular'}
+        />
+      ),
+    },
+    {
       title: 'Created',
       dataIndex: 'created_at',
       key: 'created_at',
