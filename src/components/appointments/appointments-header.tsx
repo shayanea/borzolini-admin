@@ -1,70 +1,107 @@
-import { Typography, Button } from 'antd';
+import { APPOINTMENT_STATUSES } from '@/constants';
+import type { AppointmentsHeaderProps } from '@/types';
+import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { CalendarOutlined, TeamOutlined } from '@ant-design/icons';
 
-const { Title, Text } = Typography;
+const AppointmentsHeader = ({
+	onNewAppointment,
+	onRefresh,
+	loading = false,
+	stats,
+	onQuickStatusFilter,
+}: AppointmentsHeaderProps) => {
+	const { t } = useTranslation('pages');
 
-const AppointmentsHeader = () => {
-  const { t } = useTranslation('pages');
+	return (
+		<div className='bg-white rounded-lg border border-gray-200 p-4 mb-4'>
+			<div className='flex items-center justify-between gap-4 mb-3'>
+				<div>
+					<h1 className='text-xl font-bold text-gray-900 mb-0.5'>
+						{t('appointments.title')}
+					</h1>
+					<p className='text-sm text-gray-500'>
+						{t('appointments.subtitle')}
+					</p>
+				</div>
 
-  return (
-    <div className='bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-6'>
-      <div className='flex items-center gap-4'>
-        {/* Icon */}
-        <div 
-          className='w-12 h-12 rounded-xl flex items-center justify-center shadow-sm text-white'
-          style={{ backgroundColor: '#ec4899' }}
-        >
-          <CalendarOutlined className='text-xl' />
-        </div>
-        
-        {/* Content */}
-        <div className='flex-1'>
-          <Title level={2} className='mb-1 text-slate-800 !tracking-tight !font-bold'>
-            {t('appointments.title')}
-          </Title>
-          <div className='flex items-center gap-3'>
-            <div className='flex items-center gap-1.5 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200'>
-              <TeamOutlined className='text-blue-500 text-sm' />
-              <Text className='text-xs font-medium text-blue-700'>
-                {t('appointments.subtitle')}
-              </Text>
-            </div>
-            
-            {/* Stats badges - these would be dynamic if we had stats */}
-            <div className='flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200'>
-              <CalendarOutlined className='text-slate-500 text-sm' />
-              <Text className='text-xs font-medium text-slate-600'>
-                All Appointments
-              </Text>
-            </div>
-          </div>
-        </div>
-        
-        {/* Action buttons - these would be dynamic */}
-        <div className='flex items-center gap-2'>
-          <Button
-            type='primary'
-            icon={<CalendarOutlined />}
-            className='h-10 px-4 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300'
-            style={{
-              backgroundColor: '#ec4899',
-              border: 'none',
-            }}
-          >
-            New Appointment
-          </Button>
-          
-          <Button
-            icon={<TeamOutlined className='text-slate-500' />}
-            className='h-10 px-4 rounded-xl hover:bg-slate-50 transition-colors'
-          >
-            Filter
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+				<div className='flex items-center gap-2'>
+					<Tooltip title={t('common.refresh')}>
+						<Button
+							type='text'
+							icon={<ReloadOutlined />}
+							onClick={onRefresh}
+							loading={loading}
+							className='text-gray-600'
+						>
+							{t('common.refresh')}
+						</Button>
+					</Tooltip>
+
+					<Button
+						type='primary'
+						icon={<PlusOutlined />}
+						onClick={onNewAppointment}
+						className='bg-pink-600 hover:bg-pink-700'
+					>
+						{t('appointments.newAppointment')}
+					</Button>
+				</div>
+			</div>
+
+			{stats && (
+				<div className='flex flex-wrap items-center gap-2'>
+					<button
+						type='button'
+						onClick={() => onQuickStatusFilter?.(null)}
+						className='px-3 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors'
+					>
+						All <span className='ml-1 font-semibold'>{stats.total}</span>
+					</button>
+
+					<button
+						type='button'
+						onClick={() => onQuickStatusFilter?.(APPOINTMENT_STATUSES.PENDING)}
+						className='px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors'
+					>
+						Pending <span className='ml-1 font-semibold'>{stats.pending}</span>
+					</button>
+
+					<button
+						type='button'
+						onClick={() => onQuickStatusFilter?.(APPOINTMENT_STATUSES.CONFIRMED)}
+						className='px-3 py-1 rounded-md text-xs font-medium bg-green-100 text-green-700 hover:bg-green-200 transition-colors'
+					>
+						Confirmed <span className='ml-1 font-semibold'>{stats.confirmed}</span>
+					</button>
+
+					<button
+						type='button'
+						onClick={() => onQuickStatusFilter?.(APPOINTMENT_STATUSES.IN_PROGRESS)}
+						className='px-3 py-1 rounded-md text-xs font-medium bg-orange-100 text-orange-700 hover:bg-orange-200 transition-colors'
+					>
+						In Progress <span className='ml-1 font-semibold'>{stats.inProgress}</span>
+					</button>
+
+					<button
+						type='button'
+						onClick={() => onQuickStatusFilter?.(APPOINTMENT_STATUSES.COMPLETED)}
+						className='px-3 py-1 rounded-md text-xs font-medium bg-purple-100 text-purple-700 hover:bg-purple-200 transition-colors'
+					>
+						Completed <span className='ml-1 font-semibold'>{stats.completed}</span>
+					</button>
+
+					<button
+						type='button'
+						onClick={() => onQuickStatusFilter?.(APPOINTMENT_STATUSES.CANCELLED)}
+						className='px-3 py-1 rounded-md text-xs font-medium bg-red-100 text-red-700 hover:bg-red-200 transition-colors'
+					>
+						Cancelled <span className='ml-1 font-semibold'>{stats.cancelled}</span>
+					</button>
+				</div>
+			)}
+		</div>
+	);
 };
 
 export { AppointmentsHeader };

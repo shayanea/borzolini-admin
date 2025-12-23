@@ -15,6 +15,13 @@ export interface CreateAppointmentData {
   telemedicine_link?: string;
   home_visit_address?: string;
   is_home_visit?: boolean;
+  pet_anxiety_mode?: boolean;
+  reminder_settings?: {
+    email_reminder?: boolean;
+    sms_reminder?: boolean;
+    push_reminder?: boolean;
+    reminder_hours_before?: number;
+  };
   pet_id: string;
   clinic_id: string;
   staff_id?: string;
@@ -40,6 +47,13 @@ export interface UpdateAppointmentData {
   telemedicine_link?: string;
   home_visit_address?: string;
   is_home_visit?: boolean;
+  pet_anxiety_mode?: boolean;
+  reminder_settings?: {
+    email_reminder?: boolean;
+    sms_reminder?: boolean;
+    push_reminder?: boolean;
+    reminder_hours_before?: number;
+  };
   pet_id?: string;
   clinic_id?: string;
   staff_id?: string;

@@ -39,6 +39,40 @@ export const CLINIC_SPECIALIZATION_OPTIONS = [
 ];
 
 /**
+ * Available insurance provider options for clinics
+ */
+export const CLINIC_INSURANCE_PROVIDER_OPTIONS = [
+  'Trupanion',
+  'Nationwide',
+  'ASPCA',
+  'PetPlan',
+  'Embrace',
+  'Healthy Paws',
+  'Figo',
+  'Lemonade',
+  'Pets Best',
+  'Spot',
+  'Pumpkin',
+  'MetLife',
+  'AKC',
+];
+
+/**
+ * Available payment method options for clinics
+ */
+export const CLINIC_PAYMENT_METHOD_OPTIONS = [
+  'Cash',
+  'Credit Card',
+  'Debit Card',
+  'Insurance',
+  'CareCredit',
+  'Scratchpay',
+  'Apple Pay',
+  'Google Pay',
+  'Check',
+];
+
+/**
  * Default country for new clinics
  */
 export const DEFAULT_CLINIC_COUNTRY = 'United States';
@@ -47,7 +81,8 @@ export const DEFAULT_CLINIC_COUNTRY = 'United States';
  * Form validation messages
  */
 export const CLINIC_VALIDATION_MESSAGES = {
-  OPERATING_HOURS_ERROR: 'Please check operating hours - ensure all times are valid and close time is after open time',
+  OPERATING_HOURS_ERROR:
+    'Please check operating hours - ensure all times are valid and close time is after open time',
   CREATE_SUCCESS: 'Clinic created successfully',
   UPDATE_SUCCESS: 'Clinic updated successfully',
   CREATE_ERROR: 'Failed to create clinic',

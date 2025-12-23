@@ -1,9 +1,18 @@
 import type { Appointment, AppointmentPriority, AppointmentStatus, AppointmentType } from './index';
 
-import type { UpdateAppointmentData } from '@/services/appointments';
-
 export interface AppointmentsHeaderProps {
-  onNewAppointment: (data: any) => void;
+  onNewAppointment?: () => void;
+  onRefresh?: () => void;
+  loading?: boolean;
+  stats?: {
+    total: number;
+    pending: number;
+    confirmed: number;
+    inProgress: number;
+    completed: number;
+    cancelled: number;
+  };
+  onQuickStatusFilter?: (status: string | null) => void;
 }
 
 export interface AppointmentsTableProps {
@@ -14,9 +23,11 @@ export interface AppointmentsTableProps {
     pageSize: number;
     total: number;
   };
-  onEdit: (id: string, data: UpdateAppointmentData) => void;
-  onCancel: (id: string) => void;
-  onPagination?: (page: number, pageSize: number) => void;
+  onView: (appointment: Appointment) => void;
+  onUpdate: (id: string, data: Partial<Appointment>) => Promise<void>;
+  onCancel: (id: string) => Promise<void>;
+  onPagination: (page: number, pageSize: number) => void;
+  rowSelection?: any;
 }
 
 export interface AppointmentsFiltersProps {
