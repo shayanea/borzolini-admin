@@ -22,10 +22,14 @@
     "refresh": "Actualizar",
     "retry": "Reintentar"
   },
+  "common": {
+    "refresh": "Actualizar"
+  },
   "appointments": {
     "title": "Citas",
     "subtitle": "Administrar citas y horarios de la clínica",
     "create": "Crear Cita",
+    "newAppointment": "Nueva Cita",
     "filter": "Filtrar Citas",
     "noData": "No se encontraron citas",
     "viewDetails": "Ver Detalles",

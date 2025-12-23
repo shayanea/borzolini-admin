@@ -22,10 +22,14 @@
     "refresh": "Refresh",
     "retry": "Retry"
   },
+  "common": {
+    "refresh": "Refresh"
+  },
   "appointments": {
     "title": "Appointments",
     "subtitle": "Manage clinic appointments and schedules",
     "create": "Create Appointment",
+    "newAppointment": "New Appointment",
     "filter": "Filter Appointments",
     "noData": "No appointments found",
     "viewDetails": "View Details",

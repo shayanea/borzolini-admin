@@ -22,10 +22,14 @@
     "refresh": "Actualiser",
     "retry": "Réessayer"
   },
+  "common": {
+    "refresh": "Actualiser"
+  },
   "appointments": {
     "title": "Rendez-vous",
     "subtitle": "Gérer les rendez-vous et les horaires de la clinique",
     "create": "Créer un rendez-vous",
+    "newAppointment": "Nouveau rendez-vous",
     "filter": "Filtrer les rendez-vous",
     "noData": "Aucun rendez-vous trouvé",
     "viewDetails": "Voir les détails",
