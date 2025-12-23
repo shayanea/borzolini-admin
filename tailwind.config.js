@@ -14,11 +14,11 @@ export default {
         primary: {
           dark: '#0b1220',
           navy: '#1e1b4b',
-          orange: '#f59e0b',
+          orange: '#D5992A',
           light: '#eef2ff',
           white: '#ffffff',
-          gradientFrom: '#6ecefd',
-          gradientTo: '#06b6d4',
+          gradientFrom: '#D5992A',
+          gradientTo: '#B88224',
         },
         // Semantic Colors
         text: {
@@ -33,27 +33,27 @@ export default {
         'background-accent': '#eef2ff',
         // Interactive Elements
         button: {
-          primary: '#6ecefd',
-          secondary: '#06b6d4',
-          accent: '#0ea5e9',
+          primary: '#D5992A',
+          secondary: '#B88224',
+          accent: '#A0711F',
         },
         // Health Status Colors
         health: {
           excellent: '#10b981',
-          good: '#f59e0b',
+          good: '#D5992A',
           warning: '#ef4444',
         },
         // AI/Tech Specific
         ai: {
-          primary: '#6ecefd',
-          accent: '#06b6d4',
+          primary: '#D5992A',
+          accent: '#B88224',
           background: '#f1f5f9',
         },
         // Admin Panel Specific Colors
         admin: {
           sidebar: '#0b1220',
           'sidebar-hover': '#111827',
-          'sidebar-active': '#6ecefd',
+          'sidebar-active': '#D5992A',
           header: '#ffffff',
           'header-border': '#e5e7eb',
           card: '#ffffff',
@@ -113,10 +113,10 @@ export default {
         'admin-card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
         'admin-sidebar': '2px 0 8px 0 rgba(0, 0, 0, 0.1)',
         'admin-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-        'soft': '0 2px 8px 0 rgba(0, 0, 0, 0.06)',
+        soft: '0 2px 8px 0 rgba(0, 0, 0, 0.06)',
         'soft-lg': '0 4px 16px 0 rgba(0, 0, 0, 0.08)',
         'soft-xl': '0 8px 24px 0 rgba(0, 0, 0, 0.1)',
-        'gradient': '0 4px 20px rgba(102, 126, 234, 0.15)',
+        gradient: '0 4px 20px rgba(102, 126, 234, 0.15)',
       },
     },
   },

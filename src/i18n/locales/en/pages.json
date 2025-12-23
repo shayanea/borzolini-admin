@@ -193,7 +193,7 @@
   },
   "login": {
     "title": "Welcome Back",
-    "subtitle": "Sign in to your Borzolini Admin account",
+    "subtitle": "Sign in to your Borzolini account",
     "email": "Email Address",
     "password": "Password",
     "rememberMe": "Remember me",

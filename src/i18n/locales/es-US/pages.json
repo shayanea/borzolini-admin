@@ -193,7 +193,7 @@
   },
   "login": {
     "title": "Bienvenido de Nuevo",
-    "subtitle": "Inicie sesión en su cuenta de Borzolini Admin",
+    "subtitle": "Inicie sesión en su cuenta de Borzolini",
     "email": "Dirección de Correo Electrónico",
     "password": "Contraseña",
     "rememberMe": "Recordarme",

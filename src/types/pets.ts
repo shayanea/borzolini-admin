@@ -54,7 +54,7 @@ export interface PetFiltersProps {
   onSearch: (value: string) => void;
   onSpeciesFilter: (value: string | null) => void;
   onBreedFilter: (value: string | null) => void;
-  onGenderFilter: (value: string | null) => void;
+  onGenderFilter?: (value: string | null) => void;
   onSizeFilter: (value: string | null) => void;
   onActiveFilter: (value: boolean | undefined) => void;
   onClearFilters: () => void;
@@ -121,6 +121,12 @@ export interface PetPageHeaderProps {
   onAddPet: () => void;
   onRefresh: () => void;
   loading?: boolean;
+  stats?: {
+    total: number;
+    maleCount: number;
+    femaleCount: number;
+  };
+  onQuickGenderFilter?: (gender: string | null) => void;
 }
 
 // Pet details modal props

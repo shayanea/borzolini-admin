@@ -1,11 +1,11 @@
 // Ant Design theme configuration
 export const theme = {
   token: {
-    colorPrimary: '#6ecefd',
+    colorPrimary: '#D5992A',
     colorSuccess: '#10b981',
-    colorWarning: '#f59e0b',
+    colorWarning: '#D5992A',
     colorError: '#ef4444',
-    colorInfo: '#06b6d4',
+    colorInfo: '#B88224',
     borderRadius: 10,
     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   },
@@ -19,12 +19,12 @@ export const theme = {
     Menu: {
       darkItemBg: '#0b1220',
       darkItemHoverBg: '#111827',
-      darkItemSelectedBg: '#6ecefd',
+      darkItemSelectedBg: '#D5992A',
       darkItemSelectedColor: '#ffffff',
     },
     Button: {
       primaryColor: '#ffffff',
-      primaryBg: '#6ecefd',
+      primaryBg: '#D5992A',
       borderRadius: 10,
     },
     Card: {

@@ -1,71 +1,81 @@
+import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
-import { PlusOutlined, ReloadOutlined, HeartOutlined } from '@ant-design/icons';
 
 import type { PetPageHeaderProps } from '@/types';
-import Text from 'antd/es/typography/Text';
-import Title from 'antd/es/typography/Title';
 import { useTranslation } from 'react-i18next';
 
-const PetPageHeader = ({ onAddPet, onRefresh, loading = false }: PetPageHeaderProps) => {
-  const { t } = useTranslation('components');
+const PetPageHeader = ({
+	onAddPet,
+	onRefresh,
+	loading = false,
+	stats,
+	onQuickGenderFilter,
+}: PetPageHeaderProps) => {
+	const { t } = useTranslation('components');
 
-  return (
-    <div className='bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-6'>
-      <div className='flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6'>
-        {/* Left Section - Title and Stats */}
-        <div className='flex items-start gap-4 flex-1'>
-          {/* Icon */}
-          <div 
-            className='w-12 h-12 rounded-xl flex items-center justify-center shadow-sm text-white flex-shrink-0'
-            style={{ backgroundColor: '#ec4899' }}
-          >
-            <HeartOutlined className='text-xl' />
-          </div>
-          
-          {/* Title and Subtitle */}
-          <div className='flex-1 min-w-0'>
-            <Title level={2} className='mb-1 text-slate-800 !tracking-tight !font-bold'>
-              {t('petManagement.title')}
-            </Title>
-            <Text className='text-slate-600 font-medium text-base'>
-              {t('petManagement.subtitle')}
-            </Text>
-          </div>
-        </div>
+	return (
+		<div className='bg-white rounded-lg border border-gray-200 p-4 mb-4'>
+			<div className='flex items-center justify-between gap-4'>
+				<div>
+					<h1 className='text-xl font-bold text-gray-900 mb-0.5'>
+						{t('petManagement.title')}
+					</h1>
+					<p className='text-sm text-gray-500'>
+						{t('petManagement.subtitle')}
+					</p>
+				</div>
 
-        {/* Right Section - Actions */}
-        <div className='flex items-center gap-3 flex-shrink-0'>
-          {/* Refresh Button */}
-          <Button
-            type='text'
-            icon={<ReloadOutlined className='text-slate-500' />}
-            onClick={onRefresh}
-            loading={loading}
-            className='h-10 px-4 rounded-xl hover:bg-slate-50 transition-colors'
-            title='Refresh data'
-            size='middle'
-          >
-            {t('petManagement.refresh')}
-          </Button>
+				<div className='flex items-center gap-2'>
+					<Button
+						type='text'
+						icon={<ReloadOutlined />}
+						onClick={onRefresh}
+						loading={loading}
+						className='text-gray-600'
+					>
+						{t('petManagement.refresh')}
+					</Button>
 
-          {/* Add Pet Button */}
-          <Button
-            type='primary'
-            icon={<PlusOutlined />}
-            onClick={onAddPet}
-            className='h-10 px-5 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center'
-            style={{
-              backgroundColor: '#ec4899',
-              border: 'none',
-            }}
-            size='middle'
-          >
-            {t('petManagement.addPet')}
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+					<Button
+						type='primary'
+						icon={<PlusOutlined />}
+						onClick={onAddPet}
+						className='bg-pink-600 hover:bg-pink-700'
+					>
+						{t('petManagement.addPet')}
+					</Button>
+				</div>
+			</div>
+
+			{stats && (
+				<div className='flex flex-wrap items-center gap-2 mt-3'>
+					<button
+						type='button'
+						onClick={() => onQuickGenderFilter?.(null)}
+						className='px-3 py-1 rounded-md text-xs font-medium bg-cyan-100 text-cyan-700 hover:bg-cyan-200 transition-colors'
+					>
+						All <span className='ml-1 font-semibold'>{stats.total}</span>
+					</button>
+
+					<button
+						type='button'
+						onClick={() => onQuickGenderFilter?.('male')}
+						className='px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors'
+					>
+						Male <span className='ml-1 font-semibold'>{stats.maleCount}</span>
+					</button>
+
+					<button
+						type='button'
+						onClick={() => onQuickGenderFilter?.('female')}
+						className='px-3 py-1 rounded-md text-xs font-medium bg-pink-100 text-pink-700 hover:bg-pink-200 transition-colors'
+					>
+						Female <span className='ml-1 font-semibold'>{stats.femaleCount}</span>
+					</button>
+				</div>
+			)}
+		</div>
+	);
 };
 
 export { PetPageHeader };

@@ -1,3 +1,4 @@
+import '@fontsource/manrope';
 import 'dayjs/locale/en';
 import './i18n/config';
 import './index.css';

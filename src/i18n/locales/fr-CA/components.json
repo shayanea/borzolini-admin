@@ -425,6 +425,7 @@
       "veterinarian": "Vétérinaire",
       "staff": "Personnel",
       "patient": "Patient",
+      "clinic_admin": "Administrateur de clinique",
       "active": "Actif",
       "inactive": "Inactif",
       "verified": "Vérifié",
