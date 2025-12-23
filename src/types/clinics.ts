@@ -24,6 +24,7 @@ export interface Clinic {
   rating: number;
   totalReviews: number;
   is_active: boolean;
+  owner_id?: string;
   // Social Media Fields
   facebook_url?: string;
   twitter_url?: string;
@@ -118,6 +119,7 @@ export interface CreateClinicData {
   services?: string[];
   specializations?: string[];
   operating_hours?: Record<string, OperatingHours>;
+  owner_id?: string;
   // Social Media Fields
   facebook_url?: string;
   twitter_url?: string;
@@ -145,7 +147,9 @@ export interface UpdateClinicData {
   services?: string[];
   specializations?: string[];
   operating_hours?: Record<string, OperatingHours>;
+  operatingHours?: ClinicOperatingHours[]; // Optional for update
   is_active?: boolean;
+  owner_id?: string;
   // Social Media Fields
   facebook_url?: string;
   twitter_url?: string;

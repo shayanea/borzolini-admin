@@ -1,60 +1,140 @@
-import { Col, Form, Input, Row } from 'antd';
 import { MAX_LENGTH_RULE, MIN_LENGTH_RULE, REQUIRED_RULE } from '@/constants/form-validation';
+import { Avatar, Col, Form, Input, Row, Select, Spin } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
 
-import { BasicInfoSectionProps } from './types';
-import { FC } from 'react';
 import { PhoneField } from '@/components/shared';
-import { useTranslation } from 'react-i18next';
 import { useValidationMessages } from '@/hooks/common';
+import UsersService from '@/services/users';
+import { User } from '@/types';
+import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
+import { BasicInfoSectionProps } from './types';
 
 const { TextArea } = Input;
+const { Option } = Select;
 
-const BasicInfoSection: FC<BasicInfoSectionProps> = () => {
-  const { t } = useTranslation('components');
-  const validationMessages = useValidationMessages();
+// Simple debounce implementation
+function debounce<T extends (...args: any[]) => void>(func: T, wait: number) {
+	let timeout: NodeJS.Timeout;
+	return function (...args: Parameters<T>) {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => func(...args), wait);
+	};
+}
 
-  return (
-    <>
-      <Row gutter={16}>
-        <Col span={12}>
-          <Form.Item
-            name='name'
-            label={t('forms.clinicForm.clinicName')}
-            rules={[
-              REQUIRED_RULE(validationMessages.CLINIC_NAME_REQUIRED),
-              MIN_LENGTH_RULE(2, validationMessages.CLINIC_NAME_MIN_LENGTH),
-            ]}
-          >
-            <Input placeholder={t('forms.clinicForm.clinicNamePlaceholder')} />
-          </Form.Item>
-        </Col>
+const BasicInfoSection: FC<BasicInfoSectionProps> = ({ form }) => {
+	const { t } = useTranslation('components');
+	const validationMessages = useValidationMessages();
 
-        <Col span={12}>
-          <PhoneField
-            label={t('forms.clinicForm.phoneNumber')}
-            placeholder={t('forms.clinicForm.phonePlaceholder')}
-          />
-        </Col>
-      </Row>
+	// User Search State
+	const [userOptions, setUserOptions] = useState<User[]>([]);
+	const [fetchingUsers, setFetchingUsers] = useState(false);
 
-      <Row gutter={16}>
-        <Col span={24}>
-          <Form.Item
-            name='description'
-            label={t('forms.clinicForm.description')}
-            rules={[MAX_LENGTH_RULE(500, validationMessages.DESCRIPTION_MAX_LENGTH)]}
-          >
-            <TextArea
-              rows={3}
-              placeholder={t('forms.clinicForm.descriptionPlaceholder')}
-              maxLength={500}
-              showCount
-            />
-          </Form.Item>
-        </Col>
-      </Row>
-    </>
-  );
+	const fetchUsers = useMemo(
+		() =>
+			debounce(async (search: string) => {
+				setFetchingUsers(true);
+				try {
+					const { data } = await UsersService.getUsers({ search, limit: 20 });
+					setUserOptions(data);
+				} catch (error) {
+					console.error('Failed to search users', error);
+				} finally {
+					setFetchingUsers(false);
+				}
+			}, 800),
+		[]
+	);
+
+	// Initial fetch
+	useEffect(() => {
+		fetchUsers('');
+	}, [fetchUsers]);
+
+	const handleSearch = (newValue: string) => {
+		fetchUsers(newValue);
+	};
+
+	return (
+		<>
+			<Row gutter={16}>
+				<Col span={12}>
+					<Form.Item
+						name='name'
+						label={t('forms.clinicForm.clinicName')}
+						rules={[
+							REQUIRED_RULE(validationMessages.CLINIC_NAME_REQUIRED),
+							MIN_LENGTH_RULE(2, validationMessages.CLINIC_NAME_MIN_LENGTH),
+						]}
+					>
+						<Input placeholder={t('forms.clinicForm.clinicNamePlaceholder')} />
+					</Form.Item>
+				</Col>
+
+				<Col span={12}>
+					<Form.Item
+						name="owner_id"
+						label="Clinic Owner"
+						rules={[REQUIRED_RULE('Please select a clinic owner')]}
+					>
+						<Select
+							showSearch
+							placeholder="Search for a user..."
+							notFoundContent={fetchingUsers ? <Spin size="small" /> : null}
+							filterOption={false}
+							onSearch={handleSearch}
+							loading={fetchingUsers}
+							allowClear
+							optionLabelProp="label"
+						>
+							{userOptions.map((user) => (
+								<Option key={user.id} value={user.id} label={`${user.firstName} ${user.lastName}`}>
+									<div className="flex items-center gap-2">
+										<Avatar src={user.avatar} size="small">
+											{user.firstName?.charAt(0)}
+										</Avatar>
+										<div>
+											<div className="font-medium">{user.firstName} {user.lastName}</div>
+											<div className="text-xs text-gray-400">{user.email}</div>
+										</div>
+									</div>
+								</Option>
+							))}
+						</Select>
+					</Form.Item>
+				</Col>
+			</Row>
+
+			<Row gutter={16}>
+				<Col span={12}>
+					<PhoneField
+						label={t('forms.clinicForm.phoneNumber')}
+						placeholder={t('forms.clinicForm.phonePlaceholder')}
+					/>
+				</Col>
+				<Col span={12}>
+					{/* Empty col for alignment or other field */}
+				</Col>
+			</Row>
+
+			<Row gutter={16}>
+				<Col span={24}>
+					<Form.Item
+						name='description'
+						label={t('forms.clinicForm.description')}
+						rules={[MAX_LENGTH_RULE(500, validationMessages.DESCRIPTION_MAX_LENGTH)]}
+					>
+						<TextArea
+							rows={3}
+							placeholder={t('forms.clinicForm.descriptionPlaceholder')}
+							maxLength={500}
+							showCount
+						/>
+					</Form.Item>
+				</Col>
+			</Row>
+		</>
+	);
 };
 
 export { BasicInfoSection };
