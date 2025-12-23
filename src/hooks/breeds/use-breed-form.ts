@@ -1,12 +1,12 @@
 import { useCallback, useState } from 'react';
 import {
-  ExerciseNeeds,
-  GroomingNeeds,
-  PetSize,
-  PetSpecies,
-  type Breed,
-  type CreateBreedDto,
-  type UpdateBreedDto,
+    ExerciseNeeds,
+    GroomingNeeds,
+    PetSize,
+    PetSpecies,
+    type Breed,
+    type CreateBreedDto,
+    type UpdateBreedDto,
 } from '../../types/breeds';
 
 interface FormErrors {
@@ -67,6 +67,7 @@ export const useBreedForm = (initialData?: Breed) => {
             heart_rate_bpm: { min: 0, max: 0 },
             respiratory_rate_rpm: { min: 0, max: 0 },
             weight_kg: { min: 0, max: 0 },
+            weight_lbs: { min: 0, max: 0 },
           },
           is_active: true,
           is_popular: false,
@@ -266,6 +267,7 @@ export const useBreedForm = (initialData?: Breed) => {
           heart_rate_bpm: { min: 0, max: 0 },
           respiratory_rate_rpm: { min: 0, max: 0 },
           weight_kg: { min: 0, max: 0 },
+          weight_lbs: { min: 0, max: 0 },
         };
 
         const currentCategory = currentVitals[category] || { min: 0, max: 0 };
@@ -345,6 +347,7 @@ export const useBreedForm = (initialData?: Breed) => {
               heart_rate_bpm: { min: 0, max: 0 },
               respiratory_rate_rpm: { min: 0, max: 0 },
               weight_kg: { min: 0, max: 0 },
+              weight_lbs: { min: 0, max: 0 },
             },
             is_active: true,
             is_popular: false,

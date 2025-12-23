@@ -47,7 +47,8 @@ export interface AverageVitals {
   temperature_f: MinMax;
   heart_rate_bpm: MinMax;
   respiratory_rate_rpm: MinMax;
-  weight_kg: MinMax;
+  weight_kg?: MinMax;
+  weight_lbs?: MinMax;
 }
 
 export interface Breed {
