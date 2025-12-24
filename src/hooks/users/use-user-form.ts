@@ -105,8 +105,10 @@ export const useUserForm = (): UseUserFormReturn => {
       const values = await form.validateFields();
 
       const dateOfBirth =
-        values.dateOfBirth && typeof values.dateOfBirth !== 'string'
-          ? values.dateOfBirth.format('YYYY-MM-DD')
+        values.dateOfBirth &&
+        typeof values.dateOfBirth !== 'string' &&
+        dayjs.isDayjs(values.dateOfBirth)
+          ? (values.dateOfBirth as dayjs.Dayjs).format('YYYY-MM-DD')
           : values.dateOfBirth;
 
       if (isEditing && id) {

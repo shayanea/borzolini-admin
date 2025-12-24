@@ -1,3 +1,4 @@
+export { default as Analytics } from './analytics/analytics-page';
 export { default as ApiHealth } from './api-health/api-health-page';
 export { default as Appointments } from './appointments/appointments-page';
 export { default as LoginPage } from './auth/login-page';

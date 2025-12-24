@@ -8,3 +8,8 @@ export { default as TopPerformingClinics } from './top-performing-clinics';
 
 // Modern components
 export { default as AppointmentsList } from './appointments-list';
+
+// Today-focused components
+export { default as TodaysAppointments } from './todays-appointments';
+export { default as TodaysMetrics } from './todays-metrics';
+export { default as UrgentNotifications } from './urgent-notifications';
