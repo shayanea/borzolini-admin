@@ -312,11 +312,11 @@ const AppointmentsTable = ({
 					pageSize: pagination?.pageSize,
 					total: pagination?.total,
 					showSizeChanger: true,
-					showQuickJumper: true,
+					showQuickJumper: false,
 					showTotal: handleShowTotal,
 					pageSizeOptions: TABLE_PAGE_SIZES.map(String),
-					position: ['bottomCenter'],
-					size: 'small',
+					position: ['topCenter', 'bottomCenter'],
+					size: 'default',
 				}}
 				onChange={handleTableChange}
 				scroll={{ x: 'max-content' }}

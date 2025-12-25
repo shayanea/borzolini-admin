@@ -316,11 +316,11 @@ const PetTable = ({
 					pageSize,
 					total,
 					showSizeChanger: true,
-					showQuickJumper: true,
+					showQuickJumper: false,
 					showTotal: handleShowTotal,
 					pageSizeOptions: TABLE_PAGE_SIZES.map(String),
-					position: ['bottomCenter'],
-					size: 'small',
+					position: ['topCenter', 'bottomCenter'],
+					size: 'default',
 				}}
 				onChange={onTableChange}
 				rowSelection={{

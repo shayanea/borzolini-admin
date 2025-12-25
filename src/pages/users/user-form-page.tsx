@@ -3,20 +3,19 @@ import {
 	AddressSection,
 	PersonalInfoSection,
 } from '@/components/users/user-form-sections';
+import { USER_FORM_LABELS } from '@/constants/user-management';
 import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Card, Form, Space, Spin, Typography } from 'antd';
 
 import { useUserForm } from '@/hooks/users/use-user-form';
 import type { UserFormValues } from '@/types/user-management';
-import { useTranslation } from 'react-i18next';
 
 const { Title, Text } = Typography;
 
 const UserFormPage = () => {
-	const { t } = useTranslation('components');
 	const { form, isEditing, loading, loadingUser, handleSubmit, handleCancel } = useUserForm();
 
-	const title = isEditing ? t('modals.userForm.titleEdit') : t('modals.userForm.titleCreate');
+	const title = isEditing ? USER_FORM_LABELS.EDIT_TITLE : USER_FORM_LABELS.CREATE_TITLE;
 
 	if (loadingUser) {
 		return (
@@ -32,7 +31,7 @@ const UserFormPage = () => {
 			<div className='flex items-center justify-between'>
 				<div className='flex items-center space-x-4'>
 					<Button icon={<ArrowLeftOutlined />} onClick={handleCancel} className='flex items-center'>
-						{t('common.back')}
+						{USER_FORM_LABELS.BACK_BUTTON}
 					</Button>
 					<div>
 						<Title level={2} className='!mb-0'>
@@ -40,13 +39,13 @@ const UserFormPage = () => {
 						</Title>
 						<Text type='secondary'>
 							{isEditing
-								? t('users.manageUsers')
-								: t('users.createUserDescription', 'Create a new clinic user')}
+								? USER_FORM_LABELS.EDIT_DESCRIPTION
+								: USER_FORM_LABELS.CREATE_DESCRIPTION}
 						</Text>
 					</div>
 				</div>
 				<Space>
-					<Button onClick={handleCancel}>{t('common.cancel')}</Button>
+					<Button onClick={handleCancel}>{USER_FORM_LABELS.CANCEL_BUTTON}</Button>
 					<Button
 						type='primary'
 						icon={<SaveOutlined />}
@@ -54,7 +53,7 @@ const UserFormPage = () => {
 						loading={loading}
 						className='bg-primary-navy border-primary-navy hover:bg-primary-dark hover:border-primary-dark'
 					>
-						{isEditing ? t('common.update') : t('common.create')}
+						{isEditing ? USER_FORM_LABELS.UPDATE_BUTTON : USER_FORM_LABELS.CREATE_BUTTON}
 					</Button>
 				</Space>
 			</div>
@@ -67,7 +66,7 @@ const UserFormPage = () => {
 
 					<Form.Item className='mb-0'>
 						<Space className='w-full justify-end'>
-							<Button onClick={handleCancel}>{t('common.cancel')}</Button>
+							<Button onClick={handleCancel}>{USER_FORM_LABELS.CANCEL_BUTTON}</Button>
 							<Button
 								type='primary'
 								htmlType='submit'
@@ -75,7 +74,7 @@ const UserFormPage = () => {
 								loading={loading}
 								className='bg-primary-navy border-primary-navy hover:bg-primary-dark hover:border-primary-dark'
 							>
-								{isEditing ? t('common.update') : t('common.create')}
+								{isEditing ? USER_FORM_LABELS.UPDATE_BUTTON : USER_FORM_LABELS.CREATE_BUTTON}
 							</Button>
 						</Space>
 					</Form.Item>

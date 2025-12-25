@@ -12,6 +12,7 @@ export interface CreateUserData {
   address?: string;
   city?: string;
   country?: string;
+  clinic_id?: string;
 }
 
 export interface UpdateUserData {

@@ -82,7 +82,7 @@ const UserTable = ({
 						size={32}
 						className='flex-shrink-0'
 						style={{
-							backgroundColor: '#3b82f6',
+							backgroundColor: '#D5992A',
 							fontWeight: '600',
 						}}
 					>
@@ -309,12 +309,13 @@ const UserTable = ({
 					pageSize,
 					total,
 					showSizeChanger: true,
-					showQuickJumper: true,
+					showQuickJumper: false,
 					showTotal: handleShowTotal,
 					pageSizeOptions: TABLE_PAGE_SIZES.map(String),
-					position: ['bottomCenter'],
+					position: ['topCenter', 'bottomCenter'],
 					className: 'px-4 py-3',
-					size: 'small',
+					size: 'default',
+					simple: false,
 				}}
 				onChange={onTableChange}
 				size='small'

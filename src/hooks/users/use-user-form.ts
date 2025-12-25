@@ -91,6 +91,7 @@ export const useUserForm = (): UseUserFormReturn => {
         avatar: user.avatar,
         isActive: user.isActive,
         isEmailVerified: user.isEmailVerified,
+        clinic_id: user.clinic?.id,
       } as any);
     } else if (!isEditing) {
       form.setFieldsValue({
@@ -125,6 +126,7 @@ export const useUserForm = (): UseUserFormReturn => {
           role: values.role as UserRole,
           isActive: values.isActive,
           isEmailVerified: values.isEmailVerified,
+          clinic_id: values.clinic_id,
         };
 
         await updateMutation.mutateAsync({ userId: id, data: updateData });
@@ -139,6 +141,7 @@ export const useUserForm = (): UseUserFormReturn => {
           address: values.address,
           city: values.city,
           country: values.country,
+          clinic_id: values.clinic_id,
         };
 
         await createMutation.mutateAsync(createData);
