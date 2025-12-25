@@ -1,4 +1,4 @@
-# Borzolini Admin Panel
+# Vorjin Admin Panel
 
 Admin interface for the Borzolini veterinary clinic management system.
 
