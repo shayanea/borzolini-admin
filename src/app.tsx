@@ -6,6 +6,7 @@ import ProtectedRoute from '@/components/auth/protected-route';
 import { ErrorBoundary } from '@/components/common/error-boundary';
 import ForceError from '@/components/common/force-error';
 import ModernAdminLayout from '@/components/layout/modern-admin-layout';
+import { ToastProvider } from '@/components/shared';
 import { useEffect } from 'react';
 import { ROUTES } from './constants';
 
@@ -26,32 +27,33 @@ const App = () => {
 
 	return (
 		<ErrorBoundary>
-			<Routes>
-				{/* Public routes */}
-				<Route path={ROUTES.LOGIN} element={<LoginPage />} />
-				<Route path={ROUTES.CLINIC_REGISTER} element={<ClinicRegister />} />
-				<Route path={ROUTES.CLINIC_REGISTER_SUCCESS} element={<ClinicRegisterSuccess />} />
+			<ToastProvider>
+				<Routes>
+					{/* Public routes */}
+					<Route path={ROUTES.LOGIN} element={<LoginPage />} />
+					<Route path={ROUTES.CLINIC_REGISTER} element={<ClinicRegister />} />
+					<Route path={ROUTES.CLINIC_REGISTER_SUCCESS} element={<ClinicRegisterSuccess />} />
 
-				{/* Temporary route to test Error Boundary */}
-				<Route path="/test-error" element={<ForceError />} />
+					{/* Temporary route to test Error Boundary */}
+					<Route path="/test-error" element={<ForceError />} />
 
-				{/* Protected admin routes */}
-				<Route
-					path='/*'
-					element={
-						<ProtectedRoute>
-							<ModernAdminLayout />
-						</ProtectedRoute>
-					}
-				/>
+					{/* Protected admin routes */}
+					<Route
+						path='/*'
+						element={
+							<ProtectedRoute>
+								<ModernAdminLayout />
+							</ProtectedRoute>
+						}
+					/>
 
-				{/* Catch-all route for direct access to nested routes */}
-				<Route path='*' element={<Navigate to={ROUTES.DASHBOARD} replace />} />
-			</Routes>
+					{/* Catch-all route for direct access to nested routes */}
+					<Route path='*' element={<Navigate to={ROUTES.DASHBOARD} replace />} />
+				</Routes>
+			</ToastProvider>
 		</ErrorBoundary>
 	);
 };
 
 export { App };
 export default App;
-

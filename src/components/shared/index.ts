@@ -14,3 +14,4 @@ export type { SocialMediaFieldsProps } from './social-media-fields';
 
 export { default as Breadcrumbs } from './breadcrumbs';
 export * from './skeletons';
+export * from './toast/toast-provider';

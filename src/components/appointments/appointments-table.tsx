@@ -19,7 +19,6 @@ import {
 	Table,
 	Tag,
 	Tooltip,
-	message,
 } from 'antd';
 import type { TablePaginationConfig } from 'antd/es/table';
 
@@ -27,6 +26,7 @@ import { TABLE_PAGE_SIZES } from '@/constants';
 import { useClinicContext, useClinicStaff } from '@/hooks/clinics';
 import { AppointmentsDataService } from '@/services/appointments';
 import type { Appointment, AppointmentsTableProps } from '@/types';
+import { toast } from '@/utils/toast';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -46,10 +46,10 @@ const NotesCell = ({ appointment, onSave }: NotesCellProps) => {
 		try {
 			setSaving(true);
 			await onSave(appointment.id || '', noteTemp);
-			message.success('Notes updated');
+			toast.success('Notes Updated');
 			setOpen(false);
 		} catch {
-			message.error('Failed to update notes');
+			toast.error('Update Failed', 'Failed to update notes');
 		} finally {
 			setSaving(false);
 		}
@@ -120,9 +120,9 @@ const AppointmentsTable = ({
 		if (onUpdate) {
 			try {
 				await onUpdate(id, data);
-				message.success(t('messages.updateSuccess', 'Updated successfully'));
+				toast.success('Update Success', t('messages.updateSuccess', 'Updated successfully'));
 			} catch (error) {
-				message.error(t('messages.updateFailed', 'Update failed'));
+				toast.error('Update Failed', t('messages.updateFailed', 'Update failed'));
 			}
 		}
 	};

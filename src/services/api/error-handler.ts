@@ -1,11 +1,11 @@
-import { message } from 'antd';
+import { toast } from '@/utils/toast';
 import { AxiosError } from 'axios';
 
 // Centralized error handling for all HTTP status codes
 export const handleApiError = (error: unknown): Promise<never> => {
   // Type guard for AxiosError
   if (!(error instanceof Error)) {
-    message.error('An unexpected error occurred.');
+    toast.error('An unexpected error occurred.');
     return Promise.reject(error);
   }
 
@@ -19,71 +19,71 @@ export const handleApiError = (error: unknown): Promise<never> => {
     switch (status) {
       // 401 is handled by axios interceptor for automatic token refresh
       case 403:
-        message.error('Access denied. You do not have permission to perform this action.');
+        toast.error('Access denied', 'You do not have permission to perform this action.');
         break;
 
       case 404:
-        message.error('The requested resource was not found.');
+        toast.error('Not Found', 'The requested resource was not found.');
         break;
 
       case 409:
-        message.error('Conflict: The resource already exists or cannot be created.');
+        toast.error('Conflict', 'The resource already exists or cannot be created.');
         break;
 
       case 422:
         // Validation error - show detailed messages
         if (data.message && Array.isArray(data.message)) {
-          message.error(data.message.join(', '));
+          toast.error('Validation Warning', data.message.join(', '));
         } else if (data.message) {
-          message.error(data.message);
+          toast.error('Validation Warning', data.message as string);
         } else {
-          message.error('Validation failed. Please check your input and try again.');
+          toast.error('Validation Failed', 'Please check your input and try again.');
         }
         break;
 
       case 429:
-        message.error('Too many requests. Please try again later.');
+        toast.error('Too Many Requests', 'Please try again later.');
         break;
 
       case 500:
-        message.error('An internal server error occurred. Please try again later.');
+        toast.error('Server Error', 'An internal server error occurred. Please try again later.');
         break;
 
       case 502:
-        message.error('Bad gateway. Please try again later.');
+        toast.error('Bad Gateway', 'Please try again later.');
         break;
 
       case 503:
-        message.error('Service temporarily unavailable. Please try again later.');
+        toast.error('Service Unavailable', 'Please try again later.');
         break;
 
       case 504:
-        message.error('Gateway timeout. Please try again later.');
+        toast.error('Gateway Timeout', 'Please try again later.');
         break;
 
       default:
         // Other HTTP errors
         if (data.message) {
-          message.error(data.message);
+          toast.error('Error', data.message as string);
         } else {
-          message.error(`Request failed with status ${status}. Please try again.`);
+          toast.error('Error', `Request failed with status ${status}. Please try again.`);
         }
     }
   } else if (axiosError.request) {
     // Network errors
     if (axiosError.code === 'ERR_NETWORK') {
-      message.error('Network error. Please check your connection and try again.');
+      toast.error('Network Error', 'Please check your connection and try again.');
     } else if (axiosError.code === 'ECONNABORTED') {
-      message.error('Request timeout. Please try again.');
+      toast.error('Request Timeout', 'Please try again.');
     } else {
-      message.error('Network error. Please check your connection and try again.');
+      toast.error('Network Error', 'Please check your connection and try again.');
     }
   } else {
     // Other errors (like business logic errors from services)
     if (error.message) {
-      message.error(error.message);
+      toast.error('Error', error.message);
     } else {
-      message.error('An unexpected error occurred.');
+      toast.error('Error', 'An unexpected error occurred.');
     }
   }
 
@@ -106,7 +106,7 @@ export const handleBusinessError = (error: unknown, context: string): Promise<ne
 
   // For business logic errors, show message and re-throw
   if (error instanceof Error && error.message) {
-    message.error(error.message);
+    toast.error('Error', error.message);
   }
 
   return Promise.reject(error);

@@ -6,7 +6,7 @@ import {
 	EmptyAppointmentsState,
 } from '@/components/appointments';
 import { ExclamationCircleOutlined, LockOutlined } from '@ant-design/icons';
-import { Alert, Modal, message } from 'antd';
+import { Alert, Modal } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import BulkActionsBar from '@/components/appointments/bulk-actions-bar';
@@ -16,11 +16,10 @@ import { APPOINTMENT_STATUSES } from '@/constants';
 import { useAppointments } from '@/hooks/appointments';
 import { useAuthStore } from '@/stores/auth.store';
 import type { Appointment } from '@/types';
+import { toast } from '@/utils/toast';
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
-
 
 interface AuthRequiredScreenProps {
 	title: string;
@@ -91,7 +90,7 @@ const Appointments = () => {
 				status: APPOINTMENT_STATUSES.CONFIRMED,
 			});
 			setSelectedRowKeys([]);
-			message.success(t('messages.updateSuccess'));
+			toast.success(t('messages.updateSuccess'));
 		} catch (e) {
 			console.error(e);
 			// Error handled by hook
@@ -100,7 +99,7 @@ const Appointments = () => {
 
 	const handleBulkRemind = () => {
 		// Mock action
-		message.success(`Reminders sent to ${selectedRowKeys.length} patients via SMS/Email.`);
+		toast.success('Reminders Sent', `Reminders sent to ${selectedRowKeys.length} patients via SMS/Email.`);
 		setSelectedRowKeys([]);
 	};
 
@@ -116,7 +115,7 @@ const Appointments = () => {
 				</div>
 			),
 			onOk: () => {
-				message.success('Appointments rescheduled successfully');
+				toast.success('Reschedule Successful', 'Appointments rescheduled successfully');
 				setSelectedRowKeys([]);
 			},
 		});
@@ -158,7 +157,7 @@ const Appointments = () => {
 		link.click();
 		document.body.removeChild(link);
 
-		message.success(`Exported ${selectedRowKeys.length} appointments.`);
+		toast.success('Export Complete', `Exported ${selectedRowKeys.length} appointments.`);
 		setSelectedRowKeys([]);
 	};
 
