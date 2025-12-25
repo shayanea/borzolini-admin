@@ -45,6 +45,13 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
 		roles: ['admin', 'veterinarian', 'staff', 'patient'],
 	},
 	{
+		key: '/analytics',
+		label: 'Analytics',
+		icon: React.createElement(BarChartOutlined),
+		onClick: () => { },
+		roles: ['admin', 'clinic_admin', 'veterinarian', 'staff'],
+	},
+	{
 		key: '/appointments',
 		label: 'Appointments',
 		icon: React.createElement(FileTextOutlined),
@@ -263,8 +270,8 @@ export const getAccessibleRoutes = (role: UserRole): string[] => {
 				subRoutes.push('/users/create', '/users/edit/');
 				break;
 			case '/patients':
-				// Patients page uses Users component, so it can access user edit routes
-				subRoutes.push('/users/create', '/users/edit/');
+				// Patients page has its own create route for clinic staff
+				subRoutes.push('/patients/create', '/patients/edit/');
 				break;
 			case '/staff':
 				// Staff page might have edit functionality

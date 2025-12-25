@@ -9,12 +9,17 @@ import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Card, Form, Space, Typography } from 'antd';
 
 import { useUserForm } from '@/hooks/users/use-user-form';
+import type { UserRole } from '@/types';
 import type { UserFormValues } from '@/types/user-management';
 
 const { Title, Text } = Typography;
 
-const UserFormPage = () => {
-	const { form, isEditing, loading, loadingUser, handleSubmit, handleCancel } = useUserForm();
+interface UserFormPageProps {
+	defaultRole?: UserRole;
+}
+
+const UserFormPage = ({ defaultRole }: UserFormPageProps) => {
+	const { form, isEditing, loading, loadingUser, handleSubmit, handleCancel } = useUserForm({ defaultRole });
 
 	const title = isEditing ? USER_FORM_LABELS.EDIT_TITLE : USER_FORM_LABELS.CREATE_TITLE;
 

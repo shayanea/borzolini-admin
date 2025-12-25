@@ -27,7 +27,7 @@ const QuickActions = () => {
 			key: 'new-patient',
 			label: 'New Patient',
 			icon: UserAddOutlined,
-			onClick: () => navigate(ROUTES.PETS_CREATE),
+			onClick: () => navigate(ROUTES.PATIENTS_CREATE),
 			type: 'default' as const,
 			tooltip: 'Register a new patient',
 		},

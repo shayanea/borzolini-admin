@@ -22,7 +22,12 @@ interface UseUserFormReturn {
   handleCancel: () => void;
 }
 
-export const useUserForm = (): UseUserFormReturn => {
+interface UseUserFormOptions {
+  defaultRole?: UserRole;
+}
+
+export const useUserForm = (options: UseUserFormOptions = {}): UseUserFormReturn => {
+  const { defaultRole } = options;
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [form] = Form.useForm<UserFormValues>();
@@ -32,7 +37,7 @@ export const useUserForm = (): UseUserFormReturn => {
 
   const url = new window.URL(window.location.href);
   const roleParam = url.searchParams.get('role') as UserRole | null;
-  const initialRole = roleParam ?? null;
+  const initialRole = defaultRole ?? roleParam ?? null;
 
   const { data: user, isLoading: loadingUser } = useQuery({
     queryKey: ['user', id],

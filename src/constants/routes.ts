@@ -14,6 +14,8 @@ export const ROUTES = {
   STAFF: '/staff',
   HOME: '/',
   PATIENTS: '/patients',
+  PATIENTS_CREATE: '/patients/create',
+  PATIENTS_EDIT: '/patients/edit',
   API_HEALTH: '/api-health',
   CONTACTS: '/contacts',
   CLINICS: '/clinics',

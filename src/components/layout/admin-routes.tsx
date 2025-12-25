@@ -46,7 +46,7 @@ const AdminRoutes = () => {
 			<Route
 				path='analytics'
 				element={
-					<RoleProtectedRoute requiredRole='admin'>
+					<RoleProtectedRoute>
 						<Analytics />
 					</RoleProtectedRoute>
 				}
@@ -120,6 +120,23 @@ const AdminRoutes = () => {
 				element={
 					<RoleProtectedRoute>
 						<Users roleFilter={PATIENT_ROLE_FILTER} />
+					</RoleProtectedRoute>
+				}
+			/>
+			{/* Patients create/edit routes for clinic staff */}
+			<Route
+				path='patients/create'
+				element={
+					<RoleProtectedRoute>
+						<UserFormPage defaultRole='patient' />
+					</RoleProtectedRoute>
+				}
+			/>
+			<Route
+				path='patients/edit/:id'
+				element={
+					<RoleProtectedRoute>
+						<UserFormPage defaultRole='patient' />
 					</RoleProtectedRoute>
 				}
 			/>

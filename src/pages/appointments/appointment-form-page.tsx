@@ -18,7 +18,7 @@ import {
 	SaveOutlined,
 	UserOutlined,
 	VideoCameraOutlined,
-	WarningOutlined,
+	WarningOutlined
 } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -256,9 +256,10 @@ const AppointmentFormPage = () => {
 	// Step 1: Pet & Owner Selection
 	const renderStep1 = () => (
 		<div className="space-y-6">
+			{/* Existing Patient Section */}
 			<div>
 				<Title level={5} className="!mb-2">Select Pet</Title>
-				<Text type="secondary">Search and select the pet for this appointment</Text>
+				<Text type="secondary">Search for an existing pet by name or owner</Text>
 			</div>
 
 			<Form.Item
@@ -294,6 +295,33 @@ const AppointmentFormPage = () => {
 			</Form.Item>
 
 			{renderPetInfo()}
+
+			{/* New Patient Section */}
+			<Divider>
+				<Text type="secondary" className="text-xs">OR</Text>
+			</Divider>
+
+			<Alert
+				type="info"
+				showIcon
+				message="New Patient Walk-in?"
+				description={
+					<div className="mt-2">
+						<Paragraph className="!mb-3 text-gray-600">
+							If this is a new patient not yet in the system, you'll need to register them first:
+						</Paragraph>
+						<Space>
+							<Button
+								type="default"
+								icon={<UserOutlined />}
+								onClick={() => navigate('/patients/create?returnTo=/appointments/create')}
+							>
+								Register New Owner
+							</Button>
+						</Space>
+					</div>
+				}
+			/>
 		</div>
 	);
 
