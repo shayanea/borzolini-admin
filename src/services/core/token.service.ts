@@ -18,11 +18,9 @@ export class TokenService {
 
   /**
    * Store tokens in localStorage
-   * Automatically extracts expiration time from JWT payload
    */
   static setTokens(accessToken: string, refreshToken: string, fallbackExpiresIn?: number): void {
     try {
-      // Try to get actual expiration from JWT payload
       let expiresAt: number;
 
       const jwtExpiration = getJWTExpiration(accessToken);
@@ -30,7 +28,6 @@ export class TokenService {
         expiresAt = jwtExpiration;
         console.log('TokenService: Using actual JWT expiration time');
       } else {
-        // Fallback to provided expiration or default 30 minutes
         const fallbackTime = fallbackExpiresIn || 30 * 60 * 1000;
         expiresAt = Date.now() + fallbackTime;
         console.warn(
@@ -105,7 +102,6 @@ export class TokenService {
 
   /**
    * Check if access token is valid (not expired)
-   * Uses both stored expiration and actual JWT payload for validation
    */
   static isAccessTokenValid(): boolean {
     try {
@@ -114,12 +110,11 @@ export class TokenService {
         return false;
       }
 
-      // First check: Validate against actual JWT payload
       const jwtPayload = decodeJWT(accessToken);
       if (jwtPayload && jwtPayload.exp) {
-        const jwtExpiration = jwtPayload.exp * 1000; // Convert to milliseconds
+        const jwtExpiration = jwtPayload.exp * 1000;
         const now = Date.now();
-        const bufferTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+        const bufferTime = 5 * 60 * 1000;
         const isValidByJWT = now < jwtExpiration - bufferTime;
 
         console.log('TokenService: JWT validation result:', {
@@ -132,7 +127,6 @@ export class TokenService {
         return isValidByJWT;
       }
 
-      // Fallback: Check stored expiration
       const expiresAtStr = localStorage.getItem(this.TOKEN_EXPIRY_KEY);
       if (!expiresAtStr) {
         return false;
@@ -140,7 +134,7 @@ export class TokenService {
 
       const expiresAt = parseInt(expiresAtStr, 10);
       const now = Date.now();
-      const bufferTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+      const bufferTime = 5 * 60 * 1000;
       const isValid = now < expiresAt - bufferTime;
 
       console.log('TokenService: Stored expiration validation result:', {

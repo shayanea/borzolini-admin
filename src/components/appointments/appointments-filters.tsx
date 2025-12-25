@@ -157,6 +157,10 @@ const AppointmentsFilters = ({
 						value={filters.type}
 						onChange={value => handleFilterChange('type', value)}
 						allowClear
+						showSearch
+						filterOption={(input, option) =>
+							(option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())
+						}
 					>
 						{Object.entries(APPOINTMENT_TYPES).map(([, value]) => (
 							<Select.Option key={value} value={value}>
@@ -173,6 +177,10 @@ const AppointmentsFilters = ({
 						value={filters.priority}
 						onChange={value => handleFilterChange('priority', value)}
 						allowClear
+						showSearch
+						filterOption={(input, option) =>
+							(option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())
+						}
 					>
 						{Object.entries(APPOINTMENT_PRIORITIES).map(([, value]) => (
 							<Select.Option key={value} value={value}>

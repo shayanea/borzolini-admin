@@ -107,7 +107,7 @@ function ModernHeader({
 	];
 
 	return (
-		<header className='bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-40'>
+		<header className='bg-white/80 backdrop-blur-lg border-b border-slate-200/50 shadow-sm sticky top-0 z-40 rounded-b-2xl mt-4 mx-6 rounded-2xl border'>
 			<div className='px-6 py-3'>
 				<div className='flex items-center justify-between'>
 					{/* Left Side - Context Navigation */}
