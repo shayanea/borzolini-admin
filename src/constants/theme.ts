@@ -7,7 +7,7 @@ export const theme = {
     colorError: '#ef4444',
     colorInfo: '#B88224',
     borderRadius: 10,
-    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    fontFamily: 'Geist, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   },
   components: {
     Layout: {

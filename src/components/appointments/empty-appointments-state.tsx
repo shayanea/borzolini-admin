@@ -15,7 +15,7 @@ const EmptyAppointmentsState = ({ onCreate }: EmptyAppointmentsStateProps) => {
 		<Card className="text-center py-12 my-12 border border-dashed border-slate-300 shadow-sm rounded-xl bg-slate-50/50">
 			<div className="flex flex-col items-center justify-center max-w-md mx-auto">
 				<div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 border border-slate-100">
-					<CalendarOutlined className="text-3xl text-pink-500" />
+					<CalendarOutlined className="text-3xl text-[#D5992A]" />
 				</div>
 
 				<Title level={3} className="!mb-2 !text-slate-800">
@@ -34,7 +34,6 @@ const EmptyAppointmentsState = ({ onCreate }: EmptyAppointmentsStateProps) => {
 						block
 						onClick={onCreate}
 						className="h-11 font-medium shadow-md hover:shadow-lg transition-all"
-						style={{ backgroundColor: '#ec4899', borderColor: '#ec4899' }}
 					>
 						Create First Appointment
 					</Button>

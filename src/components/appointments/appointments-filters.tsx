@@ -18,6 +18,7 @@ import {
 	MenuProps,
 	Modal,
 	Select,
+	Tooltip,
 	message
 } from 'antd';
 import dayjs from 'dayjs';
@@ -206,21 +207,28 @@ const AppointmentsFilters = ({
 
 				<div className='flex items-center gap-1 ml-auto'>
 					{Object.keys(filters).length > 0 && (
-						<Button
-							type='text'
-							danger
-							icon={<DeleteOutlined />}
-							onClick={clearFilters}
-							title="Clear Filters"
-						/>
+						<Tooltip title="Clear Filters">
+							<Button
+								type='text'
+								danger
+								icon={<DeleteOutlined />}
+								onClick={clearFilters}
+							/>
+						</Tooltip>
 					)}
 					<Dropdown menu={{ items: savedFiltersMenu }} placement='bottomRight'>
-						<Button icon={<StarOutlined />} title="Saved Filters" />
+						<Tooltip title="Saved Filters">
+							<Button icon={<StarOutlined />} />
+						</Tooltip>
 					</Dropdown>
 
-					<Button onClick={() => setIsSaveModalOpen(true)} icon={<SaveOutlined />} title="Save Current View" />
+					<Tooltip title="Save Current View">
+						<Button onClick={() => setIsSaveModalOpen(true)} icon={<SaveOutlined />} />
+					</Tooltip>
 
-					<Button onClick={onExport} icon={<TagOutlined className="rotate-90" />} title="Export" />
+					<Tooltip title="Export">
+						<Button onClick={onExport} icon={<TagOutlined className="rotate-90" />} />
+					</Tooltip>
 				</div>
 			</div>
 

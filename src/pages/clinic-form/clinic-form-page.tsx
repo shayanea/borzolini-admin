@@ -2,11 +2,10 @@ import {
 	BasicInformationStep,
 	ContactInformationStep,
 	LocationInformationStep,
-	MediaBrandingStep,
 	OperatingHoursStep,
 	ServicesSpecializationsStep,
-	SocialMediaStep,
-	StatusStep,
+	// SocialMediaStep,
+	StatusStep
 } from '@/components/clinics/form';
 import {
 	CLINIC_FORM_LABELS,
@@ -89,8 +88,8 @@ const ClinicForm = () => {
 				<BasicInformationStep />
 				<LocationInformationStep />
 				<ContactInformationStep />
-				<MediaBrandingStep />
-				<SocialMediaStep />
+				{/* <MediaBrandingStep /> */}
+				{/* <SocialMediaStep /> */}
 				<ServicesSpecializationsStep
 					serviceOptions={CLINIC_SERVICE_OPTIONS}
 					specializationOptions={CLINIC_SPECIALIZATION_OPTIONS}

@@ -1,6 +1,7 @@
 import {
 	Analytics,
 	ApiHealth,
+	AppointmentFormPage,
 	Appointments,
 	Breeds,
 	Calendar,
@@ -63,6 +64,14 @@ const AdminRoutes = () => {
 				element={
 					<RoleProtectedRoute>
 						<Appointments />
+					</RoleProtectedRoute>
+				}
+			/>
+			<Route
+				path='appointments/create'
+				element={
+					<RoleProtectedRoute>
+						<AppointmentFormPage />
 					</RoleProtectedRoute>
 				}
 			/>

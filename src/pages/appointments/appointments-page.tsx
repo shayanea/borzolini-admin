@@ -18,7 +18,7 @@ import { useAuthStore } from '@/stores/auth.store';
 import type { Appointment } from '@/types';
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 
 
@@ -62,6 +62,8 @@ const Appointments = () => {
 		handleBulkUpdate,
 		clearError,
 	} = useAppointments();
+
+	const navigate = useNavigate();
 
 	// Modal states
 	const [isViewModalVisible, setIsViewModalVisible] = useState<boolean>(false);
@@ -197,14 +199,8 @@ const Appointments = () => {
 
 	// Empty State Handlers
 	const handleCreateClick = useCallback(() => {
-		// Logic to open create modal would go here.
-		// For now, we reuse the view modal with null appointment if supported,
-		// or show a placeholder as the Create flow seems distinct or not fully exposed here.
-		// Based on existing code, there is no explicit "Create" modal state, only "View/Edit".
-		// We will show a placeholder message for now to satisfy the requirement of "Actionable",
-		// acknowledging that the actual Create Modal might be a separate task or existing one needs adaptation.
-		message.info('Create Appointment Modal would open here.');
-	}, []);
+		navigate('/appointments/create');
+	}, [navigate]);
 
 	const handleClearSelection = useCallback(() => {
 		setSelectedRowKeys([]);
