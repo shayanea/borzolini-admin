@@ -82,15 +82,7 @@ const AppointmentFormPage = () => {
 	});
 	const pets = petsData?.pets || [];
 
-	// Fetch clinics
-	const { data: clinicsData, isLoading: clinicsLoading } = useQuery({
-		queryKey: ['clinics-list'],
-		queryFn: () => ClinicsService.getClinics({ limit: 100, isActive: true }),
-		staleTime: 60000,
-	});
-	const clinics = clinicsData?.clinics || [];
-
-	// Auto-select clinic for clinic_admin users
+	// Auto-select clinic for clinic_admin/staff/veterinarian users
 	useEffect(() => {
 		if (clinicContext?.clinicId && !selectedClinicId) {
 			setSelectedClinicId(clinicContext.clinicId);
@@ -120,21 +112,12 @@ const AppointmentFormPage = () => {
 		return pets.find(p => p.id === selectedPetId);
 	}, [pets, selectedPetId]);
 
-	// Get selected clinic details
-	const selectedClinic = useMemo(() => {
-		return clinics.find(c => c.id === selectedClinicId);
-	}, [clinics, selectedClinicId]);
-
 	// Handle pet selection
 	const handlePetChange = (petId: string) => {
 		setSelectedPetId(petId);
 	};
 
-	// Handle clinic selection
-	const handleClinicChange = (clinicId: string) => {
-		setSelectedClinicId(clinicId);
-		form.setFieldsValue({ staff_id: undefined, service_id: undefined });
-	};
+
 
 	// Handle service selection - auto-fill duration
 	const handleServiceChange = (serviceId: string) => {
@@ -148,7 +131,7 @@ const AppointmentFormPage = () => {
 	const validateStep = async (step: number): Promise<boolean> => {
 		try {
 			const fieldsToValidate: string[][] = [
-				['pet_id', 'clinic_id'], // Step 0: Pet & Owner
+				['pet_id'], // Step 0: Pet selection (clinic auto-selected)
 				['appointment_type'], // Step 1: Service & Staff (staff optional)
 				['date', 'time'], // Step 2: Schedule
 				[], // Step 3: Details (all optional)
@@ -311,56 +294,6 @@ const AppointmentFormPage = () => {
 			</Form.Item>
 
 			{renderPetInfo()}
-
-			<Divider />
-
-			<div>
-				<Title level={5} className="!mb-2">Select Clinic</Title>
-				<Text type="secondary">Choose the clinic for this appointment</Text>
-			</div>
-
-			<Form.Item
-				name="clinic_id"
-				rules={[{ required: true, message: 'Please select a clinic' }]}
-			>
-				<Select
-					showSearch
-					placeholder="Select a clinic..."
-					optionFilterProp="children"
-					onChange={handleClinicChange}
-					loading={clinicsLoading}
-					size="large"
-					disabled={!!clinicContext?.shouldFilterByClinic}
-				>
-					{clinics.map((clinic) => (
-						<Option key={clinic.id} value={clinic.id}>
-							<div className="flex items-center justify-between">
-								<span><strong>{clinic.name}</strong></span>
-								<span className="text-gray-500 text-sm">{clinic.city}</span>
-							</div>
-						</Option>
-					))}
-				</Select>
-			</Form.Item>
-
-			{selectedClinic && (
-				<Card size="small" className="bg-green-50 border-green-200">
-					<div className="flex items-center gap-2">
-						<HomeOutlined className="text-green-600" />
-						<div>
-							<div className="font-medium">{selectedClinic.name}</div>
-							<div className="text-sm text-gray-600">
-								{selectedClinic.address}, {selectedClinic.city}
-							</div>
-							{selectedClinic.phone && (
-								<div className="text-sm text-gray-600">
-									<PhoneOutlined /> {selectedClinic.phone}
-								</div>
-							)}
-						</div>
-					</div>
-				</Card>
-			)}
 		</div>
 	);
 
@@ -688,7 +621,6 @@ const AppointmentFormPage = () => {
 				description={
 					<div className="mt-2 space-y-1">
 						{selectedPet && <div><strong>Pet:</strong> {selectedPet.name} ({selectedPet.species})</div>}
-						{selectedClinic && <div><strong>Clinic:</strong> {selectedClinic.name}</div>}
 						{form.getFieldValue('date') && form.getFieldValue('time') && (
 							<div>
 								<strong>When:</strong> {form.getFieldValue('date')?.format('MMM D, YYYY')} at {form.getFieldValue('time')?.format('h:mm A')}

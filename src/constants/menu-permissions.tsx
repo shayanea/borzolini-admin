@@ -49,7 +49,7 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
 		label: 'Appointments',
 		icon: React.createElement(FileTextOutlined),
 		onClick: () => { },
-		roles: ['admin', 'veterinarian', 'staff', 'patient'],
+		roles: ['clinic_admin', 'staff', 'veterinarian'],
 	},
 	{
 		key: '/calendar',
@@ -91,7 +91,7 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
 		label: 'Pets',
 		icon: React.createElement(HeartOutlined),
 		onClick: () => { },
-		roles: ['admin', 'veterinarian', 'staff', 'patient'],
+		roles: ['admin'],
 	},
 	{
 		key: '/pet-cases',
@@ -219,7 +219,6 @@ export const MENU_ITEMS: Record<UserRole, MenuItemConfig[]> = {
 				item.key === '/dashboard' ||
 				item.key === '/appointments' ||
 				item.key === '/calendar' ||
-				item.key === '/pets' ||
 				item.key === '/pet-cases' ||
 				item.key === '/staff' ||
 				item.key === '/profile'
