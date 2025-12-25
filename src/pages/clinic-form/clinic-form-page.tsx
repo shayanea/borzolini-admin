@@ -94,11 +94,26 @@ const ClinicForm = () => {
 				<ServicesSpecializationsStep
 					serviceOptions={CLINIC_SERVICE_OPTIONS}
 					specializationOptions={CLINIC_SPECIALIZATION_OPTIONS}
-					insuranceProviderOptions={CLINIC_INSURANCE_PROVIDER_OPTIONS}
+					insuranceProviderOptions={CLINIC_INSURANCE_PROVIDER_OPTIONS.all}
 					paymentMethodOptions={CLINIC_PAYMENT_METHOD_OPTIONS}
 				/>
 				<OperatingHoursStep daysOfWeek={daysOfWeek} />
 				<StatusStep />
+
+				<Form.Item className='mb-0'>
+					<Space className='w-full justify-end'>
+						<Button onClick={handleCancel}>{CLINIC_FORM_LABELS.CANCEL_BUTTON}</Button>
+						<Button
+							type='primary'
+							htmlType='submit'
+							onClick={handleSubmit}
+							loading={loading}
+							className='bg-primary-navy border-primary-navy hover:bg-primary-dark hover:border-primary-dark'
+						>
+							{isEditing ? CLINIC_FORM_LABELS.UPDATE_BUTTON : CLINIC_FORM_LABELS.CREATE_BUTTON}
+						</Button>
+					</Space>
+				</Form.Item>
 			</Form>
 		</div>
 	);

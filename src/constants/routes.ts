@@ -1,6 +1,7 @@
 export const ROUTES = {
   DASHBOARD: '/dashboard',
   APPOINTMENTS: '/appointments',
+  APPOINTMENTS_CREATE: '/appointments/create',
   CALENDAR: '/calendar',
   REPORTS: '/reports',
   SETTINGS: '/settings',
@@ -10,6 +11,7 @@ export const ROUTES = {
   LOGIN: '/login',
   PROFILE: '/profile',
   VETERINARIANS: '/veterinarians',
+  STAFF: '/staff',
   HOME: '/',
   PATIENTS: '/patients',
   API_HEALTH: '/api-health',

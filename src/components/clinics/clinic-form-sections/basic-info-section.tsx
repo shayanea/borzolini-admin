@@ -1,28 +1,30 @@
+/* eslint-env browser */
 import { MAX_LENGTH_RULE, MIN_LENGTH_RULE, REQUIRED_RULE } from '@/constants/form-validation';
 import { Avatar, Col, Form, Input, Row, Select, Spin } from 'antd';
-import { useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import { PhoneField } from '@/components/shared';
 import { useValidationMessages } from '@/hooks/common';
 import UsersService from '@/services/users';
 import { User } from '@/types';
-import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BasicInfoSectionProps } from './types';
 
 const { TextArea } = Input;
 const { Option } = Select;
 
-// Simple debounce implementation
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function debounce<T extends (...args: any[]) => void>(func: T, wait: number) {
-	let timeout: NodeJS.Timeout;
+	let timeout: number | undefined;
 	return function (...args: Parameters<T>) {
-		clearTimeout(timeout);
-		timeout = setTimeout(() => func(...args), wait);
+		if (timeout !== undefined) {
+			window.clearTimeout(timeout);
+		}
+		timeout = window.setTimeout(() => func(...args), wait);
 	};
 }
 
-const BasicInfoSection: FC<BasicInfoSectionProps> = ({ form }) => {
+const BasicInfoSection: FC<BasicInfoSectionProps> = () => {
 	const { t } = useTranslation('components');
 	const validationMessages = useValidationMessages();
 

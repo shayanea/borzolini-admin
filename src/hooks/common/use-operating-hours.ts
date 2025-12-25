@@ -31,11 +31,12 @@ export const useOperatingHours = (): OperatingHoursHookReturn => {
 
       DAYS_OF_WEEK.forEach(day => {
         if (day.key === 'sunday') {
-          defaults[day.key] = { open: '00:00', close: '00:00', closed: true };
-        } else if (day.key === 'saturday') {
           defaults[day.key] = { open: '10:00', close: '15:00', closed: false };
+        } else if (day.key === 'saturday') {
+          defaults[day.key] = { open: '09:00', close: '16:00', closed: false };
         } else {
-          defaults[day.key] = { open: '09:00', close: '17:00', closed: false };
+          // Monday - Friday
+          defaults[day.key] = { open: '08:00', close: '18:00', closed: false };
         }
       });
 

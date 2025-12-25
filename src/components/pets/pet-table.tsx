@@ -240,8 +240,8 @@ const PetTable = ({
 			render: (pet: Pet) => (
 				<div
 					className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${pet.is_active
-							? 'bg-green-100 text-green-700'
-							: 'bg-gray-100 text-gray-600'
+						? 'bg-green-100 text-green-700'
+						: 'bg-gray-100 text-gray-600'
 						}`}
 				>
 					{pet.is_active ? (
@@ -326,7 +326,7 @@ const PetTable = ({
 				className='compact-table'
 				size='small'
 				locale={{
-					emptyText: (
+					emptyText: loading ? null : (
 						<div className='text-center py-12'>
 							<HeartOutlined className='text-5xl text-gray-300 mb-4' />
 							<div className='text-xl font-medium text-gray-500 mb-2'>No Pets Found</div>

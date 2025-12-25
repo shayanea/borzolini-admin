@@ -40,6 +40,15 @@ interface ClinicFormValues {
 	tiktok_url?: string;
 }
 
+/**
+ * Normalize phone number to E.164 format by removing hyphens and spaces
+ * Example: "+1-555-0123" -> "+15550123"
+ */
+const normalizePhoneNumber = (phone: string | undefined): string | undefined => {
+	if (!phone) return phone;
+	return phone.replace(/[-\s]/g, '');
+};
+
 const ClinicFormModal = ({
 	visible,
 	onCancel,
@@ -52,6 +61,16 @@ const ClinicFormModal = ({
 
 	const isEditing = !!editingClinic;
 	const title = isEditing ? t('modals.clinicForm.titleEdit') : t('modals.clinicForm.titleAdd');
+
+	// Wrapper to normalize phone numbers before submission
+	const handleSubmit = async (values: any) => {
+		const normalizedValues = {
+			...values,
+			phone: normalizePhoneNumber(values.phone),
+			emergency_phone: normalizePhoneNumber(values.emergency_phone),
+		};
+		await onSubmit(normalizedValues);
+	};
 
 	useEffect(() => {
 		if (visible && editingClinic) {
@@ -90,7 +109,7 @@ const ClinicFormModal = ({
 			title={title}
 			form={form}
 			onCancel={onCancel}
-			onSubmit={onSubmit}
+			onSubmit={handleSubmit}
 			loading={loading}
 			isEditMode={isEditing}
 			width={800}

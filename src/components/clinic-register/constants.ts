@@ -1,32 +1,8 @@
-export const SERVICE_OPTIONS = [
-  'Vaccinations',
-  'Surgery',
-  'Dental Care',
-  'Emergency Care',
-  'Wellness Exams',
-  'Grooming',
-  'Boarding',
-  'Microchipping',
-  'Laboratory Services',
-  'Radiology',
-  'Pharmacy',
-  'Behavioral Consultation',
-];
-
-export const SPECIALIZATION_OPTIONS = [
-  'Feline Medicine',
-  'Canine Medicine',
-  'Exotic Animals',
-  'Emergency Medicine',
-  'Surgery',
-  'Dermatology',
-  'Cardiology',
-  'Oncology',
-  'Orthopedics',
-  'Neurology',
-  'Ophthalmology',
-  'Dentistry',
-];
+// Re-export service and specialization options from main constants
+export {
+  CLINIC_SERVICE_OPTIONS as SERVICE_OPTIONS,
+  CLINIC_SPECIALIZATION_OPTIONS as SPECIALIZATION_OPTIONS,
+} from '@/constants/clinics';
 
 export const DAYS_OF_WEEK = [
   { key: 'monday', label: 'Monday' },

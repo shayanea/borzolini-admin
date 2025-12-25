@@ -51,6 +51,11 @@ export class ClinicsService extends BaseService<Clinic, CreateClinicData, Update
     return service.postRequest<Clinic>('/public/register', data);
   }
 
+  static async createClinicAdmin(data: CreateClinicData): Promise<Clinic> {
+    const service = new ClinicsService();
+    return service.postRequest<Clinic>('/clinics', data);
+  }
+
   // Update clinic
   static async updateClinic(id: string, data: UpdateClinicData): Promise<Clinic> {
     const service = new ClinicsService();

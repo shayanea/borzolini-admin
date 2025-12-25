@@ -51,11 +51,11 @@ interface UseClinicManagementReturn {
 
 /**
  * Hook for managing clinic data with table, filters, and CRUD operations
- * 
+ *
  * @example
  * ```tsx
  * const clinicManagement = useClinicManagement();
- * 
+ *
  * <Table
  *   dataSource={clinicManagement.clinics}
  *   loading={clinicManagement.loading}
@@ -108,7 +108,8 @@ export function useClinicManagement(): UseClinicManagementReturn {
         limit: table.pageSize,
         search: filterManager.searchText || undefined,
         city: filterManager.filters.city || undefined,
-        isActive: filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
+        isActive:
+          filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
         sortBy: table.sortBy,
         sortOrder: table.sortOrder,
       };
@@ -126,9 +127,6 @@ export function useClinicManagement(): UseClinicManagementReturn {
       antMessage.success('Clinic deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['clinics'] });
     },
-    onError: (error: any) => {
-      antMessage.error(error?.response?.data?.message || 'Failed to delete clinic');
-    },
   });
 
   // Bulk delete mutation
@@ -138,9 +136,6 @@ export function useClinicManagement(): UseClinicManagementReturn {
       antMessage.success('Clinics deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['clinics'] });
       table.clearSelection();
-    },
-    onError: (error: any) => {
-      antMessage.error(error?.response?.data?.message || 'Failed to delete clinics');
     },
   });
 
@@ -202,7 +197,8 @@ export function useClinicManagement(): UseClinicManagementReturn {
     return await ClinicsService.exportClinicsToCSV({
       search: filterManager.searchText || undefined,
       city: filterManager.filters.city || undefined,
-      isActive: filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
+      isActive:
+        filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
     });
   }, [filterManager.searchText, filterManager.filters.city, filterManager.filters.isActive]);
 
@@ -210,7 +206,8 @@ export function useClinicManagement(): UseClinicManagementReturn {
     return await ClinicsService.exportClinicsToExcel({
       search: filterManager.searchText || undefined,
       city: filterManager.filters.city || undefined,
-      isActive: filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
+      isActive:
+        filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
     });
   }, [filterManager.searchText, filterManager.filters.city, filterManager.filters.isActive]);
 

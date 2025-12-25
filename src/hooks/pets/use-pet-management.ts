@@ -6,8 +6,9 @@ import { CACHE_PRESETS } from '@/constants';
 import { COMMON_BREEDS, PET_GENDERS, PET_SIZES, PET_SPECIES } from '@/constants/pets';
 import { useAuth } from '@/hooks/auth';
 import { useFilterManagement } from '@/hooks/common/use-filter-management';
-import { PetsService } from '@/services/pets';
+import { PetsService, type UpdatePetData } from '@/services/pets';
 import { message } from 'antd';
+import dayjs from 'dayjs';
 
 // Types for query parameters
 interface PetsFilters {
@@ -67,7 +68,7 @@ export const usePetManagement = (): UsePetManagementReturn => {
 
   // Pet species, breeds, genders, and sizes from constants
   const petSpecies = Object.values(PET_SPECIES) as string[];
-  
+
   // Flatten all breeds for the general list, or specific ones if needed
   const breeds = Object.values(COMMON_BREEDS).flat() as string[];
 
@@ -147,9 +148,12 @@ export const usePetManagement = (): UsePetManagementReturn => {
   }, []);
 
   // Map generic filter handlers to specific ones for backward compatibility
-  const handleSearch = useCallback((value: string) => {
-    onSearch(value);
-  }, [onSearch]);
+  const handleSearch = useCallback(
+    (value: string) => {
+      onSearch(value);
+    },
+    [onSearch]
+  );
 
   const handleClearFilters = useCallback(() => {
     resetFilters();
@@ -158,7 +162,15 @@ export const usePetManagement = (): UsePetManagementReturn => {
   // Mutations for CRUD operations
   const createPetMutation = useMutation({
     mutationFn: (data: PetFormData) => {
-      return PetsService.createPet(data);
+      // Transform PetFormData to CreatePetData format
+      const apiData = {
+        ...data,
+        date_of_birth:
+          data.date_of_birth && dayjs.isDayjs(data.date_of_birth)
+            ? data.date_of_birth.format('YYYY-MM-DD')
+            : data.date_of_birth,
+      };
+      return PetsService.createPet(apiData);
     },
     onSuccess: () => {
       // Invalidate and refetch pets list
@@ -172,8 +184,17 @@ export const usePetManagement = (): UsePetManagementReturn => {
   });
 
   const updatePetMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: PetFormData }) =>
-      PetsService.updatePet(id, data),
+    mutationFn: ({ id, data }: { id: string; data: PetFormData }) => {
+      // Transform PetFormData to UpdatePetData format
+      const apiData: UpdatePetData = {
+        ...data,
+        date_of_birth:
+          data.date_of_birth && dayjs.isDayjs(data.date_of_birth)
+            ? data.date_of_birth.format('YYYY-MM-DD')
+            : data.date_of_birth,
+      };
+      return PetsService.updatePet(id, apiData);
+    },
     onSuccess: (_: unknown, { id }: { id: string; data: PetFormData }) => {
       // Invalidate and refetch pets list and specific pet detail
       queryClient.invalidateQueries({ queryKey: PETS_KEYS.lists() });

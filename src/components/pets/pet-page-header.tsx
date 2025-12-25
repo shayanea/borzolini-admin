@@ -40,7 +40,7 @@ const PetPageHeader = ({
 						type='primary'
 						icon={<PlusOutlined />}
 						onClick={onAddPet}
-						className='bg-pink-600 hover:bg-pink-700'
+						className=''
 					>
 						{t('petManagement.addPet')}
 					</Button>

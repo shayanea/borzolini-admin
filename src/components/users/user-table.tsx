@@ -321,7 +321,7 @@ const UserTable = ({
 				rowClassName='hover:bg-gray-50 transition-colors cursor-pointer'
 				className='compact-table'
 				locale={{
-					emptyText: (
+					emptyText: loading ? null : (
 						<div className='text-center py-12'>
 							<UserOutlined className='text-4xl text-gray-300 mb-2' />
 							<div className='text-sm text-gray-500'>No users found</div>

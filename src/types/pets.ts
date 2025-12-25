@@ -1,4 +1,5 @@
 import type { Pet, PetOwner, PetsQueryParams } from '@/services/pets';
+import type { Dayjs } from 'dayjs';
 
 // Re-export service types for convenience
 export type { Pet, PetOwner, PetsQueryParams };
@@ -9,7 +10,7 @@ export interface PetFormData {
   species: string;
   breed?: string;
   gender: string;
-  date_of_birth: string;
+  date_of_birth: string | Dayjs;
   weight: string;
   size: string;
   color: string;

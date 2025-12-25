@@ -1,15 +1,15 @@
 import type { CreateClinicData, OperatingHours, UpdateClinicData } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Form, message as antMessage } from 'antd';
-import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
+import { ROUTES } from '@/constants';
 import {
   CLINIC_FORM_LABELS,
   CLINIC_VALIDATION_MESSAGES,
   DEFAULT_CLINIC_COUNTRY,
 } from '@/constants/clinics';
-import { ROUTES } from '@/constants';
 import { useOperatingHours } from '@/hooks/common';
 import { ClinicsService } from '@/services/clinics';
 
@@ -61,14 +61,11 @@ export const useClinicForm = () => {
 
   // Create mutation
   const createMutation = useMutation({
-    mutationFn: (data: CreateClinicData) => ClinicsService.createClinic(data),
+    mutationFn: (data: CreateClinicData) => ClinicsService.createClinicAdmin(data),
     onSuccess: () => {
       antMessage.success(CLINIC_VALIDATION_MESSAGES.CREATE_SUCCESS);
       queryClient.invalidateQueries({ queryKey: ['clinics'] });
       navigate(ROUTES.CLINICS);
-    },
-    onError: (error: any) => {
-      antMessage.error(error?.response?.data?.message || CLINIC_VALIDATION_MESSAGES.CREATE_ERROR);
     },
   });
 
@@ -81,9 +78,6 @@ export const useClinicForm = () => {
       queryClient.invalidateQueries({ queryKey: ['clinics'] });
       queryClient.invalidateQueries({ queryKey: ['clinic', id] });
       navigate(ROUTES.CLINICS);
-    },
-    onError: (error: any) => {
-      antMessage.error(error?.response?.data?.message || CLINIC_VALIDATION_MESSAGES.UPDATE_ERROR);
     },
   });
 
@@ -134,6 +128,15 @@ export const useClinicForm = () => {
     }
   }, [clinic, isEditing, form, getDefaultOperatingHours, convertApiToForm]);
 
+  /**
+   * Normalize phone number to E.164 format by removing hyphens and spaces
+   * Example: "+1-555-0123" -> "+15550123"
+   */
+  const normalizePhoneNumber = (phone: string | undefined): string | undefined => {
+    if (!phone) return phone;
+    return phone.replace(/[-\s]/g, '');
+  };
+
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
@@ -144,10 +147,19 @@ export const useClinicForm = () => {
         return;
       }
 
+      // Normalize phone numbers before submission
+      const normalizedValues = {
+        ...values,
+        phone: values.phone ? normalizePhoneNumber(values.phone)! : values.phone,
+        emergency_phone: values.emergency_phone
+          ? normalizePhoneNumber(values.emergency_phone)
+          : values.emergency_phone,
+      };
+
       if (isEditing) {
-        await updateMutation.mutateAsync({ id: id!, data: values });
+        await updateMutation.mutateAsync({ id: id!, data: normalizedValues });
       } else {
-        await createMutation.mutateAsync(values);
+        await createMutation.mutateAsync(normalizedValues);
       }
     } catch (error) {
       // Form validation errors are handled automatically by antd

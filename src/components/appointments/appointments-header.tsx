@@ -42,7 +42,7 @@ const AppointmentsHeader = ({
 						type='primary'
 						icon={<PlusOutlined />}
 						onClick={onNewAppointment}
-						className='bg-pink-600 hover:bg-pink-700'
+						className=''
 					>
 						{t('appointments.newAppointment')}
 					</Button>

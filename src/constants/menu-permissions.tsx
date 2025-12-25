@@ -1,293 +1,302 @@
 // Role-based menu permissions and configurations
 import {
-  AppstoreOutlined,
-  BarChartOutlined,
-  BookOutlined,
-  CalendarOutlined,
-  DashboardOutlined,
-  ExperimentOutlined,
-  FileTextOutlined,
-  HeartOutlined,
-  MedicineBoxOutlined,
-  MessageOutlined,
-  MonitorOutlined,
-  SafetyOutlined,
-  SettingOutlined,
-  StarOutlined,
-  TeamOutlined,
-  UserOutlined,
+	AppstoreOutlined,
+	BarChartOutlined,
+	BookOutlined,
+	CalendarOutlined,
+	DashboardOutlined,
+	ExperimentOutlined,
+	FileTextOutlined,
+	HeartOutlined,
+	MedicineBoxOutlined,
+	MessageOutlined,
+	MonitorOutlined,
+	SafetyOutlined,
+	SettingOutlined,
+	StarOutlined,
+	TeamOutlined,
+	UserOutlined,
 } from '@ant-design/icons';
 
-import React from 'react';
 import { SoonBadge } from '@/components/shared/soon-badge';
+import React from 'react';
 import { UserRole } from '../types';
 
 // Menu item interface
 export interface MenuItemConfig {
-  key: string;
-  label: string | React.ReactNode;
-  icon: React.ReactNode;
-  onClick: () => void;
-  roles: UserRole[];
-  className?: string;
-  disabled?: boolean;
-  hidden?: boolean;
-  badge?: React.ReactNode;
+	key: string;
+	label: string | React.ReactNode;
+	icon: React.ReactNode;
+	onClick: () => void;
+	roles: UserRole[];
+	className?: string;
+	disabled?: boolean;
+	hidden?: boolean;
+	badge?: React.ReactNode;
 }
 
 // Define all available menu items with unique icons
 const ALL_MENU_ITEMS: MenuItemConfig[] = [
-  {
-    key: '/dashboard',
-    label: 'Dashboard',
-    icon: React.createElement(DashboardOutlined),
-    onClick: () => {},
-    roles: ['admin', 'veterinarian', 'staff', 'patient'],
-  },
-  {
-    key: '/appointments',
-    label: 'Appointments',
-    icon: React.createElement(FileTextOutlined),
-    onClick: () => {},
-    roles: ['admin', 'veterinarian', 'staff', 'patient'],
-  },
-  {
-    key: '/calendar',
-    label: 'Calendar',
-    icon: React.createElement(CalendarOutlined),
-    onClick: () => {},
-    roles: ['clinic_admin', 'staff'],
-  },
-  {
-    key: '/clinics',
-    label: 'Clinics',
-    icon: React.createElement(MedicineBoxOutlined),
-    onClick: () => {},
-    roles: ['admin'],
-  },
-  {
-    key: '/users',
-    label: 'Users',
-    icon: React.createElement(UserOutlined),
-    onClick: () => {},
-    roles: ['admin'],
-  },
-  {
-    key: '/patients',
-    label: 'Patients',
-    icon: React.createElement(UserOutlined),
-    onClick: () => {},
-    roles: ['clinic_admin', 'staff'],
-  },
-  {
-    key: '/veterinarians',
-    label: 'Veterinarians',
-    icon: React.createElement(TeamOutlined),
-    onClick: () => {},
-    roles: ['admin'],
-  },
-  {
-    key: '/pets',
-    label: 'Pets',
-    icon: React.createElement(HeartOutlined),
-    onClick: () => {},
-    roles: ['admin', 'veterinarian', 'staff', 'patient'],
-  },
-  {
-    key: '/pet-cases',
-    label: 'Pet Cases',
-    icon: React.createElement(FileTextOutlined),
-    onClick: () => {},
-    roles: ['veterinarian', 'staff'],
-  },
-  {
-    key: '/staff',
-    label: 'Staff',
-    icon: React.createElement(TeamOutlined),
-    onClick: () => {},
-    roles: ['clinic_admin'],
-  },
-  {
-    key: '/reports',
-    label: (
-      <div className='relative flex items-center gap-2'>
-        <span>Reports</span>
-        <SoonBadge />
-      </div>
-    ),
-    icon: React.createElement(BarChartOutlined),
-    onClick: () => {},
-    roles: ['admin'],
-    hidden: true,
-  },
-  {
-    key: '/reviews',
-    label: (
-      <div className='relative flex items-center gap-2'>
-        <span>Reviews</span>
-        <SoonBadge />
-      </div>
-    ),
-    icon: React.createElement(StarOutlined),
-    onClick: () => {},
-    roles: ['admin'],
-    hidden: true,
-  },
-  {
-    key: '/contacts',
-    label: 'Contact Messages',
-    icon: React.createElement(MessageOutlined),
-    onClick: () => {},
-    roles: ['admin'],
-  },
-  {
-    key: '/api-health',
-    label: (
-      <div className='relative flex items-center gap-2'>
-        <span>API Health</span>
-        <SoonBadge />
-      </div>
-    ),
-    icon: React.createElement(MonitorOutlined),
-    onClick: () => {},
-    roles: ['admin'],
-    hidden: true,
-  },
-  {
-    key: '/role-demo',
-    label: 'Role Demo',
-    icon: React.createElement(ExperimentOutlined),
-    onClick: () => {},
-    roles: ['admin'],
-  },
-  {
-    key: '/settings',
-    label: 'Settings',
-    icon: React.createElement(SettingOutlined),
-    onClick: () => {},
-    roles: ['admin'],
-  },
-  {
-    key: '/admin/resources',
-    label: 'Resources',
-    icon: React.createElement(FileTextOutlined),
-    onClick: () => {},
-    roles: ['admin'],
-  },
-  {
-    key: '/admin/training',
-    label: 'Training',
-    icon: React.createElement(BookOutlined),
-    onClick: () => {},
-    roles: ['admin'],
-  },
-  {
-    key: '/admin/household-safety',
-    label: 'Household Safety',
-    icon: React.createElement(SafetyOutlined),
-    onClick: () => {},
-    roles: ['admin'],
-  },
-  {
-    key: '/admin/breeds',
-    label: 'Breeds',
-    icon: React.createElement(AppstoreOutlined),
-    onClick: () => {},
-    roles: ['admin'],
-  },
-  {
-    key: '/profile',
-    label: 'Profile',
-    icon: React.createElement(UserOutlined),
-    onClick: () => {},
-    roles: ['admin', 'veterinarian', 'staff', 'patient'],
-  },
+	{
+		key: '/dashboard',
+		label: 'Dashboard',
+		icon: React.createElement(DashboardOutlined),
+		onClick: () => { },
+		roles: ['admin', 'veterinarian', 'staff', 'patient'],
+	},
+	{
+		key: '/appointments',
+		label: 'Appointments',
+		icon: React.createElement(FileTextOutlined),
+		onClick: () => { },
+		roles: ['admin', 'veterinarian', 'staff', 'patient'],
+	},
+	{
+		key: '/calendar',
+		label: 'Calendar',
+		icon: React.createElement(CalendarOutlined),
+		onClick: () => { },
+		roles: ['clinic_admin', 'staff'],
+	},
+	{
+		key: '/clinics',
+		label: 'Clinics',
+		icon: React.createElement(MedicineBoxOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+	},
+	{
+		key: '/users',
+		label: 'Users',
+		icon: React.createElement(UserOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+	},
+	{
+		key: '/patients',
+		label: 'Patients',
+		icon: React.createElement(UserOutlined),
+		onClick: () => { },
+		roles: ['clinic_admin', 'staff'],
+	},
+	{
+		key: '/veterinarians',
+		label: 'Veterinarians',
+		icon: React.createElement(TeamOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+	},
+	{
+		key: '/pets',
+		label: 'Pets',
+		icon: React.createElement(HeartOutlined),
+		onClick: () => { },
+		roles: ['admin', 'veterinarian', 'staff', 'patient'],
+	},
+	{
+		key: '/pet-cases',
+		label: 'Pet Cases',
+		icon: React.createElement(FileTextOutlined),
+		onClick: () => { },
+		roles: ['veterinarian', 'staff'],
+	},
+	{
+		key: '/staff',
+		label: 'Staff',
+		icon: React.createElement(TeamOutlined),
+		onClick: () => { },
+		roles: ['clinic_admin'],
+	},
+	{
+		key: '/reports',
+		label: (
+			<div className='relative flex items-center gap-2'>
+				<span>Reports</span>
+				<SoonBadge />
+			</div>
+		),
+		icon: React.createElement(BarChartOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+		hidden: true,
+	},
+	{
+		key: '/reviews',
+		label: (
+			<div className='relative flex items-center gap-2'>
+				<span>Reviews</span>
+				<SoonBadge />
+			</div>
+		),
+		icon: React.createElement(StarOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+		hidden: true,
+	},
+	{
+		key: '/contacts',
+		label: 'Contact Messages',
+		icon: React.createElement(MessageOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+	},
+	{
+		key: '/api-health',
+		label: (
+			<div className='relative flex items-center gap-2'>
+				<span>API Health</span>
+				<SoonBadge />
+			</div>
+		),
+		icon: React.createElement(MonitorOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+		hidden: true,
+	},
+	{
+		key: '/role-demo',
+		label: 'Role Demo',
+		icon: React.createElement(ExperimentOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+	},
+	{
+		key: '/settings',
+		label: 'Settings',
+		icon: React.createElement(SettingOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+	},
+	{
+		key: '/admin/resources',
+		label: 'Resources',
+		icon: React.createElement(FileTextOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+	},
+	{
+		key: '/admin/training',
+		label: 'Training',
+		icon: React.createElement(BookOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+	},
+	{
+		key: '/admin/household-safety',
+		label: 'Household Safety',
+		icon: React.createElement(SafetyOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+	},
+	{
+		key: '/admin/breeds',
+		label: 'Breeds',
+		icon: React.createElement(AppstoreOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+	},
+	{
+		key: '/profile',
+		label: 'Profile',
+		icon: React.createElement(UserOutlined),
+		onClick: () => { },
+		roles: ['admin', 'veterinarian', 'staff', 'patient'],
+	},
 ];
 
 const filterVisibleItems = (items: MenuItemConfig[]): MenuItemConfig[] =>
-  items.filter(item => !item.hidden);
+	items.filter(item => !item.hidden);
 
 // Role-based menu configurations
 export const MENU_ITEMS: Record<UserRole, MenuItemConfig[]> = {
-  admin: filterVisibleItems(ALL_MENU_ITEMS.filter(item => item.roles.includes('admin'))),
-  // clinic_admin should only see pages related to their clinic (not admin pages like clinics, users, settings)
-  clinic_admin: filterVisibleItems(
-    ALL_MENU_ITEMS.filter(
-      item =>
-        item.roles.includes('veterinarian') ||
-        item.roles.includes('staff') ||
-        item.key === '/dashboard' ||
-        item.key === '/appointments' ||
-        item.key === '/calendar' ||
-        item.key === '/pets' ||
-        item.key === '/pet-cases' ||
-        item.key === '/staff' ||
-        item.key === '/profile'
-    )
-  ),
-  veterinarian: filterVisibleItems(
-    ALL_MENU_ITEMS.filter(item => item.roles.includes('veterinarian'))
-  ),
-  staff: filterVisibleItems(ALL_MENU_ITEMS.filter(item => item.roles.includes('staff'))),
-  patient: filterVisibleItems(ALL_MENU_ITEMS.filter(item => item.roles.includes('patient'))),
+	admin: filterVisibleItems(ALL_MENU_ITEMS.filter(item => item.roles.includes('admin'))),
+	// clinic_admin should only see pages related to their clinic (not admin pages like clinics, users, settings)
+	clinic_admin: filterVisibleItems(
+		ALL_MENU_ITEMS.filter(
+			item =>
+				item.roles.includes('veterinarian') ||
+				item.roles.includes('staff') ||
+				item.key === '/dashboard' ||
+				item.key === '/appointments' ||
+				item.key === '/calendar' ||
+				item.key === '/pets' ||
+				item.key === '/pet-cases' ||
+				item.key === '/staff' ||
+				item.key === '/profile'
+		)
+	),
+	veterinarian: filterVisibleItems(
+		ALL_MENU_ITEMS.filter(item => item.roles.includes('veterinarian'))
+	),
+	staff: filterVisibleItems(ALL_MENU_ITEMS.filter(item => item.roles.includes('staff'))),
+	patient: filterVisibleItems(ALL_MENU_ITEMS.filter(item => item.roles.includes('patient'))),
 };
 
 // Helper function to get menu items for a specific role
 export const getMenuItemsForRole = (role: UserRole): MenuItemConfig[] => {
-  return MENU_ITEMS[role] || [];
+	return MENU_ITEMS[role] || [];
 };
 
 // Helper function to check if a user has access to a specific menu item
 export const hasMenuAccess = (userRole: UserRole, menuKey: string): boolean => {
-  const roleMenuItems = getMenuItemsForRole(userRole);
-  return roleMenuItems.some(item => item.key === menuKey);
+	const roleMenuItems = getMenuItemsForRole(userRole);
+	return roleMenuItems.some(item => item.key === menuKey);
 };
 
 // Helper function to get all accessible routes for a role
 export const getAccessibleRoutes = (role: UserRole): string[] => {
-  const roleMenuItems = getMenuItemsForRole(role);
-  const baseRoutes = roleMenuItems.map(item => item.key);
+	const roleMenuItems = getMenuItemsForRole(role);
+	const baseRoutes = roleMenuItems.map(item => item.key);
 
-  // Add sub-routes for routes that have them
-  const subRoutes: string[] = [];
+	// Add sub-routes for routes that have them
+	const subRoutes: string[] = [];
 
-  baseRoutes.forEach(route => {
-    switch (route) {
-      case '/clinics':
-        subRoutes.push('/clinics/create', '/clinics/edit/');
-        break;
-      case '/users':
-        subRoutes.push('/users/create', '/users/edit/');
-        break;
-      case '/veterinarians':
-        // Veterinarians page uses Users component, so it can access user edit routes
-        subRoutes.push('/users/create', '/users/edit/');
-        break;
-      case '/patients':
-        // Patients page uses Users component, so it can access user edit routes
-        subRoutes.push('/users/create', '/users/edit/');
-        break;
-      case '/staff':
-        // Staff page might have edit functionality
-        subRoutes.push('/staff/create', '/staff/edit/');
-        break;
-      // Admin sub-routes with prefix paths
-      case '/admin/resources':
-        subRoutes.push('/admin/resources/create', '/admin/resources/edit/');
-        break;
-      case '/admin/training':
-        subRoutes.push('/admin/training/create', '/admin/training/edit/');
-        break;
-      case '/admin/household-safety':
-        subRoutes.push('/admin/household-safety/create', '/admin/household-safety/edit/');
-        break;
-      case '/admin/breeds':
-        subRoutes.push('/admin/breeds/create', '/admin/breeds/edit/');
-        break;
-      default:
-        break;
-    }
-  });
+	baseRoutes.forEach(route => {
+		switch (route) {
+			case '/clinics':
+				subRoutes.push('/clinics/create', '/clinics/edit/');
+				break;
+			case '/users':
+				subRoutes.push('/users/create', '/users/edit/');
+				break;
+			case '/veterinarians':
+				// Veterinarians page uses Users component, so it can access user edit routes
+				subRoutes.push('/users/create', '/users/edit/');
+				break;
+			case '/patients':
+				// Patients page uses Users component, so it can access user edit routes
+				subRoutes.push('/users/create', '/users/edit/');
+				break;
+			case '/staff':
+				// Staff page might have edit functionality
+				subRoutes.push('/staff/create', '/staff/edit/');
+				break;
+			case '/pets':
+				subRoutes.push('/pets/create', '/pets/edit/');
+				break;
+			case '/appointments':
+				subRoutes.push('/appointments/create', '/appointments/edit/');
+				break;
+			case '/calendar':
+				subRoutes.push('/calendar/create');
+				break;
+			// Admin sub-routes with prefix paths
+			case '/admin/resources':
+				subRoutes.push('/admin/resources/create', '/admin/resources/edit/');
+				break;
+			case '/admin/training':
+				subRoutes.push('/admin/training/create', '/admin/training/edit/');
+				break;
+			case '/admin/household-safety':
+				subRoutes.push('/admin/household-safety/create', '/admin/household-safety/edit/');
+				break;
+			case '/admin/breeds':
+				subRoutes.push('/admin/breeds/create', '/admin/breeds/edit/');
+				break;
+			default:
+				break;
+		}
+	});
 
-  return [...baseRoutes, ...subRoutes];
+	return [...baseRoutes, ...subRoutes];
 };

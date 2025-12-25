@@ -11,3 +11,5 @@ export { default as LanguageSwitcher } from './language-switcher';
 // Also export types
 export type { DayOfWeek, OperatingHoursFieldsProps } from './operating-hours-fields';
 export type { SocialMediaFieldsProps } from './social-media-fields';
+
+export { default as Breadcrumbs } from './breadcrumbs';

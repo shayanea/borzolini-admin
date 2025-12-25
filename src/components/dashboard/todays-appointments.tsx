@@ -23,7 +23,7 @@ interface TodaysAppointmentsProps {
 }
 
 const TodaysAppointments = ({ appointments = [], loading = false }: TodaysAppointmentsProps) => {
-	const { t } = useTranslation('components');
+	useTranslation('components');
 	const navigate = useNavigate();
 
 	const getStatusColor = (status: string) => {
@@ -150,7 +150,7 @@ const TodaysAppointments = ({ appointments = [], loading = false }: TodaysAppoin
 				</Button>
 			}
 		>
-			{appointments.length > 0 ? (
+			{loading || appointments.length > 0 ? (
 				<Table
 					columns={columns}
 					dataSource={appointments}
@@ -159,6 +159,7 @@ const TodaysAppointments = ({ appointments = [], loading = false }: TodaysAppoin
 					pagination={false}
 					size="small"
 					className='compact-table'
+					locale={{ emptyText: loading ? null : undefined }}
 				/>
 			) : (
 				<div className='py-12'>

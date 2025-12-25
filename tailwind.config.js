@@ -15,6 +15,7 @@ export default {
           dark: '#0b1220',
           navy: '#1e1b4b',
           orange: '#D5992A',
+          main: '#D5992A', // Added main primary
           light: '#eef2ff',
           white: '#ffffff',
           gradientFrom: '#D5992A',

@@ -323,7 +323,7 @@ const AppointmentsTable = ({
 				className='compact-table'
 				rowClassName='hover:bg-gray-50 transition-colors duration-200'
 				locale={{
-					emptyText: (
+					emptyText: loading ? null : (
 						<div className='text-center py-12'>
 							<CalendarOutlined className='text-4xl text-gray-300 mb-2' />
 							<div className='text-gray-500 font-medium'>{t('appointments.noAppointments')}</div>

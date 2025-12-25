@@ -103,10 +103,11 @@ export const usePetForm = (): UsePetFormReturn => {
     try {
       const values = await form.validateFields();
 
-      const transformedValues: PetFormData = {
+      // Transform form values to API-compatible format
+      const apiData = {
         ...values,
         date_of_birth:
-          values.date_of_birth && typeof values.date_of_birth !== 'string'
+          values.date_of_birth && dayjs.isDayjs(values.date_of_birth)
             ? values.date_of_birth.format('YYYY-MM-DD')
             : values.date_of_birth,
         weight: values.weight ? String(values.weight) : '',
@@ -118,15 +119,9 @@ export const usePetForm = (): UsePetFormReturn => {
       };
 
       if (isEditing && id) {
-        const updateData: UpdatePetData = {
-          ...transformedValues,
-        };
-        await updateMutation.mutateAsync({ petId: id, data: updateData });
+        await updateMutation.mutateAsync({ petId: id, data: apiData as UpdatePetData });
       } else {
-        const createData: CreatePetData = {
-          ...transformedValues,
-        };
-        await createMutation.mutateAsync(createData);
+        await createMutation.mutateAsync(apiData as CreatePetData);
       }
     } catch {
       // AntD handles field-level validation errors
