@@ -13,6 +13,7 @@ import {
 import {
 	Avatar,
 	Badge,
+	Button,
 	Input,
 	Popover,
 	Select,
@@ -265,25 +266,25 @@ const AppointmentsTable = ({
 			align: 'center' as const,
 			fixed: 'right' as const,
 			render: (appointment: Appointment) => (
-				<div className='flex items-center justify-center gap-1'>
+				<div className='flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
 					<Tooltip title='View'>
-						<button
-							type='button'
+						<Button
+							type='text'
+							size='small'
+							icon={<EyeOutlined className='text-blue-600' />}
 							onClick={() => onView(appointment)}
-							className='p-1 hover:bg-blue-50 rounded transition-colors text-blue-600'
-						>
-							<EyeOutlined />
-						</button>
+							className='flex items-center justify-center bg-blue-50 hover:bg-blue-100 border-blue-100'
+						/>
 					</Tooltip>
 					<Tooltip title='Cancel'>
-						<button
-							type='button'
+						<Button
+							type='text'
+							size='small'
+							icon={<CloseOutlined className='text-red-500' />}
 							onClick={() => onCancel(appointment.id)}
-							className='p-1 hover:bg-red-50 rounded transition-colors text-red-600 disabled:opacity-30 disabled:cursor-not-allowed'
+							className='flex items-center justify-center bg-red-50 hover:bg-red-100 border-red-100 disabled:opacity-50'
 							disabled={['cancelled', 'completed', 'no_show'].includes(appointment.status)}
-						>
-							<CloseOutlined />
-						</button>
+						/>
 					</Tooltip>
 				</div>
 			),
@@ -322,11 +323,12 @@ const AppointmentsTable = ({
 					pageSizeOptions: TABLE_PAGE_SIZES.map(String),
 					position: ['topCenter', 'bottomCenter'],
 					size: 'default',
+					simple: false,
 				}}
 				onChange={handleTableChange}
 				scroll={{ x: 'max-content' }}
 				className='compact-table'
-				rowClassName='hover:bg-gray-50 transition-colors duration-200'
+				rowClassName='group hover:bg-gray-50 transition-colors duration-200'
 				locale={{
 					emptyText: loading ? null : (
 						<div className='text-center py-12'>

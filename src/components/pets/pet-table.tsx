@@ -1,5 +1,6 @@
 import type { Pet, PetTableProps } from '@/types';
 import { getPetGenderColor, getPetSizeColor, getPetSpeciesColor } from '@/utils/color-helpers';
+import { toast } from '@/utils/toast';
 import {
 	CheckCircleOutlined,
 	CheckOutlined,
@@ -9,7 +10,7 @@ import {
 	EyeOutlined,
 	HeartOutlined,
 } from '@ant-design/icons';
-import { Avatar, Input, Table, Tag, Tooltip } from 'antd';
+import { Avatar, Button, Input, Table, Tag, Tooltip } from 'antd';
 
 import { TABLE_PAGE_SIZES } from '@/constants';
 import { useState } from 'react';
@@ -56,6 +57,7 @@ const PetTable = ({
 		// TODO: Implement API call to save the edit
 		// For now, just close the edit mode
 		console.log('Saving edit:', editingCell, editValue);
+		toast.success('Edit Saved', 'Value updated successfully'); // Mock feedback
 		setEditingCell(null);
 		setEditValue('');
 	};
@@ -275,33 +277,33 @@ const PetTable = ({
 			align: 'center' as const,
 			fixed: 'right' as const,
 			render: (pet: Pet) => (
-				<div className='flex items-center justify-center gap-1'>
+				<div className='flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
 					<Tooltip title='View'>
-						<button
-							type='button'
+						<Button
+							type="text"
+							size="small"
+							icon={<EyeOutlined className='text-blue-600' />}
 							onClick={() => onViewPet(pet)}
-							className='p-1 hover:bg-blue-50 rounded transition-colors'
-						>
-							<EyeOutlined className='text-blue-600 text-sm' />
-						</button>
+							className="flex items-center justify-center bg-blue-50 hover:bg-blue-100 border-blue-100"
+						/>
 					</Tooltip>
 					<Tooltip title='Edit'>
-						<button
-							type='button'
+						<Button
+							type="text"
+							size="small"
+							icon={<EditOutlined className='text-green-600' />}
 							onClick={() => onEditPet(pet)}
-							className='p-1 hover:bg-green-50 rounded transition-colors'
-						>
-							<EditOutlined className='text-green-600 text-sm' />
-						</button>
+							className="flex items-center justify-center bg-green-50 hover:bg-green-100 border-green-100"
+						/>
 					</Tooltip>
 					<Tooltip title='Delete'>
-						<button
-							type='button'
+						<Button
+							type="text"
+							size="small"
+							icon={<DeleteOutlined className='text-red-500' />}
 							onClick={() => onDeletePet(pet.id)}
-							className='p-1 hover:bg-red-50 rounded transition-colors'
-						>
-							<DeleteOutlined className='text-red-600 text-sm' />
-						</button>
+							className="flex items-center justify-center bg-red-50 hover:bg-red-100 border-red-100"
+						/>
 					</Tooltip>
 				</div>
 			),
@@ -330,6 +332,7 @@ const PetTable = ({
 					pageSizeOptions: TABLE_PAGE_SIZES.map(String),
 					position: ['topCenter', 'bottomCenter'],
 					size: 'default',
+					simple: false,
 				}}
 				onChange={onTableChange}
 				rowSelection={{
@@ -347,6 +350,7 @@ const PetTable = ({
 						</div>
 					),
 				}}
+				rowClassName='group hover:bg-gray-50 transition-colors cursor-pointer'
 			/>
 		</div>
 	);

@@ -1,6 +1,7 @@
 import { TableSkeleton } from '@/components/shared';
 import { TABLE_PAGE_SIZES, USER_TABLE_COLUMNS } from '@/constants';
 import type { User, UserTableProps } from '@/types';
+import { toast } from '@/utils/toast';
 import {
 	CheckCircleOutlined,
 	CloseCircleOutlined,
@@ -12,7 +13,7 @@ import {
 	SaveOutlined,
 	UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Input, Select, Switch, Table, Tooltip, message } from 'antd';
+import { Avatar, Button, Input, Select, Switch, Table, Tooltip } from 'antd';
 import { useState } from 'react';
 
 const UserTable = ({
@@ -49,7 +50,7 @@ const UserTable = ({
 
 	const saveEdit = async () => {
 		// Here you would call your API to update the user with editingCell and editValue
-		message.success('User updated successfully');
+		toast.success('User updated successfully');
 		setEditingCell(null);
 		setEditValue('');
 	};
@@ -270,20 +271,26 @@ const UserTable = ({
 		{
 			title: 'Actions',
 			key: USER_TABLE_COLUMNS.ACTIONS,
-			width: 80,
+			width: 100,
 			align: 'center' as const,
 			render: (user: User) => (
-				<div className='flex items-center justify-center gap-4'>
+				<div className='flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
 					<Tooltip title='Edit'>
-						<EditOutlined
-							className='text-blue-600 cursor-pointer hover:text-blue-700 text-sm'
+						<Button
+							type="text"
+							size="small"
+							icon={<EditOutlined className='text-blue-600' />}
 							onClick={() => onEditUser(user)}
+							className="flex items-center justify-center bg-blue-50 hover:bg-blue-100 border-blue-100"
 						/>
 					</Tooltip>
 					<Tooltip title='Delete'>
-						<DeleteOutlined
-							className='text-red-500 cursor-pointer hover:text-red-600 text-sm'
+						<Button
+							type="text"
+							size="small"
+							icon={<DeleteOutlined className='text-red-500' />}
 							onClick={() => onDeleteUser(user.id)}
+							className="flex items-center justify-center bg-red-50 hover:bg-red-100 border-red-100"
 						/>
 					</Tooltip>
 				</div>
@@ -325,7 +332,7 @@ const UserTable = ({
 				}}
 				onChange={onTableChange}
 				size='small'
-				rowClassName='hover:bg-gray-50 transition-colors cursor-pointer'
+				rowClassName='group hover:bg-gray-50 transition-colors cursor-pointer'
 				className='compact-table'
 				locale={{
 					emptyText: loading ? null : (

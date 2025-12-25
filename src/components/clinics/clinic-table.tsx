@@ -2,7 +2,6 @@ import {
 	CheckCircleOutlined,
 	ClockCircleOutlined,
 	DeleteOutlined,
-	DownOutlined,
 	EditOutlined,
 	EnvironmentOutlined,
 	EyeOutlined,
@@ -10,6 +9,7 @@ import {
 	LinkOutlined,
 	MailOutlined,
 	MedicineBoxOutlined,
+	MoreOutlined,
 	PhoneOutlined,
 	StarFilled,
 	TeamOutlined,
@@ -208,14 +208,13 @@ const ClinicTable = ({
 			),
 		},
 		{
+			title: 'Actions',
+			key: 'actions',
+			width: 120,
+			align: 'center',
+			fixed: 'right' as const,
 			render: (_, record: Clinic) => {
-				const items = [
-					{
-						key: 'view',
-						label: t('clinicTable.viewDetails'),
-						icon: <EyeOutlined className='text-blue-600' />,
-						onClick: () => onView && onView(record),
-					},
+				const moreItems = [
 					{
 						key: 'staff',
 						label: t('clinicTable.viewStaffVeterinarians'),
@@ -229,10 +228,7 @@ const ClinicTable = ({
 						onClick: () => handleViewPetCases(record),
 					},
 					{
-						key: 'edit',
-						label: t('clinicTable.editClinic'),
-						icon: <EditOutlined className='text-orange-600' />,
-						onClick: () => onEdit(record),
+						type: 'divider',
 					},
 					{
 						key: 'delete',
@@ -244,12 +240,34 @@ const ClinicTable = ({
 				];
 
 				return (
-					<Dropdown menu={{ items }} trigger={['click']}>
-						<Button type='text' size='small' className='flex items-center gap-1 text-gray-500 hover:text-gray-700'>
-							Actions
-							<DownOutlined className='text-xs' />
-						</Button>
-					</Dropdown>
+					<div className='flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
+						<Tooltip title={t('clinicTable.viewDetails')}>
+							<Button
+								type='text'
+								size='small'
+								icon={<EyeOutlined className='text-blue-600' />}
+								className='flex items-center justify-center'
+								onClick={() => onView && onView(record)}
+							/>
+						</Tooltip>
+						<Tooltip title={t('clinicTable.editClinic')}>
+							<Button
+								type='text'
+								size='small'
+								icon={<EditOutlined className='text-orange-600' />}
+								className='flex items-center justify-center'
+								onClick={() => onEdit(record)}
+							/>
+						</Tooltip>
+						<Dropdown menu={{ items: moreItems as any }} trigger={['click']} placement="bottomRight">
+							<Button
+								type='text'
+								size='small'
+								icon={<MoreOutlined className='text-gray-500' />}
+								className='flex items-center justify-center'
+							/>
+						</Dropdown>
+					</div>
 				);
 			},
 		},
@@ -268,7 +286,7 @@ const ClinicTable = ({
 				size='small'
 				className='compact-table'
 				scroll={{ x: 1000 }}
-				rowClassName='hover:bg-gray-50 transition-colors cursor-pointer'
+				rowClassName='group hover:bg-gray-50 transition-colors cursor-pointer'
 				locale={{
 					emptyText: loading ? null : (
 						<div className='text-center py-12'>

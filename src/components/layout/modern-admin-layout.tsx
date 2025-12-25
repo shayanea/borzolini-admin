@@ -1,5 +1,6 @@
 /* eslint-env browser */
 
+import { useQueryClient } from '@tanstack/react-query';
 import { Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -16,7 +17,10 @@ interface ModernAdminLayoutProps {
 	onLogout?: () => void;
 }
 
+
+
 function ModernAdminLayout({ onLogout }: ModernAdminLayoutProps) {
+	const queryClient = useQueryClient();
 	const { user, logout } = useAuthStore();
 	const navigate = useNavigate();
 	const [showCommandPalette, setShowCommandPalette] = useState(false);
@@ -57,6 +61,9 @@ function ModernAdminLayout({ onLogout }: ModernAdminLayoutProps) {
 	];
 
 	const handleLogout = (): void => {
+		// Clear react-query cache to prevent stale data on re-login
+		queryClient.removeQueries();
+
 		if (onLogout) {
 			onLogout();
 		} else {
@@ -73,7 +80,7 @@ function ModernAdminLayout({ onLogout }: ModernAdminLayoutProps) {
 			<ModernSidebar collapsed={true} />
 
 			{/* Main Content Area */}
-			<div className='flex-1 flex flex-col overflow-hidden'>
+			<div className='flex-1 flex flex-col overflow-hidden bg-transparent'>
 				{/* Header */}
 				<ModernHeader userName={userName} userRole={userRole} onLogout={handleLogout} />
 
