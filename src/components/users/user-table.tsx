@@ -1,3 +1,4 @@
+import { TableSkeleton } from '@/components/shared';
 import { TABLE_PAGE_SIZES, USER_TABLE_COLUMNS } from '@/constants';
 import type { User, UserTableProps } from '@/types';
 import {
@@ -29,7 +30,12 @@ const UserTable = ({
 	onToggleActive,
 }: UserTableProps) => {
 	const [editingCell, setEditingCell] = useState<{ userId: string; field: string } | null>(null);
+
 	const [editValue, setEditValue] = useState<string>('');
+
+	if (loading && users.length === 0) {
+		return <TableSkeleton />;
+	}
 
 	const startEdit = (userId: string, field: string, currentValue: string) => {
 		setEditingCell({ userId, field });

@@ -13,3 +13,4 @@ export type { DayOfWeek, OperatingHoursFieldsProps } from './operating-hours-fie
 export type { SocialMediaFieldsProps } from './social-media-fields';
 
 export { default as Breadcrumbs } from './breadcrumbs';
+export * from './skeletons';

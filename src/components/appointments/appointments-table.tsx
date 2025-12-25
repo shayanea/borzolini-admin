@@ -1,3 +1,4 @@
+import { TableSkeleton } from '@/components/shared';
 import {
 	formatAppointmentType
 } from '@/utils/color-helpers';
@@ -110,6 +111,10 @@ const AppointmentsTable = ({
 	const { t } = useTranslation('components');
 	const { clinicContext } = useClinicContext();
 	const { data: staffData } = useClinicStaff({ enabled: !!clinicContext?.clinicId });
+
+	if (loading && appointments.length === 0) {
+		return <TableSkeleton />;
+	}
 
 	const handleInlineUpdate = async (id: string, data: Partial<Appointment>) => {
 		if (onUpdate) {

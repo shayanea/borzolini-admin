@@ -15,6 +15,10 @@ import { TABLE_PAGE_SIZES } from '@/constants';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { TableSkeleton } from '@/components/shared';
+
+// ... (existing imports)
+
 const PetTable = ({
 	pets,
 	loading = false,
@@ -31,7 +35,12 @@ const PetTable = ({
 }: PetTableProps) => {
 	const { t } = useTranslation('components');
 	const [editingCell, setEditingCell] = useState<{ id: string; field: string } | null>(null);
+
 	const [editValue, setEditValue] = useState<string>('');
+
+	if (loading && pets.length === 0) {
+		return <TableSkeleton />;
+	}
 
 	const startEdit = (petId: string, field: string, currentValue: string) => {
 		setEditingCell({ id: petId, field });

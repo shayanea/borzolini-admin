@@ -1,3 +1,4 @@
+import { FormSkeleton } from '@/components/shared';
 import {
 	AccountInfoSection,
 	AddressSection,
@@ -5,7 +6,7 @@ import {
 } from '@/components/users/user-form-sections';
 import { USER_FORM_LABELS } from '@/constants/user-management';
 import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Space, Spin, Typography } from 'antd';
+import { Button, Card, Form, Space, Typography } from 'antd';
 
 import { useUserForm } from '@/hooks/users/use-user-form';
 import type { UserFormValues } from '@/types/user-management';
@@ -18,11 +19,7 @@ const UserFormPage = () => {
 	const title = isEditing ? USER_FORM_LABELS.EDIT_TITLE : USER_FORM_LABELS.CREATE_TITLE;
 
 	if (loadingUser) {
-		return (
-			<Card className='admin-card flex items-center justify-center min-h-[200px]'>
-				<Spin />
-			</Card>
-		);
+		return <FormSkeleton />;
 	}
 
 	return (

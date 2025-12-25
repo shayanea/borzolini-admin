@@ -17,6 +17,7 @@ import {
 import { Button, Dropdown, Table, Tooltip, Typography } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
 
+import { TableSkeleton } from '@/components/shared';
 import { ROUTES } from '@/constants/routes';
 import type { Clinic } from '@/types';
 import type { TablePaginationConfig } from 'antd';
@@ -50,6 +51,10 @@ const ClinicTable = ({
 }: ClinicTableProps) => {
 	const navigate = useNavigate();
 	const { t } = useTranslation('components');
+
+	if (loading && clinics.length === 0) {
+		return <TableSkeleton />;
+	}
 
 	const handleViewPetCases = (clinic: Clinic) => {
 		navigate(`${ROUTES.PET_CASES}?clinicId=${clinic.id}`);
