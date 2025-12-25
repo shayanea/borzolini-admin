@@ -2,6 +2,7 @@ import {
 	CheckCircleOutlined,
 	ClockCircleOutlined,
 	DeleteOutlined,
+	DownOutlined,
 	EditOutlined,
 	EnvironmentOutlined,
 	EyeOutlined,
@@ -13,7 +14,7 @@ import {
 	StarFilled,
 	TeamOutlined,
 } from '@ant-design/icons';
-import { Table, Tooltip, Typography } from 'antd';
+import { Button, Dropdown, Table, Tooltip, Typography } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
 
 import { ROUTES } from '@/constants/routes';
@@ -159,9 +160,19 @@ const ClinicTable = ({
 			width: 100,
 			align: 'center',
 			render: (_, record: Clinic) => (
-				<span className='text-xs text-gray-600'>
-					{record.services.length} {record.services.length === 1 ? 'service' : 'services'}
-				</span>
+				<Tooltip
+					title={
+						<div className='flex flex-col gap-1'>
+							{record.services.map((service, index) => (
+								<span key={index}>{service}</span>
+							))}
+						</div>
+					}
+				>
+					<span className='text-xs text-gray-600 cursor-help border-b border-dashed border-gray-400'>
+						{record.services.length} {record.services.length === 1 ? 'service' : 'services'}
+					</span>
+				</Tooltip>
 			),
 		},
 		{
@@ -192,49 +203,50 @@ const ClinicTable = ({
 			),
 		},
 		{
-			title: t('clinicTable.actions'),
-			key: 'actions',
-			width: 120,
-			align: 'center',
-			fixed: 'right' as const,
-			render: (_, record: Clinic) => (
-				<div className='flex items-center justify-center gap-1'>
-					<Tooltip title={t('clinicTable.viewDetails')}>
-						<EyeOutlined
-							className='text-blue-600 cursor-pointer hover:text-blue-700 text-sm'
-							onClick={() => onView && onView(record)}
-						/>
-					</Tooltip>
+			render: (_, record: Clinic) => {
+				const items = [
+					{
+						key: 'view',
+						label: t('clinicTable.viewDetails'),
+						icon: <EyeOutlined className='text-blue-600' />,
+						onClick: () => onView && onView(record),
+					},
+					{
+						key: 'staff',
+						label: t('clinicTable.viewStaffVeterinarians'),
+						icon: <TeamOutlined className='text-green-600' />,
+						onClick: () => onViewStaff && onViewStaff(record),
+					},
+					{
+						key: 'pet-cases',
+						label: t('clinicTable.viewPetCases'),
+						icon: <HeartOutlined className='text-pink-600' />,
+						onClick: () => handleViewPetCases(record),
+					},
+					{
+						key: 'edit',
+						label: t('clinicTable.editClinic'),
+						icon: <EditOutlined className='text-orange-600' />,
+						onClick: () => onEdit(record),
+					},
+					{
+						key: 'delete',
+						label: t('clinicTable.deleteClinic'),
+						icon: <DeleteOutlined className='text-red-500' />,
+						danger: true,
+						onClick: () => onDelete(record.id),
+					},
+				];
 
-					<Tooltip title={t('clinicTable.viewStaffVeterinarians')}>
-						<TeamOutlined
-							className='text-green-600 cursor-pointer hover:text-green-700 text-sm'
-							onClick={() => onViewStaff && onViewStaff(record)}
-						/>
-					</Tooltip>
-
-					<Tooltip title={t('clinicTable.viewPetCases')}>
-						<HeartOutlined
-							className='text-pink-600 cursor-pointer hover:text-pink-700 text-sm'
-							onClick={() => handleViewPetCases(record)}
-						/>
-					</Tooltip>
-
-					<Tooltip title={t('clinicTable.editClinic')}>
-						<EditOutlined
-							className='text-orange-600 cursor-pointer hover:text-orange-700 text-sm'
-							onClick={() => onEdit(record)}
-						/>
-					</Tooltip>
-
-					<Tooltip title={t('clinicTable.deleteClinic')}>
-						<DeleteOutlined
-							className='text-red-500 cursor-pointer hover:text-red-600 text-sm'
-							onClick={() => onDelete(record.id)}
-						/>
-					</Tooltip>
-				</div>
-			),
+				return (
+					<Dropdown menu={{ items }} trigger={['click']}>
+						<Button type='text' size='small' className='flex items-center gap-1 text-gray-500 hover:text-gray-700'>
+							Actions
+							<DownOutlined className='text-xs' />
+						</Button>
+					</Dropdown>
+				);
+			},
 		},
 	];
 
