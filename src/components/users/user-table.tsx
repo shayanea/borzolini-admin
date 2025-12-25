@@ -267,7 +267,7 @@ const UserTable = ({
 			width: 80,
 			align: 'center' as const,
 			render: (user: User) => (
-				<div className='flex items-center justify-center gap-1'>
+				<div className='flex items-center justify-center gap-4'>
 					<Tooltip title='Edit'>
 						<EditOutlined
 							className='text-blue-600 cursor-pointer hover:text-blue-700 text-sm'

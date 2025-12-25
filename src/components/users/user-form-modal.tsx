@@ -49,6 +49,7 @@ const UserFormModal = ({
 					avatar: editingUser.avatar,
 					isActive: editingUser.isActive,
 					isEmailVerified: editingUser.isEmailVerified,
+					clinic_id: editingUser.clinicId || editingUser.clinic_id,
 				});
 			} else {
 				form.resetFields();

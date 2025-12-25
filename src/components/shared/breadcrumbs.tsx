@@ -55,9 +55,9 @@ const Breadcrumbs = () => {
 		return {
 			key: url,
 			title: isLast ? (
-				<span className="font-bold text-blue-600">{title}</span>
+				<span className="font-bold text-primary-orange">{title}</span>
 			) : (
-				<Link to={url} className="text-slate-500 hover:text-blue-600">
+				<Link to={url} className="text-slate-500 hover:text-primary-orange">
 					{title}
 				</Link>
 			),
@@ -68,7 +68,7 @@ const Breadcrumbs = () => {
 		{
 			key: 'home',
 			title: (
-				<Link to={ROUTES.DASHBOARD} className="flex items-center gap-2 text-slate-500 hover:text-blue-600">
+				<Link to={ROUTES.DASHBOARD} className="flex items-center gap-2 text-slate-500 hover:text-primary-orange">
 					<HomeOutlined className="mr-2" />
 					<span>{t('common.home', 'Home page')}</span>
 				</Link>

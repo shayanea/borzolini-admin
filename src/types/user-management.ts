@@ -80,4 +80,5 @@ export interface UserFormValues {
   avatar?: string;
   isActive?: boolean;
   isEmailVerified?: boolean;
+  clinic_id?: string;
 }

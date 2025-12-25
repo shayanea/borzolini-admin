@@ -27,6 +27,7 @@ const PetTable = ({
 	onDeletePet,
 	onTableChange,
 	onRowSelectionChange,
+	onOwnerClick,
 }: PetTableProps) => {
 	const { t } = useTranslation('components');
 	const [editingCell, setEditingCell] = useState<{ id: string; field: string } | null>(null);
@@ -195,8 +196,11 @@ const PetTable = ({
 			key: 'owner',
 			width: 180,
 			render: (pet: Pet) => (
-				<div>
-					<div className='font-medium text-sm text-gray-900 truncate'>
+				<div
+					className={onOwnerClick ? 'cursor-pointer hover:bg-gray-50 -m-2 p-2 rounded' : ''}
+					onClick={() => onOwnerClick?.(pet.owner_id)}
+				>
+					<div className='font-medium text-sm text-gray-900 truncate hover:text-blue-600'>
 						{pet.owner.firstName} {pet.owner.lastName}
 					</div>
 					<div className='text-xs text-gray-500 truncate'>{pet.owner.email}</div>

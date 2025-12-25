@@ -1,6 +1,6 @@
 import type { PaginatedResponse, User, UserRole } from '@/types';
 
-import { BaseQueryParams, BaseService } from '../core/base.service';
+import { BaseQueryParams, BaseService, ValidationHelper } from '../core/base.service';
 
 export interface CreateUserData {
   email: string;
@@ -27,6 +27,7 @@ export interface UpdateUserData {
   role?: UserRole;
   isActive?: boolean;
   isEmailVerified?: boolean;
+  clinic_id?: string;
 }
 
 export interface UsersQueryParams extends BaseQueryParams {
@@ -96,6 +97,19 @@ export class UsersService extends BaseService<User, CreateUserData, UpdateUserDa
   static async updateUser(id: string, data: UpdateUserData): Promise<User> {
     const service = new UsersService();
     return service.update(id, data);
+  }
+
+  // Override update to use PUT instead of PATCH
+  async update(id: string, data: UpdateUserData): Promise<User> {
+    ValidationHelper.requireId(id, this.getEntityName());
+    ValidationHelper.requireData(data, this.getEntityName());
+
+    const response = await this.putRequest<User>(`${this.baseUrl}/${id}`, data);
+
+    this.invalidateCache();
+    this.validateObjectResponse(response, this.getEntityName());
+
+    return response;
   }
 
   // Delete user

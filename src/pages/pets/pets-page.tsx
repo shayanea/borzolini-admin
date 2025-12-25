@@ -57,6 +57,13 @@ function PetsPage() {
 		[navigate]
 	);
 
+	const handleOwnerClick = useCallback(
+		(ownerId: string) => {
+			navigate(`${ROUTES.USERS}/edit/${ownerId}`);
+		},
+		[navigate]
+	);
+
 	// Delete confirmation
 	const handleDeletePetConfirm = useCallback(
 		(petId: string) => {
@@ -161,6 +168,7 @@ function PetsPage() {
 				onViewPet={handleViewPet}
 				onEditPet={handleEditPet}
 				onDeletePet={handleDeletePetConfirm}
+				onOwnerClick={handleOwnerClick}
 				onTableChange={handleTableChange}
 				onRowSelectionChange={(keys, rows) => {
 					setLocalSelectedRowKeys(keys);

@@ -42,6 +42,7 @@ export interface PetTableProps {
   onDeletePet: (petId: string) => void;
   onTableChange: (pagination: any, filters: any, sorter: any) => void;
   onRowSelectionChange: (selectedRowKeys: React.Key[], selectedRows: Pet[]) => void;
+  onOwnerClick?: (ownerId: string) => void;
 }
 
 // Pet filters props
