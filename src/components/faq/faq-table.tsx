@@ -36,15 +36,6 @@ export const FAQTable = ({
 }: FAQTableProps) => {
 	const columns: ColumnsType<FAQ> = [
 		{
-			title: 'Order',
-			dataIndex: 'order',
-			key: 'order',
-			width: 80,
-			sorter: true,
-			sortOrder: sortBy === 'order' ? (sortOrder === 'asc' ? 'ascend' : 'descend') : null,
-			render: (order: number) => order ?? '-',
-		},
-		{
 			title: 'Question',
 			dataIndex: 'question',
 			key: 'question',
@@ -73,17 +64,28 @@ export const FAQTable = ({
 			key: 'category',
 			width: 150,
 			filters: [
-				{ text: 'General', value: 'General' },
-				{ text: 'Appointments', value: 'Appointments' },
-				{ text: 'Billing', value: 'Billing' },
-				{ text: 'Services', value: 'Services' },
+				{ text: 'General Care', value: 'general_care' },
+				{ text: 'Health Care', value: 'health_care' },
+				{ text: 'Feeding & Nutrition', value: 'feeding_nutrition' },
+				{ text: 'Training & Behavior', value: 'training_behavior' },
+				{ text: 'Housing & Environment', value: 'housing_environment' },
+				{ text: 'Exercise & Activity', value: 'exercise_activity' },
 			],
-			render: (category: string) =>
-				category ? (
-					<Tag color="blue">{category}</Tag>
+			render: (category: string) => {
+				const labels: Record<string, string> = {
+					general_care: 'General Care',
+					health_care: 'Health Care',
+					feeding_nutrition: 'Feeding & Nutrition',
+					training_behavior: 'Training & Behavior',
+					housing_environment: 'Housing & Environment',
+					exercise_activity: 'Exercise & Activity',
+				};
+				return category ? (
+					<Tag color="blue">{labels[category] || category}</Tag>
 				) : (
 					<Tag color="default">Uncategorized</Tag>
-				),
+				);
+			},
 		},
 		{
 			title: 'Status',

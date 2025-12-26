@@ -1,12 +1,20 @@
 import { FAQService } from '@/services/faq';
-import type { CreateFAQDto, FAQ, FAQQueryParams, UpdateFAQDto } from '@/types';
+import type { CreateFAQDto, FAQQueryParams, UpdateFAQDto } from '@/types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+
+// Query keys factory
+const faqKeys = {
+  all: ['faqs'] as const,
+  lists: () => [...faqKeys.all, 'list'] as const,
+  list: (params: FAQQueryParams) => [...faqKeys.lists(), params] as const,
+  details: () => [...faqKeys.all, 'detail'] as const,
+  detail: (id: string) => [...faqKeys.details(), id] as const,
+};
 
 export const useFAQManagement = () => {
-  const [faqs, setFaqs] = useState<FAQ[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [total, setTotal] = useState(0);
+  // Filter and pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [searchText, setSearchText] = useState('');
@@ -15,39 +23,85 @@ export const useFAQManagement = () => {
   const [sortBy, setSortBy] = useState<string | undefined>(undefined);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | undefined>(undefined);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
-  const [bulkLoading, setBulkLoading] = useState(false);
 
-  const fetchFAQs = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params: FAQQueryParams = {
-        page: currentPage,
-        limit: pageSize,
-        search: searchText || undefined,
-        category: selectedCategory,
-        is_active: selectedStatus,
-        sortBy,
-        sortOrder,
-      };
+  const queryClient = useQueryClient();
 
-      const response = await FAQService.getFAQs(params);
-      setFaqs(response.data);
-      setTotal(response.total);
-      setCurrentPage(response.page);
-      setPageSize(response.limit);
-    } catch (error: any) {
-      message.error(error.message || 'Failed to fetch FAQs');
-      setFaqs([]);
-      setTotal(0);
-    } finally {
-      setLoading(false);
-    }
-  }, [currentPage, pageSize, searchText, selectedCategory, selectedStatus, sortBy, sortOrder]);
+  // Build query params
+  const queryParams = useMemo<FAQQueryParams>(
+    () => ({
+      page: currentPage,
+      limit: pageSize,
+      search: searchText || undefined,
+      category: selectedCategory,
+      is_active: selectedStatus,
+      sortBy,
+      sortOrder,
+    }),
+    [currentPage, pageSize, searchText, selectedCategory, selectedStatus, sortBy, sortOrder]
+  );
 
-  useEffect(() => {
-    fetchFAQs();
-  }, [fetchFAQs]);
+  // Fetch FAQs with React Query
+  const {
+    data: faqResponse,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: faqKeys.list(queryParams),
+    queryFn: () => FAQService.getFAQs(queryParams),
+    staleTime: 30000, // 30 seconds
+  });
 
+  // Create FAQ mutation
+  const createMutation = useMutation({
+    mutationFn: (data: CreateFAQDto) => FAQService.createFAQ(data),
+    onSuccess: () => {
+      message.success('FAQ created successfully');
+      queryClient.invalidateQueries({ queryKey: faqKeys.lists() });
+    },
+    onError: (error: any) => {
+      message.error(error.message || 'Failed to create FAQ');
+    },
+  });
+
+  // Update FAQ mutation
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateFAQDto }) =>
+      FAQService.updateFAQ(id, data),
+    onSuccess: () => {
+      message.success('FAQ updated successfully');
+      queryClient.invalidateQueries({ queryKey: faqKeys.lists() });
+    },
+    onError: (error: any) => {
+      message.error(error.message || 'Failed to update FAQ');
+    },
+  });
+
+  // Delete FAQ mutation
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => FAQService.deleteFAQ(id),
+    onSuccess: () => {
+      message.success('FAQ deleted successfully');
+      queryClient.invalidateQueries({ queryKey: faqKeys.lists() });
+    },
+    onError: (error: any) => {
+      message.error(error.message || 'Failed to delete FAQ');
+    },
+  });
+
+  // Bulk delete mutation
+  const bulkDeleteMutation = useMutation({
+    mutationFn: (ids: string[]) => FAQService.bulkDeleteFAQs(ids),
+    onSuccess: (_, ids) => {
+      message.success(`${ids.length} FAQ(s) deleted successfully`);
+      setSelectedRowKeys([]);
+      queryClient.invalidateQueries({ queryKey: faqKeys.lists() });
+    },
+    onError: (error: any) => {
+      message.error(error.message || 'Failed to delete FAQs');
+    },
+  });
+
+  // Handler functions
   const handleSearch = useCallback((value: string) => {
     setSearchText(value);
     setCurrentPage(1);
@@ -86,43 +140,23 @@ export const useFAQManagement = () => {
 
   const handleCreateFAQ = useCallback(
     async (data: CreateFAQDto) => {
-      try {
-        await FAQService.createFAQ(data);
-        message.success('FAQ created successfully');
-        fetchFAQs();
-      } catch (error: any) {
-        message.error(error.message || 'Failed to create FAQ');
-        throw error;
-      }
+      await createMutation.mutateAsync(data);
     },
-    [fetchFAQs]
+    [createMutation]
   );
 
   const handleUpdateFAQ = useCallback(
     async (id: string, data: UpdateFAQDto) => {
-      try {
-        await FAQService.updateFAQ(id, data);
-        message.success('FAQ updated successfully');
-        fetchFAQs();
-      } catch (error: any) {
-        message.error(error.message || 'Failed to update FAQ');
-        throw error;
-      }
+      await updateMutation.mutateAsync({ id, data });
     },
-    [fetchFAQs]
+    [updateMutation]
   );
 
   const handleDeleteFAQ = useCallback(
     async (id: string) => {
-      try {
-        await FAQService.deleteFAQ(id);
-        message.success('FAQ deleted successfully');
-        fetchFAQs();
-      } catch (error: any) {
-        message.error(error.message || 'Failed to delete FAQ');
-      }
+      await deleteMutation.mutateAsync(id);
     },
-    [fetchFAQs]
+    [deleteMutation]
   );
 
   const handleBulkDelete = useCallback(async () => {
@@ -130,25 +164,14 @@ export const useFAQManagement = () => {
       message.warning('Please select FAQs to delete');
       return;
     }
-
-    setBulkLoading(true);
-    try {
-      await FAQService.bulkDeleteFAQs(selectedRowKeys);
-      message.success(`${selectedRowKeys.length} FAQ(s) deleted successfully`);
-      setSelectedRowKeys([]);
-      fetchFAQs();
-    } catch (error: any) {
-      message.error(error.message || 'Failed to delete FAQs');
-    } finally {
-      setBulkLoading(false);
-    }
-  }, [selectedRowKeys, fetchFAQs]);
+    await bulkDeleteMutation.mutateAsync(selectedRowKeys);
+  }, [selectedRowKeys, bulkDeleteMutation]);
 
   return {
     // State
-    faqs,
-    loading,
-    total,
+    faqs: faqResponse?.data ?? [],
+    loading: isLoading,
+    total: faqResponse?.total ?? 0,
     currentPage,
     pageSize,
     searchText,
@@ -157,7 +180,7 @@ export const useFAQManagement = () => {
     sortBy,
     sortOrder,
     selectedRowKeys,
-    bulkLoading,
+    bulkLoading: bulkDeleteMutation.isPending,
 
     // Actions
     handleSearch,
@@ -172,7 +195,7 @@ export const useFAQManagement = () => {
     setSelectedRowKeys,
 
     // Utils
-    refetch: fetchFAQs,
+    refetch,
   };
 };
 

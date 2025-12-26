@@ -45,12 +45,12 @@ export const FAQFilters = ({
 					size="large"
 					allowClear
 				>
-					<Option value="General">General</Option>
-					<Option value="Appointments">Appointments</Option>
-					<Option value="Billing">Billing</Option>
-					<Option value="Services">Services</Option>
-					<Option value="Pets">Pets</Option>
-					<Option value="Account">Account</Option>
+					<Option value="general_care">General Care</Option>
+					<Option value="health_care">Health Care</Option>
+					<Option value="feeding_nutrition">Feeding & Nutrition</Option>
+					<Option value="training_behavior">Training & Behavior</Option>
+					<Option value="housing_environment">Housing & Environment</Option>
+					<Option value="exercise_activity">Exercise & Activity</Option>
 				</Select>
 
 				<Select

@@ -1,0 +1,318 @@
+[
+  {
+    "id": "73d9398c-b6ef-47ec-b6c7-0ba829b39d14",
+    "title": "Roll Over",
+    "summary": "A fun party trick.",
+    "content_markdown": "\n### Steps\n1. Start with pet in a **Down**.\n2. Hold treat at nose, move it towards shoulder, then towards backbone.\n3. Pet should shift weight to hip.\n4. Continue lure over the back so they flop over.\n5. Mark and reward.\n\n### Troubleshooting\nIf they stand up, start the lure lower and slower.\n        ",
+    "difficulty": "moderate",
+    "avg_duration_minutes": 15,
+    "indoor": null,
+    "equipment": null,
+    "tags": ["tricks", "fun"],
+    "risks": [],
+    "enrichment": [],
+    "video_url": "https://www.youtube.com/watch?v=5N2q9bW791k",
+    "source_primary": null,
+    "source_name": null,
+    "license": null,
+    "terms_snapshot": null,
+    "created_at": "2025-11-24T14:41:02.634Z",
+    "updated_at": "2025-11-24T14:41:02.634Z",
+    "by_species": [
+      {
+        "id": "9d2f8227-9f8d-4baa-94b8-fb562873d2e2",
+        "species": "dog",
+        "suitability": "Healthy dogs.",
+        "prerequisites": null,
+        "cautions": null,
+        "citations": []
+      }
+    ]
+  },
+  {
+    "id": "a029420c-b9fc-4fae-931e-8a82c949e5c3",
+    "title": "Spin",
+    "summary": "Turning in a circle.",
+    "content_markdown": "\n### Luring\n1. Hold treat at nose level.\n2. Lure the head towards the tail in a tight circle.\n3. Pet will follow the nose.\n4. Mark and reward upon completing the circle.\n\n### Fading the Lure\n1. Make the hand motion without the treat (treat in other hand).\n2. Gradually make the circle gesture smaller and higher.\n        ",
+    "difficulty": "easy",
+    "avg_duration_minutes": 5,
+    "indoor": null,
+    "equipment": null,
+    "tags": ["tricks", "fun", "body-awareness"],
+    "risks": [],
+    "enrichment": [],
+    "video_url": "https://www.youtube.com/watch?v=PjK_P8QvKVM",
+    "source_primary": null,
+    "source_name": null,
+    "license": null,
+    "terms_snapshot": null,
+    "created_at": "2025-11-24T14:41:02.629Z",
+    "updated_at": "2025-11-24T14:41:02.629Z",
+    "by_species": [
+      {
+        "id": "30c75ca5-5c0a-495a-b0a3-4814e41f2945",
+        "species": "cat",
+        "suitability": "Agile cats.",
+        "prerequisites": null,
+        "cautions": null,
+        "citations": []
+      },
+      {
+        "id": "53f15112-7eb5-4a2f-8755-aec64ce1fdc5",
+        "species": "dog",
+        "suitability": "All dogs.",
+        "prerequisites": null,
+        "cautions": null,
+        "citations": []
+      }
+    ]
+  },
+  {
+    "id": "a5916881-9921-4f7c-ab80-941fc642b3a7",
+    "title": "Shake / High Five",
+    "summary": "A classic trick for dogs and cats.",
+    "content_markdown": "\n### Steps\n1. Have a treat in your closed fist.\n2. Hold it near the pet's chest/paw level.\n3. They will sniff, then eventually paw at your hand.\n4. **Click** the moment paw touches hand. Open hand to give treat.\n5. Repeat.\n6. Add verbal cue \"Shake\" or \"High Five\".\n7. Switch to open palm signal.\n        ",
+    "difficulty": "easy",
+    "avg_duration_minutes": 10,
+    "indoor": null,
+    "equipment": null,
+    "tags": ["tricks", "fun", "bonding"],
+    "risks": [],
+    "enrichment": [],
+    "video_url": "https://www.youtube.com/watch?v=Rg6Tf5lXfME",
+    "source_primary": null,
+    "source_name": null,
+    "license": null,
+    "terms_snapshot": null,
+    "created_at": "2025-11-24T14:41:02.624Z",
+    "updated_at": "2025-11-24T14:41:02.624Z",
+    "by_species": [
+      {
+        "id": "4b735907-2afa-4093-a13c-604e47b2d952",
+        "species": "dog",
+        "suitability": "All dogs.",
+        "prerequisites": null,
+        "cautions": null,
+        "citations": []
+      },
+      {
+        "id": "fd0ccdcf-ab2c-4279-9d9b-3188b94426e4",
+        "species": "cat",
+        "suitability": "Food motivated cats.",
+        "prerequisites": null,
+        "cautions": null,
+        "citations": []
+      }
+    ]
+  },
+  {
+    "id": "403fe072-053c-447f-9f38-101da277dc89",
+    "title": "Play Therapy",
+    "summary": "Reducing aggression and boredom through play.",
+    "content_markdown": "\n### Hunt, Catch, Kill, Eat, Sleep\nReplicate the predatory cycle.\n\n### Steps\n1. Use a wand toy to mimic prey (bird/mouse movements).\n2. Let the cat \"catch\" the toy occasionally to build confidence.\n3. Wind down the play (slower movements).\n4. **Feed a meal** immediately after play.\n5. This leads to the \"Groom and Sleep\" phase.\n\n### Frequency\nPlay for 15-20 mins daily to reduce behavioral issues.\n        ",
+    "difficulty": "easy",
+    "avg_duration_minutes": 20,
+    "indoor": null,
+    "equipment": null,
+    "tags": ["behavior", "enrichment", "exercise"],
+    "risks": [],
+    "enrichment": [],
+    "video_url": "https://www.youtube.com/watch?v=tq7ZgC0q0gM",
+    "source_primary": null,
+    "source_name": null,
+    "license": null,
+    "terms_snapshot": null,
+    "created_at": "2025-11-24T14:41:02.619Z",
+    "updated_at": "2025-11-24T14:41:02.619Z",
+    "by_species": [
+      {
+        "id": "0091de4c-c474-4430-a899-6668beee94a3",
+        "species": "cat",
+        "suitability": "Indoor cats.",
+        "prerequisites": null,
+        "cautions": null,
+        "citations": []
+      }
+    ]
+  },
+  {
+    "id": "55efdcff-4639-45f7-b28f-ae3272348cc6",
+    "title": "Nail Trimming (Cat)",
+    "summary": "Low-stress pedicure.",
+    "content_markdown": "\n### Preparation\nGet cat used to paw handling when relaxed.\n\n### The Cut\n1. Gently press the pad to extend the claw.\n2. Identify the \"quick\" (the pink part). **Do not cut this.**\n3. Trim just the sharp white tip.\n4. Do one nail -> Treat -> Release.\n5. Build up to doing a whole paw over time.\n        ",
+    "difficulty": "advanced",
+    "avg_duration_minutes": 10,
+    "indoor": null,
+    "equipment": null,
+    "tags": ["grooming", "husbandry", "care"],
+    "risks": [],
+    "enrichment": [],
+    "video_url": "https://www.youtube.com/watch?v=o1XisXyragM",
+    "source_primary": null,
+    "source_name": null,
+    "license": null,
+    "terms_snapshot": null,
+    "created_at": "2025-11-24T14:41:02.616Z",
+    "updated_at": "2025-11-24T14:41:02.616Z",
+    "by_species": [
+      {
+        "id": "0fd27c22-a59c-4941-99d0-5703f6e0aa6d",
+        "species": "cat",
+        "suitability": "All cats.",
+        "prerequisites": null,
+        "cautions": null,
+        "citations": []
+      }
+    ]
+  },
+  {
+    "id": "2767d337-4434-468a-8499-a33185175cf7",
+    "title": "Stop Counter Surfing",
+    "summary": "Keeping cats off kitchen counters.",
+    "content_markdown": "\n### The \"No\" is not enough; Provide a \"Yes\"\n1. Cats seek height. Provide a cat tree or shelf *near* the counter.\n2. Reward heavily when they are on the \"Yes\" spot (Cat tree).\n3. Make the counter boring: Keep food stored away, wipe crumbs.\n4. Use double-sided tape or aluminum foil temporarily as a deterrent.\n\n### The Concept\nWe are redirecting the natural instinct to climb to an appropriate location.\n        ",
+    "difficulty": "moderate",
+    "avg_duration_minutes": 10,
+    "indoor": null,
+    "equipment": null,
+    "tags": ["behavior", "management", "home"],
+    "risks": [],
+    "enrichment": [],
+    "video_url": "https://www.youtube.com/watch?v=Wf6vVd8r02k",
+    "source_primary": null,
+    "source_name": null,
+    "license": null,
+    "terms_snapshot": null,
+    "created_at": "2025-11-24T14:41:02.613Z",
+    "updated_at": "2025-11-24T14:41:02.613Z",
+    "by_species": [
+      {
+        "id": "ae81e258-c961-4d5f-b710-cad3d14e79d8",
+        "species": "cat",
+        "suitability": "All cats.",
+        "prerequisites": null,
+        "cautions": null,
+        "citations": []
+      }
+    ]
+  },
+  {
+    "id": "63855c7f-e924-4526-8c1d-2ce2955ef934",
+    "title": "Carrier Training: The Safe Space",
+    "summary": "Making the carrier a happy place.",
+    "content_markdown": "\n### The Environment\n1. Leave the carrier out 24/7 with a comfy blanket.\n2. Take the door off initially.\n\n### Feeding\n1. Feed treats near the carrier.\n2. Gradually move bowl inside the carrier.\n3. Once comfortable, put the door back on.\n4. Practice closing the door for seconds while they eat.\n\n### Travel\nGo for short car rides that end back at home with treats, so the carrier doesn't always equal \"Vet\".\n        ",
+    "difficulty": "moderate",
+    "avg_duration_minutes": 15,
+    "indoor": null,
+    "equipment": null,
+    "tags": ["husbandry", "stress-reduction", "travel"],
+    "risks": [],
+    "enrichment": [],
+    "video_url": "https://www.youtube.com/watch?v=pD4wMhfVvF8",
+    "source_primary": null,
+    "source_name": null,
+    "license": null,
+    "terms_snapshot": null,
+    "created_at": "2025-11-24T14:41:02.611Z",
+    "updated_at": "2025-11-24T14:41:02.611Z",
+    "by_species": [
+      {
+        "id": "cddae5b8-83cd-4f2b-b071-077dfc9bd404",
+        "species": "cat",
+        "suitability": "All cats.",
+        "prerequisites": null,
+        "cautions": null,
+        "citations": []
+      }
+    ]
+  },
+  {
+    "id": "3b927e37-2b08-411f-812d-21f0a896447d",
+    "title": "Introduction to Clicker Training (Cat)",
+    "summary": "Communicating clearly with your cat.",
+    "content_markdown": "\n### Charging the Clicker\n1. Sit with your cat and high-value treats (tuna, freeze-dried chicken).\n2. Click -> Treat.\n3. Repeat 20 times.\n4. Cat learns: \"Click means food is coming!\"\n\n### Targeting\n1. Hold a target stick (or chopstick) near nose.\n2. Cat sniffs -> Click -> Treat.\n3. Move stick slightly.\n4. Cat moves to sniff -> Click -> Treat.\n        ",
+    "difficulty": "moderate",
+    "avg_duration_minutes": 10,
+    "indoor": null,
+    "equipment": null,
+    "tags": ["clicker", "enrichment", "bonding"],
+    "risks": [],
+    "enrichment": [],
+    "video_url": "https://www.youtube.com/watch?v=Oq3Ym7r_f1k",
+    "source_primary": null,
+    "source_name": null,
+    "license": null,
+    "terms_snapshot": null,
+    "created_at": "2025-11-24T14:41:02.608Z",
+    "updated_at": "2025-11-24T14:41:02.608Z",
+    "by_species": [
+      {
+        "id": "dd15c136-4751-4f53-8ec8-9eeb19bdf5a6",
+        "species": "cat",
+        "suitability": "Food motivated cats.",
+        "prerequisites": null,
+        "cautions": null,
+        "citations": []
+      }
+    ]
+  },
+  {
+    "id": "68b705be-9e6e-463e-ab58-d9b3ce69c304",
+    "title": "Litter Box Best Practices",
+    "summary": "Ensuring perfect litter habits.",
+    "content_markdown": "\n### The Setup\n* **Rule of Thumb**: One box per cat, plus one extra.\n* **Location**: Quiet, low traffic, away from food/water.\n* **Size**: 1.5x the length of the cat.\n\n### Maintenance\n* Scoop daily.\n* Full wash and change monthly.\n* Use unscented, clumping litter (most cats prefer this).\n\n### Troubleshooting\n* If the cat stops using the box, see a vet immediately. It is often a UTI, not \"spite\".\n        ",
+    "difficulty": "easy",
+    "avg_duration_minutes": 5,
+    "indoor": null,
+    "equipment": null,
+    "tags": ["hygiene", "behavior", "cat-essential"],
+    "risks": [],
+    "enrichment": [],
+    "video_url": "https://www.youtube.com/watch?v=adriZE_noYg",
+    "source_primary": null,
+    "source_name": null,
+    "license": null,
+    "terms_snapshot": null,
+    "created_at": "2025-11-24T14:41:02.604Z",
+    "updated_at": "2025-11-24T14:41:02.604Z",
+    "by_species": [
+      {
+        "id": "3a88de9a-5f15-4564-8b81-f83dc4dbda58",
+        "species": "cat",
+        "suitability": "All cats.",
+        "prerequisites": null,
+        "cautions": null,
+        "citations": []
+      }
+    ]
+  },
+  {
+    "id": "2a586754-0111-4f30-b226-a6a2dab34010",
+    "title": "Muzzle Training",
+    "summary": "Desensitizing to a muzzle for safety and vet visits.",
+    "content_markdown": "\n### Why Muzzle?\nMuzzles keep dogs and vets safe. A muzzle-trained dog is less stressed when wearing one.\n\n### Steps\n1. **Appearance**: Show muzzle -> Treat. Hide muzzle. Repeat.\n2. **Targeting**: Put peanut butter inside. Let dog lick it out. Do not strap it on.\n3. **Duration**: Dog holds nose in for 5-10 seconds to get treats.\n4. **Straps**: Briefly lift straps behind ears, treat, release.\n5. **Fasten**: Fasten loosely, treat generously, remove immediately.\n        ",
+    "difficulty": "moderate",
+    "avg_duration_minutes": 15,
+    "indoor": null,
+    "equipment": null,
+    "tags": ["safety", "husbandry", "vet-prep"],
+    "risks": [],
+    "enrichment": [],
+    "video_url": "https://www.youtube.com/watch?v=KJTucFnmAbw",
+    "source_primary": null,
+    "source_name": null,
+    "license": null,
+    "terms_snapshot": null,
+    "created_at": "2025-11-24T14:41:02.601Z",
+    "updated_at": "2025-11-24T14:41:02.601Z",
+    "by_species": [
+      {
+        "id": "2efa39d4-c9c2-431f-8be4-3c3b605b38af",
+        "species": "dog",
+        "suitability": "All dogs.",
+        "prerequisites": null,
+        "cautions": null,
+        "citations": []
+      }
+    ]
+  }
+]
