@@ -22,7 +22,7 @@ import {
 	Staff,
 	Training,
 	UserFormPage,
-	Users,
+	Users
 } from '@/pages';
 import { Route, Routes } from 'react-router-dom';
 
@@ -281,6 +281,14 @@ const AdminRoutes = () => {
 				element={
 					<RoleProtectedRoute requiredRole='admin'>
 						<Breeds />
+					</RoleProtectedRoute>
+				}
+			/>
+			<Route
+				path='admin/faq'
+				element={
+					<RoleProtectedRoute requiredRole='admin'>
+						<FAQPage />
 					</RoleProtectedRoute>
 				}
 			/>

@@ -418,3 +418,6 @@ export * from './pet-cases';
 
 // Contact Types
 export * from './contact';
+
+// FAQ Types
+export * from './faq';

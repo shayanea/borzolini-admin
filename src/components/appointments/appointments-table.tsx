@@ -101,7 +101,7 @@ const NotesCell = ({ appointment, onSave }: NotesCellProps) => {
 
 const AppointmentsTable = ({
 	appointments,
-	loading,
+	loading = false,
 	pagination,
 	onView,
 	onCancel,
@@ -113,7 +113,8 @@ const AppointmentsTable = ({
 	const { clinicContext } = useClinicContext();
 	const { data: staffData } = useClinicStaff({ enabled: !!clinicContext?.clinicId });
 
-	if (loading && appointments.length === 0) {
+	// Show skeleton for initial load (no data yet)
+	if (loading && (!appointments || appointments.length === 0)) {
 		return <TableSkeleton />;
 	}
 

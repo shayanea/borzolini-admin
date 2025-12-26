@@ -33,4 +33,5 @@ export const ROUTES = {
   TRAINING: '/admin/training',
   HOUSEHOLD_SAFETY: '/admin/household-safety',
   BREEDS: '/admin/breeds',
+  FAQ: '/admin/faq',
 } as const;

@@ -11,6 +11,7 @@ export { default as ClinicRegister } from './clinic-register/clinic-register-pag
 export { default as Clinics } from './clinics/clinics-page';
 export { default as Contacts } from './contacts/contacts-page';
 export { default as Dashboard } from './dashboard/dashboard-page';
+export { default as FAQPage } from './faq/faq-page';
 export { default as HouseholdSafety } from './household-safety/household-safety-page';
 export { default as PetCases } from './pet-cases/pet-cases-page';
 export { default as PetFormPage } from './pets/pet-form-page';

@@ -11,6 +11,7 @@ import {
 	MedicineBoxOutlined,
 	MessageOutlined,
 	MonitorOutlined,
+	QuestionCircleOutlined,
 	SafetyOutlined,
 	SettingOutlined,
 	StarOutlined,
@@ -203,6 +204,13 @@ const ALL_MENU_ITEMS: MenuItemConfig[] = [
 		roles: ['admin'],
 	},
 	{
+		key: '/admin/faq',
+		label: 'FAQs',
+		icon: React.createElement(QuestionCircleOutlined),
+		onClick: () => { },
+		roles: ['admin'],
+	},
+	{
 		key: '/profile',
 		label: 'Profile',
 		icon: React.createElement(UserOutlined),
@@ -298,6 +306,9 @@ export const getAccessibleRoutes = (role: UserRole): string[] => {
 				break;
 			case '/admin/breeds':
 				subRoutes.push('/admin/breeds/create', '/admin/breeds/edit/');
+				break;
+			case '/admin/faq':
+				subRoutes.push('/admin/faq/create', '/admin/faq/edit/');
 				break;
 			default:
 				break;
