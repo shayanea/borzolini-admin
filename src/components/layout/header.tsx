@@ -20,17 +20,17 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-interface ModernHeaderProps {
+interface HeaderProps {
 	userName?: string;
 	userRole?: string;
 	onLogout?: () => void;
 }
 
-function ModernHeader({
+function Header({
 	userName = 'Dr. Sarah',
 	userRole = 'Clinic Manager',
 	onLogout,
-}: ModernHeaderProps) {
+}: HeaderProps) {
 	const { t } = useTranslation(['components', 'common']);
 	const [showUserMenu, setShowUserMenu] = useState(false);
 	const [showNotifications, setShowNotifications] = useState(false);
@@ -306,5 +306,5 @@ function ModernHeader({
 	);
 }
 
-export { ModernHeader };
-export default ModernHeader;
+export { Header };
+export default Header;

@@ -10,16 +10,16 @@ import { useAuthStore } from '@/stores/auth.store';
 import { Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AdminRoutes from './admin-routes';
-import ModernHeader from './modern-header';
-import ModernSidebar from './modern-sidebar';
+import Header from './header';
+import Sidebar from './sidebar';
 
-interface ModernAdminLayoutProps {
+interface AdminLayoutProps {
 	onLogout?: () => void;
 }
 
 
 
-function ModernAdminLayout({ onLogout }: ModernAdminLayoutProps) {
+function AdminLayout({ onLogout }: AdminLayoutProps) {
 	const queryClient = useQueryClient();
 	const { user, logout } = useAuthStore();
 	const navigate = useNavigate();
@@ -77,12 +77,12 @@ function ModernAdminLayout({ onLogout }: ModernAdminLayoutProps) {
 	return (
 		<div className='flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
 			{/* Sidebar */}
-			<ModernSidebar collapsed={true} />
+			<Sidebar collapsed={true} />
 
 			{/* Main Content Area */}
 			<div className='flex-1 flex flex-col overflow-hidden bg-transparent'>
 				{/* Header */}
-				<ModernHeader userName={userName} userRole={userRole} onLogout={handleLogout} />
+				<Header userName={userName} userRole={userRole} onLogout={handleLogout} />
 
 				{/* Page Content */}
 				<main className='flex-1 overflow-auto bg-gradient-to-b from-transparent to-white/50'>
@@ -143,5 +143,5 @@ function ModernAdminLayout({ onLogout }: ModernAdminLayoutProps) {
 	);
 }
 
-export { ModernAdminLayout };
-export default ModernAdminLayout;
+export { AdminLayout };
+export default AdminLayout;

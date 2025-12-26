@@ -139,7 +139,7 @@ const TodaysAppointments = ({ appointments = [], loading = false }: TodaysAppoin
 				</div>
 			}
 			className='h-full border border-slate-100 shadow-sm rounded-xl'
-			bodyStyle={{ padding: 0 }}
+			styles={{ body: { padding: 0 } }}
 			extra={
 				<Button
 					type="link"

@@ -52,11 +52,11 @@ const iconMap: Record<string, any> = {
 	'/admin/breeds': Layers,
 };
 
-interface ModernSidebarProps {
+interface SidebarProps {
 	collapsed?: boolean;
 }
 
-function ModernSidebar({ collapsed = false }: ModernSidebarProps) {
+function Sidebar({ collapsed = false }: SidebarProps) {
 	const { user } = useAuthStore();
 	const [isCollapsed, setIsCollapsed] = useState<boolean>(collapsed);
 	const location = useLocation();
@@ -198,5 +198,5 @@ function ModernSidebar({ collapsed = false }: ModernSidebarProps) {
 	);
 }
 
-export { ModernSidebar };
-export default ModernSidebar;
+export { Sidebar };
+export default Sidebar;

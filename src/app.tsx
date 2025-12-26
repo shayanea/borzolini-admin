@@ -5,7 +5,7 @@ import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import ProtectedRoute from '@/components/auth/protected-route';
 import { ErrorBoundary } from '@/components/common/error-boundary';
 import ForceError from '@/components/common/force-error';
-import ModernAdminLayout from '@/components/layout/modern-admin-layout';
+import AdminLayout from '@/components/layout/admin-layout';
 import { ToastProvider } from '@/components/shared';
 import { useEffect } from 'react';
 import { ROUTES } from './constants';
@@ -42,7 +42,7 @@ const App = () => {
 						path='/*'
 						element={
 							<ProtectedRoute>
-								<ModernAdminLayout />
+								<AdminLayout />
 							</ProtectedRoute>
 						}
 					/>

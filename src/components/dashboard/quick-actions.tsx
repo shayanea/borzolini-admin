@@ -58,7 +58,7 @@ const QuickActions = () => {
 				</div>
 			}
 			className='h-full border border-slate-100 shadow-sm rounded-xl'
-			bodyStyle={{ padding: '16px' }}
+			styles={{ body: { padding: '16px' } }}
 		>
 			<Row gutter={[12, 12]}>
 				{actions.map((action) => {

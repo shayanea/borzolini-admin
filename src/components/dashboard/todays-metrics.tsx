@@ -49,7 +49,7 @@ const TodaysMetrics = ({
 				<Col xs={12} sm={6} key={index}>
 					<Card
 						className='border border-slate-100 shadow-sm rounded-lg hover:shadow-md transition-shadow'
-						bodyStyle={{ padding: '16px' }}
+						styles={{ body: { padding: '16px' } }}
 						loading={loading}
 					>
 						<div className='flex items-center justify-between'>

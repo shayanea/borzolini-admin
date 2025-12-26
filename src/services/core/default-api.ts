@@ -1,5 +1,5 @@
-import { TokenService } from './token.service';
 import { environment } from '@/config/environment';
+import { TokenService } from './token.service';
 
 // Types for API responses
 export interface ApiError {
@@ -37,11 +37,8 @@ const getRequestHeaders = (endpoint: string): Record<string, string> => {
 
   if (isAuthRoute) {
     if (isPublicAuthRoute) {
-      // Public auth routes always use cookies
-      console.log('🍪 Using cookie authentication for public auth route:', endpoint);
       return headers;
     } else if (isProtectedAuthRoute && isDevelopment) {
-      // Protected auth routes use headers in development
       const authHeader = TokenService.getAuthorizationHeader();
       if (authHeader) {
         headers['Authorization'] = authHeader;
@@ -81,7 +78,6 @@ const getRequestHeaders = (endpoint: string): Record<string, string> => {
       console.log('⚠️ [DEV] No Authorization header available for', endpoint);
     }
   } else {
-    // Production mode: Use cookie-based authentication only
     console.log('🍪 [PROD] Using cookie authentication for', endpoint);
   }
 

@@ -59,7 +59,7 @@ const UrgentNotifications = ({ notifications = [], loading = false }: UrgentNoti
 				</div>
 			}
 			className='h-full border border-slate-100 shadow-sm rounded-xl'
-			bodyStyle={{ padding: '0 16px 16px' }}
+			styles={{ body: { padding: '0 16px 16px' } }}
 		>
 			{sortedNotifications.length > 0 ? (
 				<List

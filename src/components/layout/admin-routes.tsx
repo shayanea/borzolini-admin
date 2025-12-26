@@ -9,6 +9,7 @@ import {
 	Clinics,
 	Contacts,
 	Dashboard,
+	FAQPage,
 	HouseholdSafety,
 	PetCases,
 	PetFormPage,

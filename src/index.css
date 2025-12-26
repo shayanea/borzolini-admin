@@ -386,36 +386,36 @@
   background-color: #f5f5f5 !important;
 }
 
-/* Modern Steps Styling for Clinic Registration */
-.modern-steps .ant-steps-item-finish .ant-steps-item-icon {
+/* Admin Steps Styling for Clinic Registration */
+.admin-steps .ant-steps-item-finish .ant-steps-item-icon {
   background-color: #d5992a !important;
   border-color: #d5992a !important;
 }
 
-.modern-steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+.admin-steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
   color: #ffffff !important;
 }
 
-.modern-steps .ant-steps-item-process .ant-steps-item-icon {
+.admin-steps .ant-steps-item-process .ant-steps-item-icon {
   background: linear-gradient(135deg, #d5992a 0%, #b88224 100%) !important;
   border-color: #d5992a !important;
   box-shadow: 0 4px 12px rgba(213, 153, 42, 0.3) !important;
 }
 
-.modern-steps .ant-steps-item-wait .ant-steps-item-icon {
+.admin-steps .ant-steps-item-wait .ant-steps-item-icon {
   border-color: #d1d5db !important;
   background-color: #ffffff !important;
 }
 
-.modern-steps .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
+.admin-steps .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
   background-color: #d5992a !important;
 }
 
-.modern-steps .ant-steps-item-title {
+.admin-steps .ant-steps-item-title {
   font-weight: 600 !important;
 }
 
-.modern-steps .ant-steps-item-description {
+.admin-steps .ant-steps-item-description {
   font-size: 12px !important;
   color: #6b7280 !important;
 }

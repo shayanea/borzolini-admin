@@ -106,8 +106,10 @@ const RecentActivity = ({ stats }: RecentActivityProps) => {
 				</span>
 			}
 			className='h-full border border-slate-100 shadow-sm rounded-xl'
-			bodyStyle={{ padding: '0 16px 16px' }}
-			headStyle={{ borderBottom: '1px solid #f1f5f9', padding: '0 16px' }}
+			styles={{
+				body: { padding: '0 16px 16px' },
+				header: { borderBottom: '1px solid #f1f5f9', padding: '0 16px' },
+			}}
 		>
 			{hasActivity ? (
 				<List

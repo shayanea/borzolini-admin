@@ -43,7 +43,7 @@ export const FAQTable = ({
 			title: 'Question',
 			dataIndex: 'question',
 			key: 'question',
-			width: 300,
+			width: 200,
 			ellipsis: true,
 			render: (question: string) => (
 				<Tooltip title={question}>
