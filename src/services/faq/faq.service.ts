@@ -13,14 +13,7 @@ export class FAQService extends BaseService<FAQ, CreateFAQDto, UpdateFAQDto> {
   // Get all FAQs with pagination and filters
   static async getFAQs(params: FAQQueryParams = {}): Promise<FAQResponse> {
     const service = new FAQService();
-    const response = await service.getAll(params);
-    return {
-      data: response.data,
-      total: response.total,
-      page: response.page,
-      limit: response.limit,
-      totalPages: Math.ceil(response.total / response.limit),
-    };
+    return service.getRequest<FAQResponse>('/faq', params);
   }
 
   // Get FAQ by ID

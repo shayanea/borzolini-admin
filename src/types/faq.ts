@@ -41,4 +41,8 @@ export interface FAQResponse {
   page: number;
   limit: number;
   totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  message?: string;
+  timestamp?: string;
 }

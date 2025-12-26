@@ -25,6 +25,8 @@ const FAQPage = () => {
 		searchText,
 		selectedCategory,
 		selectedStatus,
+		sortBy,
+		sortOrder,
 		selectedRowKeys,
 		bulkLoading,
 
@@ -127,11 +129,13 @@ const FAQPage = () => {
 					}}
 					rowSelection={{
 						selectedRowKeys,
-						onChange: (keys) => setSelectedRowKeys(keys as string[]),
+						onChange: (keys: React.Key[]) => setSelectedRowKeys(keys as string[]),
 					}}
 					onChange={handleTableChange}
 					onEdit={handleEditFAQ}
 					onDelete={handleDeleteFAQ}
+					sortBy={sortBy}
+					sortOrder={sortOrder}
 				/>
 			</Card>
 

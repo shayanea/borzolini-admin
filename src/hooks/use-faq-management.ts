@@ -12,6 +12,8 @@ export const useFAQManagement = () => {
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
   const [selectedStatus, setSelectedStatus] = useState<boolean | undefined>(undefined);
+  const [sortBy, setSortBy] = useState<string | undefined>(undefined);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | undefined>(undefined);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [bulkLoading, setBulkLoading] = useState(false);
 
@@ -24,11 +26,15 @@ export const useFAQManagement = () => {
         search: searchText || undefined,
         category: selectedCategory,
         is_active: selectedStatus,
+        sortBy,
+        sortOrder,
       };
 
       const response = await FAQService.getFAQs(params);
       setFaqs(response.data);
       setTotal(response.total);
+      setCurrentPage(response.page);
+      setPageSize(response.limit);
     } catch (error: any) {
       message.error(error.message || 'Failed to fetch FAQs');
       setFaqs([]);
@@ -36,7 +42,7 @@ export const useFAQManagement = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, pageSize, searchText, selectedCategory, selectedStatus]);
+  }, [currentPage, pageSize, searchText, selectedCategory, selectedStatus, sortBy, sortOrder]);
 
   useEffect(() => {
     fetchFAQs();
@@ -61,12 +67,21 @@ export const useFAQManagement = () => {
     setSearchText('');
     setSelectedCategory(undefined);
     setSelectedStatus(undefined);
+    setSortBy(undefined);
+    setSortOrder(undefined);
     setCurrentPage(1);
   }, []);
 
-  const handleTableChange = useCallback((pagination: any, _filters: any, _sorter: any) => {
+  const handleTableChange = useCallback((pagination: any, _filters: any, sorter: any) => {
     setCurrentPage(pagination.current);
     setPageSize(pagination.pageSize);
+
+    if (sorter.field) {
+      setSortBy(sorter.field);
+      setSortOrder(
+        sorter.order === 'ascend' ? 'asc' : sorter.order === 'descend' ? 'desc' : undefined
+      );
+    }
   }, []);
 
   const handleCreateFAQ = useCallback(
@@ -139,6 +154,8 @@ export const useFAQManagement = () => {
     searchText,
     selectedCategory,
     selectedStatus,
+    sortBy,
+    sortOrder,
     selectedRowKeys,
     bulkLoading,
 

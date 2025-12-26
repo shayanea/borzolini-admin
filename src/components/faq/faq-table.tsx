@@ -18,6 +18,8 @@ interface FAQTableProps {
 	onEdit: (faq: FAQ) => void;
 	onDelete: (id: string) => void;
 	onView?: (faq: FAQ) => void;
+	sortBy?: string;
+	sortOrder?: 'asc' | 'desc';
 }
 
 export const FAQTable = ({
@@ -29,6 +31,8 @@ export const FAQTable = ({
 	onEdit,
 	onDelete,
 	onView,
+	sortBy,
+	sortOrder,
 }: FAQTableProps) => {
 	const columns: ColumnsType<FAQ> = [
 		{
@@ -37,6 +41,7 @@ export const FAQTable = ({
 			key: 'order',
 			width: 80,
 			sorter: true,
+			sortOrder: sortBy === 'order' ? (sortOrder === 'asc' ? 'ascend' : 'descend') : null,
 			render: (order: number) => order ?? '-',
 		},
 		{
@@ -101,6 +106,7 @@ export const FAQTable = ({
 			key: 'created_at',
 			width: 120,
 			sorter: true,
+			sortOrder: sortBy === 'created_at' ? (sortOrder === 'asc' ? 'ascend' : 'descend') : null,
 			render: (date: Date) => formatDate(date),
 		},
 		{
