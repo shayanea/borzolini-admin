@@ -27,7 +27,7 @@ export const DEFAULT_SETTINGS = {
   name: 'default',
   description: 'Default clinic settings',
   generalSettings: {
-    clinicName: 'Vorjin Veterinary Clinic',
+    clinicName: 'Borzi Veterinary Clinic',
     currency: 'USD',
     timezone: 'America/New_York',
     businessHours: '8:00 AM - 6:00 PM',

@@ -19,7 +19,7 @@ const LoginPage = () => {
 						<div className='flex items-center justify-center mx-auto bg-white rounded-2xl w-fit overflow-hidden'>
 							<img
 								src='/web-app-manifest-512x512.png'
-								alt='Vorjin Logo'
+								alt='Borzi Logo'
 								className='w-16 h-16 object-contain'
 							/>
 						</div>
