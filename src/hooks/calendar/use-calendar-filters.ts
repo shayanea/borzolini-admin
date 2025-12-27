@@ -3,7 +3,13 @@ import type { CalendarFilters } from '@/types/calendar';
 import { useCallback } from 'react';
 
 export const useCalendarFilters = (selectedVeterinarians: string[]) => {
-  const { filters, setFilters, setFilter } = useFilterManagement<CalendarFilters>({
+  const {
+    filters,
+    setFilters,
+    setFilter,
+    searchQuery,
+    handleSearch: onSearch,
+  } = useFilterManagement<CalendarFilters>({
     initialFilters: {
       veterinarianIds: [],
       includeCancelled: false,
@@ -24,14 +30,19 @@ export const useCalendarFilters = (selectedVeterinarians: string[]) => {
   });
 
   // Enhanced filter handling
-  const handleFiltersChange = useCallback((newFilters: Partial<CalendarFilters>) => {
-    setFilters(newFilters);
-  }, [setFilters]);
+  const handleFiltersChange = useCallback(
+    (newFilters: Partial<CalendarFilters>) => {
+      setFilters(newFilters);
+    },
+    [setFilters]
+  );
 
-  const handleSearch = useCallback((searchText: string) => {
-    setFilter('search', searchText);
-    setFilter('page', 1);
-  }, [setFilter]);
+  const handleSearch = useCallback(
+    (searchText: string) => {
+      onSearch(searchText);
+    },
+    [onSearch]
+  );
 
   const clearFilters = useCallback(() => {
     setFilters({
@@ -52,8 +63,14 @@ export const useCalendarFilters = (selectedVeterinarians: string[]) => {
     });
   }, [selectedVeterinarians, setFilters]);
 
+  // Merge filters with debounced search query
+  const activeFilters = {
+    ...filters,
+    search: searchQuery,
+  };
+
   return {
-    filters,
+    filters: activeFilters,
     handleFiltersChange,
     handleSearch,
     clearFilters,

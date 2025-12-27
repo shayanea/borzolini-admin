@@ -129,7 +129,8 @@ export function useUserManagement(roleFilter?: UserRole): UseUserManagementRetur
       'users',
       table.currentPage,
       table.pageSize,
-      filterManager.searchText,
+      table.pageSize,
+      filterManager.searchQuery,
       roleFilter,
       filterManager.filters.role,
       filterManager.filters.isActive,
@@ -141,7 +142,7 @@ export function useUserManagement(roleFilter?: UserRole): UseUserManagementRetur
       const params: UsersQueryParams = {
         page: table.currentPage,
         limit: table.pageSize,
-        search: filterManager.searchText || undefined,
+        search: filterManager.searchQuery || undefined,
         role: roleFilter || filterManager.filters.role || undefined,
         isActive:
           filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
@@ -395,7 +396,7 @@ export function useUserManagement(roleFilter?: UserRole): UseUserManagementRetur
   // Export handlers
   const handleExportCSV = useCallback(async () => {
     const params: UsersQueryParams = {
-      search: filterManager.searchText || undefined,
+      search: filterManager.searchQuery || undefined,
       role: filterManager.filters.role || undefined,
       isActive:
         filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
@@ -403,11 +404,11 @@ export function useUserManagement(roleFilter?: UserRole): UseUserManagementRetur
     };
 
     return await UsersService.exportUsersToCSV(params);
-  }, [filterManager.searchText, filterManager.filters]);
+  }, [filterManager.searchQuery, filterManager.filters]);
 
   const handleExportExcel = useCallback(async () => {
     const params: UsersQueryParams = {
-      search: filterManager.searchText || undefined,
+      search: filterManager.searchQuery || undefined,
       role: filterManager.filters.role || undefined,
       isActive:
         filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
@@ -415,7 +416,7 @@ export function useUserManagement(roleFilter?: UserRole): UseUserManagementRetur
     };
 
     return await UsersService.exportUsersToExcel(params);
-  }, [filterManager.searchText, filterManager.filters]);
+  }, [filterManager.searchQuery, filterManager.filters]);
 
   return {
     // State from query

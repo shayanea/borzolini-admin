@@ -1,9 +1,9 @@
 import { useClinicContext } from '@/hooks/clinics';
 import { useFilterManagement } from '@/hooks/common/use-filter-management';
 import AppointmentsService, {
-    type AppointmentStats,
-    type CreateAppointmentData,
-    type UpdateAppointmentData,
+  type AppointmentStats,
+  type CreateAppointmentData,
+  type UpdateAppointmentData,
 } from '@/services/appointments';
 import { useAuthStore } from '@/stores/auth.store';
 import type { Appointment, AppointmentStatus } from '@/types';
@@ -55,6 +55,7 @@ export const useAppointments = (): UseAppointmentsReturn => {
     filters,
     setFilters,
     searchText,
+    searchQuery,
     handleSearch: onSearch,
   } = useFilterManagement<AppointmentsFilters>({
     initialFilters: {},
@@ -87,11 +88,11 @@ export const useAppointments = (): UseAppointmentsReturn => {
       delete apiFilters.dateRange;
     }
     // Include search text in filters if set
-    if (searchText) {
-      apiFilters.search = searchText;
+    if (searchQuery) {
+      apiFilters.search = searchQuery;
     }
     return apiFilters;
-  }, [effectiveFilters, searchText]);
+  }, [effectiveFilters, searchQuery]);
 
   // Query for appointments
   const {
@@ -100,7 +101,13 @@ export const useAppointments = (): UseAppointmentsReturn => {
     error: queryError,
     refetch: refetchAppointments,
   } = useQuery({
-    queryKey: ['appointments', effectiveFilters, searchText, pagination.current, pagination.pageSize],
+    queryKey: [
+      'appointments',
+      effectiveFilters,
+      searchQuery,
+      pagination.current,
+      pagination.pageSize,
+    ],
     queryFn: async () => {
       if (!isAuthenticated) return { appointments: [], total: 0 };
 
@@ -236,13 +243,19 @@ export const useAppointments = (): UseAppointmentsReturn => {
     },
   });
 
-  const handleSearch = useCallback((value: string) => {
-    onSearch(value);
-  }, [onSearch]);
+  const handleSearch = useCallback(
+    (value: string) => {
+      onSearch(value);
+    },
+    [onSearch]
+  );
 
-  const handleFilters = useCallback((newFilters: Partial<AppointmentsFilters>) => {
-    setFilters(newFilters);
-  }, [setFilters]);
+  const handleFilters = useCallback(
+    (newFilters: Partial<AppointmentsFilters>) => {
+      setFilters(newFilters);
+    },
+    [setFilters]
+  );
 
   const handlePagination = useCallback((page: number, pageSize: number) => {
     setPagination(prev => ({

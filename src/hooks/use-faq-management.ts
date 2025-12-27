@@ -2,7 +2,7 @@ import { FAQService } from '@/services/faq';
 import type { CreateFAQDto, FAQQueryParams, UpdateFAQDto } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 // Query keys factory
 const faqKeys = {
@@ -18,6 +18,7 @@ export const useFAQManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [searchText, setSearchText] = useState('');
+  const [debouncedSearchText, setDebouncedSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
   const [selectedStatus, setSelectedStatus] = useState<boolean | undefined>(undefined);
   const [sortBy, setSortBy] = useState<string | undefined>(undefined);
@@ -31,14 +32,40 @@ export const useFAQManagement = () => {
     () => ({
       page: currentPage,
       limit: pageSize,
-      search: searchText || undefined,
+      search: debouncedSearchText || undefined,
       category: selectedCategory,
       is_active: selectedStatus,
       sortBy,
       sortOrder,
     }),
-    [currentPage, pageSize, searchText, selectedCategory, selectedStatus, sortBy, sortOrder]
+    [
+      currentPage,
+      pageSize,
+      debouncedSearchText,
+      selectedCategory,
+      selectedStatus,
+      sortBy,
+      sortOrder,
+    ]
   );
+
+  // Debounce search text
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      if (searchText.length >= 3 || searchText.length === 0) {
+        setDebouncedSearchText(searchText);
+      } else {
+        setDebouncedSearchText('');
+      }
+    }, 500);
+
+    return () => window.clearTimeout(timer);
+  }, [searchText]);
+
+  // Reset page when effective search query changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchText]);
 
   // Fetch FAQs with React Query
   const {
@@ -104,7 +131,6 @@ export const useFAQManagement = () => {
   // Handler functions
   const handleSearch = useCallback((value: string) => {
     setSearchText(value);
-    setCurrentPage(1);
   }, []);
 
   const handleCategoryFilter = useCallback((value: string | undefined) => {

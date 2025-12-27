@@ -259,13 +259,10 @@ export abstract class BaseService<T, TCreate, TUpdate = Partial<TCreate>> {
       ValidationHelper.validateArray(ids, 'IDs');
       ValidationHelper.validateMinLength(ids, 1, 'IDs');
 
-      const response = await apiService.patch<BulkOperationResponse>(
-        `${this.baseUrl}/bulk-update`,
-        {
-          ids,
-          updates,
-        }
-      );
+      const response = await apiService.patch<BulkOperationResponse>(`${this.baseUrl}/batch`, {
+        ids,
+        updates,
+      });
 
       // Clear cache on bulk update
       if (this.cacheType) {
@@ -283,12 +280,9 @@ export abstract class BaseService<T, TCreate, TUpdate = Partial<TCreate>> {
       ValidationHelper.validateArray(ids, 'IDs');
       ValidationHelper.validateMinLength(ids, 1, 'IDs');
 
-      const response = await apiService.delete<BulkOperationResponse>(
-        `${this.baseUrl}/bulk-delete`,
-        {
-          data: { ids },
-        }
-      );
+      const response = await apiService.delete<BulkOperationResponse>(`${this.baseUrl}/batch`, {
+        data: { ids },
+      });
 
       // Clear cache on bulk delete
       if (this.cacheType) {

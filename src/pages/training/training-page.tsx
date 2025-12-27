@@ -1,14 +1,14 @@
 import {
-  TrainingDetailsModal,
-  TrainingFilters,
-  TrainingFormModal,
-  TrainingPageHeader,
-  TrainingTable,
+	TrainingDetailsModal,
+	TrainingFilters,
+	TrainingFormModal,
+	TrainingPageHeader,
+	TrainingTable,
 } from '@/components/training';
 import {
-  TRAINING_FILTER_DEFAULTS,
-  TRAINING_PAGINATION_DEFAULTS,
-  TRAINING_SORT_DEFAULTS,
+	TRAINING_FILTER_DEFAULTS,
+	TRAINING_PAGINATION_DEFAULTS,
+	TRAINING_SORT_DEFAULTS,
 } from '@/constants/training';
 import { useTraining, useTrainingForm } from '@/hooks/training';
 import type { TrainingActivity, TrainingDifficulty, TrainingSearchParams } from '@/types/training';
@@ -17,317 +17,334 @@ import { Alert, Button, Card, message } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 function TrainingPage() {
-  const [selectedActivity, setSelectedActivity] = useState<TrainingActivity | null>(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showViewModal, setShowViewModal] = useState(false);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedSpecies, setSelectedSpecies] = useState<string[]>([]);
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(TRAINING_PAGINATION_DEFAULTS.PAGE_SIZE);
+	const [selectedActivity, setSelectedActivity] = useState<TrainingActivity | null>(null);
+	const [showCreateModal, setShowCreateModal] = useState(false);
+	const [showEditModal, setShowEditModal] = useState(false);
+	const [showViewModal, setShowViewModal] = useState(false);
+	const [selectedIds, setSelectedIds] = useState<string[]>([]);
+	const [searchTerm, setSearchTerm] = useState('');
+	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+	const [selectedSpecies, setSelectedSpecies] = useState<string[]>([]);
+	const [selectedDifficulty, setSelectedDifficulty] = useState<string>('');
+	const [selectedTags, setSelectedTags] = useState<string[]>([]);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [pageSize] = useState(TRAINING_PAGINATION_DEFAULTS.PAGE_SIZE);
 
-  const {
-    createTrainingActivity,
-    getTrainingActivities,
-    getTrainingActivity,
-    updateTrainingActivity,
-    deleteTrainingActivity,
-    bulkDeleteTrainingActivities,
-    loading: apiLoading,
-    error,
-  } = useTraining();
+	const {
+		createTrainingActivity,
+		getTrainingActivities,
+		getTrainingActivity,
+		updateTrainingActivity,
+		deleteTrainingActivity,
+		bulkDeleteTrainingActivities,
+		loading: apiLoading,
+		error,
+	} = useTraining();
 
-  const createForm = useTrainingForm();
-  const editForm = useTrainingForm();
+	const createForm = useTrainingForm();
+	const editForm = useTrainingForm();
 
-  const [activities, setActivities] = useState<TrainingActivity[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(false);
+	const [activities, setActivities] = useState<TrainingActivity[]>([]);
+	const [totalCount, setTotalCount] = useState(0);
+	const [loading, setLoading] = useState(false);
 
-  // Sync editForm when selectedActivity changes and edit modal is open
-  useEffect(() => {
-    if (selectedActivity && showEditModal) {
-      editForm.resetForm(selectedActivity);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedActivity?.id, showEditModal]);
+	// Sync editForm when selectedActivity changes and edit modal is open
+	useEffect(() => {
+		if (selectedActivity && showEditModal) {
+			editForm.resetForm(selectedActivity);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [selectedActivity?.id, showEditModal]);
 
-  const loadActivities = async () => {
-    setLoading(true);
-    const params: TrainingSearchParams = {
-      page: currentPage,
-      limit: pageSize,
-    };
+	const loadActivities = async () => {
+		setLoading(true);
+		const params: TrainingSearchParams = {
+			page: currentPage,
+			limit: pageSize,
+		};
 
-    if (searchTerm) params.q = searchTerm;
-    if (selectedSpecies.length > 0) params.species = selectedSpecies.join(',');
-    if (selectedDifficulty) params.difficulty = selectedDifficulty as TrainingDifficulty;
-    if (selectedTags.length > 0) params.tags = selectedTags.join(',');
+		if (debouncedSearchTerm) params.q = debouncedSearchTerm;
+		if (selectedSpecies.length > 0) params.species = selectedSpecies.join(',');
+		if (selectedDifficulty) params.difficulty = selectedDifficulty as TrainingDifficulty;
+		if (selectedTags.length > 0) params.tags = selectedTags.join(',');
 
-    const result = await getTrainingActivities(
-      params.page!,
-      params.limit!,
-      params.q,
-      params.species,
-      params.difficulty,
-      TRAINING_SORT_DEFAULTS.FIELD,
-      TRAINING_SORT_DEFAULTS.ORDER
-    );
+		const result = await getTrainingActivities(
+			params.page!,
+			params.limit!,
+			params.q,
+			params.species,
+			params.difficulty,
+			TRAINING_SORT_DEFAULTS.FIELD,
+			TRAINING_SORT_DEFAULTS.ORDER
+		);
 
-    if (result) {
-      setActivities(result.data);
-      setTotalCount(result.total);
-    }
-    setLoading(false);
-  };
+		if (result) {
+			setActivities(result.data);
+			setTotalCount(result.total);
+		}
+		setLoading(false);
+	};
 
-  useEffect(() => {
-    loadActivities();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, pageSize, searchTerm, selectedSpecies, selectedDifficulty, selectedTags]);
+	// Debounce search term
+	useEffect(() => {
+		const timer = window.setTimeout(() => {
+			if (searchTerm.length >= 3 || searchTerm.length === 0) {
+				setDebouncedSearchTerm(searchTerm);
+			} else {
+				setDebouncedSearchTerm('');
+			}
+		}, 500);
+		return () => window.clearTimeout(timer);
+	}, [searchTerm]);
 
-  const filteredActivities = useMemo(() => {
-    return activities.filter(
-      (activity: TrainingActivity) =>
-        activity.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        activity.description?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [activities, searchTerm]);
+	// Reset page when effective search query changes
+	useEffect(() => {
+		setCurrentPage(1);
+	}, [debouncedSearchTerm]);
 
-  const handleCreate = async (): Promise<boolean> => {
-    const success = await createForm.handleSubmit(async data => {
-      const result = await createTrainingActivity(
-        data as Parameters<typeof createTrainingActivity>[0]
-      );
-      if (result) {
-        setShowCreateModal(false);
-        createForm.resetForm();
-        await loadActivities();
-      }
-    });
-    return success ?? false;
-  };
+	useEffect(() => {
+		loadActivities();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentPage, pageSize, debouncedSearchTerm, selectedSpecies, selectedDifficulty, selectedTags]);
 
-  const handleEdit = async (): Promise<boolean> => {
-    if (!selectedActivity) return false;
-    const success = await editForm.handleSubmit(async data => {
-      const result = await updateTrainingActivity(selectedActivity.id, data);
-      if (result) {
-        setShowEditModal(false);
-        setSelectedActivity(null);
-        editForm.resetForm();
-        await loadActivities();
-      }
-    });
-    return success ?? false;
-  };
+	const filteredActivities = useMemo(() => {
+		return activities.filter(
+			(activity: TrainingActivity) =>
+				activity.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+				activity.description?.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+		);
+	}, [activities, debouncedSearchTerm]);
 
-  const handleDelete = async (id: string) => {
-    const success = await deleteTrainingActivity(id);
-    if (success) {
-      await loadActivities();
-      setSelectedIds(prev => prev.filter(activityId => activityId !== id));
-      message.success('Training activity deleted successfully');
-    }
-  };
+	const handleCreate = async (): Promise<boolean> => {
+		const success = await createForm.handleSubmit(async data => {
+			const result = await createTrainingActivity(
+				data as Parameters<typeof createTrainingActivity>[0]
+			);
+			if (result) {
+				setShowCreateModal(false);
+				createForm.resetForm();
+				await loadActivities();
+			}
+		});
+		return success ?? false;
+	};
 
-  const handleBulkDelete = async () => {
-    if (selectedIds.length === 0) return;
-    const success = await bulkDeleteTrainingActivities(selectedIds);
-    if (success) {
-      await loadActivities();
-      setSelectedIds([]);
-      message.success(`${selectedIds.length} training activities deleted successfully`);
-    }
-  };
+	const handleEdit = async (): Promise<boolean> => {
+		if (!selectedActivity) return false;
+		const success = await editForm.handleSubmit(async data => {
+			const result = await updateTrainingActivity(selectedActivity.id, data);
+			if (result) {
+				setShowEditModal(false);
+				setSelectedActivity(null);
+				editForm.resetForm();
+				await loadActivities();
+			}
+		});
+		return success ?? false;
+	};
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1);
-  };
+	const handleDelete = async (id: string) => {
+		const success = await deleteTrainingActivity(id);
+		if (success) {
+			await loadActivities();
+			setSelectedIds(prev => prev.filter(activityId => activityId !== id));
+			message.success('Training activity deleted successfully');
+		}
+	};
 
-  const handleSpeciesChange = useCallback((value: string) => {
-    setSelectedSpecies(prev =>
-      prev.includes(value) ? prev.filter(s => s !== value) : [...prev, value]
-    );
-    setCurrentPage(1);
-  }, []);
+	const handleBulkDelete = async () => {
+		if (selectedIds.length === 0) return;
+		const success = await bulkDeleteTrainingActivities(selectedIds);
+		if (success) {
+			await loadActivities();
+			setSelectedIds([]);
+			message.success(`${selectedIds.length} training activities deleted successfully`);
+		}
+	};
 
-  const handleDifficultyChange = useCallback((value: string) => {
-    setSelectedDifficulty(value || '');
-    setCurrentPage(1);
-  }, []);
+	const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchTerm(e.target.value);
+	};
 
-  const handleTagsChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const tags = e.target.value
-      .split(',')
-      .map((t: string) => t.trim())
-      .filter(Boolean);
-    setSelectedTags(tags.slice(0, TRAINING_FILTER_DEFAULTS.MAX_TAGS_SELECTION));
-  }, []);
+	const handleSpeciesChange = useCallback((value: string) => {
+		setSelectedSpecies(prev =>
+			prev.includes(value) ? prev.filter(s => s !== value) : [...prev, value]
+		);
+		setCurrentPage(1);
+	}, []);
 
-  const handleClearFilters = useCallback(() => {
-    setSearchTerm('');
-    setSelectedSpecies([]);
-    setSelectedDifficulty('');
-    setSelectedTags([]);
-    setCurrentPage(1);
-  }, []);
+	const handleDifficultyChange = useCallback((value: string) => {
+		setSelectedDifficulty(value || '');
+		setCurrentPage(1);
+	}, []);
 
-  const handleViewActivity = useCallback(
-    async (activity: TrainingActivity) => {
-      try {
-        // Use existing activity data first, then fetch fresh data in background
-        setSelectedActivity(activity);
-        setShowViewModal(true);
+	const handleTagsChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		const tags = e.target.value
+			.split(',')
+			.map((t: string) => t.trim())
+			.filter(Boolean);
+		setSelectedTags(tags.slice(0, TRAINING_FILTER_DEFAULTS.MAX_TAGS_SELECTION));
+	}, []);
 
-        // Fetch fresh data to ensure we have the latest
-        const activityData = await getTrainingActivity(activity.id);
-        if (activityData) {
-          setSelectedActivity(activityData);
-        }
-      } catch (err) {
-        console.error('Failed to fetch training activity:', err);
-        message.error('Failed to load training activity details');
-      }
-    },
-    [getTrainingActivity]
-  );
+	const handleClearFilters = useCallback(() => {
+		setSearchTerm('');
+		setSelectedSpecies([]);
+		setSelectedDifficulty('');
+		setSelectedTags([]);
+		setCurrentPage(1);
+	}, []);
 
-  const handleEditActivity = useCallback(
-    async (activity: TrainingActivity) => {
-      // Use existing activity data first
-      setSelectedActivity(activity);
-      editForm.resetForm(activity);
-      setShowEditModal(true);
+	const handleViewActivity = useCallback(
+		async (activity: TrainingActivity) => {
+			try {
+				// Use existing activity data first, then fetch fresh data in background
+				setSelectedActivity(activity);
+				setShowViewModal(true);
 
-      try {
-        // Fetch fresh data to ensure we have the latest
-        const activityData = await getTrainingActivity(activity.id);
-        if (activityData) {
-          setSelectedActivity(activityData);
-          editForm.resetForm(activityData);
-        }
-      } catch (err) {
-        console.error('Failed to fetch training activity:', err);
-        // and we don't want to disrupt the user flow if the fresh fetch fails.
-      }
-    },
-    [getTrainingActivity, editForm]
-  );
+				// Fetch fresh data to ensure we have the latest
+				const activityData = await getTrainingActivity(activity.id);
+				if (activityData) {
+					setSelectedActivity(activityData);
+				}
+			} catch (err) {
+				console.error('Failed to fetch training activity:', err);
+				message.error('Failed to load training activity details');
+			}
+		},
+		[getTrainingActivity]
+	);
 
-  const handleSelectAll = useCallback(
-    (checked: boolean) => {
-      if (checked) {
-        setSelectedIds(filteredActivities.map((r: TrainingActivity) => r.id));
-      } else {
-        setSelectedIds([]);
-      }
-    },
-    [filteredActivities]
-  );
+	const handleEditActivity = useCallback(
+		async (activity: TrainingActivity) => {
+			// Use existing activity data first
+			setSelectedActivity(activity);
+			editForm.resetForm(activity);
+			setShowEditModal(true);
 
-  const handleSelectRow = useCallback((id: string, checked: boolean) => {
-    if (checked) {
-      setSelectedIds(prev => [...prev, id]);
-    } else {
-      setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
-    }
-  }, []);
+			try {
+				// Fetch fresh data to ensure we have the latest
+				const activityData = await getTrainingActivity(activity.id);
+				if (activityData) {
+					setSelectedActivity(activityData);
+					editForm.resetForm(activityData);
+				}
+			} catch (err) {
+				console.error('Failed to fetch training activity:', err);
+				// and we don't want to disrupt the user flow if the fresh fetch fails.
+			}
+		},
+		[getTrainingActivity, editForm]
+	);
 
-  if (error) {
-    return (
-      <div className='flex items-center justify-center min-h-[400px]'>
-        <Card>
-          <div className='text-center'>
-            <Alert
-              message='Error'
-              description={error.message}
-              type='error'
-              showIcon
-              icon={<ExclamationCircleOutlined />}
-              action={<Button onClick={loadActivities}>Retry</Button>}
-            />
-          </div>
-        </Card>
-      </div>
-    );
-  }
+	const handleSelectAll = useCallback(
+		(checked: boolean) => {
+			if (checked) {
+				setSelectedIds(filteredActivities.map((r: TrainingActivity) => r.id));
+			} else {
+				setSelectedIds([]);
+			}
+		},
+		[filteredActivities]
+	);
 
-  return (
-    <div className='space-y-6'>
-      <TrainingPageHeader
-        onCreate={() => setShowCreateModal(true)}
-        selectedCount={selectedIds.length}
-        onBulkDelete={handleBulkDelete}
-        loading={apiLoading}
-      />
+	const handleSelectRow = useCallback((id: string, checked: boolean) => {
+		if (checked) {
+			setSelectedIds(prev => [...prev, id]);
+		} else {
+			setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+		}
+	}, []);
 
-      <TrainingFilters
-        searchTerm={searchTerm}
-        selectedSpecies={selectedSpecies}
-        selectedDifficulty={selectedDifficulty}
-        onSearch={handleSearch}
-        onSpeciesChange={handleSpeciesChange}
-        onDifficultyChange={handleDifficultyChange}
-        onTagsChange={handleTagsChange}
-        onClearFilters={handleClearFilters}
-      />
+	if (error) {
+		return (
+			<div className='flex items-center justify-center min-h-[400px]'>
+				<Card>
+					<div className='text-center'>
+						<Alert
+							message='Error'
+							description={error.message}
+							type='error'
+							showIcon
+							icon={<ExclamationCircleOutlined />}
+							action={<Button onClick={loadActivities}>Retry</Button>}
+						/>
+					</div>
+				</Card>
+			</div>
+		);
+	}
 
-      <TrainingTable
-        activities={filteredActivities}
-        loading={loading}
-        totalCount={totalCount}
-        currentPage={currentPage}
-        pageSize={pageSize}
-        selectedIds={selectedIds}
-        onPageChange={setCurrentPage}
-        onSelectAll={handleSelectAll}
-        onSelectRow={handleSelectRow}
-        onView={handleViewActivity}
-        onEdit={handleEditActivity}
-        onDelete={handleDelete}
-      />
+	return (
+		<div className='space-y-6'>
+			<TrainingPageHeader
+				onCreate={() => setShowCreateModal(true)}
+				selectedCount={selectedIds.length}
+				onBulkDelete={handleBulkDelete}
+				loading={apiLoading}
+			/>
 
-      <TrainingFormModal
-        open={showCreateModal}
-        onCancel={() => {
-          setShowCreateModal(false);
-          createForm.resetForm();
-        }}
-        onSubmit={handleCreate}
-        form={createForm}
-        isLoading={apiLoading}
-        isEdit={false}
-      />
+			<TrainingFilters
+				searchTerm={searchTerm}
+				selectedSpecies={selectedSpecies}
+				selectedDifficulty={selectedDifficulty}
+				onSearch={handleSearch}
+				onSpeciesChange={handleSpeciesChange}
+				onDifficultyChange={handleDifficultyChange}
+				onTagsChange={handleTagsChange}
+				onClearFilters={handleClearFilters}
+			/>
 
-      <TrainingFormModal
-        open={showEditModal}
-        onCancel={() => {
-          setShowEditModal(false);
-          setSelectedActivity(null);
-          editForm.resetForm();
-        }}
-        onSubmit={handleEdit}
-        form={editForm}
-        isLoading={apiLoading}
-        isEdit={true}
-        activity={selectedActivity || undefined}
-      />
+			<TrainingTable
+				activities={filteredActivities}
+				loading={loading}
+				totalCount={totalCount}
+				currentPage={currentPage}
+				pageSize={pageSize}
+				selectedIds={selectedIds}
+				onPageChange={setCurrentPage}
+				onSelectAll={handleSelectAll}
+				onSelectRow={handleSelectRow}
+				onView={handleViewActivity}
+				onEdit={handleEditActivity}
+				onDelete={handleDelete}
+			/>
 
-      <TrainingDetailsModal
-        activity={selectedActivity}
-        open={showViewModal}
-        onClose={() => {
-          setShowViewModal(false);
-          setSelectedActivity(null);
-        }}
-      />
-    </div>
-  );
+			<TrainingFormModal
+				open={showCreateModal}
+				onCancel={() => {
+					setShowCreateModal(false);
+					createForm.resetForm();
+				}}
+				onSubmit={handleCreate}
+				form={createForm}
+				isLoading={apiLoading}
+				isEdit={false}
+			/>
+
+			<TrainingFormModal
+				open={showEditModal}
+				onCancel={() => {
+					setShowEditModal(false);
+					setSelectedActivity(null);
+					editForm.resetForm();
+				}}
+				onSubmit={handleEdit}
+				form={editForm}
+				isLoading={apiLoading}
+				isEdit={true}
+				activity={selectedActivity || undefined}
+			/>
+
+			<TrainingDetailsModal
+				activity={selectedActivity}
+				open={showViewModal}
+				onClose={() => {
+					setShowViewModal(false);
+					setSelectedActivity(null);
+				}}
+			/>
+		</div>
+	);
 }
 
 export { TrainingPage };

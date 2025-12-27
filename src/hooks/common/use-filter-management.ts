@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 /**
  * Generic filter value type
@@ -16,19 +16,20 @@ export type FilterState = Record<string, FilterValue>;
 export interface UseFilterManagementReturn<T extends FilterState = FilterState> {
   // Filter state
   filters: T;
-  
+
   // Filter actions
   setFilter: <K extends keyof T>(key: K, value: T[K]) => void;
   setFilters: (newFilters: Partial<T>) => void;
   clearFilter: (key: keyof T) => void;
   clearAllFilters: () => void;
   resetFilters: () => void;
-  
+
   // Search state
   searchText: string;
+  searchQuery: string;
   setSearchText: (text: string) => void;
   handleSearch: (value: string) => void;
-  
+
   // Utilities
   hasActiveFilters: boolean;
   activeFilterCount: number;
@@ -45,10 +46,10 @@ export interface FilterManagementConfig<T extends FilterState> {
 
 /**
  * Reusable hook for managing filter state
- * 
+ *
  * @param config - Configuration options
  * @returns Filter management state and handlers
- * 
+ *
  * @example
  * ```tsx
  * interface MyFilters {
@@ -56,12 +57,12 @@ export interface FilterManagementConfig<T extends FilterState> {
  *   city: string | null;
  *   dateRange: [string, string] | null;
  * }
- * 
+ *
  * const filterManager = useFilterManagement<MyFilters>({
  *   initialFilters: { status: null, city: null, dateRange: null },
  *   resetToPage1: () => setCurrentPage(1),
  * });
- * 
+ *
  * // Use in component
  * <Select
  *   value={filterManager.filters.status}
@@ -76,9 +77,30 @@ export function useFilterManagement<T extends FilterState = FilterState>(
 
   // Filter state
   const [filters, setFiltersState] = useState<T>(initialFilters as T);
-  
+
   // Search text state
   const [searchText, setSearchTextState] = useState('');
+  const [debouncedSearchText, setDebouncedSearchText] = useState('');
+
+  // Debounce search text
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      if (searchText.length >= 3 || searchText.length === 0) {
+        setDebouncedSearchText(searchText);
+      } else {
+        setDebouncedSearchText('');
+      }
+    }, 500);
+
+    return () => window.clearTimeout(timer);
+  }, [searchText]);
+
+  // Reset page when effective search query changes
+  useEffect(() => {
+    if (resetToPage1) {
+      resetToPage1();
+    }
+  }, [debouncedSearchText, resetToPage1]);
 
   /**
    * Set a single filter value
@@ -87,12 +109,12 @@ export function useFilterManagement<T extends FilterState = FilterState>(
     <K extends keyof T>(key: K, value: T[K]) => {
       const newFilters = { ...filters, [key]: value };
       setFiltersState(newFilters);
-      
+
       // Reset to page 1 when filter changes
       if (resetToPage1) {
         resetToPage1();
       }
-      
+
       // Trigger onChange callback
       if (onFilterChange) {
         onFilterChange(newFilters);
@@ -108,12 +130,12 @@ export function useFilterManagement<T extends FilterState = FilterState>(
     (newFilters: Partial<T>) => {
       const updatedFilters = { ...filters, ...newFilters };
       setFiltersState(updatedFilters);
-      
+
       // Reset to page 1 when filters change
       if (resetToPage1) {
         resetToPage1();
       }
-      
+
       // Trigger onChange callback
       if (onFilterChange) {
         onFilterChange(updatedFilters);
@@ -130,12 +152,12 @@ export function useFilterManagement<T extends FilterState = FilterState>(
       const newFilters = { ...filters };
       newFilters[key] = null as T[keyof T];
       setFiltersState(newFilters);
-      
+
       // Reset to page 1 when filter is cleared
       if (resetToPage1) {
         resetToPage1();
       }
-      
+
       // Trigger onChange callback
       if (onFilterChange) {
         onFilterChange(newFilters);
@@ -154,12 +176,12 @@ export function useFilterManagement<T extends FilterState = FilterState>(
     );
     setFiltersState(clearedFilters);
     setSearchTextState('');
-    
+
     // Reset to page 1 when clearing filters
     if (resetToPage1) {
       resetToPage1();
     }
-    
+
     // Trigger onChange callback
     if (onFilterChange) {
       onFilterChange(clearedFilters);
@@ -172,12 +194,12 @@ export function useFilterManagement<T extends FilterState = FilterState>(
   const resetFilters = useCallback(() => {
     setFiltersState(initialFilters as T);
     setSearchTextState('');
-    
+
     // Reset to page 1 when resetting filters
     if (resetToPage1) {
       resetToPage1();
     }
-    
+
     // Trigger onChange callback
     if (onFilterChange) {
       onFilterChange(initialFilters as T);
@@ -187,17 +209,10 @@ export function useFilterManagement<T extends FilterState = FilterState>(
   /**
    * Set search text
    */
-  const setSearchText = useCallback(
-    (text: string) => {
-      setSearchTextState(text);
-      
-      // Reset to page 1 when search changes
-      if (resetToPage1) {
-        resetToPage1();
-      }
-    },
-    [resetToPage1]
-  );
+  const setSearchText = useCallback((text: string) => {
+    setSearchTextState(text);
+    // NOTE: Page reset is now handled in the useEffect for debouncedSearchText
+  }, []);
 
   /**
    * Handle search input (convenience wrapper)
@@ -212,33 +227,34 @@ export function useFilterManagement<T extends FilterState = FilterState>(
   /**
    * Check if any filters are active (non-null/non-empty)
    */
-  const hasActiveFilters = Object.values(filters).some(
-    (value) => value !== null && value !== undefined && value !== ''
-  ) || searchText !== '';
+  const hasActiveFilters =
+    Object.values(filters).some(value => value !== null && value !== undefined && value !== '') ||
+    debouncedSearchText !== '';
 
   /**
    * Count of active filters
    */
-  const activeFilterCount = Object.values(filters).filter(
-    (value) => value !== null && value !== undefined && value !== ''
-  ).length + (searchText ? 1 : 0);
+  const activeFilterCount =
+    Object.values(filters).filter(value => value !== null && value !== undefined && value !== '')
+      .length + (debouncedSearchText ? 1 : 0);
 
   return {
     // Filter state
     filters,
-    
+
     // Filter actions
     setFilter,
     setFilters,
     clearFilter,
     clearAllFilters,
     resetFilters,
-    
+
     // Search state
     searchText,
+    searchQuery: debouncedSearchText,
     setSearchText,
     handleSearch,
-    
+
     // Utilities
     hasActiveFilters,
     activeFilterCount,

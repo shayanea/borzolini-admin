@@ -96,7 +96,7 @@ export function useClinicManagement(): UseClinicManagementReturn {
       'clinics',
       table.currentPage,
       table.pageSize,
-      filterManager.searchText,
+      filterManager.searchQuery,
       filterManager.filters.city,
       filterManager.filters.isActive,
       table.sortBy,
@@ -106,7 +106,7 @@ export function useClinicManagement(): UseClinicManagementReturn {
       const params: ClinicsQueryParams = {
         page: table.currentPage,
         limit: table.pageSize,
-        search: filterManager.searchText || undefined,
+        search: filterManager.searchQuery || undefined,
         city: filterManager.filters.city || undefined,
         isActive:
           filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
@@ -195,21 +195,21 @@ export function useClinicManagement(): UseClinicManagementReturn {
   // Export handlers
   const handleExportCSV = useCallback(async () => {
     return await ClinicsService.exportClinicsToCSV({
-      search: filterManager.searchText || undefined,
+      search: filterManager.searchQuery || undefined,
       city: filterManager.filters.city || undefined,
       isActive:
         filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
     });
-  }, [filterManager.searchText, filterManager.filters.city, filterManager.filters.isActive]);
+  }, [filterManager.searchQuery, filterManager.filters.city, filterManager.filters.isActive]);
 
   const handleExportExcel = useCallback(async () => {
     return await ClinicsService.exportClinicsToExcel({
-      search: filterManager.searchText || undefined,
+      search: filterManager.searchQuery || undefined,
       city: filterManager.filters.city || undefined,
       isActive:
         filterManager.filters.isActive !== null ? filterManager.filters.isActive : undefined,
     });
-  }, [filterManager.searchText, filterManager.filters.city, filterManager.filters.isActive]);
+  }, [filterManager.searchQuery, filterManager.filters.city, filterManager.filters.isActive]);
 
   return {
     // State from table management

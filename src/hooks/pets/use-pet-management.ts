@@ -52,6 +52,7 @@ export const usePetManagement = (): UsePetManagementReturn => {
     setFilter,
     resetFilters,
     searchText,
+    searchQuery: debouncedSearch,
     handleSearch: onSearch,
   } = useFilterManagement<PetsFilters & { search: string }>({
     initialFilters: {
@@ -82,12 +83,12 @@ export const usePetManagement = (): UsePetManagementReturn => {
     error: queryError,
     refetch: fetchPets,
   } = useQuery({
-    queryKey: PETS_KEYS.list({ ...filters, search: searchText }, { currentPage, pageSize }),
+    queryKey: PETS_KEYS.list({ ...filters, search: debouncedSearch }, { currentPage, pageSize }),
     queryFn: async () => {
       const params = {
         page: currentPage,
         limit: pageSize,
-        search: searchText || undefined,
+        search: debouncedSearch || undefined,
         species: filters.species || undefined,
         breed: filters.breed || undefined,
         gender: filters.gender || undefined,
